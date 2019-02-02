@@ -1,0 +1,108 @@
+body {
+	background-color: #0d89c1;
+	color: #fff;
+}
+code {
+	background: rgba(0, 0, 0, 0.25);
+	padding: 1px 3px;
+	border-radius: 3px;
+}
+
+.card {
+	background-color: rgba(29, 29, 29, 0.95);
+}
+.card-content{
+	margin: 0px;
+}
+.card-content ul.stepper {
+	margin-bottom: 0px;
+}
+ul.stepper:not(.horizontal) .step.done:before {
+	content: '\f12c';
+	font-size: 16px;
+	font-family: 'Material Design Icons';
+}
+ul.stepper > .step:not(:last-of-type):after {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+ul.stepper .step-title {
+	margin-bottom: 15px;
+}
+ul.stepper .step-actions {
+	background-color: transparent;
+	flex-direction: row-reverse;
+}
+.desc {
+	margin-bottom: 10px;
+}
+.collection {
+	border: 0px;
+}
+.collection .collection-item {
+	background-color: #242a2d;
+	border-bottom: 1px solid rgba(224, 224, 224, 0.05);
+}
+input {
+	margin-top: 3px !important;
+}
+input::placeholder {
+	color: rgba(255, 255, 255, 0.25);
+	font-weight: 300;
+}
+input:not([type]):focus:not([readonly])+label,input[type=date]:not(.browser-default):focus:not([readonly])+label,input[type=datetime-local]:not(.browser-default):focus:not([readonly])+label,input[type=datetime]:not(.browser-default):focus:not([readonly])+label,input[type=email]:not(.browser-default):focus:not([readonly])+label,input[type=number]:not(.browser-default):focus:not([readonly])+label,input[type=password]:not(.browser-default):focus:not([readonly])+label,input[type=search]:not(.browser-default):focus:not([readonly])+label,input[type=tel]:not(.browser-default):focus:not([readonly])+label,input[type=text]:not(.browser-default):focus:not([readonly])+label,input[type=time]:not(.browser-default):focus:not([readonly])+label,input[type=url]:not(.browser-default):focus:not([readonly])+label,textarea.materialize-textarea:focus:not([readonly])+label{
+	color:#2196f3
+}
+input:not([type]):focus:not([readonly]),input[type=date]:not(.browser-default):focus:not([readonly]),input[type=datetime-local]:not(.browser-default):focus:not([readonly]),input[type=datetime]:not(.browser-default):focus:not([readonly]),input[type=email]:not(.browser-default):focus:not([readonly]),input[type=number]:not(.browser-default):focus:not([readonly]),input[type=password]:not(.browser-default):focus:not([readonly]),input[type=search]:not(.browser-default):focus:not([readonly]),input[type=tel]:not(.browser-default):focus:not([readonly]),input[type=text]:not(.browser-default):focus:not([readonly]),input[type=time]:not(.browser-default):focus:not([readonly]),input[type=url]:not(.browser-default):focus:not([readonly]),textarea.materialize-textarea:focus:not([readonly]) {
+	border-bottom:1px solid #2196f3;
+	-webkit-box-shadow:0 1px 0 0 #2196f3;
+	box-shadow:0 1px 0 0 #2196f3
+}
+input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=text]:not(.browser-default):disabled, input[type=text]:not(.browser-default)[readonly="readonly"], input[type=password]:not(.browser-default):disabled, input[type=password]:not(.browser-default)[readonly="readonly"], input[type=email]:not(.browser-default):disabled, input[type=email]:not(.browser-default)[readonly="readonly"], input[type=url]:not(.browser-default):disabled, input[type=url]:not(.browser-default)[readonly="readonly"], input[type=time]:not(.browser-default):disabled, input[type=time]:not(.browser-default)[readonly="readonly"], input[type=date]:not(.browser-default):disabled, input[type=date]:not(.browser-default)[readonly="readonly"], input[type=datetime]:not(.browser-default):disabled, input[type=datetime]:not(.browser-default)[readonly="readonly"], input[type=datetime-local]:not(.browser-default):disabled, input[type=datetime-local]:not(.browser-default)[readonly="readonly"], input[type=tel]:not(.browser-default):disabled, input[type=tel]:not(.browser-default)[readonly="readonly"], input[type=number]:not(.browser-default):disabled, input[type=number]:not(.browser-default)[readonly="readonly"], input[type=search]:not(.browser-default):disabled, input[type=search]:not(.browser-default)[readonly="readonly"], textarea.materialize-textarea:disabled, textarea.materialize-textarea[readonly="readonly"] {
+	color: #4e4e4e;
+	border-bottom: 1px solid rgba(171, 169, 169, 0.42);
+}
+.input-field label {
+	color: #d2d2d2;
+}
+#email .input-field {
+	display: none;
+}
+.col.input-field {
+	padding: 0 1.25rem;
+}
+.input-field label {
+	padding-left: 9px;
+}
+.input-field .prefix.active {
+	color: #2196f3;
+}
+.select-wrapper span.caret {
+	color: #fff;
+}
+.switch label input[type=checkbox]:checked+.lever {
+	background-color: #5ea5de;
+}
+.switch label input[type=checkbox]:checked+.lever:after {
+	background-color: #2196f3;
+}
+.dropdown-content, .select-dropdown.dropdown-content li.selected {
+	background-color: #242a2d;
+}
+.btn {
+	background-color: #2196f3;
+}
+.btn:hover,.btn:focus, .btn-large:focus, .btn-floating:focus {
+	background-color: #2177f3;
+}
+.btn-flat {
+	color: #565656;
+}
+.modal {
+	background-color: #171c1f;
+}
+.modal .modal-footer {
+	background-color: #1c2225;
+}
+.toast code {
+	margin-left: 3px;
+}

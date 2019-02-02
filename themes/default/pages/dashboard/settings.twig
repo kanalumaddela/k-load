@@ -1,0 +1,169 @@
+{% extends 'base.twig' %}
+
+{% block title %}Settings | K-Load{% endblock %}
+
+{% block css_head %}
+	{{ parent() }}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css" />
+{% endblock %}
+
+{% block content %}
+	<h3>Settings</h3>
+	<form method="post" action="{{site.path}}/dashboard/settings" class="row" style="padding-top:15px;padding-bottom:15px;">
+		{{ csrf|raw }}
+
+		<div class="col s12">
+			{% if user.admin %}
+				<p>To edit the loading screen for all users visit <a href="{{ site.path ~ '/dashboard/admin/general' }}">{{ site.url ~ '/dashboard/admin/general' }}</a></p>
+			{% endif %}
+			<div class="card">
+				<div class="card-content row">
+					<h1 class="flow-text col s12"><span class="mdi mdi-format-color-fill"></span>Theme</h1>
+					{% for theme in themes %}
+						<div class="col s12 m3 center-align theme-block">
+							<img class="materialboxed " src="{{theme.preview}}" style="display:inline-block;width:150px;">
+							<input id="theme_{{theme.name}}" class="with-gap" name="theme" type="radio" value="{{theme.name}}" {% if theme.name == user.settings.theme %}checked{% endif %} />
+							<label for="theme_{{theme.name}}">{{theme.name|capitalize}}</label>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12">
+			<div class="card">
+				<div class="card-content">
+					<h1 class="flow-text"><span class="mdi mdi-panorama"></span>Backgrounds</h1>
+					<div class="row">
+						<div class="switch col s6">
+							<p>
+								Enable?
+							</p>
+							<label>
+								No
+								<input type="checkbox" name="backgrounds[enable]" value="1" {% if user.settings.backgrounds.enable %}checked{% endif %} />
+								<span class="lever"></span>
+								Yes
+							</label>
+						</div>
+						<div class="switch col s6">
+							<p>
+								Randomize?
+							</p>
+							<label>
+								No
+								<input type="checkbox" name="backgrounds[random]" value="1" {% if user.settings.backgrounds.random %}checked{% endif %} />
+								<span class="lever"></span>
+								Yes
+							</label>
+						</div>
+						<div class="input-field col s6">
+							Background Duration (ms)
+							<p class="range-field">
+								<input type="number" name="backgrounds[duration]" placeholder="e.g. 5000" value="{{user.settings.backgrounds.duration}}" />
+							</p>
+						</div>
+						<div class="input-field col s6">
+							Background Fade (ms)
+							<p class="range-field">
+								<input type="number" name="backgrounds[fade]" placeholder="e.g. 750" value="{{user.settings.backgrounds.fade}}" />
+							</p>
+						</div>
+						<div class="col s12">
+							<p>1 second = 1000ms</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12">
+			<div class="card">
+				<div class="card-content">
+					<h1 class="flow-text"><span class="mdi mdi-youtube-play"></span>YouTube / Music <small>The available options control both various music sources</small></h1>
+					<div>
+						<div class="row">
+							<div class="switch col s6">
+								<p>
+									Enable?
+								</p>
+								<label>
+									No
+									<input type="checkbox" name="youtube[enable]" value="1" {% if user.settings.youtube.enable %}checked{% endif %} />
+									<span class="lever"></span>
+									Yes
+								</label>
+							</div>
+							<div class="switch col s6">
+								<p>
+									Randomize?
+								</p>
+								<label>
+									No
+									<input type="checkbox" name="youtube[random]" value="1" {% if user.settings.youtube.random %}checked{% endif %} />
+									<span class="lever"></span>
+									Yes
+								</label>
+							</div>
+						</div>
+						<div class="input-field">
+							Volume
+							<p class="range-field">
+								<input type="range" id="volume" min="0" max="100" name="youtube[volume]" value="{{ user.settings.youtube.volume|default(15) }}" />
+							</p>
+						</div>
+						<div>
+							<h5>YouTube Videos to Play <span class="red" style="padding: 0 10px;font-weight: bold;">DEPRECATED</span></h5>
+							<div class="disabled">
+								<div id="yt_vids">
+                                    {% for youtube_id in user.settings.youtube.list %}
+										<div class="input-field child">
+											<input type="text" name="youtube[list][]" placeholder="YouTube URL" value="https://www.youtube.com/watch?v={{youtube_id}}" style="width: 80%;">
+											<a class="btn-floating delete-elem red"><i class="mdi mdi-delete"></i></a>
+										</div>
+                                    {% endfor %}
+								</div>
+								<div>
+									<a class="btn green add-elem" data-type="youtube" data-parent="#yt_vids"><span class="mdi mdi-plus"></span>Add</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12">
+			<div class="card">
+				<div class="card-content">
+					<h1 class="flow-text"><span class="mdi mdi-language-css3"></span>Custom CSS</h1>
+					<div class="input-field">
+						<textarea id="css" name="css">{{user.css|raw}}</textarea>
+						<span class="counter" data-max="500">{{user.css|length}}/500</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12 center-align">
+		</div>
+
+		<div class="fixed-action-btn">
+			<button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+		</div>
+
+	</form>
+{% endblock %}
+
+{% block js %}
+<script>
+function createElem_youtube() {
+	return elem('div', {className: 'input-field child'},
+					elem('input', {type: 'text', name: 'youtube[list][]', placeholder: 'YouTube URL', style: 'width:80%;'}),
+					elem('a', {className: 'btn-floating delete-elem red'},
+						elem('i', {className: 'mdi mdi-delete'})
+					)
+				);
+}
+</script>
+{% endblock %}

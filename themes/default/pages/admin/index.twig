@@ -1,0 +1,109 @@
+{% extends 'base.twig' %}
+
+{% block title %}Admin | K-Load{% endblock %}
+
+{% block css_body %}
+<style>
+a.btn {
+	width: 215px;
+	margin-bottom: 6px;
+}
+</style>
+{% endblock %}
+{% block content %}
+	{% if user.super %}
+		<div class="row">
+
+			<div class="col s12 m8">
+				<h3>Config</h3>
+
+				<div class="card">
+					<div class="card-content row">
+					<form action="{{ site.path ~ '/dashboard/admin?action=update_apikeys' }}" method="post">
+						{{ csrf|raw }}
+						<div class="input-field col s12">
+							<input name="apikeys[steam]" type="text" class="validate" value="{{ api_keys.steam }}">
+							<label>Steam API Key</label>
+						</div>
+						<div class="col s12 right-align">
+							<input type="submit" name="save_apikeys" class="btn" value="Save">
+						</div>
+					</form>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-content row">
+						<div class="col s12">
+							<h1 class="card-title">Default Theme</h1>
+						</div>
+						<form action="{{ site.path ~ '/dashboard/admin?action=update_theme' }}" method="post">
+							{{ csrf|raw }}
+						{% for loading_theme in themes %}
+							<div class="col s12 m4 center-align theme-block">
+								<img class="materialboxed " src="{{loading_theme.preview}}" style="display:inline-block;width:150px;">
+								<input id="theme_{{loading_theme.name}}" class="with-gap" name="theme" type="radio" value="{{loading_theme.name}}" {% if loading_theme.name == theme %}checked{% endif %} />
+								<label for="theme_{{loading_theme.name}}">{{loading_theme.name|capitalize}}</label>
+							</div>
+						{% endfor %}
+						<div class="col s12 center-align">
+							<input type="submit" name="save_theme" class="btn" value="Save">
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="col s12 m4">
+				<h3>Tools</h3>
+
+				<div class="card">
+					<div class="card-content">
+						<h1 class="card-title">Updates</h1>
+						<div class="center-align">
+							<p>Current Version: {{ version }}</p>
+							<p>There {% if updates.amount != 1 %}are{% else %}is{% endif %} currently <span class="{% if updates.amount > 0 %}green-text{% endif %}">{{ updates.amount }}</span> update(s)</p>
+							{% if updates.amount > 0 %}
+								<p>The latest version available is {{ updates.latest }}</p>
+							{% endif %}
+							<br>
+							<a href="{{site.path}}/dashboard/admin?action=update" class="btn">Update</a>
+							<a href="{{site.path}}/dashboard/admin?action=refresh_themes" class="btn orange tooltipped" data-tooltip="Fixes the config to display all themes">Refresh Themes</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-content">
+						<h1 class="card-title">Clear Cache</h1>
+						<div class="center-align">
+							<a href="{{site.path}}/dashboard/admin?action=clear_cache" class="btn red">All Cache</a>
+							<a href="{{site.path}}/dashboard/admin?action=clear_cache_data" class="btn pink">Data Cache</a>
+							<a href="{{site.path}}/dashboard/admin?action=clear_cache_template" class="btn pink">Template Cache</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-content">
+						<h1 class="card-title">Users</h1>
+						<div class="center-align">
+							<a href="{{site.path}}/dashboard/admin?action=refresh_css" class="btn orange">Recompile CSS</a>
+							<a href="{{site.path}}/dashboard/admin?action=unban_all" class="btn green">Unban All</a>
+							<a href="{{site.path}}/dashboard/admin?action=reset_perms" class="btn red">Reset Perms</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block js %}
+<script>
+$('.btn').click(function() {
+	return window.confirm('Are you sure you want to do this?');
+});
+</script>
+{% endblock %}

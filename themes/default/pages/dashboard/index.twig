@@ -1,0 +1,50 @@
+{% extends 'base.twig' %}
+
+{% block title %}Dashboard | K-Load{% endblock %}
+
+{% block content %}
+	<h1 class="flow-text">Welcome {{ user.personaname }}</h1>
+	<div class="row">
+		<div class="col s12">
+			<div class="card">
+				<div class="card-content">
+					<p>
+						To access your loading screen with your settings, visit
+						<br>
+						<a href="{{site.path}}/?steamid={{user.steamid}}" target="_blank">{{site.url}}/?steamid={{user.steamid}}</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col s12 m6">
+			<div class="card stat">
+				<div class="card-content">
+					<span class="card-title">Your Info</span>
+					<p>SteamID: <code>{{ user.steamid }}</code></p>
+					<p>SteamID2 <code>{{ user.steamid2 }}</code></p>
+					<p>SteamID3: <code>{{ user.steamid3 }}</code></p>
+					<br>
+					<p>Profile: <a href="{{ user.profileurl|replace({'http://': 'https://'}) }}" target="_blank" style="word-break: break-all;word-wrap:break-word;">{{ user.profileurl }}</a></p>
+				</div>
+			</div>
+		</div>
+		<div class="col s12 m6">
+			<div class="card stat">
+				<div class="card-content">
+					<span class="card-title">Your Perms</span>
+					{% if user.super %}
+						<p>You're a super, you can do whatever you want!</p>
+					{% else %}
+						<p>Admin: {% if user.admin %}Yes{% else %}No{% endif %}</p>
+						{% 	if user.perms|length > 0 %}
+							<br>
+							{% for perm,value in user.perms %}
+								<p>{{ perm }}</p>
+							{% endfor %}
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends '@loading/base.twig' %}
+
+{% block css %}
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand:300,400,700">
+	<link rel="stylesheet" href="{{assets_theme}}/css/slick.css" />
+	<style>
+		body:before { background-image:url({{site.url}}/themes/default/assets/img/particles_red.jpg); }
+	</style>
+{% endblock %}
+{% block body %}
+	<div class="overlay dark dots"></div>
+
+	<div id="info-block" class="fixed top left">
+		<h1 class="community-name">{{ settings.community_name }}</h1>
+		<p>We are currently playing <b><span class="gamemode"></span></b> on <b><span class="map"></span></b></p>
+	</div>
+
+	<div class="pure-center">
+		<p class="status"></p>
+		<div id="loading-bar-outer">
+			<div class="loading-bar"></div>
+		</div>
+		<p class="messages"></p>
+	</div>
+
+	<div id="music-block" class="fixed bottom left">
+		<p style="margin:0px 0px 5px 0px;">You are now listening to</p>
+		<p class="youtube-playing-title"></p>
+	</div>
+{% endblock %}

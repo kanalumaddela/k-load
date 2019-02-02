@@ -1,0 +1,43 @@
+{% block vars %}{% endblock %}
+<!doctype html>
+<html lang="en">
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	{% block head %}{% endblock %}
+	<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+	<link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/2.1.19/css/materialdesignicons.min.css" />
+	{% block css_head %}{% endblock %}
+	<link rel="stylesheet" href="{{assets_theme}}/css/site.css">
+</head>
+<body>
+{% block css_body %}{% endblock %}
+
+{% block body %}
+	{% if user %}
+		{{csrf|raw}}
+		{% include '@partials/navigation.twig' %}
+		<main class="container">{% block content %}{% endblock %}</main>
+	{% else %}
+		<div class="true-center center-align">
+			<h3>K-Load Dashboard</h3>
+			<a href="{{login_url}}" style=" padding: 10px 40px; border: 2px solid; border-radius: 50px; ">Login</a>
+		</div>
+	{% endif %}
+{% endblock %}
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+	{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/mode/css/css.js"></script>
+	{% endif %}
+	<script>var site = {{site_json|raw}}; var alert = '{{alert}}';$(".button-collapse").sideNav();</script>
+	<script src="{{assets}}/js/site.js"></script>
+{% block js %}{% endblock %}
+</body>
+</html>

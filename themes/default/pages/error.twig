@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Uh-Oh | K-Load</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,500">
+</head>
+<body class="valign-wrapper">
+<style>
+*, *:before, *:after {
+	color: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+html {
+	line-height: 1.5;
+	font-family: "Roboto", sans-serif;
+	color: rgba(0,0,0,0.87);
+}
+body,html {
+	width: 100%;
+	height: 100%;
+	height: 100vh;
+}
+body {
+	margin: 0;
+	background-color: #161b2d;
+	color: #fff;
+	font-weight: 300;
+}
+a {
+	color: #03a9f4;
+	text-decoration: none;
+	font-weight: 500;
+}
+b {
+	font-weight: 500;
+}
+code {
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 2px 3px;
+    border-radius: 3px;
+}
+p {
+	margin: 0;
+}
+.valign-wrapper {
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+.flow-text{font-weight:300;}@media only screen and (min-width:360px){.flow-text{font-size:1.2rem}}@media only screen and (min-width:390px){.flow-text{font-size:1.224rem}}@media only screen and (min-width:420px){.flow-text{font-size:1.248rem}}@media only screen and (min-width:450px){.flow-text{font-size:1.272rem}}@media only screen and (min-width:480px){.flow-text{font-size:1.296rem}}@media only screen and (min-width:510px){.flow-text{font-size:1.32rem}}@media only screen and (min-width:540px){.flow-text{font-size:1.344rem}}@media only screen and (min-width:570px){.flow-text{font-size:1.368rem}}@media only screen and (min-width:600px){.flow-text{font-size:1.392rem}}@media only screen and (min-width:630px){.flow-text{font-size:1.416rem}}@media only screen and (min-width:660px){.flow-text{font-size:1.44rem}}@media only screen and (min-width:690px){.flow-text{font-size:1.464rem}}@media only screen and (min-width:720px){.flow-text{font-size:1.488rem}}@media only screen and (min-width:750px){.flow-text{font-size:1.512rem}}@media only screen and (min-width:780px){.flow-text{font-size:1.536rem}}@media only screen and (min-width:810px){.flow-text{font-size:1.56rem}}@media only screen and (min-width:840px){.flow-text{font-size:1.584rem}}@media only screen and (min-width:870px){.flow-text{font-size:1.608rem}}@media only screen and (min-width:900px){.flow-text{font-size:1.632rem}}@media only screen and (min-width:930px){.flow-text{font-size:1.656rem}}@media only screen and (min-width:960px){.flow-text{font-size:1.68rem}}@media only screen and (max-width:360px){.flow-text{font-size:1.2rem}}
+</style>
+<div style="margin:auto;width: 75%;">
+<h1 class="flow-text">Uh-Oh - <code>{{error.message}}</code></h1>
+{% if error.trace %}
+<p>Stack Trace</p>
+{{error.trace|raw}}
+{% endif %}
+</div>
+<div style="position:fixed;bottom:0;right:10px;font-size:0.75rem;">
+<p>{{time}} secs</p>
+<p>K-Load by <a href="https://www.maddela.org" target="_blank">@kanalumaddela</a></p>
+</div>
+</body>
+</html>
