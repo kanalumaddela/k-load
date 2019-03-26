@@ -1,0 +1,253 @@
+{% extends '@loading/base.twig' %}
+
+{% block title %}Fusion | K-Load{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{site.url}}/themes/metra/assets/css/grid.css" />
+    <link href="{{assets_theme}}/css/fusion.css?{{cache_buster}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rajdhani:300,400,600">
+    <style>
+        body:before { background-image:url({{assets}}/img/backgrounds/global/particles_blue.jpg); }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+    <div class="overlay"></div>
+
+    <div id="container" class="pure-center" style="top: 47.5%;">
+        <div class="header">
+            <img class="avatar" style="max-width: 65px;" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
+            <div style="margin-left: 10px">
+                <h1 style="text-transform: uppercase;">{{ settings.community_name }}</h1>
+                <h3 style="margin-top: -12px;">You are now joining <span class="server-name"></span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <!-- about us -->
+            <div class="col xl-3 block">
+                <div>
+                    <div class="block-item block-header">
+                        <h2>About Us</h2>
+                    </div>
+                    <div class="block-item block-content">
+                        <div class="absolute-align-vertical" style="top: 45%;padding: 15px;">
+                            <p>{{ settings.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- rules -->
+            <div id="rules" class="col xl-3 block">
+                <div>
+                    <div class="block-item block-header">
+                        <h2>Rules</h2>
+                    </div>
+                    <div class="block-item block-content no-padding">
+                        <div id="rules-list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- staff -->
+            <div id="staff" class="col xl-3 block">
+                <div>
+                    <div class="block-item block-header">
+                        <h2>Staff</h2>
+                    </div>
+                    <div class="block-item block-content">
+                        <div id="staff-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- music -->
+            <div id="music" class="col xl-3 block hide">
+                <div>
+                    <div class="block-item block-header">
+                        <h2>Now Playing</h2>
+                    </div>
+                    <div class="block-item block-content">
+                        <div class="absolute-align-vertical center-text" style="top: 45%;padding: 15px;">
+                            <h1 style="font-size: 7.5rem;">&#9835;</h1>
+                            <h3 class="youtube-playing-title"></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- info -->
+            <div class="col xl-3 block">
+                <div>
+                    <div class="block-item block-header">
+                        <h2>Information</h2>
+                    </div>
+                    <div class="block-item block-content no-padding">
+                        <div class="absolute-align-vertical">
+                            <h2 class="info server-name"></h2>
+                            <h2 class="info"><span class="max-players"></span> Max Players</h2>
+                            <h2 class="info map"></h2>
+                            <h2 class="info gamemode"></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- percentage -->
+            <div id="percentage" class="col xl-3 block hide">
+                <div>
+                    <div class="block-item block-header">
+                        <h2>Progress</h2>
+                    </div>
+                    <div class="block-item block-content">
+                        <div class="absolute-align-vertical center-text" style="top: 47%;padding: 15px;">
+                            <h1 class="progress"></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading-bar"></div>
+            <div class="center-text">
+                <p class="messages"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode, demo) {
+            showRules(gamemode);
+            showStaff(gamemode);
+        }
+
+        function showRules(gamemode) {
+            var rule_parent = document.getElementById('rules-list');
+            if (rules[gamemode] instanceof Array === false) { gamemode = 'global'; }
+            if (rules[gamemode] instanceof Array) {
+                if (rules[gamemode].length > 0) {
+                    var real_cnt = 0;
+                    var rule_blocks = Math.ceil(rules[gamemode].length/7);
+                    for (var x = 0; x < rule_blocks; x++) {
+                        var children = [];
+                        for (var i = 0; i < 7; i++) {
+                            var rule = rules[gamemode][real_cnt] || null;
+                            real_cnt++;
+                            if (!rule) { continue; }
+
+                            children.push(elem('div',{ className: 'rule', innerText: rule}));
+                        }
+                        var rule_block = elem('div',{id: 'rule_block_'+x, className: 'rule-block'}, children);
+                        rule_parent.appendChild(rule_block);
+                        var rule_cnt = 0;
+                        var anim_dur = 1000;
+                        $('#rule_block_'+rule_cnt).children().each(function() {
+                            var elem = this;
+                            setTimeout(function(){
+                                $(elem).animate({opacity: '1'},{duration: 600});
+                            }, anim_dur);
+                            anim_dur = anim_dur+600;
+                        });
+                    }
+
+                    if (rules[gamemode].length > 7) {
+                        var rule_elems = $('.rule-block');
+                        rule_interval = setInterval(function(){
+                            $('#rule_block_'+rule_cnt).fadeOut(500, function() {
+                                anim_dur = 1000;
+                                rule_cnt++;
+                                if (rule_cnt >= rule_elems.length) {
+                                    rule_cnt = 0;
+                                }
+                                $('#rule_block_'+rule_cnt).fadeIn(300);
+
+                                if ($('#rule_block_'+rule_cnt).children().css("opacity") == '0') {
+                                    $('#rule_block_'+rule_cnt).children().each(function() {
+                                        var elem = this;
+                                        setTimeout(function(){
+                                            $(elem).animate({opacity: '1'},{duration: 600});
+                                        }, anim_dur);
+                                        anim_dur = anim_dur+600;
+                                    });
+                                }
+                            });
+                        }, 15000);
+                    }
+                } else {
+                    document.getElementById('rules').style.display = 'none';
+                    showMusicBlock();
+                }
+            } else {
+                document.getElementById('rules').style.display = 'none';
+                showMusicBlock();
+            }
+        }
+
+        function showMusicBlock() {
+            document.getElementById('music').style.display = 'inline-block';
+        }
+        function showPercentageBlock() {
+            document.getElementById('percentage').style.display = 'inline-block';
+        }
+
+        function showStaff(gamemode) {
+            var staff_list = document.getElementById('staff-list');
+            if (Array.isArray(staff[gamemode]) === false) { gamemode = 'global'; }
+            if (Array.isArray(staff[gamemode])) {
+                if (staff[gamemode].length > 0) {
+                    if (typeof staffinterval !== 'undefined') {
+                        clearInterval(staffinterval);
+                    }
+                    var real_cnt = 0;
+                    var staff_blocks = Math.ceil(staff[gamemode].length/5);
+                    for (var i = 0; i < staff_blocks; i++) {
+                        var children = [];
+                        for (var x = 0; x < 5; x++) {
+                            var staff_member = staff[gamemode][real_cnt];
+                            real_cnt++;
+                            if (typeof staff_member === 'undefined') { continue; }
+                            var steamid = staff_member.steamid || null;
+                            var rank = staff_member.rank || 'Staff';
+
+                            children.push(
+                                elem('div',{className: 'staff-member'}, [
+                                    elem('img', {className: 'avatar', src: site.path+'/api/player/'+steamid+'/avatarmedium?raw'}),
+                                    elem('div', {},[
+                                        elem('h4', {className: 'staff-name name_'+steamid, innerText: steamid}),
+                                        elem('h5', {className: 'staff-rank rank_'+steamid, innerText: rank})
+                                    ])
+                                ])
+                            );
+                        }
+                        staff_list.appendChild(
+                            elem('div',{id: 'staff_block_'+i, className: 'staff-block'}, children)
+                        );
+                    }
+                    getStaff();
+                    var staff_cnt = 0;
+                    if (staff[gamemode].length > 6) {
+                        var staff_elems = $('.staff-block');
+                        staffinterval = setInterval(function(){
+                            $('#staff_block_'+staff_cnt).fadeOut(500, function() {
+                                anim_dur = 1000;
+                                staff_cnt++;
+                                if (staff_cnt >= staff_elems.length) {
+                                    staff_cnt = 0;
+                                }
+                                $('#staff_block_'+staff_cnt).fadeIn(300);
+                            });
+                        }, 8000);
+                    }
+                } else {
+                    document.getElementById('staff').style.display = 'none';
+                    showPercentageBlock();
+                }
+            } else {
+                document.getElementById('staff').style.display = 'none';
+                showPercentageBlock();
+            }
+        }
+    </script>
+{% endblock %}

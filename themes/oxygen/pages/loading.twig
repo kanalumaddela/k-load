@@ -1,0 +1,46 @@
+{% extends '@loading/base.twig' %}
+
+{% block title %}Oxygen | K-Load{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300|Material+Icons">
+	<link rel="stylesheet" href="{{assets_theme}}/css/oxygen.css?{{cache_buster}}">
+	<style>
+		body:before { background-image:url({{assets}}/img/backgrounds/global/particles_red.jpg); }
+	</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="overlay fade-in delay long"></div>
+<div style="position:fixed;top:10px;left:15px;">
+	<h2>{{ settings.community_name }}</h2>
+	<h4>You are now playing on <span class="server-name"></span></h4>
+</div>
+<div class="pure-center fade-in delay">
+	<div>
+		<img class="avatar" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
+	</div>
+	<div id="content">
+		<div class="block one">
+			<div><i class="material-icons">map</i></div>
+			<span class="map">{{map}}</span>
+		</div>
+		<div class="spacer vertical"></div>
+		<div class="block two">
+			<div><i class="material-icons">videogame_asset</i></div>
+			<span class="gamemode">N/A</span>
+		</div>
+		<div class="spacer vertical"></div>
+		<div class="block three">
+			<div><i class="material-icons">group</i></div>
+			<span class="max-players">N/A</span>
+		</div>
+		<div class="spacer vertical"></div>
+		<div class="block four">
+			<div><i class="material-icons">schedule</i></div>
+			<span class="progress">%</span>
+		</div>
+	</div>
+</div>
+{% endblock %}

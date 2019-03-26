@@ -1,0 +1,48 @@
+{% block vars %}{% endblock %}
+<!doctype html>
+<html lang="en">
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+	<link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
+	<!-- custom css below -->
+
+	{% block head %}{% endblock %}
+</head>
+<body>
+{% block css_body %}{% endblock %}
+
+{% block body %}
+	{% if user %}
+
+		<!-- required -->
+		{{csrf|raw}}
+		<!-- content to show when logged in -->
+
+	{% else %}
+
+		<!-- login page -->
+		<div class="true-center center-align">
+			<a href="{{login_url}}" style=" padding: 10px 20px; border: 2px solid; border-radius: 53px; ">login</a>
+		</div>
+
+	{% endif %}
+{% endblock %}
+
+	<!-- start custom js -->
+	<!-- end custom js -->
+
+	{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/mode/css/css.js"></script>
+	{% endif %}
+
+	<!-- required js -->
+	<script>var site = {{ site_json|raw }}; var alert = '{{alert}}';</script>
+	<script src="{{assets}}/js/site.js"></script>
+{% block js %}{% endblock %}
+</body>
+</html>

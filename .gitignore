@@ -1,0 +1,11 @@
+/_upload/
+/assets/img/backgrounds/demo/
+/data/cache/
+/data/logs/
+/data/music/
+/data/users/
+/data/config.php
+/data/FILE_WRITE_CHECK_DO_NOT_REMOVE
+/vendor/
+/.idea/76561198152390718
+/composer.lock

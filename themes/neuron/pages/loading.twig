@@ -1,0 +1,44 @@
+{% extends '@loading/base.twig' %}
+
+{% block title %}Neuron | K-Load{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700">
+	<link rel="stylesheet" href="{{assets_theme}}/css/neuron.css?{{cache_buster}}">
+<style>
+.hexagon-inner-2 {
+	background-image: url({{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }});
+}
+body:before { background-image:url({{assets}}/img/backgrounds/global/particles_red.jpg); }
+
+</style>
+{% endblock %}
+
+{% block body %}
+	<div class="overlay dark dots"></div>
+	<div class="pure-center">
+		<div id="avatarblock">
+			<div id="hexblock">
+				<div class="hexagon avatar"><div class="hexagon-inner-1"><div class="hexagon-inner-2"></div></div></div>
+			</div>
+			<div id="polygon">
+				<svg id="hexagon" width="175" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 173.21 200"><polygon points="0 50 0 150 86.6 200 173.21 150 173.21 50 86.6 0 0 50"/></svg>
+			</div>
+		</div>
+		<h1 id="steam_name">{{ user.personaname|default('Welcome') }}</h1>
+		<h3 id="steamid">{{ user.steamid2 }}</h3>
+		<span class="status">Loading...</span>
+		<div class="loading-bar"></div>
+	</div>
+{% endblock %}
+
+{% block js %}
+<script>
+function DownloadingFile_custom(file, progress) {
+	var amount = progress*100;
+	var polygon = document.getElementById('polygon').offsetHeight;
+	var imageclip = polygon - ( progress*polygon);
+	document.getElementById("polygon").setAttribute("style", "clip: rect(" + imageclip + "px " + polygon + "px " + polygon + "px 0px);");
+}
+</script>
+{% endblock %}

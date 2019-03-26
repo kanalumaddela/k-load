@@ -1,0 +1,80 @@
+body {
+	font-family: 'Noto Sans';
+	color: #fff;
+	text-align: center;
+	text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+	font-weight: 400;
+}
+#hexagon {
+	fill: rgba(255,255,255,0.8);
+}
+.loading-bar {
+	background: rgba(255,255,255,0.85);
+}
+
+h1, h3 {
+	margin: 0;
+}
+.pure-center {
+	width: 60%;
+}
+.hexagon {
+	overflow: hidden;
+	visibility: hidden;
+	-webkit-transform: rotate(120deg);
+}
+.hexagon-inner-1 {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	-webkit-transform: rotate(-60deg);
+}
+.hexagon-inner-2 {
+	width: 100%;
+	height: 100%;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	visibility: visible;
+	-webkit-transform: rotate(-60deg);
+}
+.avatar {
+	width: 150px;
+	height: 173px;
+	margin: auto;
+}
+
+#avatarblock {
+	position: relative;
+	width: 175px;
+	height: 215px;
+	margin: auto;
+}
+#hexblock {
+	z-index: 1;
+	padding-top: 15px;
+}
+#polygon {
+	z-index: -1;
+	position: absolute;
+	top: 0;
+}
+#polygon {
+	opacity: 0.8;
+	font-size: 0;
+	-webkit-transition: all 0.3s linear;
+}
+#steam_name {
+	font-weight: 700;
+}
+#steamid {
+	font-size: 1rem;
+	font-weight: 300;
+	margin-top: -5px;
+	margin-bottom: 30px;
+}
+.loading-bar {
+	height: 5px;
+	border-radius: 5px;
+	margin: 10px auto;
+	-webkit-transition: width 0.3s linear;
+}

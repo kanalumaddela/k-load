@@ -1,0 +1,150 @@
+{% extends 'base.twig' %}
+
+{% block title %}Staff | K-Load{% endblock %}
+
+{% block css_body %}
+<style>
+.card-content {
+	position: relative;
+}
+.cat.delete-elem {
+	z-index: 1;
+	cursor: pointer;
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	width: 28px;
+	height: 28px;
+	background-color: transparent;
+	font-size: 1.25rem;
+	border: none;
+	border-radius: 50%;
+}
+.staff > .col.input-field > div {
+	padding: 10px;
+	border: 2px solid rgba(255, 255, 255, 0.15);
+	border-radius: 10px;
+}
+.staff > .input-field p > span.mdi {
+	margin-left: 5px;
+	margin-right: 5px;
+	font-size: 1rem;
+}
+</style>
+{% endblock %}
+{% block content %}
+	<h3><i class="mdi mdi-format-list-numbers left"></i>Staff</h3>
+	<p>Here you can create staff for specific gamemodes or staff in general.</p>
+
+	{% include '@partials/gamemode-examples.twig' %}
+
+	<form method="post" action="{{site.path}}/dashboard/admin/staff" class="row" style="padding-top:15px;padding-bottom:15px;">
+		{{ csrf|raw }}
+
+		<div class="col s12">
+			<a class="btn green add-elem" data-type="staff_cat" data-parent="#staff_categories">Add Gamemode</a>
+		</div>
+
+		<div id="staff_categories" class="row">
+			{% for gamemode,staff in settings.staff %}
+				<div class="col s12 child">
+					<div class="card">
+						<span class="mdi mdi-close red-text delete-elem cat"></span>
+						<div class="card-content">
+							<h1 class="flow-text">Gamemode</h1>
+							<input class="gamemode" type="text" placeholder="e.g. terrortown" oninput="fixGamemode(this)" required="" value="{{ gamemode }}">
+							<div>
+								<h5 class="flow-text">Staff</h5>
+								<div class="staff row">
+									{% for staff_member in staff %}
+										<div class="input-field col s12 m6 l4 center-align child">
+											<div>
+												<p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>
+												<input type="number" class="staff-steamid" name="staff[{{ gamemode }}][{{ loop.index0 }}][steamid]" oninput="fixGamemode(this, true)" value="{{ staff_member.steamid }}">
+												<p><span class="mdi mdi-sitemap"></span> Rank</p>
+												<input type="text" class="staff-rank" name="staff[{{ gamemode }}][{{ loop.index0 }}][rank]" oninput="fixGamemode(this, true)" value="{{ staff_member.rank }}">
+												<a class="btn-floating red delete-elem"><i class="mdi mdi-delete"></i></a>
+											</div>
+										</div>
+
+									{% endfor %}
+								</div>
+								<a class="btn blue add-elem" data-type="staff" data-parent=".staff">Add Staff Member</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+		<div class="fixed-action-btn">
+			<button id="save-btn" class="btn-floating btn-large blue" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+		</div>
+
+	</form>
+{% endblock %}
+
+
+{% block js %}
+<script>
+function fixGamemode(elem, isChildren = false) {
+	if (!isChildren) {
+		var gamemode = elem.value;
+		var staff = $(elem).next().children('.staff').children('.input-field.child');
+		console.log(staff);
+	} else {
+		var gamemode = $(elem).parent().parent().parent().parent().parent().find('.gamemode');
+		if (gamemode.length > 0) {
+			gamemode = gamemode[0].value;
+			var staff = $(elem).parent().parent().parent().find('.input-field.child');
+		}
+	}
+
+	if (staff.length > 0) {
+		var cnt = 0;
+		$.each(staff, function(key, child) {
+			var steamid_input = $(child).find('.staff-steamid')[0];
+			var rank_input = $(child).find('.staff-rank')[0];
+			steamid_input.setAttribute('name', 'staff['+gamemode+']['+cnt+'][steamid]');
+			rank_input.setAttribute('name', 'staff['+gamemode+']['+cnt+'][rank]');
+			cnt++;
+		});
+	}
+}
+
+function createElem_staff_cat() {
+	return elem('div', {className: 'col s12 child'},
+				elem('div', {className: 'card'},
+					elem('span', {className: 'mdi mdi-close red-text delete-elem cat'}),
+					elem('div', {className: 'card-content'},
+						elem('h1', {className: 'flow-text', innerText: 'Gamemode'}),
+						elem('input', {className: 'gamemode', type: 'text', placeholder: 'e.g. terrortown', onInput: 'fixGamemode(this)', required: true }),
+						elem('div', {},
+							elem('h5', {className: 'flow-text', innerText: 'Staff'}),
+							elem('div', {className: 'staff row'}),
+							elem('a', {className: 'btn blue add-elem', innerText: 'Add Staff Member', 'data-type': 'staff', 'data-parent': '.staff'})
+							)
+						)
+					)
+				);
+}
+
+var fake_cnt = -1;
+function createElem_staff() {
+	fake_cnt++;
+	var steam_input_title = '<p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>';
+	var rank_input_title = '<p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>';
+	return elem('div', {className: 'input-field col s12 m6 l4 center-align child'},
+				elem('div', {},
+					elem('p', {innerHTML: '<span class="mdi mdi-steam"></span> SteamID (64 bit)'}),
+					elem('input', {type: 'number', className: 'staff-steamid', name: 'staff[global]['+fake_cnt+'][steamid]', onInput: 'fixGamemode(this, true)'}),
+
+					elem('p', {innerHTML: '<span class="mdi mdi-sitemap"></span> Rank'}),
+					elem('input', {type: 'text', className: 'staff-rank', name: 'staff[global]['+fake_cnt+'][rank]', onInput: 'fixGamemode(this, true)'}),
+
+					elem('a', {className: 'btn-floating red delete-elem'}, elem('i', {className: 'mdi mdi-delete'}) )
+					)
+				);
+}
+</script>
+{% endblock %}

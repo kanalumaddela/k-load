@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+	<link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
+	<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+	<link rel="stylesheet" href="{{assets}}/css/loading.css?{{cache_buster}}">
+	{% block css %}{% endblock %}
+	{% if user.steamid %}
+		<link rel="stylesheet" href="{{site.path}}/data/users/{{user.steamid}}.css?{{cache_buster}}">
+	{% endif %}
+</head>
+<body>
+{% block body %}{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+<script>
+var site = {{ site_json|default('{}')|raw }};
+var backgrounds = {{ user.settings.backgrounds|default(settings.backgrounds|default('{}'))|raw }};
+backgrounds.list = {{ backgrounds|default('{}')|raw }};
+var youtube = {{ user.settings.youtube|default(settings.youtube|default('{}'))|raw }};
+var messages = {{ settings.messages|default('{}')|raw }};
+var rules = {{ settings.rules|default('{}')|raw }};
+var staff = {{ settings.staff|default('{}')|raw }};
+var music = {{ settings.music|default('{}')|raw }};
+</script>
+{% block js %}{% endblock %}
+<script src="{{assets}}/js/loading.js?{{cache_buster}}"></script>
+</body>
+</html>

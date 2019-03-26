@@ -1,0 +1,12 @@
+# hello hi, no index 4 u
+Options -Indexes
+
+# how 2 make routes work
+<IfModule mod_rewrite.c>
+    Options -MultiViews
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . index.php [L]
+</IfModule>

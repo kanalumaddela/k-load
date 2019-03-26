@@ -1,0 +1,218 @@
+{% extends '@loading/base.twig' %}
+
+{% block title %}Eris | K-Load{% endblock %}
+
+{# SMALL CONFIG #}
+{% set settings = settings|merge({'block_1': {
+	'icon': 'fab fa-steam-symbol',
+	'text': 'group'
+}}) %}
+{% set settings = settings|merge({'block_2': {
+	'icon': 'fas fa-globe',
+	'text': 'www.example.com'
+}}) %}
+{% set settings = settings|merge({'block_3': {
+	'icon': 'fas fa-microphone',
+	'text': 'ts.example.com'
+}}) %}
+
+
+{% block css %}
+	<link rel="stylesheet" href="{{assets}}/css/grid.min.css" />
+	<link rel="stylesheet" href="{{assets}}/css/grid-sm.min.css" media="all and (max-width: 575px)" />
+	<link rel="stylesheet" href="{{assets}}/css/grid-md.min.css" media="all and (min-width: 768px)" />
+	<link rel="stylesheet" href="{{assets}}/css/grid-lg.min.css" media="all and (min-width: 992px)" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:300|Roboto:300,400">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
+	<link href="{{assets_theme}}/css/eris.css?{{cache_buster}}" rel="stylesheet">
+	<style>
+		body:before { background-image:url({{assets}}/img/backgrounds/global/particles_red.jpg); }
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="pure-center">
+
+		<!-- player's avatar -->
+		<div id="trapezoid">
+			<img id="player_avatar" class="avatar small circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
+		</div>
+
+		<!-- red bar rotating between these <p> -->
+		<div id="top-bar" class="center-text">
+			<p>Welcome to {{ settings.community_name }} {{ user.personaname|default('User') }}</p>
+			<p>You are now playing on <span class="server-name">&lt;server name></span></p>
+		</div>
+
+		<!-- main content -->
+		<div class="row" style="display:block;height: calc(100% - 45px);overflow: hidden;">
+
+			<!-- rules -->
+			<div class="col sm-12 md-4">
+				<h1 style="margin:10px 0px;">Rules</h1>
+				<div id="rules"></div>
+			</div>
+
+			<div class="col sm-12 md-8">
+				<!-- staff -->
+				<h1 style="margin:10px 0px;">Staff</h1>
+				<div id="staff"></div>
+
+				<!-- dumb separator -->
+				<div class="separator"></div>
+
+				<div id="services">
+
+					<!-- block #1 -->
+					<div class="type">
+						<i class="{{ settings.block_1.icon }}"></i>
+						<p>{{ settings.block_1.text }}</p>
+					</div>
+
+					<!-- block #2 -->
+					<div class="type">
+						<i class="{{ settings.block_2.icon }}"></i>
+						<p>{{ settings.block_2.text }}</p>
+					</div>
+
+					<!-- block #3 -->
+					<div class="type">
+						<i class="{{ settings.block_3.icon }}"></i>
+						<p>{{ settings.block_3.text }}</p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+<script>
+var top_bar_rotate = $('#top-bar > p');
+var	top_bar_rotate_counter = 0;
+top_bar_rotate.hide();
+$(top_bar_rotate[0]).show();
+
+function custom_func() {
+	var	top_bar_rotate_interv = setInterval(function() {
+		$(top_bar_rotate[top_bar_rotate_counter]).fadeOut(backgrounds.fade, function() {
+			top_bar_rotate_counter++;
+			if (top_bar_rotate_counter >= top_bar_rotate.length) {
+				top_bar_rotate_counter = 0;
+			}
+			$(top_bar_rotate[top_bar_rotate_counter]).fadeIn();
+		});
+		}, 5000);
+}
+
+function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode, demo) {
+	showRules(gamemode);
+	showStaff(gamemode);
+}
+
+function showRules(gamemode) {
+	if (rules[gamemode] instanceof Array === false) { gamemode = 'global'; }
+	if (rules[gamemode] instanceof Array) {
+		if (rules[gamemode].length > 0) {
+			var real_cnt = 0;
+			var rule_blocks = Math.ceil(rules[gamemode].length/8);
+			for (var x = 0; x < rule_blocks; x++) {
+				var children = [];
+				for (var i = 0; i < 8; i++) {
+					var rule = rules[gamemode][real_cnt] || null;
+					real_cnt++;
+					if (!rule) { continue; }
+
+					children.push(elem('div',{ className: 'rule', innerText: rule}));
+				}
+				var rule_block = elem('div',{id: 'rule_block_'+x, className: 'rule-block'}, children);
+				document.getElementById('rules').appendChild(rule_block);
+				var rule_cnt = 0;
+				var anim_dur = 1000;
+				$('#rule_block_'+rule_cnt).children().each(function() {
+					var elem = this;
+					setTimeout(function(){
+						$(elem).animate({opacity: '1'},{duration: 500});
+					}, anim_dur);
+					anim_dur = anim_dur+500;
+				});
+			}
+
+			if (rules[gamemode].length > 8) {
+				var rule_elems = $('.rule-block');
+				var rule_interval = setInterval(function(){
+					$('#rule_block_'+rule_cnt).fadeOut(500, function() {
+						anim_dur = 1000;
+						rule_cnt++;
+						if (rule_cnt >= rule_elems.length) {
+							rule_cnt = 0;
+						}
+						$('#rule_block_'+rule_cnt).fadeIn(300);
+
+						if ($('#rule_block_'+rule_cnt).children().css("opacity") == '0') {
+							$('#rule_block_'+rule_cnt).children().each(function() {
+								var elem = this;
+								setTimeout(function(){
+									$(elem).animate({opacity: '1'},{duration: 500});
+								}, anim_dur);
+								anim_dur = anim_dur+500;
+							});
+						}
+					});
+				}, 15000);
+			}
+
+		}
+	}
+}
+
+function showStaff(gamemode) {
+	if (Array.isArray(staff[gamemode]) === false) { gamemode = 'global'; }
+	if (Array.isArray(staff[gamemode])) {
+		if (staff[gamemode].length > 0) {
+			var real_cnt = 0;
+			var staff_blocks = Math.ceil(staff[gamemode].length/8);
+			for (var i = 0; i < staff_blocks; i++) {
+				var children = [];
+				for (var x = 0; x < 8; x++) {
+					var staff_member = staff[gamemode][real_cnt];
+					real_cnt++;
+					if (typeof staff_member === 'undefined') { continue; }
+					var steamid = staff_member.steamid || null;
+					var rank = staff_member.rank || 'Staff';
+
+					children.push(
+						elem('div',{className: 'member center-text'}, [
+							elem('img', {className: 'avatar small circle shadow', src: site.path+'/api/player/'+steamid+'/avatarmedium?raw'}),
+							elem('p', {className: 'name name_'+steamid, innerText: '...'}),
+							elem('p', {className: 'rank rank_'+steamid, innerText: rank})
+						])
+					);
+				}
+				document.getElementById('staff').appendChild(
+					elem('div',{id: 'staff_block_'+i, className: 'staff-block'}, children)
+				);
+			}
+			getStaff();
+			var staff_cnt = 0;
+			if (staff[gamemode].length > 8) {
+				var staff_elems = $('.staff-block');
+				var staffinterval = setInterval(function(){
+					$('#staff_block_'+staff_cnt).fadeOut(500, function() {
+						anim_dur = 1000;
+						staff_cnt++;
+						if (staff_cnt >= staff_elems.length) {
+							staff_cnt = 0;
+						}
+						$('#staff_block_'+staff_cnt).fadeIn(300);
+					});
+				}, 15000);
+			}
+
+		}
+	}
+}
+
+</script>
+{% endblock %}
