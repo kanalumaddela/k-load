@@ -1,5 +1,0 @@
-<select class="materialize-select" name="music[order][]">
-    {% for file in music_files %}
-        <option value="{{ file.filename }}" {% if song == file.filename %}selected{% endif %}>{{ file.name }}</option>
-    {% endfor %}
-</select>
