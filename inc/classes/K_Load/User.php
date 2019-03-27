@@ -8,32 +8,33 @@ use Steam;
 
 class User
 {
-
     public static function all($page = 1)
     {
         $page = $page - 1;
-        return Database::conn()->select("SELECT `name`, `steamid`, `admin`, `perms`, `banned` FROM `kload_users`")->limit(USERS_PER_PAGE, $page * USERS_PER_PAGE)->execute();
+
+        return Database::conn()->select('SELECT `name`, `steamid`, `admin`, `perms`, `banned` FROM `kload_users`')->limit(USERS_PER_PAGE, $page * USERS_PER_PAGE)->execute();
     }
 
     public static function search($query, $page = 1)
     {
         $data['page'] = $page - 1;
-        $data['total'] = Database::conn()->count("kload_users")->where("`name` LIKE '%?%' OR `steamid` LIKE '%?%' OR `steamid2` LIKE '%?%' OR `steamid3` LIKE '%?%'", [$query, $query, $query, $query])->execute();
+        $data['total'] = Database::conn()->count('kload_users')->where("`name` LIKE '%?%' OR `steamid` LIKE '%?%' OR `steamid2` LIKE '%?%' OR `steamid3` LIKE '%?%'", [$query, $query, $query, $query])->execute();
         $data['pages'] = ceil($data['total'] / USERS_PER_PAGE);
         if ($data['page'] > $data['total']) {
             $data['page'] = $data['total'];
         }
-        $users = Database::conn()->select("SELECT `name`, `steamid`, `admin`, `perms`, `banned` FROM `kload_users`")->where("`name` LIKE '%?%' OR `steamid` LIKE '%?%' OR `steamid2` LIKE '%?%' OR `steamid3` LIKE '%?%'", [$query, $query, $query, $query])->limit(USERS_PER_PAGE, $data['page'] * USERS_PER_PAGE)->execute();
+        $users = Database::conn()->select('SELECT `name`, `steamid`, `admin`, `perms`, `banned` FROM `kload_users`')->where("`name` LIKE '%?%' OR `steamid` LIKE '%?%' OR `steamid2` LIKE '%?%' OR `steamid3` LIKE '%?%'", [$query, $query, $query, $query])->limit(USERS_PER_PAGE, $data['page'] * USERS_PER_PAGE)->execute();
         $data['users'] = ($data['total'] > 1 ? $users : [$users]);
         if ($data['page'] == 0) {
             $data['page'] = 1;
         }
+
         return $data;
     }
 
     public static function total()
     {
-        return Database::conn()->count("kload_users")->execute();
+        return Database::conn()->count('kload_users')->execute();
     }
 
     public static function get($steamid)
@@ -42,12 +43,12 @@ class User
         $admin = (isset($_SESSION['steamid']) ? (self::isAdmin($_SESSION['steamid'] ?? 0)) : 0);
         $super = (isset($_SESSION['steamid']) ? (self::isSuper($_SESSION['steamid'] ?? 0)) : 0);
 
-        return Database::conn()->select("SELECT `id`, `name`, `steamid`, `steamid2`, `steamid3`, `settings`, ".($logged_in ? '`custom_css` AS `css`,' : '')." `admin`, ".(($super || $logged_in) ? '`perms`,' : '')."`banned`, DATE_FORMAT(`registered`, '%m/%d/%Y %r') AS `registered` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute() ?? [];
+        return Database::conn()->select('SELECT `id`, `name`, `steamid`, `steamid2`, `steamid3`, `settings`, '.($logged_in ? '`custom_css` AS `css`,' : '').' `admin`, '.(($super || $logged_in) ? '`perms`,' : '')."`banned`, DATE_FORMAT(`registered`, '%m/%d/%Y %r') AS `registered` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute() ?? [];
     }
 
     public static function getInfo($steamid, ...$columns)
     {
-        return Database::conn()->select("SELECT `".(implode('`,`', $columns))."` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute();
+        return Database::conn()->select('SELECT `'.(implode('`,`', $columns)).'` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute();
     }
 
     public static function action($steamid, $post)
@@ -69,7 +70,7 @@ class User
                     $message = $success ? 'User has been unbanned' : 'Failed to unban user';
                     break;
                 default:
-                    $message = "Not a valid action";
+                    $message = 'Not a valid action';
                     break;
             }
         }
@@ -84,7 +85,7 @@ class User
         $steamids = Steam::Convert($steamid);
         if (empty($steamids)) {
             $steamids = [
-                'steamid' => '',
+                'steamid'  => '',
                 'steamid2' => '',
                 'steamid3' => '',
             ];
@@ -106,7 +107,8 @@ class User
         $data = [
             [$steam['personaname'], $steamids['steamid'], $steamids['steamid2'], $steamids['steamid3'], '[]', $settings],
         ];
-        return Database::conn()->insert("INSERT IGNORE INTO `kload_users` (`name`, `steamid`, `steamid2`, `steamid3`, `perms`, `settings`)")->values($data)->execute();
+
+        return Database::conn()->insert('INSERT IGNORE INTO `kload_users` (`name`, `steamid`, `steamid2`, `steamid3`, `perms`, `settings`)')->values($data)->execute();
     }
 
     public static function delete($steamid)
@@ -122,9 +124,10 @@ class User
         self::refreshCSRF($_SESSION['steamid']);
 
         if (self::isAdmin($_SESSION['steamid']) && ($steamid != $_SESSION['steamid']) && !self::isSuper($steamid)) {
-            if (self::isSuper($_SESSION['steamid']) || (array_key_exists("ban", $_SESSION['perms']) && self::isAdmin($_SESSION['steamid']) && !self::isAdmin($steamid))) {
+            if (self::isSuper($_SESSION['steamid']) || (array_key_exists('ban', $_SESSION['perms']) && self::isAdmin($_SESSION['steamid']) && !self::isAdmin($steamid))) {
                 $banned = Database::conn()->add("UPDATE `kload_users` SET `banned` = 1 WHERE `steamid` = '?'", [$steamid])->execute();
                 Util::log('action', $_SESSION['steamid'].($banned ? ' banned ' : ' attempted to ban ').$steamid);
+
                 return $banned;
             }
         }
@@ -138,9 +141,10 @@ class User
         self::refreshCSRF($_SESSION['steamid']);
 
         if (self::isAdmin($_SESSION['steamid'])) {
-            if (array_key_exists("unban", $_SESSION['perms']) || self::isSuper($_SESSION['steamid'])) {
+            if (array_key_exists('unban', $_SESSION['perms']) || self::isSuper($_SESSION['steamid'])) {
                 $unbanned = Database::conn()->add("UPDATE `kload_users` SET `banned` = 0 WHERE `steamid` = '?'", [$steamid])->execute();
                 Util::log('action', $_SESSION['steamid'].($unbanned ? ' unbanned ' : ' attempted to unban ').$steamid);
+
                 return $unbanned;
             }
         }
@@ -235,7 +239,7 @@ class User
             unset($_SESSION['settings']);
             $_SESSION = array_merge($_SESSION, self::get($_SESSION['steamid']));
             Cache::remove('player-'.$steamid);
-            file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', Util::minify(Database::conn()->select("SELECT `custom_css` FROM `kload_users`")->where("`steamid` = '?'", [$player])->execute()));
+            file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', Util::minify(Database::conn()->select('SELECT `custom_css` FROM `kload_users`')->where("`steamid` = '?'", [$player])->execute()));
         }
 
         return $success;
@@ -266,7 +270,7 @@ class User
 
     public static function getCSRF($steamid)
     {
-        return Database::conn()->select("SELECT `token` FROM `kload_sessions`")->where("`steamid` = '?'", [$steamid])->execute() ?? 0;
+        return Database::conn()->select('SELECT `token` FROM `kload_sessions`')->where("`steamid` = '?'", [$steamid])->execute() ?? 0;
     }
 
     public static function refreshCSRF($steamid)
@@ -275,7 +279,8 @@ class User
         $data = [
             [$steamid, $token],
         ];
-        return Database::conn()->insert("INSERT INTO `kload_sessions` (`steamid`, `token`)")->values($data)->add("ON DUPLICATE KEY UPDATE `token` = '?'", [$token])->execute();
+
+        return Database::conn()->insert('INSERT INTO `kload_sessions` (`steamid`, `token`)')->values($data)->add("ON DUPLICATE KEY UPDATE `token` = '?'", [$token])->execute();
     }
 
     public static function validateCSRF($steamid, $token)
@@ -285,12 +290,13 @@ class User
 
     public static function isAdmin($steamid)
     {
-        return (self::isSuper($steamid) || (int) Database::conn()->select("SELECT `admin` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute());
+        return self::isSuper($steamid) || (int) Database::conn()->select('SELECT `admin` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute();
     }
 
     public static function isSuper($steamid)
     {
         global $config;
+
         return in_array($steamid, $config['admins']);
     }
 
@@ -309,6 +315,7 @@ class User
             'music',
         ];
         sort($perms);
+
         return $perms;
     }
 
@@ -317,7 +324,8 @@ class User
         if (!isset($_SESSION['steamid'])) {
             return false;
         }
-        return (array_key_exists($perm, $_SESSION['perms']) || self::isSuper($_SESSION['steamid']));
+
+        return array_key_exists($perm, $_SESSION['perms']) || self::isSuper($_SESSION['steamid']);
     }
 
     public static function isBanned($steamid)
@@ -325,7 +333,7 @@ class User
         if (self::isSuper($steamid)) {
             return false;
         }
-        return (int) Database::conn()->select("SELECT `banned` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute() ?? false;
-    }
 
+        return (int) Database::conn()->select('SELECT `banned` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute() ?? false;
+    }
 }
