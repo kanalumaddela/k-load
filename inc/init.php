@@ -109,7 +109,6 @@ function kload_exception_handler(Exception $exception)
 
     $twig->load('error.twig')->display($data);
     die();
-
 }
 
 set_exception_handler('kload_exception_handler');
@@ -182,7 +181,7 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
             User::session($_SESSION['steamid']);
         }
     } else {
-        echo "Registration is not allowed.";
+        echo 'Registration is not allowed.';
         die();
     }
     if (strpos($_SERVER['REQUEST_URI'], 'api') === false) {

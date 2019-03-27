@@ -8,7 +8,6 @@ use Steam;
 
 class Setup
 {
-
     public static function install($config)
     {
         Cache::remove('version');
@@ -30,11 +29,11 @@ class Setup
         foreach ($migrations as $folder) {
             $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
             $ver = end($path_arr);
-            file_exists($folder.'/drop.php') AND include $folder.'/drop.php';
-            file_exists($folder.'/delete.php') AND include $folder.'/delete.php';
-            file_exists($folder.'/create.php') AND include $folder.'/create.php';
-            file_exists($folder.'/alter.php') AND include $folder.'/alter.php';
-            file_exists($folder.'/insert.php') AND include $folder.'/insert.php';
+            file_exists($folder.'/drop.php') and include $folder.'/drop.php';
+            file_exists($folder.'/delete.php') and include $folder.'/delete.php';
+            file_exists($folder.'/create.php') and include $folder.'/create.php';
+            file_exists($folder.'/alter.php') and include $folder.'/alter.php';
+            file_exists($folder.'/insert.php') and include $folder.'/insert.php';
             Cache::remove('version');
             $installed = Util::version() == $ver;
             Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
@@ -61,11 +60,11 @@ class Setup
                 $tmp_version = (int) str_replace('.', '', $ver);
 
                 if ($tmp_version > $version) {
-                    file_exists($folder.'/drop.php') AND include $folder.'/drop.php';
-                    file_exists($folder.'/delete.php') AND include $folder.'/delete.php';
-                    file_exists($folder.'/create.php') AND include $folder.'/create.php';
-                    file_exists($folder.'/alter.php') AND include $folder.'/alter.php';
-                    file_exists($folder.'/insert.php') AND include $folder.'/insert.php';
+                    file_exists($folder.'/drop.php') and include $folder.'/drop.php';
+                    file_exists($folder.'/delete.php') and include $folder.'/delete.php';
+                    file_exists($folder.'/create.php') and include $folder.'/create.php';
+                    file_exists($folder.'/alter.php') and include $folder.'/alter.php';
+                    file_exists($folder.'/insert.php') and include $folder.'/insert.php';
 
                     Cache::remove('version');
                     $installed = Util::version() == $ver;
@@ -109,5 +108,4 @@ class Setup
             Util::redirect(APP_PATH);
         }
     }
-
 }

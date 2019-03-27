@@ -20,7 +20,6 @@ if (file_exists(APP_ROOT.'/data/config.php')) {
     $config = include APP_ROOT.'/data/config.php';
 }
 if (isset($_POST['install']) && isset($_SESSION['steamid'])) {
-
     $valid = [
         'apikeys' => [
             'steam'   => '',
@@ -55,7 +54,6 @@ if (isset($_POST['install']) && isset($_SESSION['steamid'])) {
 
     $errors = array_filter($errors);
 }
-
 
 /* extension check */
 $extensions = [
@@ -109,14 +107,17 @@ $extensions = [
     <h1>K-Load Setup</h1>
     <div class="card z-depth-2">
         <a href="<?= APP_PATH ?>/?phpinfo" target="_blank" style="position:absolute;right:14px;top:8px;">phpinfo</a>
-        <?php if (!isset($_SESSION['steamid'])) { ?>
+        <?php if (!isset($_SESSION['steamid'])) {
+    ?>
         <div style="padding: 25px 10px;text-align: center;"
         ">
         <a href="<?= steam::loginUrl() ?>">
             <img alt="Sign in through Steam" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_02.png">
         </a>
     </div>
-    <?php } else { ?>
+    <?php
+} else {
+        ?>
         <div class="card-content">
             <form action="<?= APP_PATH.'/install' ?>" method="post" autocomplete="off">
                 <ul class="stepper linear">
@@ -141,26 +142,24 @@ $extensions = [
                                         echo '<li class="collection-item green-text"><div><i class="mdi mdi-check left"></i>PHP Version: '.PHP_VERSION.'</div></li>'."\n";
                                     }
 
-                                    $install_error = false;
-                                    foreach ($extensions as $extension => $info) {
-                                        $ext_color = 'green';
-                                        $ext_icon = 'check';
-                                        $ext_msg = 'is loaded';
+        $install_error = false;
+        foreach ($extensions as $extension => $info) {
+            $ext_color = 'green';
+            $ext_icon = 'check';
+            $ext_msg = 'is loaded';
 
-                                        if (!extension_loaded($info[0])) {
-                                            $ext_color = 'orange';
-                                            $ext_icon = 'alert-circle';
-                                            $ext_msg = 'is not loaded!';
-                                            if ($info[1]) {
-                                                $install_error = true;
-                                                $ext_color = 'red';
-                                                $ext_icon = 'close';
-                                            }
-                                        }
-                                        echo '<li class="collection-item '.$ext_color.'-text"><div><i class="mdi mdi-'.$ext_icon.' left"></i>'.$extension.' extension '.$ext_msg.'</div></li>'."\n";
-                                    }
-
-                                    ?>
+            if (!extension_loaded($info[0])) {
+                $ext_color = 'orange';
+                $ext_icon = 'alert-circle';
+                $ext_msg = 'is not loaded!';
+                if ($info[1]) {
+                    $install_error = true;
+                    $ext_color = 'red';
+                    $ext_icon = 'close';
+                }
+            }
+            echo '<li class="collection-item '.$ext_color.'-text"><div><i class="mdi mdi-'.$ext_icon.' left"></i>'.$extension.' extension '.$ext_msg.'</div></li>'."\n";
+        } ?>
                                 </ul>
                             </div>
                             <div class="step-actions">
@@ -168,7 +167,8 @@ $extensions = [
                             </div>
                         </div>
                     </li>
-                    <?php if (!$install_error) { ?>
+                    <?php if (!$install_error) {
+            ?>
                         <li id="settings" class="step">
                             <div class="step-title waves-effect waves-dark">Settings</div>
                             <div class="step-content">
@@ -282,11 +282,13 @@ $extensions = [
                                 </div>
                             </div>
                         </li>
-                    <?php } ?>
+                    <?php
+        } ?>
                 </ul>
             </form>
         </div>
-    <?php } ?>
+    <?php
+    } ?>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>

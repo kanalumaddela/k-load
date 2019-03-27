@@ -2,111 +2,125 @@
 
 use SteamID\SteamID;
 
-class Steam {
+class Steam
+{
+    public static $host;
+    public static $current;
 
-	public static $host;
-	public static $current;
+    private static $apikey;
 
-	private static $apikey;
+    public static function Init()
+    {
+        self::$host = APP_HOST;
+        self::$current = APP_URL_CURRENT;
+    }
 
+    public static function Key(string $key)
+    {
+        self::$apikey = $key;
+    }
 
-	public static function Init() {
-		self::$host = APP_HOST;
-		self::$current = APP_URL_CURRENT;
-	}
+    public static function LoginUrl()
+    {
+        global $steamLogin;
 
-	public static function Key(string $key) {
-		self::$apikey = $key;
-	}
+        return $steamLogin->getLoginURL();
+    }
 
-	public static function LoginUrl() {
-	    global $steamLogin;
+    public static function login()
+    {
+        self::Redirect(self::LoginUrl());
+    }
 
-	    return $steamLogin->getLoginURL();
-	}
+    public static function Logout()
+    {
+        session_destroy();
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false) {
+                self::Redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
 
-	public static function login() {
-		self::Redirect(self::LoginUrl());
-	}
+        self::Redirect();
+    }
 
-	public static function Logout() {
-		session_destroy();
-		if (isset($_SERVER['HTTP_REFERER'])) {
+    public static function Redirect($url = null, $force = false)
+    {
+        if (!$url) {
+            $url = self::$host;
+        }
+        header('Location: '.$url, true, 302);
+        die();
+    }
 
-			if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false) {
-				self::Redirect($_SERVER['HTTP_REFERER']);
-			}
-		}
+    public static function Session($steamid)
+    {
+        $_SESSION = self::Convert($steamid);
+        $_SESSION['logged_in'] = 1;
+        self::Redirect($_GET['openid_return_to'] ?? null);
+    }
 
-		self::Redirect();
-	}
+    public static function Convert($steamid)
+    {
+        try {
+            $steamids = new SteamID($steamid);
+            $data['steamid'] = $steamids->getSteamID64();
+            $data['steamid2'] = $steamids->getSteam2RenderedID();
+            $data['steamid3'] = $steamids->getSteam3RenderedID();
 
-	public static function Redirect($url = null, $force = false) {
-		if (!$url) {
-			$url = self::$host;
-		}
-		header('Location: '.$url, true, 302);
-		die();
-	}
+            return $data;
+        } catch (Exception $e) {
+            return [];
+        }
+    }
 
-	public static function Session($steamid) {
-		$_SESSION =  self::Convert($steamid);
-		$_SESSION['logged_in'] = 1;
-		self::Redirect($_GET['openid_return_to'] ?? null);
-	}
+    public static function Info($steamids, $format = 'json')
+    {
+        $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.self::$apikey.'&steamids='.$steamids.'&format='.$format;
 
-	public static function Convert($steamid) {
-		try {
-			$steamids = new SteamID($steamid);
-			$data['steamid'] = $steamids->getSteamID64();
-			$data['steamid2'] = $steamids->getSteam2RenderedID();
-			$data['steamid3'] = $steamids->getSteam3RenderedID();
-			return $data;
-		} catch (Exception $e) {
-			return [];
-		}
-	}
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        $result = curl_exec($curl);
+        curl_close($curl);
 
-	public static function Info($steamids, $format = 'json') {
+        $result = json_decode($result, true);
 
-		$url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.self::$apikey.'&steamids='.$steamids.'&format='.$format;
+        return $result;
+    }
 
-		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_URL, $url);
-		$result = curl_exec($curl);
-		curl_close($curl);
+    public static function User($steamid, $format = null)
+    {
+        $steamid = explode(',', $steamid);
+        $steamid = $steamid[0];
+        $user = self::Info($steamid, $format);
 
-		$result = json_decode($result, true);
+        return $user['response']['players'][0] ?? null;
+    }
 
-		return $result;
-	}
+    public static function Users($steamids, $format = null)
+    {
+        if (is_array($steamids)) {
+            $steamids = implode(',', $steamids);
+        }
+        if (is_string($steamids)) {
+            $steamids = preg_replace('/\s+/', '', $steamids);
+        }
 
-	public static function User($steamid, $format = null) {
-		$steamid = explode(',', $steamid);
-		$steamid = $steamid[0];
-		$user = self::Info($steamid, $format);
-		return $user['response']['players'][0] ?? null;
-	}
+        $users = self::Info($steamids, $format);
 
-	public static function Users($steamids, $format = null) {
-		if (is_array($steamids)) { $steamids = implode(',', $steamids); }
-		if (is_string($steamids)) { $steamids = preg_replace('/\s+/', '', $steamids); }
+        return $users['response']['players'] ?? null;
+    }
 
-		$users = self::Info($steamids, $format);
-		return $users['response']['players'] ?? null;
-	}
+    public static function Group($name)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://steamcommunity.com/groups/'.$name.'/memberslistxml/?xml=1');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $data = simplexml_load_string(curl_exec($curl), 'SimpleXMLElement', LIBXML_NOCDATA);
+        curl_close($curl);
 
-	public static function Group($name) {
-
-		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, 'https://steamcommunity.com/groups/'.$name.'/memberslistxml/?xml=1');
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		$data = simplexml_load_string(curl_exec($curl),'SimpleXMLElement',LIBXML_NOCDATA);
-		curl_close($curl);
-
-		return $data ?? null;
-	}
-
+        return $data ?? null;
+    }
 }
