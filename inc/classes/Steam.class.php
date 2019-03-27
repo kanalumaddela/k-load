@@ -63,7 +63,7 @@ class Steam {
 			$data['steamid3'] = $steamids->getSteam3RenderedID();
 			return $data;
 		} catch (Exception $e) {
-			return;
+			return [];
 		}
 	}
 

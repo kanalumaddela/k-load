@@ -29,6 +29,6 @@ var staff = {{ settings.staff|default('{}')|raw }};
 var music = {{ settings.music|default('{}')|raw }};
 </script>
 {% block js %}{% endblock %}
-<script src="{{assets}}/js/loading.js?{{cache_buster}}"></script>
+<script src="{{assets}}/js/loading-improved.js?{{cache_buster}}"></script>
 </body>
 </html>

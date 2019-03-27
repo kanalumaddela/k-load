@@ -1,7 +1,7 @@
 .pure-center { text-align: center; }
 body {
 	color: #fff;
-	font-family: 'Raleway';
+	font-family: 'Raleway', sans-serif;
 	font-weight: 300;
 }
 p {
@@ -9,7 +9,7 @@ p {
 	margin: 10px;
 }
 h1,h2,h3,h4,h5,h6{
-	margin: 0px;
+	margin: 0;
 	font-weight: 600;
 }
 #load-circle {
@@ -26,9 +26,9 @@ h1,h2,h3,h4,h5,h6{
 #load-circle-inner{
 	z-index: -1;
 	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	width: 190px;
 	height: 190px;
 	fill: #1173c3;
@@ -52,12 +52,12 @@ h1,h2,h3,h4,h5,h6{
 .sidebar.left {
 	padding-right: 10px;
 	border-right: 5px solid rgba(255, 255, 255, 0.3);
-	border-radius: 0px 50% 50% 0px;
+	border-radius: 0 50% 50% 0;
 }
 .sidebar.right {
 	padding-left: 10px;
 	border-left: 5px solid rgba(255, 255, 255, 0.3);
-	border-radius: 50% 0px 0px 50%;
+	border-radius: 50% 0 0 50%;
 }
 #staff {
 	line-height: 115px;

@@ -26,6 +26,7 @@ const gamemodes = {
 
 const elem = function(tag, attrs, children) {
 	const elem = document.createElement(tag);
+
 	Object.keys(attrs).forEach(function(key) {
 		if (key in document.createElement(tag)) {
 			elem[key] = attrs[key];
@@ -34,7 +35,7 @@ const elem = function(tag, attrs, children) {
 		}
 	});
 
-	if (typeof children !== 'undefined') {
+	if (Array.isArray(children)) {
 		children.forEach(function(child) {
 			if (typeof child === "string") {
 				child = document.createTextNode(child);
@@ -42,6 +43,7 @@ const elem = function(tag, attrs, children) {
 			elem.appendChild(child);
 		});
 	}
+
 	return elem;
 };
 
@@ -55,7 +57,7 @@ function shuffle(arr) {
 
 function text(classname, text) {
 	var elems = document.getElementsByClassName(classname);
-	[].forEach.call(elems, function(elem) {
+		[].forEach.call(elems, function(elem) {
 		elem.innerText = text;
 	});
 }

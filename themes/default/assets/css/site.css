@@ -99,7 +99,7 @@ code {
 .card {
 	background-color: #1d2234;
 	border-radius: 5px;
-	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 .card h1 {
 	margin-top: 10px;
@@ -155,7 +155,7 @@ h1 > .mdi {
 	background-color: #5c9fff;
 }
 input[type=range] {
-	border: 0px;
+	border: 0;
 }
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:after, .switch label input[type=checkbox]:checked+.lever:after, input[type=range]+.thumb, input[type=range]::-webkit-slider-thumb {
 	background-color: #2196f3;

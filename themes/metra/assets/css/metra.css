@@ -4,7 +4,7 @@ body {
 	background-color: #0c223e;
 }
 h1,h2,h2,h4,h5,h6,p {
-	margin: 0px;
+	margin: 0;
 }
 .pure-center {
 	width: 95%;
@@ -20,7 +20,7 @@ h1,h2,h2,h4,h5,h6,p {
 	text-align: right;
 }
 .no-padding {
-	padding: 0px;
+	padding: 0;
 }
 .col {
 	padding: 8px;
@@ -83,14 +83,14 @@ h1,h2,h2,h4,h5,h6,p {
 .loading-bar {
 	position: absolute;
 	right: 0;
-	margin: 15px 0px;
+	margin: 15px 0;
 	height: 15px;
 	background-color: #fff;
 	transition: width 0.25s linear;
 }
 
 #rules {
-	margin-top: 0px;
+	margin-top: 0;
 	overflow: hidden;
 }
 #rules > .rule-block:not(:first-child), #staff > .staff-block:not(:first-child) {

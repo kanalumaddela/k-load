@@ -60,7 +60,6 @@
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 25px;
             text-align: center;
-            max-width: 380px;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -117,8 +116,8 @@
             <img class="avatar circle small" src="{{ user.avatarmedium|default(assets ~ '/img/avatar.jpg') }}">
             <span class="connecting-player-name">{{ user.personaname|default('Welcome Player') }}</span>
             <div class="info">
-                <span class="badge progress"></span>
-                <span class="badge status"></span>
+                <span class="badge status" style="max-width: 450px;white-space: nowrap;">Retrieving server info...</span>
+                <span class="badge progress">0%</span>
             </div>
         </div>
 

@@ -149,7 +149,6 @@ class Util {
 	public static function updateSetting(array $settings, array $data, $csrf, $force = false) {
 		if ((!User::validateCSRF($_SESSION['steamid'], $csrf) || User::isBanned($_SESSION['steamid'])) && !$force) {
 			Steam::Logout();
-			return;
 		}
 
 		if (!$force) {

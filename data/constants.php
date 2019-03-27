@@ -16,7 +16,7 @@ define('CLEAR_CACHE', 'refresh'); // default: refresh
 define('ENABLE_REGISTRATION', true); // default: true
 
 /* override user's theme choice */
-define('THEME_OVERRIDE', false); // default: false
+define('THEME_OVERRIDE', true); // default: false
 
 /* users per page */
 define('USERS_PER_PAGE', 16); // default: 16

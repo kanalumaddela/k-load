@@ -12,10 +12,10 @@ code {
 	background-color: rgba(29, 29, 29, 0.95);
 }
 .card-content{
-	margin: 0px;
+	margin: 0;
 }
 .card-content ul.stepper {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
 ul.stepper:not(.horizontal) .step.done:before {
 	content: '\f12c';
@@ -36,7 +36,7 @@ ul.stepper .step-actions {
 	margin-bottom: 10px;
 }
 .collection {
-	border: 0px;
+	border: 0;
 }
 .collection .collection-item {
 	background-color: #242a2d;
