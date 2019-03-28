@@ -212,8 +212,8 @@ class Admin
         }
 
         $data = [
-            'settings' => Util::getSetting('backgrounds'),
-            'backgrounds' => Util::getBackgrounds(true),
+            'settings'       => Util::getSetting('backgrounds'),
+            'backgrounds'    => Util::getBackgrounds(true),
             'max_bg_uploads' => \ini_get('max_file_uploads'),
         ];
         $data['settings']['backgrounds'] = \json_decode($data['settings']['backgrounds'], true);

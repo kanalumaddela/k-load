@@ -305,16 +305,16 @@ class User
     public static function getPerms($friendly = false)
     {
         $perms = [
-            'ban' => 'Ban',
-            'unban' => 'Unban',
-            'backgrounds' => 'Backgrounds',
+            'ban'            => 'Ban',
+            'unban'          => 'Unban',
+            'backgrounds'    => 'Backgrounds',
             'community_name' => 'Community Name',
-            'description' => 'description',
-            'rules' => 'Rules',
-            'messages' => 'Messages',
-            'staff' => 'Staff',
-            'youtube' => 'YouTube',
-            'music' => 'Music',
+            'description'    => 'description',
+            'rules'          => 'Rules',
+            'messages'       => 'Messages',
+            'staff'          => 'Staff',
+            'youtube'        => 'YouTube',
+            'music'          => 'Music',
         ];
 
         $keys = \array_keys($perms);
