@@ -26,11 +26,11 @@ class API
             $_SESSION['steamid'] = $session_steamid;
         }
 
-        $data['success'] = count($data) > 0;
+        $data['success'] = \count($data) > 0;
         Util::to_top($data, 'success');
         if (isset($data[$info])) {
             $data = $data[$info];
-            if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] == 'raw' && (strpos($info, 'avatar') !== false || strpos($info, 'profileurl') !== false)) {
+            if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] == 'raw' && (\strpos($info, 'avatar') !== false || \strpos($info, 'profileurl') !== false)) {
                 Util::redirect($data);
             }
         }
@@ -44,7 +44,7 @@ class API
             return Steam::Group($name)->asXML();
         }) : Steam::Group($name)->asXML());
 
-        $data = simplexml_load_string($data);
+        $data = \simplexml_load_string($data);
         $data->success = isset($data);
 
         Util::json($data, true, ($_SERVER['QUERY_STRING'] == 'formatted'));

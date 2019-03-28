@@ -154,4 +154,4 @@ $('textarea').on('input', function () {
     } else {
         counter.removeClass('warning-text').addClass('success-text');
     }
-})
+});

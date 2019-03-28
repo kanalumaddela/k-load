@@ -127,7 +127,7 @@ code {
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     max-width: 90px;
-    border: 6px solid #1d2234;
+    border: 6px solid #1a2037;
 }
 
 .avatar {
@@ -165,8 +165,8 @@ h1 > .mdi {
 }
 
 [type="checkbox"].filled-in:checked + label:after {
-    border-color: #3a97c5;
-    background-color: #3a97c5;
+    border-color: #2196f3;
+    background-color: #2196f3;
 }
 
 [type="radio"]:not(:checked) + label, [type="radio"]:checked + label {
@@ -203,19 +203,19 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 }
 
 .btn:hover, .btn-large:hover {
-    background-color: #21acd2;
+    background-color: #63baff;
 }
 
 .btn:focus, .btn-large:focus, .btn-floating:focus {
-    background-color: #137a96;
+    background-color: #0c66ad;
 }
 
 .modal {
-    background-color: #141725;
+    background-color: #2c324c;
 }
 
 .modal .modal-footer {
-    background-color: #121521;
+    background-color: #262b40;
 }
 
 #materialbox-overlay {
@@ -270,7 +270,7 @@ img.materialboxed.initialized.active {
 }
 
 .pagination li.active {
-    background-color: #3a97c5;
+    background-color: #2196f3;
 }
 
 .success-text {

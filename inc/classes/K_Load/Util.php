@@ -18,7 +18,7 @@ class Util
 
         switch ($type) {
             case 'access':
-                if (strpos($_SERVER['REQUEST_URI'], 'raw') !== false) {
+                if (\strpos($_SERVER['REQUEST_URI'], 'raw') !== false) {
                     return;
                 }
                 $content = $_SERVER['REQUEST_METHOD'].' '.$_SERVER['REQUEST_URI'].' - '.$_SERVER['REMOTE_ADDR'];
@@ -31,12 +31,12 @@ class Util
         }
 
         $log = $type.'.log';
-        $log_path = sprintf('%sdata%slogs%s', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+        $log_path = \sprintf('%sdata%slogs%s', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
         $log_folder = APP_ROOT.$log_path.$type;
         $log_loc = APP_ROOT.$log_path.$type.DIRECTORY_SEPARATOR.$log;
 
-        if (!file_exists($log_folder)) {
-            if (!mkdir($log_folder, 0700)) {
+        if (!\file_exists($log_folder)) {
+            if (!\mkdir($log_folder, 0700)) {
                 if ($type != 'error') {
                     self::log('error', 'Failed to create folder for log type: '.$type);
                 }
@@ -45,18 +45,18 @@ class Util
             }
         }
 
-        $content = '['.date('m-d-Y h:i:s A').'] ~ '.$content;
-        $file = fopen($log_loc, 'a');
-        fwrite($file, $content."\n");
-        fclose($file);
+        $content = '['.\date('m-d-Y h:i:s A').'] ~ '.$content;
+        $file = \fopen($log_loc, 'a');
+        \fwrite($file, $content."\n");
+        \fclose($file);
 
-        if (filesize($log_loc) >= 1048576) {
-            $versions = glob($log_loc.'.*');
-            $recent_ver = end($versions);
-            $tmp = explode('.', $recent_ver);
+        if (\filesize($log_loc) >= 1048576) {
+            $versions = \glob($log_loc.'.*');
+            $recent_ver = \end($versions);
+            $tmp = \explode('.', $recent_ver);
 
-            $recent = (int) end($tmp);
-            rename($log_loc, $log_loc.'.'.($recent + 1));
+            $recent = (int) \end($tmp);
+            \rename($log_loc, $log_loc.'.'.($recent + 1));
         }
     }
 
@@ -70,15 +70,15 @@ class Util
 
     public static function rmDir($folder)
     {
-        $content = glob($folder.'/*');
+        $content = \glob($folder.'/*');
         foreach ($content as $location) {
-            if (is_dir($location)) {
+            if (\is_dir($location)) {
                 self::rmdir($location);
             } else {
-                unlink($location);
+                \unlink($location);
             }
         }
-        rmdir($folder);
+        \rmdir($folder);
     }
 
     /**
@@ -92,11 +92,11 @@ class Util
      */
     public static function mkDir($directory)
     {
-        if ($doesntExist = !file_exists($directory)) {
-            set_error_handler(function () {
+        if ($doesntExist = !\file_exists($directory)) {
+            \set_error_handler(function () {
             });
-            $doesntExist = !mkdir($directory, 0775, true);
-            restore_error_handler();
+            $doesntExist = !\mkdir($directory, 0775, true);
+            \restore_error_handler();
             if ($doesntExist) {
                 throw new \Exception('no perms to create directory, fix it');
             }
@@ -132,8 +132,8 @@ class Util
         $data = [];
         $where = '';
 
-        sort($keys);
-        $length = count($keys);
+        \sort($keys);
+        $length = \count($keys);
         for ($i = 0; $i < $length; $i++) {
             if (($i + 1) >= $length) {
                 $where .= "`name` = '?' ";
@@ -154,7 +154,7 @@ class Util
             }
         }
 
-        return count($data) > 0 ? $data : [];
+        return \count($data) > 0 ? $data : [];
     }
 
     public static function updateSetting(array $settings, array $data, $csrf, $force = false)
@@ -190,35 +190,35 @@ class Util
         return $sucess;
     }
 
-    public static function getBackgrounds()
+    public static function getBackgrounds($asArray = false)
     {
-        $backgrounds = glob(APP_ROOT.sprintf('%sassets%simg%sbackgrounds%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        $backgrounds = \glob(APP_ROOT.\sprintf('%sassets%simg%sbackgrounds%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
         $list = [];
         foreach ($backgrounds as $gamemode) {
-            $images = glob($gamemode.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
+            $images = \glob($gamemode.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
             foreach ($images as $index => $image) {
-                $images[$index] = APP_PATH.str_replace(APP_ROOT, '', $image);
+                $images[$index] = APP_PATH.\str_replace(DIRECTORY_SEPARATOR, '/', \str_replace(APP_ROOT, '', $image));
             }
-            $gamemode = explode(DIRECTORY_SEPARATOR, $gamemode);
-            $gamemode = end($gamemode);
+            $gamemode = \explode(DIRECTORY_SEPARATOR, $gamemode);
+            $gamemode = \end($gamemode);
             $list[$gamemode] = $images;
         }
 
-        return json_encode($list);
+        return !$asArray ? \json_encode($list) : $list;
     }
 
     public static function isAjax()
     {
-        return  !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        return  !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && \strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     public static function isUrl($url)
     {
-        set_error_handler(function () {
+        \set_error_handler(function () {
         });
-        $headers = get_headers($url);
-        $httpCode = substr($headers[0], 9, 3);
-        restore_error_handler();
+        $headers = \get_headers($url);
+        $httpCode = \substr($headers[0], 9, 3);
+        \restore_error_handler();
 
         return $httpCode >= 200 && $httpCode <= 400;
     }
@@ -226,9 +226,9 @@ class Util
     public static function json($data, $header = false, $formatted = false)
     {
         if ($header) {
-            header('Content-Type: application/json');
+            \header('Content-Type: application/json');
         }
-        echo json_encode($data, ($formatted ? JSON_PRETTY_PRINT : 0));
+        echo \json_encode($data, ($formatted ? JSON_PRETTY_PRINT : 0));
         if ($header) {
             die();
         }
@@ -247,27 +247,27 @@ class Util
         if (self::startsWith('/', $url)) {
             $url = APP_PATH.$url;
         }
-        header('Location: '.$url, true, 302);
+        \header('Location: '.$url, true, 302);
         die();
     }
 
     public static function startsWith($search, $string)
     {
-        return strpos($string, $search) === 0;
+        return \strpos($string, $search) === 0;
     }
 
     public static function token()
     {
-        return hash('sha256', bin2hex(random_bytes(16)));
+        return \hash('sha256', \bin2hex(\random_bytes(16)));
     }
 
     public static function var_export($var, $indent = '')
     {
-        switch (gettype($var)) {
+        switch (\gettype($var)) {
             case 'string':
-                return '"'.addcslashes($var, "\\\$\"\r\n\t\v\f").'"';
+                return '"'.\addcslashes($var, "\\\$\"\r\n\t\v\f").'"';
             case 'array':
-                $indexed = array_keys($var) === range(0, count($var) - 1);
+                $indexed = \array_keys($var) === \range(0, \count($var) - 1);
                 $r = [];
                 foreach ($var as $key => $value) {
                     $r[] = "$indent	"
@@ -275,25 +275,25 @@ class Util
                         .self::var_export($value, "$indent	");
                 }
 
-                return "[\n".implode(",\n", $r)."\n".$indent.']';
+                return "[\n".\implode(",\n", $r)."\n".$indent.']';
             case 'boolean':
                 return $var ? 'TRUE' : 'FALSE';
             default:
-                return var_export($var, true);
+                return \var_export($var, true);
         }
     }
 
     public static function YouTubeID($url)
     {
-        $url = urldecode(rawurldecode($url));
-        preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
+        $url = \urldecode(\rawurldecode($url));
+        \preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
 
         return $match[1] ?? null;
     }
 
     public static function array_for_JS(array $array)
     {
-        return '`'.implode('`,`', $array).'`';
+        return '`'.\implode('`,`', $array).'`';
     }
 
     public static function to_top(&$array, $key)
@@ -305,7 +305,7 @@ class Util
 
     public static function flash($key, $value)
     {
-        if (session_status() == PHP_SESSION_ACTIVE) {
+        if (\session_status() == PHP_SESSION_ACTIVE) {
             $_SESSION['flash'][$key] = $value;
         }
     }

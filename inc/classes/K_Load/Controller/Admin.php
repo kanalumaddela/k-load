@@ -31,14 +31,14 @@ class Admin
             if (User::isSuper($_SESSION['steamid']) && isset($_GET['action'])) {
                 switch ($_GET['action']) {
                     case 'update_apikeys':
-                        if (count($_POST) > 0) {
+                        if (\count($_POST) > 0) {
                             if (isset($_POST['save_apikeys']) && isset($_POST['apikeys'])) {
-                                if (count($_POST['apikeys']) > 0) {
+                                if (\count($_POST['apikeys']) > 0) {
                                     if (isset($_POST['apikeys']['steam'])) {
                                         if (Test::steam($_POST['apikeys']['steam'])) {
                                             $config['apikeys'] = $_POST['apikeys'];
-                                            array_multisort($config);
-                                            file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
+                                            \array_multisort($config);
+                                            \file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
                                             $data['alert'] = 'API key updated';
                                             $data['api_keys']['steam'] = $config['apikeys']['steam'];
                                         } else {
@@ -50,13 +50,13 @@ class Admin
                         }
                         break;
                     case 'update_theme':
-                        if (count($_POST) > 0) {
+                        if (\count($_POST) > 0) {
                             if (isset($_POST['save_theme']) && isset($_POST['theme'])) {
                                 if (Template::isLoadingTheme($_POST['theme'])) {
                                     $config['loading_theme'] = $_POST['theme'];
                                     $data['theme'] = $_POST['theme'];
-                                    array_multisort($config);
-                                    file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
+                                    \array_multisort($config);
+                                    \file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
                                     $data['alert'] = 'Theme updated';
                                 } else {
                                     $data['alert'] = 'Not a valid theme, please make sure there is a <code>pages/loading.twig</code> in the theme';
@@ -71,8 +71,8 @@ class Admin
                             $data['updates'] = Setup::getUpdates();
 
                             $themes = Template::loadingThemes(true);
-                            $config['loading_themes'] = array_column($themes, 'name');
-                            file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
+                            $config['loading_themes'] = \array_column($themes, 'name');
+                            \file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
 
                             $data['alert'] = 'An update was attempted, please make sure everything is working and check the logs';
                         } else {
@@ -81,43 +81,43 @@ class Admin
                         break;
                     case 'refresh_themes':
                         $themes = Template::loadingThemes(true);
-                        $config['loading_themes'] = array_column($themes, 'name');
-                        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
+                        $config['loading_themes'] = \array_column($themes, 'name');
+                        \file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
                         $data['alert'] = 'Themes have been refreshed and added to config';
                         break;
                     case 'clear_cache':
-                        if (file_exists(APP_ROOT.'/data/cache')) {
+                        if (\file_exists(APP_ROOT.'/data/cache')) {
                             Util::rmDir(APP_ROOT.'/data/cache');
                             Util::log('action', 'Attempted to clear all cache');
                         }
-                        $data['alert'] = !file_exists(APP_ROOT.'/data/cache') ? 'All cache has been deleted' : 'Failed to clear all cache';
+                        $data['alert'] = !\file_exists(APP_ROOT.'/data/cache') ? 'All cache has been deleted' : 'Failed to clear all cache';
                         break;
                     case 'clear_cache_data':
                         Util::log('action', 'Attempted to clear cached data');
                         $data['alert'] = Cache::clear() ? 'Cached data has been cleared' : 'Failed to delete cached data';
                         break;
                     case 'clear_cache_template':
-                        if (file_exists(APP_ROOT.'/data/cache/templates')) {
+                        if (\file_exists(APP_ROOT.'/data/cache/templates')) {
                             Util::rmDir(APP_ROOT.'/data/cache/templates');
                             Util::log('action', 'Attempted to clear template cache');
                         }
-                        $data['alert'] = !file_exists(APP_ROOT.'/data/cache/templates') ? 'Template cache has been deleted' : 'Failed to clear template cache';
+                        $data['alert'] = !\file_exists(APP_ROOT.'/data/cache/templates') ? 'Template cache has been deleted' : 'Failed to clear template cache';
                         break;
                     case 'refresh_css':
                         $css_fixed = true;
-                        $files = glob(APP_ROOT.'/data/users/*');
+                        $files = \glob(APP_ROOT.'/data/users/*');
                         foreach ($files as $file) {
-                            unlink($file);
+                            \unlink($file);
                         }
                         $user_count = Database::conn()->count('kload_users')->execute();
-                        $batches = ceil($user_count / 5);
+                        $batches = \ceil($user_count / 5);
                         for ($i = 0; $i < $batches; $i++) {
                             $users = Database::conn()->select('SELECT `steamid`,`custom_css` FROM `kload_users`')->where("`custom_css` != NULL OR `custom_css` != ''")->limit(5, $i * 5)->execute();
                             $users = (array) $users;
                             foreach ($users as $user) {
                                 if (!empty($user['custom_css'])) {
-                                    file_put_contents(APP_ROOT.'/data/users/'.$user['steamid'].'.css', Util::minify($user['custom_css']));
-                                    if (!file_exists(APP_ROOT.'/data/users/'.$user['steamid'].'.css')) {
+                                    \file_put_contents(APP_ROOT.'/data/users/'.$user['steamid'].'.css', Util::minify($user['custom_css']));
+                                    if (!\file_exists(APP_ROOT.'/data/users/'.$user['steamid'].'.css')) {
                                         Util::log('action', 'Failed to recreate CSS file for User: '.$user['steamid']);
                                         $css_fixed = false;
                                     } else {
@@ -150,7 +150,7 @@ class Admin
     {
         $perms = User::getCurrentPerms();
 
-        if (!array_key_exists('community_name', $perms) && !array_key_exists('backgrounds', $perms) && !array_key_exists('description', $perms) && !array_key_exists('youtube', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('community_name', $perms) && !\array_key_exists('backgrounds', $perms) && !\array_key_exists('description', $perms) && !\array_key_exists('youtube', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
 
@@ -159,10 +159,10 @@ class Admin
             $_POST['youtube']['random'] = (isset($_POST['youtube']['random']) ? (int) $_POST['youtube']['random'] : 0);
             $_POST['youtube']['volume'] = (isset($_POST['youtube']['volume']) ? (int) $_POST['youtube']['volume'] : 0);
             $_POST['youtube']['list'] = (isset($_POST['youtube']['list']) ? $_POST['youtube']['list'] : []);
-            if (count($_POST['youtube']['list']) > 0) {
+            if (\count($_POST['youtube']['list']) > 0) {
                 $yt_ids = [];
                 foreach ($_POST['youtube']['list'] as $url) {
-                    $url = trim($url);
+                    $url = \trim($url);
                     $youtube_id = Util::YouTubeID($url);
                     if ($youtube_id) {
                         $yt_ids[] = $youtube_id;
@@ -171,7 +171,7 @@ class Admin
                 $_POST['youtube']['list'] = $yt_ids;
             }
 
-            $success = Util::updateSetting(['community_name', 'description', 'youtube'], [(isset($_POST['community_name']) ? $_POST['community_name'] : 'K-Load'), (isset($_POST['description']) ? substr($_POST['description'], 0, 250) : ''), $_POST['youtube']], $_POST['csrf']);
+            $success = Util::updateSetting(['community_name', 'description', 'youtube'], [(isset($_POST['community_name']) ? $_POST['community_name'] : 'K-Load'), (isset($_POST['description']) ? \substr($_POST['description'], 0, 250) : ''), $_POST['youtube']], $_POST['csrf']);
             if ($success) {
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
@@ -182,8 +182,7 @@ class Admin
             'settings' => Util::getSetting('community_name', 'description', 'youtube'),
             'alert'    => (isset($alert) ? $alert : ''),
         ];
-        //$data['settings']['backgrounds'] = json_decode($data['settings']['backgrounds'], true);
-        $data['settings']['youtube'] = json_decode($data['settings']['youtube'], true);
+        $data['settings']['youtube'] = \json_decode($data['settings']['youtube'], true);
 
         Template::render('@admin/general.twig', $data);
     }
@@ -191,7 +190,7 @@ class Admin
     public static function backgrounds()
     {
         $perms = User::getCurrentPerms();
-        if (!array_key_exists('backgrounds', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('backgrounds', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
 
@@ -206,7 +205,7 @@ class Admin
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
 
-            $alert = ($success ? 'Music settings have been saved' : 'Failed to save, please try again and check the data/logs if necessary');
+            $alert = ($success ? 'Background settings have been saved' : 'Failed to save, please try again and check the data/logs if necessary');
 
             Util::flash('alert', $alert);
             Util::redirect('/dashboard/admin/backgrounds');
@@ -214,16 +213,54 @@ class Admin
 
         $data = [
             'settings' => Util::getSetting('backgrounds'),
+            'backgrounds' => Util::getBackgrounds(true),
+            'max_bg_uploads' => \ini_get('max_file_uploads'),
         ];
-        $data['settings']['backgrounds'] = json_decode($data['settings']['backgrounds'], true);
+        $data['settings']['backgrounds'] = \json_decode($data['settings']['backgrounds'], true);
 
         Template::render('@admin/backgrounds.twig', $data);
+    }
+
+    public static function backgroundsUpload()
+    {
+        if (!isset($_SESSION['steamid'])) {
+            die();
+        }
+
+        $perms = User::getCurrentPerms();
+        if (!isset($_FILES['bg-files']) || !\array_key_exists('backgrounds', $perms) && !User::isSuper($_SESSION['steamid'])) {
+            die();
+        }
+
+        $gamemode = $_POST['gamemode'] ?? 'global';
+        $gamemode = \preg_replace('/[^a-zA-Z0-9]+/', '', $gamemode);
+
+        $bgFolder = APP_ROOT.'/assets/img/backgrounds/'.$gamemode;
+        Util::mkDir($bgFolder);
+
+        $message = 'No images provided';
+
+        if (($count = \count($_FILES['bg-files']['name'])) > 0) {
+            $filesUploaded = 0;
+            $files = $_FILES['bg-files'];
+            foreach ($files['name'] as $index => $name) {
+                $uploaded = \move_uploaded_file($files['tmp_name'][$index], $bgFolder.'/'.$name);
+                if ($uploaded) {
+                    $filesUploaded++;
+                }
+            }
+
+            $message = $filesUploaded.' out of '.$count.' backgrounds were uploaded';
+        }
+
+        Util::flash('alert', $message);
+        Util::redirect('/dashboard/admin/backgrounds');
     }
 
     public static function rules()
     {
         $perms = User::getCurrentPerms();
-        if (!array_key_exists('rules', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('rules', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
 
@@ -239,7 +276,7 @@ class Admin
             'settings' => Util::getSetting('rules'),
             'alert'    => (isset($alert) ? $alert : ''),
         ];
-        $data['settings']['rules'] = json_decode($data['settings']['rules'], true);
+        $data['settings']['rules'] = \json_decode($data['settings']['rules'], true);
 
         Template::render('@admin/rules.twig', $data);
     }
@@ -247,7 +284,7 @@ class Admin
     public static function messages()
     {
         $perms = User::getCurrentPerms();
-        if (!array_key_exists('messages', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('messages', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
 
@@ -265,7 +302,7 @@ class Admin
             'settings' => Util::getSetting('messages'),
             'alert'    => (isset($alert) ? $alert : ''),
         ];
-        $data['settings']['messages'] = json_decode($data['settings']['messages'], true);
+        $data['settings']['messages'] = \json_decode($data['settings']['messages'], true);
 
         Template::render('@admin/messages.twig', $data);
     }
@@ -273,13 +310,13 @@ class Admin
     public static function staff()
     {
         $perms = User::getCurrentPerms();
-        if (!array_key_exists('staff', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('staff', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
 
         if (isset($_POST['save']) && isset($_POST['staff'])) {
             foreach ($_POST['staff'] as $gamemode => $ranks) {
-                $_POST['staff'][$gamemode] = array_values($ranks);
+                $_POST['staff'][$gamemode] = \array_values($ranks);
             }
             $success = Util::updateSetting(['staff'], [$_POST['staff']], $_POST['csrf']);
             if ($success) {
@@ -298,7 +335,7 @@ class Admin
             'settings' => Util::getSetting('staff'),
             'alert'    => (isset($alert) ? $alert : ''),
         ];
-        $data['settings']['staff'] = json_decode($data['settings']['staff'], true);
+        $data['settings']['staff'] = \json_decode($data['settings']['staff'], true);
 
         Template::render('@admin/staff.twig', $data);
     }
@@ -306,7 +343,7 @@ class Admin
     public static function music()
     {
         $perms = User::getCurrentPerms();
-        if (!array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
 
@@ -315,20 +352,20 @@ class Admin
             $_POST['music']['volume'] = (int) ($_POST['music']['volume'] ?? 15);
             $_POST['music']['enable'] = (int) ($_POST['music']['enable'] ?? 0);
             $_POST['music']['random'] = (int) ($_POST['music']['random'] ?? 0);
-            $_POST['music']['source'] = isset($_POST['music']['source']) ? (in_array($_POST['music']['source'], ['youtube', 'files', 'soundcloud']) ? $_POST['music']['source'] : 'youtube') : 'youtube';
+            $_POST['music']['source'] = isset($_POST['music']['source']) ? (\in_array($_POST['music']['source'], ['youtube', 'files', 'soundcloud']) ? $_POST['music']['source'] : 'youtube') : 'youtube';
 
             // validate youtube shit
             if (!isset($_POST['youtube']['list'])) {
                 $_POST['youtube']['list'] = [];
             } else {
                 // we only need the list now reeee
-                $_POST['youtube'] = array_intersect_key($_POST['youtube'], ['list' => []]);
+                $_POST['youtube'] = \array_intersect_key($_POST['youtube'], ['list' => []]);
             }
 
-            if (count($_POST['youtube']['list']) > 0) {
+            if (\count($_POST['youtube']['list']) > 0) {
                 $yt_ids = [];
                 foreach ($_POST['youtube']['list'] as $url) {
-                    $url = trim($url);
+                    $url = \trim($url);
                     $youtube_id = Util::YouTubeID($url);
                     if ($youtube_id) {
                         $yt_ids[] = $youtube_id;
@@ -342,18 +379,18 @@ class Admin
                 $_POST['music']['order'] = [];
             }
 
-            $_POST['music']['order'] = array_unique($_POST['music']['order']);
+            $_POST['music']['order'] = \array_unique($_POST['music']['order']);
 
             if (($orderLength = count($_POST['music']['order'])) > 0) {
                 $musicFileOrder = $_POST['music']['order'];
 
                 for ($i = 0; $i < $orderLength; $i++) {
-                    if (!file_exists(APP_ROOT.'/data/music/'.$musicFileOrder[$i])) {
+                    if (!\file_exists(APP_ROOT.'/data/music/'.$musicFileOrder[$i])) {
                         unset($musicFileOrder[$i]);
                     }
                 }
 
-                $_POST['music']['order'] = array_values($musicFileOrder);
+                $_POST['music']['order'] = \array_values($musicFileOrder);
             }
 
             $success = Util::updateSetting(['music', 'youtube'], [$_POST['music'], $_POST['youtube']], $_POST['csrf']);
@@ -383,9 +420,9 @@ class Admin
 
             $data['music'] = $temp_music_data;
         } else {
-            $data['music'] = json_decode($data['music'], true);
+            $data['music'] = \json_decode($data['music'], true);
         }
-        $data['youtube'] = json_decode($data['youtube'], true);
+        $data['youtube'] = \json_decode($data['youtube'], true);
 
         $dir = APP_ROOT.'/data/music';
         $files = glob($dir.'/*.ogg');
@@ -393,14 +430,14 @@ class Admin
 
         if ($length > 0) {
             for ($i = 0; $i < $length; $i++) {
-                $filename = str_replace($dir.'/', '', $files[$i]);
-                $name = str_replace('.ogg', '', $filename);
+                $filename = \str_replace($dir.'/', '', $files[$i]);
+                $name = \str_replace('.ogg', '', $filename);
 
                 $files[$i] = [
                     'filename'    => $filename,
                     'name'        => $name,
-                    'name_hashed' => md5($name),
-                    'row_id'      => 'file_'.md5($name),
+                    'name_hashed' => \md5($name),
+                    'row_id'      => 'file_'.\md5($name),
                     'url'         => APP_URL.'/data/music/'.$filename,
                 ];
             }
@@ -418,7 +455,7 @@ class Admin
         }
 
         $perms = User::getCurrentPerms();
-        if (!array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
             die();
         }
 
@@ -442,8 +479,8 @@ class Admin
                         break;
                     }
 
-                    $filename = preg_replace('/[[:^print:]]/', '', $_FILES['music_file']['name']);
-                    $name = str_replace('.ogg', '', $filename);
+                    $filename = \preg_replace('/[[:^print:]]/', '', $_FILES['music_file']['name']);
+                    $name = \str_replace('.ogg', '', $filename);
 
                     $success = self::storeMusic($_FILES['music_file'], $name);
                     $message = $success ? 'File uploaded successfully' : 'Failed to upload file, check file permissions or try again';
@@ -451,7 +488,7 @@ class Admin
                         $file = [
                             'filename'    => $filename,
                             'name'        => $name,
-                            'name_hashed' => md5($name),
+                            'name_hashed' => \md5($name),
                         ];
                     }
                     break;
@@ -466,14 +503,14 @@ class Admin
 
     private static function storeMusic($file, $filename = null)
     {
-        if (is_null($filename)) {
-            $filename = preg_replace('/[[:^print:]]/', '', $file['name']);
-            $filename = str_replace('.ogg', '', $filename);
+        if (\is_null($filename)) {
+            $filename = \preg_replace('/[[:^print:]]/', '', $file['name']);
+            $filename = \str_replace('.ogg', '', $filename);
         }
 
         Util::mkDir(APP_ROOT.'/data/music');
 
-        return move_uploaded_file($file['tmp_name'], APP_ROOT.'/data/music/'.$filename.'.ogg');
+        return \move_uploaded_file($file['tmp_name'], APP_ROOT.'/data/music/'.$filename.'.ogg');
     }
 
     public static function deleteMusic()
@@ -483,7 +520,7 @@ class Admin
         }
 
         $perms = User::getCurrentPerms();
-        if (!array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
+        if (!\array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
             die();
         }
 
@@ -492,8 +529,8 @@ class Admin
         $message = 'Failed to delete. Try again';
 
         $filepath = '/data/music/'.$filename;
-        if (!empty($filename) && file_exists(APP_ROOT.'/data/music/'.$filename)) {
-            $success = unlink(APP_ROOT.$filepath);
+        if (!empty($filename) && \file_exists(APP_ROOT.'/data/music/'.$filename)) {
+            $success = \unlink(APP_ROOT.$filepath);
             $message = $success ? 'File deleted' : $message;
         } else {
             $message = 'File does not exist, cannot delete';

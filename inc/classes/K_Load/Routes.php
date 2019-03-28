@@ -28,6 +28,7 @@ class Routes
         self::$router->any(APP_PATH.'/dashboard/admin', ['K_Load\Controller\Admin', 'index']);
         self::$router->any(APP_PATH.'/dashboard/admin/general', ['K_Load\Controller\Admin', 'general']);
         self::$router->any(APP_PATH.'/dashboard/admin/backgrounds', ['K_Load\Controller\Admin', 'backgrounds']);
+        self::$router->any(APP_PATH.'/dashboard/admin/backgrounds/upload', ['K_Load\Controller\Admin', 'backgroundsUpload']);
         self::$router->any(APP_PATH.'/dashboard/admin/messages', ['K_Load\Controller\Admin', 'messages']);
         self::$router->any(APP_PATH.'/dashboard/admin/rules', ['K_Load\Controller\Admin', 'rules']);
         self::$router->any(APP_PATH.'/dashboard/admin/staff', ['K_Load\Controller\Admin', 'staff']);

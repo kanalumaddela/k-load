@@ -24,11 +24,11 @@ class Template
         $theme_loc = APP_ROOT.'/themes/'.self::$theme.'/pages';
         $theme_loc_fallback = APP_ROOT.'/themes/default/pages';
 
-        self::$twig_loader = new \Twig_Loader_Filesystem($theme_loc);
+        self::$twig_loader = new \Twig\Loader\FilesystemLoader($theme_loc);
 
-        self::$twig_loader->addPath((file_exists($theme_loc.'/dashboard') ? $theme_loc.'/dashboard' : $theme_loc_fallback.'/dashboard'), 'dashboard');
-        self::$twig_loader->addPath((file_exists($theme_loc.'/admin') ? $theme_loc.'/admin' : $theme_loc_fallback.'/admin'), 'admin');
-        self::$twig_loader->addPath((file_exists($theme_loc.'/partials') ? $theme_loc.'/partials' : $theme_loc_fallback.'/partials'), 'partials');
+        self::$twig_loader->addPath((\file_exists($theme_loc.'/dashboard') ? $theme_loc.'/dashboard' : $theme_loc_fallback.'/dashboard'), 'dashboard');
+        self::$twig_loader->addPath((\file_exists($theme_loc.'/admin') ? $theme_loc.'/admin' : $theme_loc_fallback.'/admin'), 'admin');
+        self::$twig_loader->addPath((\file_exists($theme_loc.'/partials') ? $theme_loc.'/partials' : $theme_loc_fallback.'/partials'), 'partials');
         self::$twig_loader->addPath(APP_ROOT.'/themes/default/pages/loading', 'loading');
 
         self::$twig_env_params = [
@@ -36,9 +36,9 @@ class Template
             'debug'       => DEBUG,
             'cache'       => (ENABLE_CACHE ? APP_ROOT.'/data/cache/templates' : false),
         ];
-        self::$twig = new \Twig_Environment(self::$twig_loader, self::$twig_env_params);
+        self::$twig = new \Twig\Environment(self::$twig_loader, self::$twig_env_params);
         if (DEBUG) {
-            self::$twig->addExtension(new \Twig_Extension_Debug());
+            self::$twig->addExtension(new \Twig\Extension\DebugExtension());
         }
 
         $site_urls = [
@@ -54,14 +54,14 @@ class Template
             //'login_url' => steam::loginUrl(),
             'login_url'    => $steamLogin->getLoginURL(),
             'site'         => $site_urls,
-            'site_json'    => json_encode($site_urls),
-            'cache_buster' => bin2hex(random_bytes(3)),
+            'site_json'    => \json_encode($site_urls),
+            'cache_buster' => \bin2hex(\random_bytes(3)),
         ];
     }
 
     public static function theme($theme = null)
     {
-        if (isset($theme) && file_exists(APP_ROOT.'/themes/'.$theme)) {
+        if (isset($theme) && \file_exists(APP_ROOT.'/themes/'.$theme)) {
             self::$theme = $theme;
         }
 
@@ -72,23 +72,23 @@ class Template
     {
         $theme = APP_ROOT.'/themes/'.self::$theme.'/pages';
 
-        return file_exists($theme.'/dashboard') && file_exists($theme.'/admin');
+        return \file_exists($theme.'/dashboard') && \file_exists($theme.'/admin');
     }
 
     public static function isLoadingTheme($name)
     {
-        return file_exists(APP_ROOT.'/themes/'.$name.'/pages/loading.twig');
+        return \file_exists(APP_ROOT.'/themes/'.$name.'/pages/loading.twig');
     }
 
     public static function dashboardThemes()
     {
         $list = [];
-        $themes = glob(APP_ROOT.sprintf('%sthemes%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        $themes = \glob(APP_ROOT.\sprintf('%sthemes%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
         foreach ($themes as $location) {
-            $tmp = explode(DIRECTORY_SEPARATOR, $location);
-            $name = end($temp);
+            $tmp = \explode(DIRECTORY_SEPARATOR, $location);
+            $name = \end($temp);
             $location .= '/pages';
-            if (file_exists($location.'/dashboard') && file_exists($location.'/admin')) {
+            if (\file_exists($location.'/dashboard') && \file_exists($location.'/admin')) {
                 $list[] = $name;
             }
         }
@@ -101,17 +101,17 @@ class Template
         global $config;
 
         $list = [];
-        $themes = glob(APP_ROOT.sprintf('%sthemes%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        $themes = \glob(APP_ROOT.\sprintf('%sthemes%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
         foreach ($themes as $location) {
-            $tmp = explode(DIRECTORY_SEPARATOR, $location);
-            $name = end($tmp);
-            if (file_exists($location.'/pages/loading.twig')) {
+            $tmp = \explode(DIRECTORY_SEPARATOR, $location);
+            $name = \end($tmp);
+            if (\file_exists($location.'/pages/loading.twig')) {
                 if ($all || in_array($name, $config['loading_themes'])) {
-                    $previews = glob($location.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
-                    usort($previews, function ($a, $b) {
-                        return filemtime($a) - filemtime($b);
+                    $previews = \glob($location.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
+                    \usort($previews, function ($a, $b) {
+                        return \filemtime($a) - \filemtime($b);
                     });
-                    $preview = count($previews) > 0 ? str_replace(APP_ROOT, APP_PATH, $previews[0]) : null;
+                    $preview = \count($previews) > 0 ? \str_replace(APP_ROOT, APP_PATH, $previews[0]) : null;
 
                     $list[] = [
                         'name'    => $name,
@@ -158,7 +158,7 @@ class Template
             self::$data['user'] = $_SESSION;
             self::$data['user']['admin'] = User::isSuper($_SESSION['steamid']) ? 1 : (int) User::getInfo($_SESSION['steamid'], 'admin');
             self::$data['user']['super'] = User::isSuper($_SESSION['steamid']);
-            self::$data['user']['perms'] = array_fill_keys(array_keys(array_flip(json_decode(User::getInfo($_SESSION['steamid'], 'perms'), true))), 1);
+            self::$data['user']['perms'] = \array_fill_keys(\array_keys(\array_flip(\json_decode(User::getInfo($_SESSION['steamid'], 'perms'), true))), 1);
             if (self::$data['user']['perms'] != $_SESSION['perms']) {
                 $_SESSION['perms'] = self::$data['user']['perms'];
             }

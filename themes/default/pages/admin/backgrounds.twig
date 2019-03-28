@@ -5,55 +5,109 @@
 {% block content %}
     {% if user.admin %}
         {% if user.super or user.perms.backgrounds %}
-            <form method="post" action="{{ site.path }}/dashboard/admin/backgrounds" class="row" style="padding-top:15px;padding-bottom:15px;">
-                {{ csrf|raw }}
+
+            {% include '@partials/gamemode-examples.twig' %}
+
+            <div class="row" style="padding-top: 15px">
                 <div class="col s12 m6">
                     <div class="card">
                         <div class="card-content">
-                            <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>Backgrounds</h1>
-                            <div class="row">
-                                <div class="col s12 m6">
-                                    <p>Enable Backgrounds?</p>
+                            <form method="post" action="{{ site.path }}/dashboard/admin/backgrounds">
+                                {{ csrf|raw }}
+                                <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>Backgrounds</h1>
+                                <div class="row">
+                                    <div class="col s12 m6">
+                                        <p>Enable Backgrounds?</p>
+                                    </div>
+                                    <div class="switch s12 m6">
+                                        <label>
+                                            No
+                                            <input type="checkbox" name="backgrounds[enable]" value="1"
+                                                   {% if settings.backgrounds.enable %}checked{% endif %} />
+                                            <span class="lever"></span>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div style="height:8px;"></div>
+                                    <div class="col s12 m6">
+                                        <p>Randomize Backgrounds?</p>
+                                    </div>
+                                    <div class="switch s12 m6">
+                                        <label>
+                                            No
+                                            <input type="checkbox" name="backgrounds[random]" value="1"
+                                                   {% if settings.backgrounds.random %}checked{% endif %} />
+                                            <span class="lever"></span>
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="input-field col s12 m6">
+                                        <p>Background Duration</p>
+                                        <input name="backgrounds[duration]" type="number" placeholder="e.g. 5000" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.duration }}">
+                                    </div>
+                                    <div class="input-field col s12 m6">
+                                        <p>Background Fade</p>
+                                        <input name="backgrounds[fade]" type="number" placeholder="e.g. 750" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.fade }}">
+                                    </div>
                                 </div>
-                                <div class="switch s12 m6">
-                                    <label>
-                                        No
-                                        <input type="checkbox" name="backgrounds[enable]" value="1"
-                                               {% if settings.backgrounds.enable %}checked{% endif %} />
-                                        <span class="lever"></span>
-                                        Yes
-                                    </label>
+
+                                <div class="fixed-action-btn">
+                                    <button id="save-btn" class="btn-floating btn-large blue" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
                                 </div>
-                                <div style="height:8px;"></div>
-                                <div class="col s12 m6">
-                                    <p>Randomize Backgrounds?</p>
-                                </div>
-                                <div class="switch s12 m6">
-                                    <label>
-                                        No
-                                        <input type="checkbox" name="backgrounds[random]" value="1"
-                                               {% if settings.backgrounds.random %}checked{% endif %} />
-                                        <span class="lever"></span>
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="input-field col s12 m6">
-                                    <p>Background Duration</p>
-                                    <input name="backgrounds[duration]" type="number" placeholder="e.g. 5000" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.duration }}">
-                                </div>
-                                <div class="input-field col s12 m6">
-                                    <p>Background Fade</p>
-                                    <input name="backgrounds[fade]" type="number" placeholder="e.g. 750" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.fade }}">
-                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6">
+                    <div class="card">
+                        <div class="card-content">
+                            <h1 class="flow-text"><span class="mdi mdi-upload"></span>Upload Backgrounds</h1>
+                            <div class="center">
+                                <a href="#upload-backgrounds" class="btn modal-trigger">Upload</a>
+                                <p style="margin: 4px 0">Max {{ max_bg_uploads }} Uploads at a time</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="fixed-action-btn">
-                    <button id="save-btn" class="btn-floating btn-large blue" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+                <div id="upload-backgrounds" class="modal bottom-sheet">
+                    <div class="modal-content">
+                        <form id="upload-backgrounds-form" method="post" action="{{ site.path }}/dashboard/admin/backgrounds/upload" enctype="multipart/form-data">
+                            <div class="input-field">
+                                <input id="upload-backgrounds-gamemode-input" type="text" name="gamemode" value="global" placeholder="Enter a gamemode id, refer to the list above">
+                                <label for="upload-backgrounds-gamemode-input">Gamemode</label>
+                            </div>
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>File</span>
+                                    <input name="bg-files[]" type="file" multiple>
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" form="upload-backgrounds-form" class="btn green" value="upload" />
+                        <a href="#" class="modal-action modal-close btn red">Cancel</a>
+                    </div>
                 </div>
-            </form>
+
+                <div class="col s12">
+                    <div class="card">
+                        <div class="card-content">
+                            <h1 class="flow-text"><span class="mdi mdi-image-multiple"></span>Uploaded Backgrounds</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endif %}
     {% endif %}
+{% endblock %}
+{% block js %}
+    <script>
+        $('.modal').modal();
+    </script>
 {% endblock %}

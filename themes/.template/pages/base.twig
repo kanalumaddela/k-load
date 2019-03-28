@@ -41,8 +41,10 @@
 {% endif %}
 
 <!-- required js -->
-<script>var site = {{ site_json|raw }};
-    var alert = '{{ alert }}';</script>
+<script>
+    var site = {{ site_json|raw }};
+    var alert = '{{ alert }}';
+</script>
 <script src="{{ assets }}/js/site.js"></script>
 {% block js %}{% endblock %}
 </body>

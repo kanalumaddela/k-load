@@ -25,15 +25,15 @@ class Setup
         Database::connect($config['mysql']);
 
         Cache::remove('version');
-        $migrations = glob(APP_ROOT.sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        $migrations = \glob(APP_ROOT.\sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
         foreach ($migrations as $folder) {
-            $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
-            $ver = end($path_arr);
-            file_exists($folder.'/drop.php') and include $folder.'/drop.php';
-            file_exists($folder.'/delete.php') and include $folder.'/delete.php';
-            file_exists($folder.'/create.php') and include $folder.'/create.php';
-            file_exists($folder.'/alter.php') and include $folder.'/alter.php';
-            file_exists($folder.'/insert.php') and include $folder.'/insert.php';
+            $path_arr = \explode(DIRECTORY_SEPARATOR, $folder);
+            $ver = \end($path_arr);
+            \file_exists($folder.'/drop.php') and include $folder.'/drop.php';
+            \file_exists($folder.'/delete.php') and include $folder.'/delete.php';
+            \file_exists($folder.'/create.php') and include $folder.'/create.php';
+            \file_exists($folder.'/alter.php') and include $folder.'/alter.php';
+            \file_exists($folder.'/insert.php') and include $folder.'/insert.php';
             Cache::remove('version');
             $installed = Util::version() == $ver;
             Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
@@ -52,19 +52,19 @@ class Setup
     {
         if (User::isSuper($_SESSION['steamid'])) {
             Cache::remove('version');
-            $version = (int) str_replace('.', '', Util::version(true));
-            $migrations = glob(APP_ROOT.sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+            $version = (int) \str_replace('.', '', Util::version(true));
+            $migrations = \glob(APP_ROOT.\sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
             foreach ($migrations as $folder) {
-                $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
-                $ver = end($path_arr);
-                $tmp_version = (int) str_replace('.', '', $ver);
+                $path_arr = \explode(DIRECTORY_SEPARATOR, $folder);
+                $ver = \end($path_arr);
+                $tmp_version = (int) \str_replace('.', '', $ver);
 
                 if ($tmp_version > $version) {
-                    file_exists($folder.'/drop.php') and include $folder.'/drop.php';
-                    file_exists($folder.'/delete.php') and include $folder.'/delete.php';
-                    file_exists($folder.'/create.php') and include $folder.'/create.php';
-                    file_exists($folder.'/alter.php') and include $folder.'/alter.php';
-                    file_exists($folder.'/insert.php') and include $folder.'/insert.php';
+                    \file_exists($folder.'/drop.php') and include $folder.'/drop.php';
+                    \file_exists($folder.'/delete.php') and include $folder.'/delete.php';
+                    \file_exists($folder.'/create.php') and include $folder.'/create.php';
+                    \file_exists($folder.'/alter.php') and include $folder.'/alter.php';
+                    \file_exists($folder.'/insert.php') and include $folder.'/insert.php';
 
                     $installed = Util::version() == $ver;
                     Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
@@ -82,12 +82,12 @@ class Setup
             'latest' => '',
         ];
 
-        $version = (int) str_replace('.', '', Util::version());
-        $migrations = glob(APP_ROOT.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
+        $version = (int) \str_replace('.', '', Util::version());
+        $migrations = \glob(APP_ROOT.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
         foreach ($migrations as $folder) {
-            $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
-            $ver = end($path_arr);
-            $tmp_version = (int) str_replace('.', '', $ver);
+            $path_arr = \explode(DIRECTORY_SEPARATOR, $folder);
+            $ver = \end($path_arr);
+            $tmp_version = (int) \str_replace('.', '', $ver);
 
             if ($tmp_version > $version) {
                 $updates['amount']++;

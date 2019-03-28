@@ -59,13 +59,13 @@
                                         Admin
                                     </label>
                                 </div>
-                                {% for perm in permissions %}
+                                {% for perm, permFriendly in permissions %}
                                     <div class="col s6 m4">
                                         <p>
                                             <input type="checkbox" id="perm_{{ perm }}_{{ player.steamid }}"
                                                    class="filled-in perm" name="perms[]" value="{{ perm }}"
                                                    {% if perm in player.perms %}checked{% endif %} />
-                                            <label for="perm_{{ perm }}_{{ player.steamid }}">{{ perm }}</label>
+                                            <label for="perm_{{ perm }}_{{ player.steamid }}">{{ permFriendly }}</label>
                                         </p>
                                     </div>
                                 {% endfor %}

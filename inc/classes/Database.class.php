@@ -42,10 +42,10 @@ class Database
         self::$pass = $mysql['pass'] ?? '';
         self::$db = $mysql['db'] ?? '';
 
-        set_error_handler(function () {
+        \set_error_handler(function () {
         });
         self::$conn = new \mysqli(self::$host.(self::$host != 'localhost' ? ':'.self::$port : ''), self::$user, self::$pass, self::$db, self::$port);
-        restore_error_handler();
+        \restore_error_handler();
         if (self::$conn->connect_error) {
             Util::log('mysql', '[FAIL] '.self::$conn->connect_error);
             self::$conn = null;
@@ -72,20 +72,20 @@ class Database
 
     public static function escape($sql, array $data)
     {
-        $params = substr_count($sql, '?');
-        $hash = ':'.bin2hex(random_bytes(4));
+        $params = \substr_count($sql, '?');
+        $hash = ':'.\bin2hex(\random_bytes(4));
 
-        $sql = str_replace('?', $hash, $sql);
+        $sql = \str_replace('?', $hash, $sql);
 
         if ($params > 0) {
             for ($x = 0; $x < $params; $x++) {
                 if (!isset($data[$x])) {
                     $data[$x] = null;
                 }
-                if (is_array($data[$x])) {
-                    $data[$x] = json_encode($data[$x], JSON_UNESCAPED_UNICODE);
+                if (\is_array($data[$x])) {
+                    $data[$x] = \json_encode($data[$x], JSON_UNESCAPED_UNICODE);
                 }
-                $sql = preg_replace('/'.$hash.'/', self::$conn->real_escape_string($data[$x]), $sql, 1);
+                $sql = \preg_replace('/'.$hash.'/', self::$conn->real_escape_string($data[$x]), $sql, 1);
             }
         }
 
@@ -94,7 +94,7 @@ class Database
 
     public function add($sql, array $data = [])
     {
-        if (count($data) > 0) {
+        if (\count($data) > 0) {
             $sql = self::escape($sql, $data);
         }
         self::$sql .= " $sql";
@@ -104,8 +104,8 @@ class Database
 
     public static function quickEscape($data)
     {
-        if (is_array($data)) {
-            $data = json_encode($data);
+        if (\is_array($data)) {
+            $data = \json_encode($data);
         }
 
         return self::$conn->real_escape_string($data);
@@ -142,14 +142,14 @@ class Database
         self::$sql .= ' VALUES';
 
         $x = 0;
-        $val_count = count($values);
+        $val_count = \count($values);
 
         foreach ($values as $row => $value) {
             $x++;
             self::$sql .= '(';
 
             $i = 0;
-            $row_count = count($value);
+            $row_count = \count($value);
 
             foreach ($value as $data) {
                 $i++;
@@ -166,7 +166,7 @@ class Database
     public function select($sql, array $data = [])
     {
         self::$type = 'select';
-        if (count($data) > 0) {
+        if (\count($data) > 0) {
             $sql = self::escape($sql, $data);
         }
         self::$sql = $sql;
@@ -186,10 +186,10 @@ class Database
     {
         if (self::$type == 'count') {
             if ($columns) {
-                self::$sql = str_replace('COUNT(*)', 'COUNT(DISTINCT `'.implode(',`', $columns).'`)', self::$sql);
+                self::$sql = \str_replace('COUNT(*)', 'COUNT(DISTINCT `'.\implode(',`', $columns).'`)', self::$sql);
             }
         } else {
-            self::$sql = str_replace('SELECT', 'SELECT DISTINCT', self::$sql);
+            self::$sql = \str_replace('SELECT', 'SELECT DISTINCT', self::$sql);
         }
 
         return $this;
@@ -197,7 +197,7 @@ class Database
 
     public function where($sql, array $data = [])
     {
-        if (count($data) > 0) {
+        if (\count($data) > 0) {
             $sql = self::escape($sql, $data);
         }
         self::$sql .= " WHERE $sql";
@@ -207,7 +207,7 @@ class Database
 
     public function orderBy($column, $type = 'asc')
     {
-        $type = strtoupper(($type != 'desc' && $type != 'desc') ? 'asc' : $type);
+        $type = \strtoupper(($type != 'desc' && $type != 'desc') ? 'asc' : $type);
         self::$sql .= " ORDER BY `$column` $type";
 
         return $this;
@@ -243,7 +243,7 @@ class Database
             switch (self::$type) {
                 case 'select':
                     if ($result->num_rows > 1) {
-                        if (function_exists('mysqli_fetch_all')) {
+                        if (\function_exists('mysqli_fetch_all')) {
                             $data = $result->fetch_all(MYSQLI_BOTH);
                         } else {
                             $data = [];

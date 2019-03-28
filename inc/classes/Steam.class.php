@@ -34,9 +34,9 @@ class Steam
 
     public static function Logout()
     {
-        session_destroy();
+        \session_destroy();
         if (isset($_SERVER['HTTP_REFERER'])) {
-            if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false) {
+            if (\strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false) {
                 self::Redirect($_SERVER['HTTP_REFERER']);
             }
         }
@@ -44,12 +44,12 @@ class Steam
         self::Redirect();
     }
 
-    public static function Redirect($url = null, $force = false)
+    public static function Redirect($url = null)
     {
         if (!$url) {
             $url = self::$host;
         }
-        header('Location: '.$url, true, 302);
+        \header('Location: '.$url, true, 302);
         die();
     }
 
@@ -69,7 +69,7 @@ class Steam
             $data['steamid3'] = $steamids->getSteam3RenderedID();
 
             return $data;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return [];
         }
     }
@@ -78,21 +78,21 @@ class Steam
     {
         $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.self::$apikey.'&steamids='.$steamids.'&format='.$format;
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        $result = curl_exec($curl);
-        curl_close($curl);
+        $curl = \curl_init();
+        \curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($curl, CURLOPT_URL, $url);
+        $result = \curl_exec($curl);
+        \curl_close($curl);
 
-        $result = json_decode($result, true);
+        $result = \json_decode($result, true);
 
         return $result;
     }
 
     public static function User($steamid, $format = null)
     {
-        $steamid = explode(',', $steamid);
+        $steamid = \explode(',', $steamid);
         $steamid = $steamid[0];
         $user = self::Info($steamid, $format);
 
@@ -101,11 +101,11 @@ class Steam
 
     public static function Users($steamids, $format = null)
     {
-        if (is_array($steamids)) {
-            $steamids = implode(',', $steamids);
+        if (\is_array($steamids)) {
+            $steamids = \implode(',', $steamids);
         }
-        if (is_string($steamids)) {
-            $steamids = preg_replace('/\s+/', '', $steamids);
+        if (\is_string($steamids)) {
+            $steamids = \preg_replace('/\s+/', '', $steamids);
         }
 
         $users = self::Info($steamids, $format);
@@ -115,11 +115,11 @@ class Steam
 
     public static function Group($name)
     {
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://steamcommunity.com/groups/'.$name.'/memberslistxml/?xml=1');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $data = simplexml_load_string(curl_exec($curl), 'SimpleXMLElement', LIBXML_NOCDATA);
-        curl_close($curl);
+        $curl = \curl_init();
+        \curl_setopt($curl, CURLOPT_URL, 'https://steamcommunity.com/groups/'.$name.'/memberslistxml/?xml=1');
+        \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $data = \simplexml_load_string(\curl_exec($curl), 'SimpleXMLElement', LIBXML_NOCDATA);
+        \curl_close($curl);
 
         return $data ?? null;
     }
