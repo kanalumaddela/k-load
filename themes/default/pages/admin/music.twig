@@ -3,7 +3,8 @@
 {% block title %}Settings | K-Load{% endblock %}
 
 {% block content %}
-    <form method="post" action="{{site.path}}/dashboard/admin/music" class="row" style="padding-top:15px;margin-bottom:15px;">
+    <form method="post" action="{{ site.path }}/dashboard/admin/music" class="row"
+          style="padding-top:15px;margin-bottom:15px;">
         {{ csrf|raw }}
 
         <div class="col s12 m6">
@@ -17,7 +18,8 @@
                             </p>
                             <label>
                                 No
-                                <input type="checkbox" name="music[enable]" value="1" {% if music.enable %}checked{% endif %} />
+                                <input type="checkbox" name="music[enable]" value="1"
+                                       {% if music.enable %}checked{% endif %} />
                                 <span class="lever"></span>
                                 Yes
                             </label>
@@ -28,7 +30,8 @@
                             </p>
                             <label>
                                 No
-                                <input type="checkbox" name="music[random]" value="1" {% if music.random %}checked{% endif %} />
+                                <input type="checkbox" name="music[random]" value="1"
+                                       {% if music.random %}checked{% endif %} />
                                 <span class="lever"></span>
                                 Yes
                             </label>
@@ -36,14 +39,20 @@
                         <div class="input-field col s12">
                             Volume
                             <p class="range-field">
-                                <input type="range" id="volume" min="0" max="100" name="music[volume]" value="{{ music.volume|default(15) }}" />
+                                <input type="range" id="volume" min="0" max="100" name="music[volume]"
+                                       value="{{ music.volume|default(15) }}"/>
                             </p>
                         </div>
                         <div class="input-field col s12">
                             <select name="music[source]" class="materialize-select">
-                                <option value="youtube" {% if music.source == 'youtube'%}selected{% endif %}>YouTube</option>
-                                <option value="soundcloud" disabled {% if settings.music.source == 'soundcloud'%}selected{% endif %}>SoundCloud (not added yet)</option>
-                                <option value="files" {% if music.source == 'files'%}selected{% endif %}>Music Files</option>
+                                <option value="youtube" {% if music.source == 'youtube' %}selected{% endif %}>YouTube
+                                </option>
+                                <option value="soundcloud" disabled
+                                        {% if settings.music.source == 'soundcloud' %}selected{% endif %}>SoundCloud
+                                    (not added yet)
+                                </option>
+                                <option value="files" {% if music.source == 'files' %}selected{% endif %}>Music Files
+                                </option>
                             </select>
                             <label>Music Source</label>
                         </div>
@@ -59,13 +68,15 @@
                     <div id="yt_vids">
                         {% for youtube_id in youtube.list %}
                             <div class="input-field child">
-                                <input type="text" name="youtube[list][]" placeholder="YouTube URL" value="https://www.youtube.com/watch?v={{youtube_id}}" style="width: 80%;">
+                                <input type="text" name="youtube[list][]" placeholder="YouTube URL"
+                                       value="https://www.youtube.com/watch?v={{ youtube_id }}" style="width: 80%;">
                                 <a class="btn-floating delete-elem red"><i class="mdi mdi-delete"></i></a>
                             </div>
                         {% endfor %}
                     </div>
                     <div>
-                        <a class="btn green add-elem" data-type="youtube" data-parent="#yt_vids"><span class="mdi mdi-plus"></span>Add Video</a>
+                        <a class="btn green add-elem" data-type="youtube" data-parent="#yt_vids"><span
+                                    class="mdi mdi-plus"></span>Add Video</a>
                     </div>
                 </div>
             </div>
@@ -74,7 +85,9 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <h1 class="flow-text"><span class="mdi mdi-format-list-checks"></span>Songs to Play <small>(duplicate songs will get removed when saving)</small></h1>
+                    <h1 class="flow-text"><span class="mdi mdi-format-list-checks"></span>Songs to Play
+                        <small>(duplicate songs will get removed when saving)</small>
+                    </h1>
                     <div id="music_order">
                         {% for song in music.order %}
                             <div class="input-field child">
@@ -84,14 +97,17 @@
                         {% endfor %}
                     </div>
                     <div>
-                        <a class="btn green add-elem" data-type="musicSelect" data-parent="#music_order"><span class="mdi mdi-plus"></span>Add Song</a>
+                        <a class="btn green add-elem" data-type="musicSelect" data-parent="#music_order"><span
+                                    class="mdi mdi-plus"></span>Add Song</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col s12 center">
-            <button class="btn blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1">Save Changes</button>
+            <button class="btn blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save"
+                    value="1">Save Changes
+            </button>
         </div>
     </form>
 
@@ -113,7 +129,8 @@
                         {% for file in music_files %}
                             <div id="{{ file.row_id }}" class="col s12" data-file="{{ file.filename }}">
                                 <h5 class="song-title truncate">
-                                    <a class="blue-text link--hover" href="{{ file.url }}" target="_blank">{{ file.name }} <i class="mdi mdi-open-in-new"></i></a>
+                                    <a class="blue-text link--hover" href="{{ file.url }}"
+                                       target="_blank">{{ file.name }} <i class="mdi mdi-open-in-new"></i></a>
                                 </h5>
                                 <div class="valign-wrapper right">
                                     <a class="btn-floating delete-song red"><i class="mdi mdi-delete"></i></a>
@@ -123,8 +140,10 @@
                     </div>
 
                     <div class="center">
-                        <input id="music_file_upload" type="file" style="display: none;" accept="audio/ogg" />
-                        <label for="music_file_upload" class="btn green tooltipped" data-tooltip="Only '.ogg' files are allowed" data-position="top" data-delay="25"><span class="mdi mdi-upload"></span>Upload</label>
+                        <input id="music_file_upload" type="file" style="display: none;" accept="audio/ogg"/>
+                        <label for="music_file_upload" class="btn green tooltipped"
+                               data-tooltip="Only '.ogg' files are allowed" data-position="top" data-delay="25"><span
+                                    class="mdi mdi-upload"></span>Upload</label>
                         <!--<a class="btn green"></a>-->
                     </div>
                 </div>
@@ -139,7 +158,10 @@
         var music_files_select = elem('select', {className: 'materialize-select', name: 'music[order][]'});
 
         for (let i = 0; i < music_files.length; i++) {
-            music_files_select.appendChild(elem('option', {value: music_files[i].filename, innerText: music_files[i].name}));
+            music_files_select.appendChild(elem('option', {
+                value: music_files[i].filename,
+                innerText: music_files[i].name
+            }));
         }
 
         $('#music_file_upload').on('input', function (event) {
@@ -156,12 +178,12 @@
 
                 let uploadUrl = site.current;
                 if (uploadUrl.substr(-1) === '/') {
-                    uploadUrl = uploadUrl.substr(0, uploadUrl.length -1);
+                    uploadUrl = uploadUrl.substr(0, uploadUrl.length - 1);
                 }
 
                 $.ajax({
                     type: 'POST',
-                    url: uploadUrl  + '/upload',
+                    url: uploadUrl + '/upload',
 
                     cache: false,
                     contentType: false,
@@ -171,10 +193,15 @@
                     success: function (data) {
                         if (data.success) {
                             let file = data.file;
-                            let row_id = 'file_'+file.name_hashed;
+                            let row_id = 'file_' + file.name_hashed;
                             let music_elem = elem('div', {id: row_id, className: 'col s12', 'data-file': file.filename},
                                 elem('h5', {className: 'song-title'},
-                                    elem('a', {href: site.url + '/data/music/' + file.name + '.ogg', target: '_blank', className: 'blue-text link--hover', innerText: file.name},
+                                    elem('a', {
+                                            href: site.url + '/data/music/' + file.name + '.ogg',
+                                            target: '_blank',
+                                            className: 'blue-text link--hover',
+                                            innerText: file.name
+                                        },
                                         elem('i', {className: 'mdi mdi-open-in-new'})
                                     )
                                 ),
@@ -190,11 +217,11 @@
                                 deleteSongEventRemove();
                                 deleteSongEventInit();
                             } else {
-                                toast('File already exists, but has been uploaded and overwritten', 4000, 'orange')
+                                toast('File already exists, but has been uploaded and overwritten', 4000, 'orange');
                                 console.log('already exists jew');
                             }
 
-                            toast(data.message, 2000,'green');
+                            toast(data.message, 2000, 'green');
                             toast('The list of available songs has changed, you will<br>need to refresh the page to see them in the list', 3000, 'orange');
                         } else {
                             toast(data.message, -1, 'red');
@@ -213,7 +240,7 @@
                 if (confirm && file && file.length) {
                     let url = site.current;
                     if (url.substr(-1) === '/') {
-                        url = url.substr(0, url.length -1);
+                        url = url.substr(0, url.length - 1);
                     }
 
                     url = url + '/delete';
@@ -221,7 +248,9 @@
                     // todo
                     $.post(url, {file}, function (data) {
                         if (data.success) {
-                            parent.fadeOut(function() {this.remove()});
+                            parent.fadeOut(function () {
+                                this.remove()
+                            });
                             toast('The list of available songs has changed, you will<br>need to refresh the page to see them in the list', 3000, 'orange');
                         }
 

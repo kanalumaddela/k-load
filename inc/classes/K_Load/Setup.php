@@ -52,7 +52,7 @@ class Setup
     {
         if (User::isSuper($_SESSION['steamid'])) {
             Cache::remove('version');
-            $version = (int) str_replace('.', '', Util::version());
+            $version = (int) str_replace('.', '', Util::version(true));
             $migrations = glob(APP_ROOT.sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
             foreach ($migrations as $folder) {
                 $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
@@ -66,7 +66,6 @@ class Setup
                     file_exists($folder.'/alter.php') and include $folder.'/alter.php';
                     file_exists($folder.'/insert.php') and include $folder.'/insert.php';
 
-                    Cache::remove('version');
                     $installed = Util::version() == $ver;
                     Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
                 }
@@ -97,15 +96,5 @@ class Setup
         }
 
         return $updates;
-    }
-
-    public static function phpinfo()
-    {
-        if (!Util::installed() || User::isAdmin($_SESSION['steamid'])) {
-            phpinfo();
-            die();
-        } else {
-            Util::redirect(APP_PATH);
-        }
     }
 }

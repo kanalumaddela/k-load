@@ -175,6 +175,10 @@ if (Util::installed() && strpos($_SERVER['REQUEST_URI'], '/install') !== false) 
 }
 
 if (isset($_SESSION['steamid']) && Util::installed()) {
+    if (!User::validateCSRF($_SESSION['steamid'], User::getCSRF($_SESSION['steamid']))) {
+        User::refreshCSRF($_SESSION['steamid']);
+    }
+
     if (User::isSuper($_SESSION['steamid']) || ENABLE_REGISTRATION) {
         if (!isset($_SESSION['id'])) {
             User::add($_SESSION['steamid']);

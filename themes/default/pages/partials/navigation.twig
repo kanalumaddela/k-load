@@ -1,83 +1,92 @@
 <nav class="hide-on-large-only">
-	<div class="nav-wrapper">
-		<a href="#" class="brand-logo">K-Load</a>
-		<a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi mdi-menu"></i></a>
-	</div>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">K-Load</a>
+        <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi mdi-menu"></i></a>
+    </div>
 </nav>
 
 <ul id="slide-out" class="side-nav fixed">
-	<li class="center-align no-hover">
-		<img class="avatar" src="{{user.avatarfull}}" onerror="this.src='{{assets}}/img/avatar.jpg'" style="margin-top:25px;margin-bottom:40px;">
-	</li>
-	<li class="{% if (site.host ~ site.path ~ '/dashboard') == site.current %}active{% endif %}">
-		<a href="{{site.path}}/dashboard">
-			<span class="mdi mdi-home-outline"></span>
-			Home
-		</a>
-	</li>
-	<li class="{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %}active{% endif %} tooltipped" data-delay="100" data-position="top" data-tooltip="These are settings to customize how it looks for YOU only">
-		<a href="{{site.path}}/dashboard/settings">
-			<span class="mdi mdi-tune"></span>
-			My Settings
-		</a>
-	</li>
+    <li class="center-align no-hover">
+        <img class="avatar" src="{{ user.avatarfull }}" onerror="this.src='{{ assets }}/img/avatar.jpg'"
+             style="margin-top:25px;margin-bottom:40px;">
+    </li>
+    <li class="{% if (site.host ~ site.path ~ '/dashboard') == site.current %}active{% endif %}">
+        <a href="{{ site.path }}/dashboard">
+            <span class="mdi mdi-home-outline"></span>
+            Home
+        </a>
+    </li>
+    <li class="{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %}active{% endif %} tooltipped"
+        data-delay="100" data-position="top" data-tooltip="These are settings to customize how it looks for YOU only">
+        <a href="{{ site.path }}/dashboard/settings">
+            <span class="mdi mdi-tune"></span>
+            My Settings
+        </a>
+    </li>
 
-	<li class="{% if (site.host ~ site.path ~ '/dashboard/users') == site.current %}active{% endif %}">
-		<a href="{{site.path}}/dashboard/users">
-			<span class="mdi mdi-account-multiple"></span>
-			Users
-		</a>
-	</li>
-	{% if (user.admin and user.perms|length > 0) or user.super %}
-		<li class="no-padding">
-			<ul class="collapsible collapsible-accordion">
-				<li>
-					<a class="collapsible-header {% if (site.host ~ site.path ~ '/dashboard/admin') in site.current %}active{% endif %} tooltipped" data-delay="100" data-position="top" data-tooltip="These are global settings that affect ALL players">
-						<span class="mdi mdi-wrench"></span>
-						Admin
-					</a>
-					<div class="collapsible-body">
-						<ul>
-							{% if user.super %}
-							<li class="{% if (site.host ~ site.path ~ '/dashboard/admin') == site.current %}active{% endif %}">
-								<a href="{{site.path}}/dashboard/admin">Core</a>
-							</li>
-							{% endif %}
-							{% if user.super or user.perms.community_name or user.perms.backgrounds or user.perms.description or user.perms.youtube %}
-								<li class="{% if (site.host ~ site.path ~ '/dashboard/admin/general') == site.current %}active{% endif %}">
-									<a href="{{site.path}}/dashboard/admin/general">General</a>
-								</li>
-							{% endif %}
-							{% if user.super or user.perms.messages %}
-								<li class="{% if (site.host ~ site.path ~ '/dashboard/admin/messages') == site.current %}active{% endif %}">
-									<a href="{{site.path}}/dashboard/admin/messages">Messages</a>
-								</li>
-							{% endif %}
-							{% if user.super or user.perms.rules %}
-								<li class="{% if (site.host ~ site.path ~ '/dashboard/admin/rules') == site.current %}active{% endif %}">
-									<a href="{{site.path}}/dashboard/admin/rules">Rules</a>
-								</li>
-							{% endif %}
-							{% if user.super or user.perms.staff %}
-								<li class="{% if (site.host ~ site.path ~ '/dashboard/admin/staff') == site.current %}active{% endif %}">
-									<a href="{{site.path}}/dashboard/admin/staff">Staff</a>
-								</li>
-							{% endif %}
-							{% if user.super or user.perms.music %}
-								<li class="{% if (site.host ~ site.path ~ '/dashboard/admin/music') == site.current %}active{% endif %}">
-									<a href="{{site.path}}/dashboard/admin/music">Music</a>
-								</li>
-							{% endif %}
-						</ul>
-					</div>
-				</li>
-			</ul>
-		</li>
-	{% endif %}
-	<li class="logout">
-		<a href="{{site.path}}/dashboard/logout">
-			<span class="mdi mdi-logout"></span>
-			Logout
-		</a>
-	</li>
+    <li class="{% if (site.host ~ site.path ~ '/dashboard/users') in site.current %}active{% endif %}">
+        <a href="{{ site.path }}/dashboard/users">
+            <span class="mdi mdi-account-multiple"></span>
+            Users
+        </a>
+    </li>
+    {% if (user.admin and user.perms|length > 0) or user.super %}
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header {% if (site.host ~ site.path ~ '/dashboard/admin') in site.current %}active{% endif %} tooltipped"
+                       data-delay="100" data-position="top"
+                       data-tooltip="These are global settings that affect ALL players">
+                        <span class="mdi mdi-wrench"></span>
+                        Admin
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            {% if user.super %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin">Core</a>
+                                </li>
+                            {% endif %}
+                            {% if user.super or user.perms.community_name or user.perms.backgrounds or user.perms.description or user.perms.youtube %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/general') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/general">General</a>
+                                </li>
+                            {% endif %}
+                            {% if user.super or user.perms.backgrounds %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/backgrounds') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/backgrounds">Backgrounds</a>
+                                </li>
+                            {% endif %}
+                            {% if user.super or user.perms.messages %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/messages') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/messages">Messages</a>
+                                </li>
+                            {% endif %}
+                            {% if user.super or user.perms.rules %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/rules') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/rules">Rules</a>
+                                </li>
+                            {% endif %}
+                            {% if user.super or user.perms.staff %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/staff') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/staff">Staff</a>
+                                </li>
+                            {% endif %}
+                            {% if user.super or user.perms.music %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/music') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/music">Music</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    {% endif %}
+    <li class="logout">
+        <a href="{{ site.path }}/dashboard/logout">
+            <span class="mdi mdi-logout"></span>
+            Logout
+        </a>
+    </li>
 </ul>

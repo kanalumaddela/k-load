@@ -3,11 +3,13 @@
 {% block title %}Fusion | K-Load{% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href="{{site.url}}/themes/metra/assets/css/grid.css" />
-    <link href="{{assets_theme}}/css/stripped.css?{{cache_buster}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ site.url }}/themes/metra/assets/css/grid.css"/>
+    <link href="{{ assets_theme }}/css/stripped.css?{{ cache_buster }}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,600,700">
     <style>
-        body:before { background-image:url({{assets}}/img/backgrounds/global/particles_green.jpg); }
+        body:before {
+            background-image: url({{assets}}/img/backgrounds/global/particles_green.jpg);
+        }
     </style>
 {% endblock %}
 
@@ -63,7 +65,8 @@
                 <!-- player -->
                 <div class="block">
                     <div class="block-content center-text">
-                        <img class="player avatar circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
+                        <img class="player avatar circle"
+                             src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
                         <h3>{{ user.personaname|default('Welcome') }}</h3>
                         <p>{{ user.steamid2 }}</p>
                     </div>
@@ -74,15 +77,27 @@
                     <div class="block-content" style="padding: 0;">
                         <h2 class="bold" style="padding: 15px 10px;text-transform: uppercase;">Server Rules</h2>
                         <div class="info">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-svg-icon"><path fill="currentColor" d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z" class=""></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-svg-icon">
+                                <path fill="currentColor"
+                                      d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z"
+                                      class=""></path>
+                            </svg>
                             <span class="server-name"></span>
                         </div>
                         <div class="info">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="fa-svg-icon"><path fill="currentColor" d="M480 96H160C71.6 96 0 167.6 0 256s71.6 160 160 160c44.8 0 85.2-18.4 114.2-48h91.5c29 29.6 69.5 48 114.2 48 88.4 0 160-71.6 160-160S568.4 96 480 96zM256 276c0 6.6-5.4 12-12 12h-52v52c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-52H76c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h52v-52c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h52c6.6 0 12 5.4 12 12v40zm184 68c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm80-80c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48z" class=""></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="fa-svg-icon">
+                                <path fill="currentColor"
+                                      d="M480 96H160C71.6 96 0 167.6 0 256s71.6 160 160 160c44.8 0 85.2-18.4 114.2-48h91.5c29 29.6 69.5 48 114.2 48 88.4 0 160-71.6 160-160S568.4 96 480 96zM256 276c0 6.6-5.4 12-12 12h-52v52c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-52H76c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h52v-52c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h52c6.6 0 12 5.4 12 12v40zm184 68c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm80-80c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48z"
+                                      class=""></path>
+                            </svg>
                             <span class="gamemode"></span>
                         </div>
                         <div class="info">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="fa-svg-icon"><path fill="currentColor" d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z" class=""></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="fa-svg-icon">
+                                <path fill="currentColor"
+                                      d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z"
+                                      class=""></path>
+                            </svg>
                             <span class="map"></span>
                         </div>
                     </div>
@@ -101,51 +116,55 @@
 
         function showRules(gamemode) {
             var rule_parent = document.getElementById('rules-list');
-            if (rules[gamemode] instanceof Array === false) { gamemode = 'global'; }
+            if (rules[gamemode] instanceof Array === false) {
+                gamemode = 'global';
+            }
             if (rules[gamemode] instanceof Array) {
                 if (rules[gamemode].length > 0) {
                     var real_cnt = 0;
-                    var rule_blocks = Math.ceil(rules[gamemode].length/7);
+                    var rule_blocks = Math.ceil(rules[gamemode].length / 7);
                     for (var x = 0; x < rule_blocks; x++) {
                         var children = [];
                         for (var i = 0; i < 7; i++) {
                             var rule = rules[gamemode][real_cnt] || null;
                             real_cnt++;
-                            if (!rule) { continue; }
+                            if (!rule) {
+                                continue;
+                            }
 
-                            children.push(elem('div',{ className: 'rule', innerText: rule}));
+                            children.push(elem('div', {className: 'rule', innerText: rule}));
                         }
-                        var rule_block = elem('div',{id: 'rule_block_'+x, className: 'rule-block'}, children);
+                        var rule_block = elem('div', {id: 'rule_block_' + x, className: 'rule-block'}, children);
                         rule_parent.appendChild(rule_block);
                         var rule_cnt = 0;
                         var anim_dur = 1000;
-                        $('#rule_block_'+rule_cnt).children().each(function() {
+                        $('#rule_block_' + rule_cnt).children().each(function () {
                             var elem = this;
-                            setTimeout(function(){
-                                $(elem).animate({opacity: '1'},{duration: 600});
+                            setTimeout(function () {
+                                $(elem).animate({opacity: '1'}, {duration: 600});
                             }, anim_dur);
-                            anim_dur = anim_dur+600;
+                            anim_dur = anim_dur + 600;
                         });
                     }
 
                     if (rules[gamemode].length > 7) {
                         var rule_elems = $('.rule-block');
-                        rule_interval = setInterval(function(){
-                            $('#rule_block_'+rule_cnt).fadeOut(500, function() {
+                        rule_interval = setInterval(function () {
+                            $('#rule_block_' + rule_cnt).fadeOut(500, function () {
                                 anim_dur = 1000;
                                 rule_cnt++;
                                 if (rule_cnt >= rule_elems.length) {
                                     rule_cnt = 0;
                                 }
-                                $('#rule_block_'+rule_cnt).fadeIn(300);
+                                $('#rule_block_' + rule_cnt).fadeIn(300);
 
-                                if ($('#rule_block_'+rule_cnt).children().css("opacity") == '0') {
-                                    $('#rule_block_'+rule_cnt).children().each(function() {
+                                if ($('#rule_block_' + rule_cnt).children().css("opacity") == '0') {
+                                    $('#rule_block_' + rule_cnt).children().each(function () {
                                         var elem = this;
-                                        setTimeout(function(){
-                                            $(elem).animate({opacity: '1'},{duration: 600});
+                                        setTimeout(function () {
+                                            $(elem).animate({opacity: '1'}, {duration: 600});
                                         }, anim_dur);
-                                        anim_dur = anim_dur+600;
+                                        anim_dur = anim_dur + 600;
                                     });
                                 }
                             });
@@ -158,7 +177,9 @@
         }
 
         function showStaff(gamemode) {
-            if (Array.isArray(staff[gamemode]) === false) { gamemode = 'global'; }
+            if (Array.isArray(staff[gamemode]) === false) {
+                gamemode = 'global';
+            }
             if (Array.isArray(staff[gamemode])) {
                 var staff_list = document.getElementById('staff-list');
                 if (staff[gamemode].length > 0) {
@@ -166,42 +187,48 @@
                         clearInterval(staffinterval);
                     }
                     var real_cnt = 0;
-                    var staff_blocks = Math.ceil(staff[gamemode].length/2);
+                    var staff_blocks = Math.ceil(staff[gamemode].length / 2);
                     for (var i = 0; i < staff_blocks; i++) {
                         var children = [];
                         for (var x = 0; x < 2; x++) {
                             var staff_member = staff[gamemode][real_cnt];
                             real_cnt++;
-                            if (typeof staff_member === 'undefined') { continue; }
+                            if (typeof staff_member === 'undefined') {
+                                continue;
+                            }
                             var steamid = staff_member.steamid || null;
                             var rank = staff_member.rank || 'Staff';
 
                             children.push(
-                                elem('div',{className: 'staff-member'}, [
-                                    elem('img', {className: 'avatar', src: site.path+'/api/player/'+steamid+'/avatarmedium?raw', onerror: 'this.src='+site.path+'/assets/img/avatar.jpg'}),
-                                    elem('div', {},[
-                                        elem('h4', {className: 'staff-name name_'+steamid, innerText: steamid}),
-                                        elem('h5', {className: 'staff-rank rank_'+steamid, innerText: rank})
+                                elem('div', {className: 'staff-member'}, [
+                                    elem('img', {
+                                        className: 'avatar',
+                                        src: site.path + '/api/player/' + steamid + '/avatarmedium?raw',
+                                        onerror: 'this.src=' + site.path + '/assets/img/avatar.jpg'
+                                    }),
+                                    elem('div', {}, [
+                                        elem('h4', {className: 'staff-name name_' + steamid, innerText: steamid}),
+                                        elem('h5', {className: 'staff-rank rank_' + steamid, innerText: rank})
                                     ])
                                 ])
                             );
                         }
                         staff_list.appendChild(
-                            elem('div',{id: 'staff_block_'+i, className: 'staff-block'}, children)
+                            elem('div', {id: 'staff_block_' + i, className: 'staff-block'}, children)
                         );
                     }
                     getStaff();
                     var staff_cnt = 0;
                     if (staff[gamemode].length > 2) {
                         var staff_elems = $('.staff-block');
-                        staffinterval = setInterval(function(){
-                            $('#staff_block_'+staff_cnt).fadeOut(500, function() {
+                        staffinterval = setInterval(function () {
+                            $('#staff_block_' + staff_cnt).fadeOut(500, function () {
                                 anim_dur = 1000;
                                 staff_cnt++;
                                 if (staff_cnt >= staff_elems.length) {
                                     staff_cnt = 0;
                                 }
-                                $('#staff_block_'+staff_cnt).fadeIn(300);
+                                $('#staff_block_' + staff_cnt).fadeIn(300);
                             });
                         }, 8000);
                     }

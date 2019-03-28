@@ -1,0 +1,59 @@
+{% extends 'base.twig' %}
+
+{% block tiitle %}Backgrounds | K-Load{% endblock %}
+
+{% block content %}
+    {% if user.admin %}
+        {% if user.super or user.perms.backgrounds %}
+            <form method="post" action="{{ site.path }}/dashboard/admin/backgrounds" class="row" style="padding-top:15px;padding-bottom:15px;">
+                {{ csrf|raw }}
+                <div class="col s12 m6">
+                    <div class="card">
+                        <div class="card-content">
+                            <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>Backgrounds</h1>
+                            <div class="row">
+                                <div class="col s12 m6">
+                                    <p>Enable Backgrounds?</p>
+                                </div>
+                                <div class="switch s12 m6">
+                                    <label>
+                                        No
+                                        <input type="checkbox" name="backgrounds[enable]" value="1"
+                                               {% if settings.backgrounds.enable %}checked{% endif %} />
+                                        <span class="lever"></span>
+                                        Yes
+                                    </label>
+                                </div>
+                                <div style="height:8px;"></div>
+                                <div class="col s12 m6">
+                                    <p>Randomize Backgrounds?</p>
+                                </div>
+                                <div class="switch s12 m6">
+                                    <label>
+                                        No
+                                        <input type="checkbox" name="backgrounds[random]" value="1"
+                                               {% if settings.backgrounds.random %}checked{% endif %} />
+                                        <span class="lever"></span>
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="input-field col s12 m6">
+                                    <p>Background Duration</p>
+                                    <input name="backgrounds[duration]" type="number" placeholder="e.g. 5000" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.duration }}">
+                                </div>
+                                <div class="input-field col s12 m6">
+                                    <p>Background Fade</p>
+                                    <input name="backgrounds[fade]" type="number" placeholder="e.g. 750" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.fade }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fixed-action-btn">
+                    <button id="save-btn" class="btn-floating btn-large blue" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+                </div>
+            </form>
+        {% endif %}
+    {% endif %}
+{% endblock %}

@@ -2,6 +2,7 @@
 
 namespace K_Load\Controller;
 
+use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
@@ -33,6 +34,37 @@ class Users
             }
         }
         $data['permissions'] = User::getPerms();
+
+        $steamids = implode(',',array_column($data['users'], 'steamid'));
+
+        if (ENABLE_CACHE) {
+            $cacheKey = 'pg-'.($data['page'] ?? ($page ?? 1)).'-'.($steamids);
+
+            $steamInfo = Cache::remember($cacheKey, 3600, function() use ($steamids) {
+                $info = \Steam::Info($steamids);
+
+                return $info['response']['players'] ?? null;
+            });
+
+            if (is_null($steamInfo)) {
+                $steamInfo = [];
+            }
+        } else {
+            $steamInfo = \Steam::Info($steamids);
+            $steamInfo = $steamInfo['response']['players'] ?? [];
+        }
+
+        foreach ($steamInfo as $index => $player) {
+            if (!isset($player['steamid'])) {
+                unset($steamInfo[$index]);
+                continue;
+            }
+
+            $steamInfo[$player['steamid']] = $player;
+            unset($steamInfo[$index]);
+        }
+
+        $data['steamInfo'] = $steamInfo;
 
         Template::render('@dashboard/users.twig', $data);
     }

@@ -19,6 +19,12 @@ class Dashboard
             User::session($_SESSION['steamid']);
         }
 
+        /*
+        dump(Template::getData());
+        die();
+        */
+
+
         Template::render('@dashboard/settings.twig', (isset($alert) ? ['alert'=>$alert] : []));
     }
 }

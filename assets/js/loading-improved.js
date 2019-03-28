@@ -35,7 +35,7 @@ const finishedStatuses = [
 ];
 
 // misc variables
-var currentProgress, demoInterval;
+var currentProgress, demoInterval, backgroundInterval, backstretchInstance;
 var isGmod = navigator.userAgent.toLowerCase().indexOf('valve') !== -1;
 
 /**
@@ -86,6 +86,29 @@ const str_random_v2 = function (length) {
 };
 
 /**
+ * {@link https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/}
+ *
+ * @param {Array} array
+ * @returns {Array}
+ */
+const shuffle = function (array) {
+    var currentIndex = array.length;
+    var temporaryValue, randomIndex;
+
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+};
+
+
+/**
  * Return a NodeList matching the given selector.
  *
  * @param {string} selector
@@ -134,8 +157,9 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
         resetDemoMode();
     }
 
+    var gamemodeFriendly = gamemode;
     if (Object.keys(gamemodes).indexOf(gamemode) !== -1) {
-        gamemode = gamemodes[gamemode];
+        gamemodeFriendly = gamemodes[gamemode];
     }
 
     text('.server-name', servername);
@@ -145,8 +169,9 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
     text('.maxplayers', maxplayers);
     text('.max-players', maxplayers);
     text('.steamid', steamid);
-    text('.gamemode', gamemode);
+    text('.gamemode', gamemodeFriendly);
     updateProgress();
+    setBackgrounds(gamemode);
 
     if (typeof GameDetails_custom === 'function') {
         GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode);
@@ -249,14 +274,54 @@ function setDownloadProgress(decimal, force) {
 }
 
 /**
- * Create the div container for the backgrounds and insert styles.
+ * Configure backgrounds to be used for the given gamemode.
+ *
+ * @param {string} gamemode
  */
-function setUpBackgrounds() {
-    var backgroundsHtml = elem('div', {id: 'k-load-backgrounds'});
+function setBackgrounds(gamemode) {
+    if (!backgrounds.enable) {
+        return;
+    }
 
-    document.body.appendChild(backgroundsHtml);
+    var doesntExist = Object.keys(backgrounds.list).indexOf(gamemode) === -1;
+    const globalExists = Object.keys(backgrounds.list).indexOf('global') !== -1;
+    const backstretchActive = typeof backstretchInstance !== 'undefined';
 
-    var backgroundCounter = 0;
+    if (globalExists && doesntExist) {
+        gamemode = 'global';
+        doesntExist = false;
+    }
+
+    if (doesntExist || backstretchActive) {
+        if (backstretchActive) {
+            stopBackgrounds();
+        }
+        if (doesntExist) {
+            return;
+        }
+    }
+
+    var backgroundImages = backgrounds.list[gamemode];
+
+    if (backgroundImages.length <= 0) {
+        return;
+    }
+
+    if (backgrounds.random) {
+        shuffle(backgroundImages);
+    }
+
+    backstretchInstance = $.backstretch(backgroundImages[0], {fade: (backgrounds.fade ? backgrounds.fade : 750)});
+    backstretchInstance.images = backgroundImages;
+
+    backgroundInterval = setInterval(function() {
+        backstretchInstance.next();
+    }, backgrounds.duration);
+}
+
+function stopBackgrounds() {
+    backstretchInstance.destroy();
+    clearInterval(backgroundInterval);
 }
 
 /**
@@ -273,7 +338,7 @@ function demoMode() {
         if (files.downloaded >= 100) {
             files.downloaded = 0;
         }
-    }, 125);
+    }, 200);
 }
 
 /**
@@ -290,8 +355,4 @@ function resetDemoMode() {
 
 if (!isGmod) {
     demoMode();
-}
-
-if (backgrounds.enable) {
-    //setUpBackgrounds();
 }

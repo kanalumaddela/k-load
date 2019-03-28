@@ -1,173 +1,184 @@
 {% extends 'base.twig' %}
 
-{% block title %}{{player.name|default(player.steamid)}} | K-Load{% endblock %}
+{% block title %}{{ player.name|default(player.steamid) }} | K-Load{% endblock %}
 
 {% block head %}
-	<meta property="og:title" content="{{player.name|default(player.steamid)}} | K-Load" />
-	<meta property="og:description" content="{{player.name|default(player.steamid)}}'s settings on K-Load" />
-	<meta property="og:url" content="{{site.current}}" />
-	<meta property="og:image" content="{{site.path}}/api/player/{{player.steamid}}/avatarfull?raw" />
-	<link rel="icon" type="image/png" sizes="32x32" href="{{site.path}}/api/player/{{player.steamid}}/avatar?raw">
+    <meta property="og:title" content="{{ player.name|default(player.steamid) }} | K-Load"/>
+    <meta property="og:description" content="{{ player.name|default(player.steamid) }}'s settings on K-Load"/>
+    <meta property="og:url" content="{{ site.current }}"/>
+    <meta property="og:image" content="{{ site.path }}/api/player/{{ player.steamid }}/avatarfull?raw"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ site.path }}/api/player/{{ player.steamid }}/avatar?raw">
 {% endblock %}
 
 {% block css_body %}
-<style>
-.col.s12.m3 > img {
-	width: 100%;
-}
-.card .card-content p {
-	margin: 8px 0;
-}
-.col.s12.m6 > .card {
-	height: 200px;
-}
-.settings .col > p {
-	margin: 0;
-}
-.settings [type="checkbox"]+label {
-	padding-left: 20px;
-}
-@media only screen and (min-width: 601px) {
-	.col.s12.m3 {
-		width: 22%;
-	}
-}
-</style>
+    <style>
+        .col.s12.m3 > img {
+            width: 100%;
+        }
+
+        .card .card-content p {
+            margin: 8px 0;
+        }
+
+        .col.s12.m6 > .card {
+            height: 200px;
+        }
+
+        .settings .col > p {
+            margin: 0;
+        }
+
+        .settings [type="checkbox"] + label {
+            padding-left: 20px;
+        }
+
+        @media only screen and (min-width: 601px) {
+            .col.s12.m3 {
+                width: 22%;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-	<div class="row" style="margin-top: 20px;">
-		<div class="col s12">
-			<div class="card">
-				<div class="card-content">
-					<div class="row">
-						<div class="col s12 m3 center-align valign-wrapper">
-							<img class="avatar" src="{{site.path}}/api/player/{{player.steamid}}/avatarfull?raw">
-						</div>
-						<div class="col s12 m9">
-							{% if player.banned %}
-								<span class="new badge red" data-badge-caption="">Banned</span>
-							{% endif %}
-							<p>Name: {{player.name|default('unknown')}}</p>
-							<p>SteamIDs: <code>{{player.steamid}}</code>, <code>{{player.steamid2}}</code>, <code>{{player.steamid3}}</code></p>
-							<p>Loading Screen: <a href="{{site.path}}/?steamid={{player.steamid}}" target="_blank">{{site.url}}/?steamid={{player.steamid}}</a></p>
-							<p>Registered: {{player.registered}}</a></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col s12 m6">
-			<div class="card">
-				<div class="card-content">
-					<span class="card-title"><i class="mdi mdi-panorama left"></i>Backgrounds</span>
-					<div class="row settings">
-						<div class="col s12">
-							Enabled
-							<p class="right">
-								<input type="checkbox" {% if player.settings.backgrounds.enable %}checked{% endif %} />
-								<label></label>
-							</p>
-						</div>
-						<div class="col s12">
-							Random
-							<p class="right">
-								<input type="checkbox" {% if player.settings.backgrounds.random %}checked{% endif %} />
-								<label></label>
-							</p>
-						</div>
-						<div class="col s12">
-							<p>Duration: <span class="right">{{player.settings.backgrounds.duration}}</span></p>
-						</div>
-						<div class="col s12">
-							<p>Fade: <span class="right">{{player.settings.backgrounds.fade}}</span></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col s12 m6">
-			<div class="card">
-				<div class="card-content">
-					<span class="card-title"><i class="mdi mdi-youtube-play left"></i>YouTube</span>
-					<div class="row settings">
-						<div class="col s12">
-							Enabled
-							<p class="right">
-								<input type="checkbox" {% if player.settings.youtube.enable %}checked{% endif %} />
-								<label></label>
-							</p>
-						</div>
-						<div class="col s12">
-							Random
-							<p class="right">
-								<input type="checkbox" {% if player.settings.youtube.random %}checked{% endif %} />
-								<label></label>
-							</p>
-						</div>
-						<div class="col s12">
-							<p>Volume: <span class="right">{{player.settings.youtube.volume}}</span></p>
-						</div>
-						{% if player.settings.youtube.list %}
-							<div class="col s12 center-align">
-								<button class="btn modal-trigger" href="#youtube_videos">Videos</button>
-							</div>
-						{% endif %}
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col s12">
-			<div class="card">
-				<div class="card-content">
-					<span class="card-title"><i class="mdi mdi-language-css3 left"></i>CSS</span>
-					<pre>{{player.css}}</pre>
-				</div>
-			</div>
-		</div>
-	</div>
-	{% if player.settings.youtube.list %}
-		<div id="youtube_videos" class="modal">
-			<div class="modal-content">
-				{% for id in player.settings.youtube.list %}
-					<a href="https://www.youtube.com/watch?v={{ id }}" target="_blank">https://www.youtube.com/watch?v={{ id }}</a>
-					<br>
-				{% endfor %}
-			</div>
-			<div class="modal-footer">
-				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
-			</div>
-		</div>
-	{% endif %}
-	{% if player.steamid != user.steamid %}
-		<div class="fixed-action-btn">
-			<a class="btn-floating btn-large blue">
-				<i class="large mdi mdi-account-settings-variant"></i>
-			</a>
-			<ul>
-				<li>
-					<a class="btn-floating tooltipped pink copy-user" data-tooltip="Copy User's Settings" data-position="left" data-steamid="{{player.steamid}}">
-						<i class="mdi mdi-content-copy"></i>
-					</a>
-				</li>
-				{% if not player.banned and (perms.ban or user.super) %}
-					<li>
-						<a class="btn-floating tooltipped red ban-user" data-tooltip="Ban User" data-position="left" data-steamid="{{player.steamid}}">
-							<i class="mdi mdi-gavel"></i>
-						</a>
-					</li>
-				{% elseif player.banned and (perms.unban or user.super) %}
-					<li>
-						<a class="btn-floating tooltipped green unban-user" data-tooltip="Unban User" data-position="left" data-steamid="{{player.steamid}}">
-							<i class="mdi mdi-lock-open-outline"></i>
-						</a>
-					</li>
-				{% endif %}
-			</ul>
-		</div>
-	{% endif %}
+    <div class="row" style="margin-top: 20px;">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12 m3 center-align valign-wrapper">
+                            <img class="avatar" src="{{ site.path }}/api/player/{{ player.steamid }}/avatarfull?raw">
+                        </div>
+                        <div class="col s12 m9">
+                            {% if player.banned %}
+                                <span class="new badge red" data-badge-caption="">Banned</span>
+                            {% endif %}
+                            <p>Name: {{ player.name|default('unknown') }}</p>
+                            <p>SteamIDs: <code>{{ player.steamid }}</code>, <code>{{ player.steamid2 }}</code>,
+                                <code>{{ player.steamid3 }}</code></p>
+                            <p>Loading Screen: <a href="{{ site.path }}/?steamid={{ player.steamid }}"
+                                                  target="_blank">{{ site.url }}/?steamid={{ player.steamid }}</a></p>
+                            <p>Registered: {{ player.registered }}</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="mdi mdi-panorama left"></i>Backgrounds</span>
+                    <div class="row settings">
+                        <div class="col s12">
+                            Enabled
+                            <p class="right">
+                                <input type="checkbox" {% if player.settings.backgrounds.enable %}checked{% endif %} />
+                                <label></label>
+                            </p>
+                        </div>
+                        <div class="col s12">
+                            Random
+                            <p class="right">
+                                <input type="checkbox" {% if player.settings.backgrounds.random %}checked{% endif %} />
+                                <label></label>
+                            </p>
+                        </div>
+                        <div class="col s12">
+                            <p>Duration: <span class="right">{{ player.settings.backgrounds.duration }}</span></p>
+                        </div>
+                        <div class="col s12">
+                            <p>Fade: <span class="right">{{ player.settings.backgrounds.fade }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="mdi mdi-youtube-play left"></i>YouTube</span>
+                    <div class="row settings">
+                        <div class="col s12">
+                            Enabled
+                            <p class="right">
+                                <input type="checkbox" {% if player.settings.youtube.enable %}checked{% endif %} />
+                                <label></label>
+                            </p>
+                        </div>
+                        <div class="col s12">
+                            Random
+                            <p class="right">
+                                <input type="checkbox" {% if player.settings.youtube.random %}checked{% endif %} />
+                                <label></label>
+                            </p>
+                        </div>
+                        <div class="col s12">
+                            <p>Volume: <span class="right">{{ player.settings.youtube.volume }}</span></p>
+                        </div>
+                        {% if player.settings.youtube.list %}
+                            <div class="col s12 center-align">
+                                <button class="btn modal-trigger" href="#youtube_videos">Videos</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="mdi mdi-language-css3 left"></i>CSS</span>
+                    <pre>{{ player.css }}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if player.settings.youtube.list %}
+        <div id="youtube_videos" class="modal">
+            <div class="modal-content">
+                {% for id in player.settings.youtube.list %}
+                    <a href="https://www.youtube.com/watch?v={{ id }}"
+                       target="_blank">https://www.youtube.com/watch?v={{ id }}</a>
+                    <br>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+            </div>
+        </div>
+    {% endif %}
+    {% if player.steamid != user.steamid %}
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large blue">
+                <i class="large mdi mdi-account-settings-variant"></i>
+            </a>
+            <ul>
+                <li>
+                    <a class="btn-floating tooltipped pink copy-user" data-tooltip="Copy User's Settings"
+                       data-position="left" data-steamid="{{ player.steamid }}">
+                        <i class="mdi mdi-content-copy"></i>
+                    </a>
+                </li>
+                {% if not player.banned and (perms.ban or user.super) %}
+                    <li>
+                        <a class="btn-floating tooltipped red ban-user" data-tooltip="Ban User" data-position="left"
+                           data-steamid="{{ player.steamid }}">
+                            <i class="mdi mdi-gavel"></i>
+                        </a>
+                    </li>
+                {% elseif player.banned and (perms.unban or user.super) %}
+                    <li>
+                        <a class="btn-floating tooltipped green unban-user" data-tooltip="Unban User"
+                           data-position="left" data-steamid="{{ player.steamid }}">
+                            <i class="mdi mdi-lock-open-outline"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block js %}
-	<script>$('.modal').modal();</script>
+    <script>$('.modal').modal();</script>
 {% endblock %}

@@ -47,7 +47,9 @@
             <div class="col-4">
                 <div id="server-info">
                     <h1>{{ settings.community_name }}</h1>
-                    <div class="center-text"><img style="border-radius:3px;" onerror="this.src='https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/nomap.jpg'" src="https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/{% if map %}{{ 'garrysmod/' ~ map }}{% else %}nomap{% endif %}.jpg"/>
+                    <div class="center-text"><img style="border-radius:3px;"
+                                                  onerror="this.src='https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/nomap.jpg'"
+                                                  src="https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/{% if map %}{{ 'garrysmod/' ~ map }}{% else %}nomap{% endif %}.jpg"/>
                     </div>
                     <p id="description" class="center-text">{{ settings.description }}</p>
                     <table style="margin-top:10px">

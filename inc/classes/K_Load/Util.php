@@ -110,9 +110,9 @@ class Util
         return self::version();
     }
 
-    public static function version()
+    public static function version($ignoreCache = false)
     {
-        if (ENABLE_CACHE) {
+        if (ENABLE_CACHE && !$ignoreCache) {
             $version = Cache::remember('version', 120, function () {
                 $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 

@@ -6,22 +6,28 @@
 {% block css %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300">
     <style>
-        body:before { background-image:url({{assets}}/img/backgrounds/global/particles_blue.jpg); }
+        body:before {
+            background-image: url({{assets}}/img/backgrounds/global/particles_blue.jpg);
+        }
 
         body {
             font-family: Roboto, sans-serif;
             color: #fff;
         }
-        body,p,h1,h2,h3,h4,h5,h6 {
+
+        body, p, h1, h2, h3, h4, h5, h6 {
             font-weight: 300;
         }
-        p,h1,h2,h3,h4,h5,h6 {
+
+        p, h1, h2, h3, h4, h5, h6 {
             margin: 0;
         }
+
         h1 {
             border-bottom: 2px solid #3da1cd;
             padding-bottom: 10px;
         }
+
         #box {
             width: 95%;
             max-width: 900px;
@@ -38,9 +44,11 @@
             border-top-right-radius: 15px;
             border-top-left-radius: 15px;
         }
+
         .box-header > * {
             vertical-align: middle;
         }
+
         .connecting-player-name {
             margin-left: 15px;
             font-size: 1.75rem;
@@ -53,6 +61,7 @@
             -webkit-transform: translateY(-50%);
             transform: translateY(-50%);
         }
+
         .badge {
             display: inline-block;
             padding: 5px 8px;
@@ -63,8 +72,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .badge.progress {
-            background-color: rgba(0,0,0,0.2);
+            background-color: rgba(0, 0, 0, 0.2);
         }
 
         .box-content > div {
@@ -88,12 +98,15 @@
             margin-top: 10px;
             counter-reset: rule;
         }
+
         #rules > .rule-block:not(:first-child) {
             display: none;
         }
+
         #rules .rule {
             padding: 10px 0;
         }
+
         #rules .rule:before {
             display: inline-block;
             margin-right: 10px;
@@ -116,7 +129,8 @@
             <img class="avatar circle small" src="{{ user.avatarmedium|default(assets ~ '/img/avatar.jpg') }}">
             <span class="connecting-player-name">{{ user.personaname|default('Welcome Player') }}</span>
             <div class="info">
-                <span class="badge status" style="max-width: 450px;white-space: nowrap;">Retrieving server info...</span>
+                <span class="badge status"
+                      style="max-width: 450px;white-space: nowrap;">Retrieving server info...</span>
                 <span class="badge progress">0%</span>
             </div>
         </div>
@@ -127,29 +141,69 @@
                 <table>
                     <tbody>
                     <tr>
-                        <td><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 510 510"><path d="M229.5,382.5h51v-153h-51V382.5z M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255s255-114.75,255-255S395.25,0,255,0z     M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z M229.5,178.5h51v-51h-51V178.5z" style="fill: rgb(255, 255, 255);"></path></svg></td>
+                        <td>
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px"
+                                 viewBox="0 0 510 510">
+                                <path d="M229.5,382.5h51v-153h-51V382.5z M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255s255-114.75,255-255S395.25,0,255,0z     M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z M229.5,178.5h51v-51h-51V178.5z"
+                                      style="fill: rgb(255, 255, 255);"></path>
+                            </svg>
+                        </td>
                         <td>{{ settings.description }}</td>
                     </tr>
                     <tr>
-                        <td><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 510 510"><path d="M255,127.5v-102H0v459h510v-357H255z M102,433.5H51v-51h51V433.5z M102,331.5H51v-51h51V331.5z M102,229.5H51v-51h51    V229.5z M102,127.5H51v-51h51V127.5z M204,433.5h-51v-51h51V433.5z M204,331.5h-51v-51h51V331.5z M204,229.5h-51v-51h51V229.5z     M204,127.5h-51v-51h51V127.5z M459,433.5H255v-51h51v-51h-51v-51h51v-51h-51v-51h204V433.5z M408,229.5h-51v51h51V229.5z     M408,331.5h-51v51h51V331.5z" style="fill: #ffffff;"></path></svg></td>
+                        <td>
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512px" height="512px"
+                                 viewBox="0 0 510 510">
+                                <path d="M255,127.5v-102H0v459h510v-357H255z M102,433.5H51v-51h51V433.5z M102,331.5H51v-51h51V331.5z M102,229.5H51v-51h51    V229.5z M102,127.5H51v-51h51V127.5z M204,433.5h-51v-51h51V433.5z M204,331.5h-51v-51h51V331.5z M204,229.5h-51v-51h51V229.5z     M204,127.5h-51v-51h51V127.5z M459,433.5H255v-51h51v-51h-51v-51h51v-51h-51v-51h204V433.5z M408,229.5h-51v51h51V229.5z     M408,331.5h-51v51h51V331.5z"
+                                      style="fill: #ffffff;"></path>
+                            </svg>
+                        </td>
                         <td class="server-name"></td>
                     </tr>
                     <tr>
-                        <td><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 469.333 469.333" width="25px" height="25px"><path d="M426.667,106.667h-384C19.093,106.667,0,125.76,0,149.333V320c0,23.573,19.093,42.667,42.667,42.667h384    c23.573,0,42.667-19.093,42.667-42.667V149.333C469.333,125.76,450.24,106.667,426.667,106.667z M213.333,256h-64v64h-42.667v-64    h-64v-42.667h64v-64h42.667v64h64V256z M309.333,298.667c-17.707,0-32-14.293-32-32s14.293-32,32-32s32,14.293,32,32    S327.04,298.667,309.333,298.667z M394.667,234.667c-17.707,0-32-14.293-32-32s14.293-32,32-32s32,14.293,32,32    S412.373,234.667,394.667,234.667z" style="fill: #ffffff;"></path></svg></td>
+                        <td>
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                 viewBox="0 0 469.333 469.333" width="25px" height="25px">
+                                <path d="M426.667,106.667h-384C19.093,106.667,0,125.76,0,149.333V320c0,23.573,19.093,42.667,42.667,42.667h384    c23.573,0,42.667-19.093,42.667-42.667V149.333C469.333,125.76,450.24,106.667,426.667,106.667z M213.333,256h-64v64h-42.667v-64    h-64v-42.667h64v-64h42.667v64h64V256z M309.333,298.667c-17.707,0-32-14.293-32-32s14.293-32,32-32s32,14.293,32,32    S327.04,298.667,309.333,298.667z M394.667,234.667c-17.707,0-32-14.293-32-32s14.293-32,32-32s32,14.293,32,32    S412.373,234.667,394.667,234.667z"
+                                      style="fill: #ffffff;"></path>
+                            </svg>
+                        </td>
                         <td class="gamemode"></td>
                     </tr>
                     <tr>
                         <td>
-                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 561 561" ><path d="M382.5,255c43.35,0,76.5-33.15,76.5-76.5S425.85,102,382.5,102S306,135.15,306,178.5S339.15,255,382.5,255z M178.5,255    c43.35,0,76.5-33.15,76.5-76.5S221.85,102,178.5,102S102,135.15,102,178.5S135.15,255,178.5,255z M178.5,306    C119.85,306,0,336.6,0,395.25V459h357v-63.75C357,336.6,237.15,306,178.5,306z M382.5,306c-7.65,0-15.3,0-25.5,2.55    c30.6,20.4,51,51,51,86.7V459h153v-63.75C561,336.6,441.15,306,382.5,306z" style="fill: #ffffff;"></path></svg>
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px"
+                                 viewBox="0 0 561 561">
+                                <path d="M382.5,255c43.35,0,76.5-33.15,76.5-76.5S425.85,102,382.5,102S306,135.15,306,178.5S339.15,255,382.5,255z M178.5,255    c43.35,0,76.5-33.15,76.5-76.5S221.85,102,178.5,102S102,135.15,102,178.5S135.15,255,178.5,255z M178.5,306    C119.85,306,0,336.6,0,395.25V459h357v-63.75C357,336.6,237.15,306,178.5,306z M382.5,306c-7.65,0-15.3,0-25.5,2.55    c30.6,20.4,51,51,51,86.7V459h153v-63.75C561,336.6,441.15,306,382.5,306z"
+                                      style="fill: #ffffff;"></path>
+                            </svg>
                         </td>
                         <td class="max-players"></td>
                     </tr>
                     <tr>
-                        <td><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 484.5 484.5"><path d="M242.25,0c-127.5,0-229.5,102-229.5,229.5V408c0,43.35,33.15,76.5,76.5,76.5h76.5v-204h-102v-51    c0-99.45,79.05-178.5,178.5-178.5s178.5,79.05,178.5,178.5v51h-102v204h76.5c43.35,0,76.5-33.15,76.5-76.5V229.5    C471.75,102,369.75,0,242.25,0z" style="fill: #ffffff;"></path></svg></td>
+                        <td>
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px"
+                                 viewBox="0 0 484.5 484.5">
+                                <path d="M242.25,0c-127.5,0-229.5,102-229.5,229.5V408c0,43.35,33.15,76.5,76.5,76.5h76.5v-204h-102v-51    c0-99.45,79.05-178.5,178.5-178.5s178.5,79.05,178.5,178.5v51h-102v204h76.5c43.35,0,76.5-33.15,76.5-76.5V229.5    C471.75,102,369.75,0,242.25,0z"
+                                      style="fill: #ffffff;"></path>
+                            </svg>
+                        </td>
                         <td class="youtube-playing-title">Nothing's playing...</td>
                     </tr>
                     <tr>
-                        <td><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 510 510"><path d="M459,0H51C22.95,0,0,22.95,0,51v459l102-102h357c28.05,0,51-22.95,51-51V51C510,22.95,487.05,0,459,0z M408,306H102v-51    h306V306z M408,229.5H102v-51h306V229.5z M408,153H102v-51h306V153z" style="fill: #ffffff;"></path></svg></td>
+                        <td>
+                            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px"
+                                 viewBox="0 0 510 510">
+                                <path d="M459,0H51C22.95,0,0,22.95,0,51v459l102-102h357c28.05,0,51-22.95,51-51V51C510,22.95,487.05,0,459,0z M408,306H102v-51    h306V306z M408,229.5H102v-51h306V229.5z M408,153H102v-51h306V153z"
+                                      style="fill: #ffffff;"></path>
+                            </svg>
+                        </td>
                         <td class="messages"></td>
                     </tr>
                     </tbody>
@@ -172,51 +226,55 @@
 
         function showRules(gamemode) {
             var rule_parent = document.getElementById('rules');
-            if (rules[gamemode] instanceof Array === false) { gamemode = 'global'; }
+            if (rules[gamemode] instanceof Array === false) {
+                gamemode = 'global';
+            }
             if (rules[gamemode] instanceof Array) {
                 if (rules[gamemode].length > 0) {
                     var real_cnt = 0;
-                    var rule_blocks = Math.ceil(rules[gamemode].length/7);
+                    var rule_blocks = Math.ceil(rules[gamemode].length / 7);
                     for (var x = 0; x < rule_blocks; x++) {
                         var children = [];
                         for (var i = 0; i < 7; i++) {
                             var rule = rules[gamemode][real_cnt] || null;
                             real_cnt++;
-                            if (!rule) { continue; }
+                            if (!rule) {
+                                continue;
+                            }
 
-                            children.push(elem('div',{ className: 'rule', innerText: rule}));
+                            children.push(elem('div', {className: 'rule', innerText: rule}));
                         }
-                        var rule_block = elem('div',{id: 'rule_block_'+x, className: 'rule-block'}, children);
+                        var rule_block = elem('div', {id: 'rule_block_' + x, className: 'rule-block'}, children);
                         rule_parent.appendChild(rule_block);
                         var rule_cnt = 0;
                         var anim_dur = 1000;
-                        $('#rule_block_'+rule_cnt).children().each(function() {
+                        $('#rule_block_' + rule_cnt).children().each(function () {
                             var elem = this;
-                            setTimeout(function(){
-                                $(elem).animate({opacity: '1'},{duration: 600});
+                            setTimeout(function () {
+                                $(elem).animate({opacity: '1'}, {duration: 600});
                             }, anim_dur);
-                            anim_dur = anim_dur+600;
+                            anim_dur = anim_dur + 600;
                         });
                     }
 
                     if (rules[gamemode].length > 7) {
                         var rule_elems = $('.rule-block');
-                        rule_interval = setInterval(function(){
-                            $('#rule_block_'+rule_cnt).fadeOut(500, function() {
+                        rule_interval = setInterval(function () {
+                            $('#rule_block_' + rule_cnt).fadeOut(500, function () {
                                 anim_dur = 1000;
                                 rule_cnt++;
                                 if (rule_cnt >= rule_elems.length) {
                                     rule_cnt = 0;
                                 }
-                                $('#rule_block_'+rule_cnt).fadeIn(300);
+                                $('#rule_block_' + rule_cnt).fadeIn(300);
 
-                                if ($('#rule_block_'+rule_cnt).children().css("opacity") == '0') {
-                                    $('#rule_block_'+rule_cnt).children().each(function() {
+                                if ($('#rule_block_' + rule_cnt).children().css("opacity") == '0') {
+                                    $('#rule_block_' + rule_cnt).children().each(function () {
                                         var elem = this;
-                                        setTimeout(function(){
-                                            $(elem).animate({opacity: '1'},{duration: 600});
+                                        setTimeout(function () {
+                                            $(elem).animate({opacity: '1'}, {duration: 600});
                                         }, anim_dur);
-                                        anim_dur = anim_dur+600;
+                                        anim_dur = anim_dur + 600;
                                     });
                                 }
                             });

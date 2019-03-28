@@ -40,10 +40,9 @@ class User
     public static function get($steamid)
     {
         $logged_in = isset($_SESSION['steamid']);
-        $admin = (isset($_SESSION['steamid']) ? (self::isAdmin($_SESSION['steamid'] ?? 0)) : 0);
         $super = (isset($_SESSION['steamid']) ? (self::isSuper($_SESSION['steamid'] ?? 0)) : 0);
 
-        return Database::conn()->select('SELECT `id`, `name`, `steamid`, `steamid2`, `steamid3`, `settings`, '.($logged_in ? '`custom_css` AS `css`,' : '').' `admin`, '.(($super || $logged_in) ? '`perms`,' : '')."`banned`, DATE_FORMAT(`registered`, '%m/%d/%Y %r') AS `registered` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute() ?? [];
+        return Database::conn()->select('SELECT `id`, `name`, `steamid`, `steamid2`, `steamid3`, `settings`, '.($logged_in ? '`custom_css` AS `css`,' : '').' `admin`, '.(($super || $logged_in) ? '`perms`,' : '\'[]\' as `perms`')."`banned`, DATE_FORMAT(`registered`, '%m/%d/%Y %r') AS `registered` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute() ?? [];
     }
 
     public static function getInfo($steamid, ...$columns)
@@ -186,7 +185,8 @@ class User
         unset($settings['csrf']);
         unset($settings['save']);
 
-        $data = Steam::User($steamid) ? Steam::User($steamid) : [];
+        $steamInfo = Steam::User($steamid);
+        $data = $steamInfo ? $steamInfo : [];
         $data['settings'] = $settings;
         $data['settings']['backgrounds'] = json_encode($settings['backgrounds']);
         $data['settings']['youtube'] = json_encode($settings['youtube']);
@@ -261,7 +261,9 @@ class User
         if (isset($user['perms'])) {
             $user['perms'] = array_fill_keys(array_keys(array_flip(json_decode($user['perms'], true))), 1);
         }
-        $_SESSION = $_SESSION + $user;
+
+        $_SESSION = array_replace_recursive($_SESSION, $user);
+
         if ($_SESSION['settings'] != $user['settings']) {
             $_SESSION['settings'] = $user['settings'];
         }
@@ -317,6 +319,11 @@ class User
         sort($perms);
 
         return $perms;
+    }
+
+    public static function getCurrentPerms()
+    {
+        return $_SESSION['perms'] ?? [];
     }
 
     public static function can($perm)

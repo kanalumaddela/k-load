@@ -4,7 +4,7 @@
 define('DEBUG', true); // default: false
 
 /* cache data retrieved for faster load times */
-define('ENABLE_CACHE', true); // default: true
+define('ENABLE_CACHE', false); // default: true
 
 /* logs all requests, mysql queries, actions performed by admins, etc */
 define('ENABLE_LOG', true); // default: true

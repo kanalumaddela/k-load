@@ -1,85 +1,90 @@
 {% extends '@loading/base.twig' %}
 
 {% block css %}
-	<link rel="stylesheet" href="{{assets_theme}}/css/grid.css" />
-	<link rel="stylesheet" href="{{assets_theme}}/css/columns/large.css" media="all and (max-width: 991.98px)" />
-	<link rel="stylesheet" href="{{assets_theme}}/css/columns/medium.css" media="all and (max-width: 565.98px)" />
-	<link rel="stylesheet" href="{{assets_theme}}/css/columns/small.css" media="all and (max-width: 555.98px)" />
-	<link rel="stylesheet" href="{{assets_theme}}/css/columns/extra-small.css" media="all and (max-width: 459.98px)" />
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css">
-	<link rel="stylesheet" href="{{assets_theme}}/css/metra.css?{{cache_buster}}" />
-	<style>
-		body:before { background-image:url({{assets}}/img/backgrounds/global/particles_red.jpg); }
-	</style>
+    <link rel="stylesheet" href="{{ assets_theme }}/css/grid.css"/>
+    <link rel="stylesheet" href="{{ assets_theme }}/css/columns/large.css" media="all and (max-width: 991.98px)"/>
+    <link rel="stylesheet" href="{{ assets_theme }}/css/columns/medium.css" media="all and (max-width: 565.98px)"/>
+    <link rel="stylesheet" href="{{ assets_theme }}/css/columns/small.css" media="all and (max-width: 555.98px)"/>
+    <link rel="stylesheet" href="{{ assets_theme }}/css/columns/extra-small.css" media="all and (max-width: 459.98px)"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css">
+    <link rel="stylesheet" href="{{ assets_theme }}/css/metra.css?{{ cache_buster }}"/>
+    <style>
+        body:before {
+            background-image: url({{assets}}/img/backgrounds/global/particles_red.jpg);
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-	<div class="pure-center">
-		<div class="row">
-			<div class="col xl-12" style="text-align:right;">
-				<img class="avatar circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}" style="max-width:50px;">
-				<p>{{ user.personaname|default('Player') }}</p>
-			</div>
-			<div class="col xl-3 hide-md">
-				<div class="card server-info blue">
-					<h2><i class="fas fa-gamepad"></i> Gamemode</h2>
-					<p class="gamemode"></p>
-					<h2><i class="fas fa-users"></i> Max Players</h2>
-					<p class="max-players"></p>
-				</div>
-			</div>
-			<div class="col xl-3 md-6">
-				<div class="card map-info" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25) ), url('https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/{% if map %}{{ 'garrysmod/' ~ map }}{% else %}nomap{% endif %}.jpg') no-repeat center center / cover;">
-					<h2><i class="fas fa-map"></i> Map</h2>
-					<p>{{ map|default('N/A') }}</p>
-				</div>
-			</div>
-			<div class="col xl-6 hide-md">
-				<div class="card news orange">
-					<h2><i class="fas fa-comment-alt"></i> Messages</h2>
-					<p class="messages" style="font-size: 2rem;"></p>
-				</div>
-			</div>
-			<div class="col xl-6 md-12 hide-lg">
-				<div class="card rules dark-blue">
-					<h2><i class="fas fa-gavel"></i> Rules</h2>
-					<div id="rules"></div>
-				</div>
-			</div>
-			<div class="col xl-3 hide-lg">
-				<div class="card staff magneta">
-					<h2><i class="fas fa-users"></i> Staff</h2>
-					<div id="staff"></div>
-				</div>
-			</div>
-			<div class="col xl-3 md-6 hide-lg show-md">
-				<div class="card music green">
-					<h2><i class="fas fa-music"></i> Music</h2>
-					<p class="youtube-playing-title"></p>
-					<p class="youtube-playing-author">Nothing playing...</p>
-				</div>
-			</div>
-			<div class="col xl-6 hide-md">
-				<div class="card server green">
-					<h2><i class="fas fa-server"></i> <span class="server-name"></span></h2>
-					<p style="font-size:1.2rem;">{{ settings.description }}</p>
-				</div>
-			</div>
-			<div class="col xl-6 md-12">
-				<div class="card download purple text-right">
-					<div>
-						<h2><i class="fas fa-circle-notch fa-spin"></i> <span class="status">Retrieving server info...</span></h2>
-						<p>Progress [<span class="progress"></span>]</p>
-						<div class="loading-bar"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="pure-center">
+        <div class="row">
+            <div class="col xl-12" style="text-align:right;">
+                <img class="avatar circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}"
+                     style="max-width:50px;">
+                <p>{{ user.personaname|default('Player') }}</p>
+            </div>
+            <div class="col xl-3 hide-md">
+                <div class="card server-info blue">
+                    <h2><i class="fas fa-gamepad"></i> Gamemode</h2>
+                    <p class="gamemode"></p>
+                    <h2><i class="fas fa-users"></i> Max Players</h2>
+                    <p class="max-players"></p>
+                </div>
+            </div>
+            <div class="col xl-3 md-6">
+                <div class="card map-info"
+                     style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25) ), url('https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/{% if map %}{{ 'garrysmod/' ~ map }}{% else %}nomap{% endif %}.jpg') no-repeat center center / cover;">
+                    <h2><i class="fas fa-map"></i> Map</h2>
+                    <p>{{ map|default('N/A') }}</p>
+                </div>
+            </div>
+            <div class="col xl-6 hide-md">
+                <div class="card news orange">
+                    <h2><i class="fas fa-comment-alt"></i> Messages</h2>
+                    <p class="messages" style="font-size: 2rem;"></p>
+                </div>
+            </div>
+            <div class="col xl-6 md-12 hide-lg">
+                <div class="card rules dark-blue">
+                    <h2><i class="fas fa-gavel"></i> Rules</h2>
+                    <div id="rules"></div>
+                </div>
+            </div>
+            <div class="col xl-3 hide-lg">
+                <div class="card staff magneta">
+                    <h2><i class="fas fa-users"></i> Staff</h2>
+                    <div id="staff"></div>
+                </div>
+            </div>
+            <div class="col xl-3 md-6 hide-lg show-md">
+                <div class="card music green">
+                    <h2><i class="fas fa-music"></i> Music</h2>
+                    <p class="youtube-playing-title"></p>
+                    <p class="youtube-playing-author">Nothing playing...</p>
+                </div>
+            </div>
+            <div class="col xl-6 hide-md">
+                <div class="card server green">
+                    <h2><i class="fas fa-server"></i> <span class="server-name"></span></h2>
+                    <p style="font-size:1.2rem;">{{ settings.description }}</p>
+                </div>
+            </div>
+            <div class="col xl-6 md-12">
+                <div class="card download purple text-right">
+                    <div>
+                        <h2><i class="fas fa-circle-notch fa-spin"></i> <span
+                                    class="status">Retrieving server info...</span></h2>
+                        <p>Progress [<span class="progress"></span>]</p>
+                        <div class="loading-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block js %}
-<script src="{{ assets_theme }}/js/metra.js?{{cache_buster}}"></script>
+    <script src="{{ assets_theme }}/js/metra.js?{{ cache_buster }}"></script>
 {% endblock %}

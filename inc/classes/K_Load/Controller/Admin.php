@@ -148,18 +148,13 @@ class Admin
 
     public static function general()
     {
-        $perms = $_SESSION['perms'];
+        $perms =  User::getCurrentPerms();
 
         if (!array_key_exists('community_name', $perms) && !array_key_exists('backgrounds', $perms) && !array_key_exists('description', $perms) && !array_key_exists('youtube', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
 
         if (isset($_POST['save']) && isset($_SESSION['steamid'])) {
-            $_POST['backgrounds']['enable'] = (isset($_POST['backgrounds']['enable']) ? (int) $_POST['backgrounds']['enable'] : 0);
-            $_POST['backgrounds']['random'] = (isset($_POST['backgrounds']['random']) ? (int) $_POST['backgrounds']['random'] : 0);
-            $_POST['backgrounds']['duration'] = (isset($_POST['backgrounds']['duration']) && $_POST['backgrounds']['duration'] != 0) ? (int) $_POST['backgrounds']['duration'] : 8000;
-            $_POST['backgrounds']['fade'] = (isset($_POST['backgrounds']['duration']) && $_POST['backgrounds']['fade'] != 0) ? (int) $_POST['backgrounds']['fade'] : 750;
-
             $_POST['youtube']['enable'] = (isset($_POST['youtube']['enable']) ? (int) $_POST['youtube']['enable'] : 0);
             $_POST['youtube']['random'] = (isset($_POST['youtube']['random']) ? (int) $_POST['youtube']['random'] : 0);
             $_POST['youtube']['volume'] = (isset($_POST['youtube']['volume']) ? (int) $_POST['youtube']['volume'] : 0);
@@ -176,7 +171,7 @@ class Admin
                 $_POST['youtube']['list'] = $yt_ids;
             }
 
-            $success = Util::updateSetting(['backgrounds', 'community_name', 'description', 'youtube'], [$_POST['backgrounds'], (isset($_POST['community_name']) ? $_POST['community_name'] : ''), (isset($_POST['description']) ? substr($_POST['description'], 0, 250) : ''), $_POST['youtube']], $_POST['csrf']);
+            $success = Util::updateSetting(['community_name', 'description', 'youtube'], [(isset($_POST['community_name']) ? $_POST['community_name'] : 'K-Load'), (isset($_POST['description']) ? substr($_POST['description'], 0, 250) : ''), $_POST['youtube']], $_POST['csrf']);
             if ($success) {
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
@@ -184,18 +179,50 @@ class Admin
         }
 
         $data = [
-            'settings' => Util::getSetting('backgrounds', 'community_name', 'description', 'youtube'),
+            'settings' => Util::getSetting('community_name', 'description', 'youtube'),
             'alert'    => (isset($alert) ? $alert : ''),
         ];
-        $data['settings']['backgrounds'] = json_decode($data['settings']['backgrounds'], true);
+        //$data['settings']['backgrounds'] = json_decode($data['settings']['backgrounds'], true);
         $data['settings']['youtube'] = json_decode($data['settings']['youtube'], true);
 
         Template::render('@admin/general.twig', $data);
     }
 
+    public static function backgrounds()
+    {
+        $perms =  User::getCurrentPerms();
+        if (!array_key_exists('backgrounds', $perms) && !User::isSuper($_SESSION['steamid'])) {
+            Util::redirect('/dashboard');
+        }
+
+        if (isset($_POST['save']) && isset($_SESSION['steamid'])) {
+            $_POST['backgrounds']['enable'] = (isset($_POST['backgrounds']['enable']) ? (int) $_POST['backgrounds']['enable'] : 0);
+            $_POST['backgrounds']['random'] = (isset($_POST['backgrounds']['random']) ? (int) $_POST['backgrounds']['random'] : 0);
+            $_POST['backgrounds']['duration'] = (isset($_POST['backgrounds']['duration']) && $_POST['backgrounds']['duration'] != 0) ? (int) $_POST['backgrounds']['duration'] : 8000;
+            $_POST['backgrounds']['fade'] = (isset($_POST['backgrounds']['duration']) && $_POST['backgrounds']['fade'] != 0) ? (int) $_POST['backgrounds']['fade'] : 750;
+
+            $success = Util::updateSetting(['backgrounds'], [$_POST['backgrounds']], $_POST['csrf']);
+            if ($success) {
+                Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
+            }
+
+            $alert = ($success ? 'Music settings have been saved' : 'Failed to save, please try again and check the data/logs if necessary');
+
+            Util::flash('alert', $alert);
+            Util::redirect('/dashboard/admin/backgrounds');
+        }
+
+        $data = [
+            'settings' => Util::getSetting('backgrounds'),
+        ];
+        $data['settings']['backgrounds'] = json_decode($data['settings']['backgrounds'], true);
+
+        Template::render('@admin/backgrounds.twig', $data);
+    }
+
     public static function rules()
     {
-        $perms = $_SESSION['perms'];
+        $perms =  User::getCurrentPerms();
         if (!array_key_exists('rules', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
@@ -219,7 +246,7 @@ class Admin
 
     public static function messages()
     {
-        $perms = $_SESSION['perms'];
+        $perms =  User::getCurrentPerms();
         if (!array_key_exists('messages', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
@@ -245,7 +272,7 @@ class Admin
 
     public static function staff()
     {
-        $perms = $_SESSION['perms'];
+        $perms =  User::getCurrentPerms();
         if (!array_key_exists('staff', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
@@ -259,13 +286,13 @@ class Admin
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Staff have been saved' : 'Failed to save, please try again');
-        } elseif (isset($_POST['save']) && !isset($_POST['staff'])) {
+        }
+        else if (isset($_POST['save']) && !isset($_POST['staff'])) {
             $success = Util::updateSetting(['staff'], ['[]'], $_POST['csrf']);
             if ($success) {
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Staff have been saved' : 'Failed to save, please try again');
-        } else {
         }
 
         $data = [
@@ -279,7 +306,7 @@ class Admin
 
     public static function music()
     {
-        $perms = $_SESSION['perms'];
+        $perms =  User::getCurrentPerms();
         if (!array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
             Util::redirect('/dashboard');
         }
@@ -391,7 +418,7 @@ class Admin
             die();
         }
 
-        $perms = $_SESSION['perms'];
+        $perms =  User::getCurrentPerms();
         if (!array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
             die();
         }
@@ -456,7 +483,7 @@ class Admin
             die();
         }
 
-        $perms = $_SESSION['perms'];
+        $perms =  User::getCurrentPerms();
         if (!array_key_exists('music', $perms) && !User::isSuper($_SESSION['steamid'])) {
             die();
         }
