@@ -35,12 +35,12 @@ class Users
         }
         $data['permissions'] = User::getPerms();
 
-        $steamids = implode(',',array_column($data['users'], 'steamid'));
+        $steamids = implode(',', array_column($data['users'], 'steamid'));
 
         if (ENABLE_CACHE) {
             $cacheKey = 'pg-'.($data['page'] ?? ($page ?? 1)).'-'.($steamids);
 
-            $steamInfo = Cache::remember($cacheKey, 3600, function() use ($steamids) {
+            $steamInfo = Cache::remember($cacheKey, 3600, function () use ($steamids) {
                 $info = \Steam::Info($steamids);
 
                 return $info['response']['players'] ?? null;

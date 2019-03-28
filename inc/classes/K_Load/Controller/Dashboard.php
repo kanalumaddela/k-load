@@ -24,7 +24,6 @@ class Dashboard
         die();
         */
 
-
         Template::render('@dashboard/settings.twig', (isset($alert) ? ['alert'=>$alert] : []));
     }
 }
