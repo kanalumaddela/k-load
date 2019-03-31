@@ -93,7 +93,7 @@ class Util
     public static function mkDir($directory)
     {
         if ($doesntExist = !\file_exists($directory)) {
-            \set_error_handler(function () {
+            \set_error_handler(function() {
             });
             $doesntExist = !\mkdir($directory, 0775, true);
             \restore_error_handler();
@@ -113,7 +113,7 @@ class Util
     public static function version($ignoreCache = false)
     {
         if (ENABLE_CACHE && !$ignoreCache) {
-            $version = Cache::remember('version', 120, function () {
+            $version = Cache::remember('version', 120, function() {
                 $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 
                 return $version !== false ? $version : null;
@@ -196,9 +196,15 @@ class Util
         $list = [];
         foreach ($backgrounds as $gamemode) {
             $images = \glob($gamemode.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
+
+            if (\count($images) === 0) {
+                continue;
+            }
+
             foreach ($images as $index => $image) {
                 $images[$index] = APP_PATH.\str_replace(DIRECTORY_SEPARATOR, '/', \str_replace(APP_ROOT, '', $image));
             }
+
             $gamemode = \explode(DIRECTORY_SEPARATOR, $gamemode);
             $gamemode = \end($gamemode);
             $list[$gamemode] = $images;
@@ -209,12 +215,12 @@ class Util
 
     public static function isAjax()
     {
-        return  !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && \strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && \strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     public static function isUrl($url)
     {
-        \set_error_handler(function () {
+        \set_error_handler(function() {
         });
         $headers = \get_headers($url);
         $httpCode = \substr($headers[0], 9, 3);

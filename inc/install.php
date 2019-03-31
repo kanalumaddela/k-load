@@ -40,7 +40,7 @@ if (isset($_POST['install']) && isset($_SESSION['steamid'])) {
     if ($mysql_check && $steam_check) {
         $config = array_intersect_key($_POST, $valid);
         $config['loading_themes'] = [];
-        $config['admins'][0] = '{{ user_id }}';
+        $config['admins'][0] = $_SESSION['steamid'];
         $config['loading_themes'] = array_column(Template::loadingThemes(true), 'name');
         $config['dashboard_theme'] = 'default';
         array_multisort($config);

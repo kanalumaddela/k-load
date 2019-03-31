@@ -21,7 +21,7 @@ class Main
         $map = $_GET['mapname'] ?? null;
 
         if (!empty($steamid) && !\file_exists(APP_ROOT.'/data/users/'.$steamid.'.css')) {
-            touch(APP_ROOT.'/data/users/'.$steamid.'.css');
+            \touch(APP_ROOT.'/data/users/'.$steamid.'.css');
         }
 
         if (ENABLE_CACHE) {
@@ -35,7 +35,7 @@ class Main
                         $data['settings']['youtube'] = \json_encode($data['settings']['youtube']);
                     }
 
-                    return count($data) > 0 ? $data : null;
+                    return \count($data) > 0 ? $data : null;
                 });
             }
 

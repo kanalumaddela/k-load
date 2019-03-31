@@ -1,3 +1,6 @@
+/**
+ * List of gamemode ids and their respective friendly/well known name.
+ */
 const gamemodes = {
     cinema: 'Cinema',
     demo: 'Demo Gamemode',
@@ -35,8 +38,9 @@ const finishedStatuses = [
 ];
 
 // misc variables
-var currentProgress, demoInterval, backgroundInterval, backstretchInstance;
-var isGmod = navigator.userAgent.toLowerCase().indexOf('valve') !== -1;
+var currentProgress, demoInterval, backgroundImages, backgroundCounter = 0, backgroundsActive = false,
+    backgroundsAdded = [];
+const isGmod = navigator.userAgent.toLowerCase().indexOf('valve') !== -1;
 
 /**
  * Generate a HTMLElement with the given attributes and optional children.
@@ -50,7 +54,11 @@ const elem = function (tag, attrs, children) {
     const elem = document.createElement(tag);
 
     Object.keys(attrs).forEach(function (key) {
-        elem.setAttribute(key, attrs[key]);
+        if (key in document.createElement(tag)) {
+            elem[key] = attrs[key];
+        } else {
+            elem.setAttribute(key, attrs[key]);
+        }
     });
 
     if (Array.isArray(children)) {
@@ -71,42 +79,68 @@ const str_random = function () {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 };
 
+/**
+ * {@link https://stackoverflow.com/a/1349426}
+ *
+ * @param length
+ * @returns {string}
+ */
 const str_random_v2 = function (length) {
     var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     if (!length) {
         length = 12;
     }
 
-    for (var i = 0; i < length; i++)
+    for (var i = 0; i < length; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
     return text;
 };
 
 /**
- * {@link https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/}
+ * Shuffle/randomize an array.
+ * {@link https://www.frankmitchell.org/2015/01/fisher-yates/}
  *
  * @param {Array} array
  * @returns {Array}
  */
 const shuffle = function (array) {
-    var currentIndex = array.length;
-    var temporaryValue, randomIndex;
+    var i, j = 0, temp = null;
 
-    while (0 !== currentIndex) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+    for (i = array.length - 1; i > 0; i -= 1) {
+        j = Math.floor(Math.random() * (i + 1));
+        temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
-
-    return array;
 };
 
+/**
+ * Debounce function to prevent excessive calls.
+ * {@link  https://davidwalsh.name/javascript-debounce-function}
+ *
+ * @param func
+ * @param wait
+ * @param immediate
+ * @returns {Function}
+ */
+const debounce = function (func, wait, immediate) {
+    var timeout;
+    return function () {
+        var context = this, args = arguments;
+        var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
 
 /**
  * Return a NodeList matching the given selector.
@@ -122,7 +156,7 @@ const getElements = function (selector) {
  * Set the innerText of the elements matching the selector.
  *
  * @param {string} selector
- * @param {string} text
+ * @param {string|number} text
  */
 const text = function (selector, text) {
     [].forEach.call(getElements(selector), function (elem) {
@@ -158,7 +192,7 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
     }
 
     var gamemodeFriendly = gamemode;
-    if (Object.keys(gamemodes).indexOf(gamemode) !== -1) {
+    if (gamemode in gamemodes) {
         gamemodeFriendly = gamemodes[gamemode];
     }
 
@@ -187,6 +221,10 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
 function SetFilesNeeded(needed) {
     files.needed = needed;
     text('.files-needed', files.needed);
+
+    if (typeof SetFilesNeeded_custom === 'function') {
+        SetFilesNeeded_custom(needed);
+    }
 }
 
 /**
@@ -198,6 +236,10 @@ function SetFilesNeeded(needed) {
 function SetFilesTotal(total) {
     files.total = total;
     text('.files-total', total);
+
+    if (typeof SetFilesTotal_custom === 'function') {
+        SetFilesTotal_custom(total);
+    }
 }
 
 /**
@@ -211,6 +253,10 @@ function DownloadingFile(file) {
     text('.files-downloading', files.downloaded);
     SetStatusChanged('Downloading ' + file);
     updateProgress();
+
+    if (typeof DownloadingFile_custom === 'function') {
+        DownloadingFile_custom(file);
+    }
 }
 
 /**
@@ -220,7 +266,7 @@ function DownloadingFile(file) {
  */
 function SetStatusChanged(status) {
     if (finishedStatuses.indexOf(status) !== -1) {
-        setDownloadProgress(100);
+        setDownloadProgress(100, false);
     }
 
     if (status.indexOf('Loading') !== -1) {
@@ -229,6 +275,10 @@ function SetStatusChanged(status) {
     }
 
     text('.status', status);
+
+    if (typeof SetStatusChanged_custom === 'function') {
+        SetStatusChanged_custom(status);
+    }
 }
 
 /**
@@ -240,13 +290,14 @@ function updateProgress() {
         SetFilesNeeded(files.needed);
     }
 
-    setDownloadProgress(files.downloaded / files.needed);
+    setDownloadProgress(files.downloaded / files.needed, false);
 }
 
 /**
  * Set the current download progress and update text/loading bars.
  *
  * @param {number} decimal
+ * @param {boolean} force
  */
 function setDownloadProgress(decimal, force) {
     decimal = Math.abs(decimal);
@@ -273,55 +324,144 @@ function setDownloadProgress(decimal, force) {
     }
 }
 
+
+const backgroundsHtml = elem('div', {id: 'k-load-backgrounds'});
+const backgroundCss = elem('style', {
+    type: 'text/css',
+    innerHTML: '.k-load-background {-webkit-transition-duration: ' + (backgrounds.fade / 1000) + 's;}'
+});
+const backgroundCssRatioFix = elem('style', {
+    id: 'k-load-bg-css-fix',
+    type: 'text/css'
+});
+
+document.body.appendChild(backgroundsHtml);
+document.head.appendChild(backgroundCss);
+document.head.appendChild(backgroundCssRatioFix);
+
+/**
+ * Fix background sizing to avoid "bars"  on either top/bottom or left/right.
+ */
+const fixBackgrounds = debounce(function () {
+    const normalRatio = 16 / 9;
+    const ratio = window.innerWidth / window.innerHeight;
+    const tolerance = normalRatio * 0.08;
+
+    if (ratio < normalRatio) {
+        backgroundCssRatioFix.innerHTML = '.k-load-background {width:initial;height:100%;}';
+    }
+    if (ratio > normalRatio) {
+        backgroundCssRatioFix.innerHTML = '.k-load-background {width:120%;}';
+    }
+    if (ratio >= (normalRatio - tolerance) && ratio <= (normalRatio + tolerance)) {
+        backgroundCssRatioFix.innerHTML = '';
+    }
+}, 250);
+
+fixBackgrounds();
+window.addEventListener('resize', fixBackgrounds);
+
 /**
  * Configure backgrounds to be used for the given gamemode.
  *
  * @param {string} gamemode
  */
 function setBackgrounds(gamemode) {
-    if (!backgrounds.enable) {
-        return;
-    }
+    var gamemodeExists = gamemode in backgrounds.list;
+    const globalExists = 'global' in backgrounds.list;
 
-    var doesntExist = Object.keys(backgrounds.list).indexOf(gamemode) === -1;
-    const globalExists = Object.keys(backgrounds.list).indexOf('global') !== -1;
-    const backstretchActive = typeof backstretchInstance !== 'undefined';
-
-    if (globalExists && doesntExist) {
+    if (!gamemodeExists && globalExists) {
         gamemode = 'global';
-        doesntExist = false;
+        gamemodeExists = true;
     }
 
-    if (doesntExist || backstretchActive) {
-        if (backstretchActive) {
-            stopBackgrounds();
-        }
-        if (doesntExist) {
+    if (!backgrounds.enable || backgroundsActive || !gamemodeExists) {
+        clearBackgrounds();
+
+        if (!backgrounds.enable || !gamemodeExists) {
+            backgroundsActive = false;
             return;
         }
     }
 
-    var backgroundImages = backgrounds.list[gamemode];
-
-    if (backgroundImages.length <= 0) {
-        return;
-    }
-
+    backgroundImages = backgrounds.list[gamemode].slice(0);
     if (backgrounds.random) {
         shuffle(backgroundImages);
     }
 
-    backstretchInstance = $.backstretch(backgroundImages[0], {fade: (backgrounds.fade ? backgrounds.fade : 750)});
-    backstretchInstance.images = backgroundImages;
+    backgroundsActive = true;
 
-    backgroundInterval = setInterval(function() {
-        backstretchInstance.next();
-    }, backgrounds.duration);
+    loadNextBackground(backgroundImages);
+    nextBackground();
 }
 
-function stopBackgrounds() {
-    backstretchInstance.destroy();
-    clearInterval(backgroundInterval);
+/**
+ * Remove all backgrounds from container.
+ */
+function clearBackgrounds() {
+    while (backgroundsHtml.firstChild) {
+        backgroundsHtml.removeChild(backgroundsHtml.firstChild);
+    }
+
+    backgroundsAdded = [];
+}
+
+/**
+ * Preload the next background so it's ready to be displayed.
+ *
+ * @param images
+ */
+function loadNextBackground(images) {
+    if (images.length === backgroundsAdded.length) {
+        return;
+    }
+
+    const bgSrc = images[backgroundCounter];
+
+    if (backgroundsAdded.indexOf(bgSrc) === -1) {
+        const bgElem = elem('img', {src: bgSrc, className: 'k-load-background'});
+
+        bgElem.addEventListener('webkitTransitionEnd', function () {
+            if (!this.classList.contains('active')) {
+                loadNextBackground(images);
+            } else {
+                loadNextBackground(images);
+            }
+        });
+
+        backgroundsHtml.appendChild(bgElem);
+        backgroundsAdded.push(bgSrc);
+    }
+}
+
+/**
+ * Advance to the next background.
+ */
+function nextBackground() {
+    if (!backgroundsActive) {
+        return;
+    }
+
+    if (backgroundCounter >= backgroundImages.length) {
+        backgroundCounter = 0;
+    }
+
+    const tmpCounter = backgroundCounter;
+
+    setTimeout(function () {
+        backgroundsHtml.childNodes[tmpCounter].classList.add('active');
+        if (tmpCounter === 0 && backgroundsAdded.length === backgroundImages.length) {
+            backgroundsHtml.childNodes[backgroundsAdded.length - 1].classList.remove('active');
+        } else if (tmpCounter !== 0 && backgroundsAdded.length > 1) {
+            backgroundsHtml.childNodes[tmpCounter - 1].classList.remove('active');
+        }
+
+        setTimeout(function () {
+            nextBackground();
+        }, backgrounds.duration);
+    }, 25);
+
+    backgroundCounter++;
 }
 
 /**
@@ -347,12 +487,16 @@ function demoMode() {
 function resetDemoMode() {
     files.downloaded = 0;
     files.needed = 1;
+    backgroundsActive = false;
     SetStatusChanged('');
-    setDownloadProgress(0);
+    setDownloadProgress(0, false);
 
     clearInterval(demoInterval);
 }
 
+/**
+ * If we're not in game, demo the loading screen.
+ */
 if (!isGmod) {
     demoMode();
 }

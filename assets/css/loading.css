@@ -205,7 +205,7 @@ body, .no-margin {
     left: -9999px;
 }
 
-#video_background, .video_background, .video-background {
+#video_background, .video_background, .video-background, #k-load-backgrounds {
     z-index: -9999;
     position: absolute;
     bottom: 0;
@@ -215,4 +215,17 @@ body, .no-margin {
     width: auto;
     height: auto;
     overflow: hidden;
+}
+.k-load-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    width: 100%;
+    opacity: 0;
+    -webkit-transition-property: opacity;
+    -webkit-transition-timing-function: linear;
+}
+.k-load-background.active {
+    opacity: 1;
 }
