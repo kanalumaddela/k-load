@@ -93,7 +93,7 @@ class Util
     public static function mkDir($directory)
     {
         if ($doesntExist = !\file_exists($directory)) {
-            \set_error_handler(function() {
+            \set_error_handler(function () {
             });
             $doesntExist = !\mkdir($directory, 0775, true);
             \restore_error_handler();
@@ -113,7 +113,7 @@ class Util
     public static function version($ignoreCache = false)
     {
         if (ENABLE_CACHE && !$ignoreCache) {
-            $version = Cache::remember('version', 120, function() {
+            $version = Cache::remember('version', 120, function () {
                 $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 
                 return $version !== false ? $version : null;
@@ -220,7 +220,7 @@ class Util
 
     public static function isUrl($url)
     {
-        \set_error_handler(function() {
+        \set_error_handler(function () {
         });
         $headers = \get_headers($url);
         $httpCode = \substr($headers[0], 9, 3);
