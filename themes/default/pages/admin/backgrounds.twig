@@ -2,6 +2,11 @@
 
 {% block tiitle %}Backgrounds | K-Load{% endblock %}
 
+{% block css_body %}
+    <style>
+    </style>
+{% endblock %}
+
 {% block content %}
     {% if user.admin %}
         {% if user.super or user.perms.backgrounds %}
@@ -65,7 +70,8 @@
                             <h1 class="flow-text"><span class="mdi mdi-upload"></span>Upload Backgrounds</h1>
                             <div class="center">
                                 <a href="#upload-backgrounds" class="btn modal-trigger">Upload</a>
-                                <p style="margin: 4px 0">Max {{ max_bg_uploads }} uploads at a time</p>
+                                <p style="margin: 4px 0">{{ upload_requirements.max_uploads }} max uploads at a time</p>
+                                <p style="margin: 4px 0">{{ upload_requirements.file_size }} max size per uploaded file</p>
                             </div>
                         </div>
                     </div>
@@ -74,6 +80,7 @@
                 <div id="upload-backgrounds" class="modal bottom-sheet">
                     <div class="modal-content">
                         <form id="upload-backgrounds-form" method="post" action="{{ site.path }}/dashboard/admin/backgrounds/upload" enctype="multipart/form-data">
+                            {{ csrf|raw }}
                             <div class="input-field">
                                 <input id="upload-backgrounds-gamemode-input" type="text" name="gamemode" value="global" placeholder="Enter a gamemode id, refer to the list above">
                                 <label for="upload-backgrounds-gamemode-input">Gamemode</label>
@@ -99,6 +106,27 @@
                     <div class="card">
                         <div class="card-content">
                             <h1 class="flow-text"><span class="mdi mdi-image-multiple"></span>Uploaded Backgrounds</h1>
+                            {% if backgrounds|length  > 0 %}
+                                <ul class="collapsible" data-collapsible="expandable">
+                                    {% for gamemode, gmBackgrounds in backgrounds %}
+                                        <li>
+                                            <div class="collapsible-header">{{ gamemode }}</div>
+                                            <div class="collapsible-body">
+                                                <div class="row">
+                                                    {% for background in gmBackgrounds %}
+                                                        <div class="col s12 m4 l3">
+                                                            <span class="k-load-background" data-src="{{ background.src }}">
+                                                                {{ background.name }}
+                                                            </span>
+                                                            <span class="mdi mdi-close red-text right"></span>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -108,6 +136,9 @@
 {% endblock %}
 {% block js %}
     <script>
-        $('.modal').modal();
+        $(document).ready(function(){
+            $('.modal').modal();
+            $('.collapsible').collapsible();
+        });
     </script>
 {% endblock %}

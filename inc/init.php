@@ -147,7 +147,7 @@ if (!ENABLE_CACHE || isset($_GET[CLEAR_CACHE])) {
         Util::rmDir(APP_ROOT.'/data/cache');
     }
 }
-$cache = new J0sh0nat0r\SimpleCache\Cache(J0sh0nat0r\SimpleCache\Drivers\File::class, ['dir' => APP_ROOT.'/data/cache']);
+$cache = new \J0sh0nat0r\SimpleCache\Cache(\J0sh0nat0r\SimpleCache\Drivers\File::class, ['dir' => APP_ROOT.'/data/cache']);
 Cache::bind($cache);
 
 // get config if exists
@@ -194,6 +194,7 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
             die();
         }
     }
+
     $_SESSION['perms'] = \array_fill_keys(\array_keys(\array_flip(\json_decode(User::getInfo($_SESSION['steamid'], 'perms'), true))), 1);
 }
 
@@ -202,5 +203,5 @@ Template::init();
 
 // routing
 $routes = (ENABLE_CACHE ? Cache::remember('routes', 86400, [Routes::class, 'get']) : Routes::get());
-$dispatcher = new Phroute\Phroute\Dispatcher($routes);
+$dispatcher = new \Phroute\Phroute\Dispatcher($routes);
 $response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], \parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));

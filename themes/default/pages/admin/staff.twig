@@ -44,10 +44,6 @@
           style="padding-top:15px;padding-bottom:15px;">
         {{ csrf|raw }}
 
-        <div class="col s12">
-            <a class="btn green add-elem" data-type="staff_cat" data-parent="#staff_categories">Add Gamemode</a>
-        </div>
-
         <div id="staff_categories" class="row">
             {% for gamemode,staff in settings.staff %}
                 <div class="col s12 child">
@@ -86,6 +82,10 @@
                     </div>
                 </div>
             {% endfor %}
+        </div>
+
+        <div class="col s12 right-align">
+            <a class="btn green add-elem" data-type="staff_cat" data-parent="#staff_categories">Add Gamemode</a>
         </div>
 
         <div class="fixed-action-btn">

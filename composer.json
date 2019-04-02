@@ -6,6 +6,7 @@
     },
     "require": {
         "ext-json": "*",
+        "ext-fileinfo": "*",
         "doctormckay/steamid": "^1.0",
         "j0sh0nat0r/simple-cache": "^1.0",
         "matthiasmullie/minify": "^1.3",

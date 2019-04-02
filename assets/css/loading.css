@@ -60,7 +60,7 @@ body, .no-margin {
 }
 
 .overlay {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.45);
 }
 
 .overlay.dark {
@@ -223,8 +223,7 @@ body, .no-margin {
     -webkit-transform: translate(-50%,-50%);
     width: 100%;
     opacity: 0;
-    -webkit-transition-property: opacity;
-    -webkit-transition-timing-function: linear;
+    -webkit-transition: opacity .75s ease-out;
 }
 .k-load-background.active {
     opacity: 1;

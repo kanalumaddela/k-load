@@ -1,7 +1,7 @@
 <?php
 
 // debug time
-$start = \microtime(true);
+\define('APP_START', \microtime(true));
 
 // data/constants.php
 include __DIR__.'/data/constants.php';

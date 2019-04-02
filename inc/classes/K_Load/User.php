@@ -45,6 +45,12 @@ class User
         return Database::conn()->select('SELECT `id`, `name`, `steamid`, `steamid2`, `steamid3`, `settings`, '.($logged_in ? '`custom_css` AS `css`,' : '').' `admin`, '.(($super || $logged_in) ? '`perms`,' : '\'[]\' as `perms`')."`banned`, DATE_FORMAT(`registered`, '%m/%d/%Y %r') AS `registered` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute() ?? [];
     }
 
+    /**
+     * @param       $steamid
+     * @param mixed ...$columns
+     *
+     * @return array|string
+     */
     public static function getInfo($steamid, ...$columns)
     {
         return Database::conn()->select('SELECT `'.(\implode('`,`', $columns)).'` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute();

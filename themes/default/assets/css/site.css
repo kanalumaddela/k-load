@@ -501,3 +501,24 @@ div.disabled {
     border-right: 2px solid #2196f3;
     border-bottom: 2px solid #2196f3;
 }
+
+.collapsible {
+    border: 0;
+}
+
+.collapsible-header {
+    background-color: #29304a;
+    border-color: rgba(255, 255, 255, 0.2);
+    transition: background-color .2s ease-out;
+}
+.collapsible-header.active {
+    background-color: #2196f3;
+}
+
+.collapsible > li:last-child:not(.active) .collapsible-header {
+    border-color: transparent;
+}
+
+.collapsible-body  {
+    border-bottom: none;
+}

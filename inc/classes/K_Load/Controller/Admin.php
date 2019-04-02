@@ -9,6 +9,7 @@ use K_Load\Template;
 use K_Load\Test;
 use K_Load\User;
 use K_Load\Util;
+use Steam;
 
 class Admin
 {
@@ -212,11 +213,36 @@ class Admin
         }
 
         $data = [
-            'settings'       => Util::getSetting('backgrounds'),
-            'backgrounds'    => Util::getBackgrounds(true),
-            'max_bg_uploads' => \ini_get('max_file_uploads'),
+            'settings'            => Util::getSetting('backgrounds'),
+            'upload_requirements' => [
+                'max_uploads' => \ini_get('max_file_uploads'),
+                'file_size'   => \ini_get('upload_max_filesize'),
+            ],
         ];
         $data['settings']['backgrounds'] = \json_decode($data['settings']['backgrounds'], true);
+
+        $data['backgrounds'] = [];
+        $bgGamemodes = \glob(APP_ROOT.\sprintf('%sassets%simg%sbackgrounds%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        foreach ($bgGamemodes as $gamemode) {
+            $bgImages = \glob($gamemode.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
+
+            if (\count($bgImages) === 0) {
+                continue;
+            }
+
+            $images = [];
+
+            foreach ($bgImages as $image) {
+                $images[] = [
+                    'src'  => APP_PATH.\str_replace(DIRECTORY_SEPARATOR, '/', \str_replace(APP_ROOT, '', $image)),
+                    'name' => basename($image),
+                ];
+            }
+
+            $gamemode = \explode(DIRECTORY_SEPARATOR, $gamemode);
+            $gamemode = \end($gamemode);
+            $data['backgrounds'][$gamemode] = $images;
+        }
 
         Template::render('@admin/backgrounds.twig', $data);
     }
@@ -224,13 +250,18 @@ class Admin
     public static function backgroundsUpload()
     {
         if (!isset($_SESSION['steamid'])) {
-            die();
+            Util::redirect('/dashboard/admin/backgrounds');
         }
 
-        $perms = User::getCurrentPerms();
-        if (!isset($_FILES['bg-files']) || !\array_key_exists('backgrounds', $perms) && !User::isSuper($_SESSION['steamid'])) {
-            die();
+        if (!isset($_FILES['bg-files']) || (!\array_key_exists('backgrounds', User::getCurrentPerms()) && !User::isSuper($_SESSION['steamid']))) {
+            Util::redirect('/dashboard/admin/backgrounds');
         }
+
+        if (!User::validateCSRF($_SESSION['steamid'], $_POST['csrf'] ?? '')) {
+            Steam::Logout();
+        }
+
+        User::refreshCSRF($_SESSION['steamid']);
 
         $gamemode = $_POST['gamemode'] ?? 'global';
         $gamemode = \preg_replace('/[^a-zA-Z0-9]+/', '', $gamemode);
@@ -239,18 +270,53 @@ class Admin
         Util::mkDir($bgFolder);
 
         $message = 'No images provided';
+        $failed = false;
 
         if (($count = \count($_FILES['bg-files']['name'])) > 0) {
             $filesUploaded = 0;
             $files = $_FILES['bg-files'];
+
             foreach ($files['name'] as $index => $name) {
-                $uploaded = \move_uploaded_file($files['tmp_name'][$index], $bgFolder.'/'.$name);
-                if ($uploaded) {
-                    $filesUploaded++;
+                switch ($files['error'][$index]) {
+                    case UPLOAD_ERR_NO_FILE:
+                        break;
+                    case UPLOAD_ERR_INI_SIZE:
+                        Util::log('error', $name.' failed to upload: filesize limit exceeded');
+                        break;
+                    case UPLOAD_ERR_FORM_SIZE:
+                        Util::log('error', $name.' failed to upload: filesize limit exceeded');
+                        break;
+                    case UPLOAD_ERR_OK:
+                        $fileinfo = new \finfo(FILEINFO_MIME_TYPE);
+
+                        if (!\in_array($type = $fileinfo->file($files['tmp_name'][$index]), ['image/png', 'image/jpg', 'image/jpeg'])) {
+                            Util::log('error', 'Invalid filetype uploaded for '.$name.'. '.$type.' given.');
+                            break;
+                        }
+
+                        $filename = \strtolower(\preg_replace('/[[:^print:]]/', '', $name));
+
+                        $success = \move_uploaded_file($files['tmp_name'][$index], $bgFolder.'/'.$filename);
+
+                        if ($success === false && $failed === false) {
+                            $failed = true;
+                        }
+
+                        if ($success) {
+                            Util::log('action', $name.' was uploaded by '.$_SESSION['steamid']);
+                            $filesUploaded++;
+                        } else {
+                            Util::log('error', $_SESSION['steamid'].' tried to upload '.$name.'. Make sure the proper write permissions are give ');
+                        }
+                        break;
+                    default:
+                        Util::log('error', $name.' failed to upload: Unknown error, check your upload_max_filesize and post_max_size in your php.ini');
+                        continue;
+                        break;
                 }
             }
 
-            $message = $filesUploaded.' out of '.$count.' backgrounds were uploaded';
+            $message = $filesUploaded.' out of '.$count.' backgrounds were uploaded.'.(!$failed ? ' Check the data/logs/error folder for more info.' : '');
         }
 
         Util::flash('alert', $message);
@@ -323,7 +389,7 @@ class Admin
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Staff have been saved' : 'Failed to save, please try again');
-        } elseif (isset($_POST['save']) && !isset($_POST['staff'])) {
+        } else if (isset($_POST['save']) && !isset($_POST['staff'])) {
             $success = Util::updateSetting(['staff'], ['[]'], $_POST['csrf']);
             if ($success) {
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
@@ -468,7 +534,12 @@ class Admin
                 case UPLOAD_ERR_NO_FILE:
                     $message = 'No file sent';
                     break;
+                case UPLOAD_ERR_INI_SIZE:
+                    Util::log('error', $_FILES['music_file']['name'].' failed to upload: filesize limit exceeded');
+                    $message = 'Filesize limit exceeded';
+                    break;
                 case UPLOAD_ERR_FORM_SIZE:
+                    Util::log('error', $_FILES['music_file']['name'].' failed to upload: filesize limit exceeded');
                     $message = 'Filesize limit exceeded';
                     break;
                 case UPLOAD_ERR_OK:
@@ -485,6 +556,7 @@ class Admin
                     $success = self::storeMusic($_FILES['music_file'], $name);
                     $message = $success ? 'File uploaded successfully' : 'Failed to upload file, check file permissions or try again';
                     if ($success) {
+                        Util::log('action', $_SESSION['steamid'].' uploaded '.$name);
                         $file = [
                             'filename'    => $filename,
                             'name'        => $name,

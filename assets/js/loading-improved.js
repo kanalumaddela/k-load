@@ -38,7 +38,8 @@ const finishedStatuses = [
 ];
 
 // misc variables
-var currentProgress, demoInterval, backgroundImages, backgroundCounter = 0, backgroundsActive = false,
+var currentProgress, demoInterval, backgroundImages, backgroundCounter = 0, backgroundsAddedCounter = 0,
+    backgroundsActive = false,
     backgroundsAdded = [];
 const isGmod = navigator.userAgent.toLowerCase().indexOf('valve') !== -1;
 
@@ -307,9 +308,10 @@ function setDownloadProgress(decimal, force) {
         percentage = 100;
     }
 
-    const roundedPercentage = Math.ceil(percentage);
-
     text('.percentage', percentage + '%');
+
+    var roundedPercentage = Math.round(10*percentage)/10;
+    roundedPercentage = roundedPercentage.toFixed(1);
 
     if (currentProgress === roundedPercentage && !force) {
         return;
@@ -328,7 +330,7 @@ function setDownloadProgress(decimal, force) {
 const backgroundsHtml = elem('div', {id: 'k-load-backgrounds'});
 const backgroundCss = elem('style', {
     type: 'text/css',
-    innerHTML: '.k-load-background {-webkit-transition-duration: ' + (backgrounds.fade / 1000) + 's;}'
+    innerHTML: '.k-load-background {-webkit-transition-duration: ' + (backgrounds.fade / 1000) + 's !important;}body:before{background-image:none;}'
 });
 const backgroundCssRatioFix = elem('style', {
     id: 'k-load-bg-css-fix',
@@ -346,14 +348,15 @@ const fixBackgrounds = debounce(function () {
     const normalRatio = 16 / 9;
     const ratio = window.innerWidth / window.innerHeight;
     const tolerance = normalRatio * 0.08;
+    const html = backgroundCssRatioFix.innerHTML;
 
-    if (ratio < normalRatio) {
+    if (ratio < normalRatio && html.length !== 47) {
         backgroundCssRatioFix.innerHTML = '.k-load-background {width:initial;height:100%;}';
     }
-    if (ratio > normalRatio) {
-        backgroundCssRatioFix.innerHTML = '.k-load-background {width:120%;}';
+    if (ratio > normalRatio && html.length !== 32) {
+        backgroundCssRatioFix.innerHTML = '.k-load-background {width:125%;}';
     }
-    if (ratio >= (normalRatio - tolerance) && ratio <= (normalRatio + tolerance)) {
+    if (ratio >= (normalRatio - tolerance) && ratio <= (normalRatio + tolerance) && html.length !== 0) {
         backgroundCssRatioFix.innerHTML = '';
     }
 }, 250);
@@ -391,7 +394,7 @@ function setBackgrounds(gamemode) {
 
     backgroundsActive = true;
 
-    loadNextBackground(backgroundImages);
+    loadNextBackground();
     nextBackground();
 }
 
@@ -408,29 +411,28 @@ function clearBackgrounds() {
 
 /**
  * Preload the next background so it's ready to be displayed.
- *
- * @param images
  */
-function loadNextBackground(images) {
-    if (images.length === backgroundsAdded.length) {
+function loadNextBackground() {
+    if (backgroundsAdded.length === backgroundImages.length) {
         return;
     }
 
-    const bgSrc = images[backgroundCounter];
+    const bgSrc = backgroundImages[backgroundsAddedCounter];
 
     if (backgroundsAdded.indexOf(bgSrc) === -1) {
         const bgElem = elem('img', {src: bgSrc, className: 'k-load-background'});
-
         bgElem.addEventListener('webkitTransitionEnd', function () {
-            if (!this.classList.contains('active')) {
-                loadNextBackground(images);
-            } else {
-                loadNextBackground(images);
+            if (this.classList.contains('active')) {
+                loadNextBackground();
             }
+
+            queueBackground(backgrounds.duration);
         });
 
         backgroundsHtml.appendChild(bgElem);
         backgroundsAdded.push(bgSrc);
+
+        backgroundsAddedCounter++;
     }
 }
 
@@ -449,33 +451,49 @@ function nextBackground() {
     const tmpCounter = backgroundCounter;
 
     setTimeout(function () {
-        backgroundsHtml.childNodes[tmpCounter].classList.add('active');
-        if (tmpCounter === 0 && backgroundsAdded.length === backgroundImages.length) {
-            backgroundsHtml.childNodes[backgroundsAdded.length - 1].classList.remove('active');
-        } else if (tmpCounter !== 0 && backgroundsAdded.length > 1) {
-            backgroundsHtml.childNodes[tmpCounter - 1].classList.remove('active');
+        switch (tmpCounter) {
+            case 0:
+                backgroundsHtml.childNodes[tmpCounter].classList.add('active');
+
+                if (backgroundsAdded.length !== 1) {
+                    backgroundsHtml.childNodes[backgroundsAdded.length - 1].classList.remove('active');
+                }
+
+                break;
+            default:
+                backgroundsHtml.childNodes[tmpCounter - 1].classList.remove('active');
+                backgroundsHtml.childNodes[tmpCounter].classList.add('active');
+                break;
         }
 
-        setTimeout(function () {
-            nextBackground();
-        }, backgrounds.duration);
+        backgroundCounter = tmpCounter + 1;
     }, 25);
+}
 
-    backgroundCounter++;
+/**
+ * Queue to display the background in x seconds
+ *
+ * @param {number} milliseconds
+ */
+function queueBackground(milliseconds) {
+    setTimeout(function () {
+        nextBackground();
+    }, milliseconds);
 }
 
 /**
  * Start up demo mode.
  */
 function demoMode() {
-    files.needed = 100;
+    files.needed = Math.floor(Math.random() * 1000) + 100;
+    console.log(files.needed);
 
     GameDetails('Demo Server', window.location.href, 'demo_map_name', 24, '76561198152390718', 'demo');
 
     demoInterval = setInterval(function () {
         DownloadingFile('example/folder/file-' + str_random_v2() + '.ext');
 
-        if (files.downloaded >= 100) {
+        if (files.downloaded >= files.needed) {
             files.downloaded = 0;
         }
     }, 200);

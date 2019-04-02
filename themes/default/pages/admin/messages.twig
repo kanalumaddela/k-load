@@ -55,10 +55,6 @@
             </div>
         </div>
 
-        <div class="col s12">
-            <a class="btn green add-elem" data-type="message_cat" data-parent="#message_categories">Add Gamemode</a>
-        </div>
-
         <div id="message_categories" class="row">
             {% for gamemode, messages in settings.messages.list %}
                 <div class="col s12 child">
@@ -83,6 +79,10 @@
                     </div>
                 </div>
             {% endfor %}
+        </div>
+
+        <div class="col s12 right-align">
+            <a class="btn green add-elem" data-type="message_cat" data-parent="#message_categories">Add Gamemode</a>
         </div>
 
         <div class="fixed-action-btn">
