@@ -389,7 +389,7 @@ class Admin
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Staff have been saved' : 'Failed to save, please try again');
-        } else if (isset($_POST['save']) && !isset($_POST['staff'])) {
+        } elseif (isset($_POST['save']) && !isset($_POST['staff'])) {
             $success = Util::updateSetting(['staff'], ['[]'], $_POST['csrf']);
             if ($success) {
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
