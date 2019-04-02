@@ -18,7 +18,7 @@ class Setup
             Util::redirect('/dashboard/admin');
         }
 
-        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
+        \file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
         $config = include APP_ROOT.'/data/config.php';
 
         Steam::Key($config['apikeys']['steam']);
@@ -45,7 +45,7 @@ class Setup
         User::session($_SESSION['steamid']);
 
         Util::log('action', 'K-Load has been installed', true);
-        die('K-Load has been installed. Go to <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>');
+        die('K-Load has been installed. Visit <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>');
     }
 
     public static function update()

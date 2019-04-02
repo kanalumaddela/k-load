@@ -16,7 +16,7 @@ class addon_darkrp_wallet
             'database' => '',
         ];
 
-        $conn = new mysqli($mysql['host'].':'.$mysql['port'], $mysql['user'], $mysql['pass'], $mysql['database'], $mysql['port']);
+        $conn = new \mysqli($mysql['host'].':'.$mysql['port'], $mysql['user'], $mysql['pass'], $mysql['database'], $mysql['port']);
         if ($conn->connect_error) {
             Util::log('addons', 'DarkRP - Failed to connect: '.$conn->connect_error);
         } else {
@@ -32,6 +32,6 @@ class addon_darkrp_wallet
 
     public function data()
     {
-        return '$'.number_format($this->money);
+        return '$'.\number_format($this->money);
     }
 }

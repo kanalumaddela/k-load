@@ -4,8 +4,10 @@ namespace K_Load;
 
 class Routes
 {
+    /**
+     * @var \Phroute\Phroute\RouteCollector
+     */
     private static $router;
-    private static $routes;
 
     public static function init()
     {

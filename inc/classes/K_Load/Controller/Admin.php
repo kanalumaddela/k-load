@@ -491,8 +491,8 @@ class Admin
         $data['youtube'] = \json_decode($data['youtube'], true);
 
         $dir = APP_ROOT.'/data/music';
-        $files = glob($dir.'/*.ogg');
-        $length = count($files);
+        $files = \glob($dir.'/*.ogg');
+        $length = \count($files);
 
         if ($length > 0) {
             for ($i = 0; $i < $length; $i++) {

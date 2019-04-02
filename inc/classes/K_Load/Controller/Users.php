@@ -6,6 +6,7 @@ use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
+use Steam;
 
 class Users
 {
@@ -41,7 +42,7 @@ class Users
             $cacheKey = 'pg-'.($data['page'] ?? ($page ?? 1)).'-'.($steamids);
 
             $steamInfo = Cache::remember($cacheKey, 3600, function () use ($steamids) {
-                $info = \Steam::Info($steamids);
+                $info = Steam::Info($steamids);
 
                 return $info['response']['players'] ?? null;
             });
@@ -50,7 +51,7 @@ class Users
                 $steamInfo = [];
             }
         } else {
-            $steamInfo = \Steam::Info($steamids);
+            $steamInfo = Steam::Info($steamids);
             $steamInfo = $steamInfo['response']['players'] ?? [];
         }
 

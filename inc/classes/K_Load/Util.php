@@ -177,9 +177,7 @@ class Util
                 continue;
             }
 
-            // INSERT INTO `kload_settings` (`name`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = ?
             $result = Database::conn()->add("INSERT INTO `kload_settings` (`name`, `value`) VALUES ('?', '?') ON DUPLICATE KEY UPDATE `value` = '?'", [$setting, $insert, $insert])->execute();
-            //$result = Database::conn()->add("UPDATE `kload_settings` SET `value` = '?'", [$insert])->where("`name` = '?'", [$setting])->execute();
 
             self::log('action', $_SESSION['steamid'].($result ? ' updated ' : ' attempted to update ').$setting);
             if (!$result) {

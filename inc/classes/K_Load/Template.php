@@ -70,7 +70,7 @@ class Template
 
     public static function isDasbhoardTheme($name)
     {
-        $theme = APP_ROOT.'/themes/'.self::$theme.'/pages';
+        $theme = APP_ROOT.'/themes/'.$name.'/pages';
 
         return \file_exists($theme.'/dashboard') && \file_exists($theme.'/admin');
     }
@@ -86,7 +86,7 @@ class Template
         $themes = \glob(APP_ROOT.\sprintf('%sthemes%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
         foreach ($themes as $location) {
             $tmp = \explode(DIRECTORY_SEPARATOR, $location);
-            $name = \end($temp);
+            $name = \end($tmp);
             $location .= '/pages';
             if (\file_exists($location.'/dashboard') && \file_exists($location.'/admin')) {
                 $list[] = $name;
