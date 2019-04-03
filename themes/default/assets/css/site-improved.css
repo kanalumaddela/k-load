@@ -1,0 +1,541 @@
+@charset "UTF-8";
+
+body {
+    color: #ececec;
+    background-color: #393e52;
+}
+
+header, main, footer {
+    padding-left: 225px;
+}
+
+a:hover {
+    color: #80cdff;
+}
+
+a.is-image {
+    font-size: 0;
+    height: unset !important;
+    line-height: unset !important;
+}
+
+nav {
+    background-color: #5294e2;
+}
+
+nav.top-nav {
+    height: 100px;
+}
+
+nav.top-nav .nav-wrapper {
+    padding: 0 20px;
+}
+
+nav.top-nav .nav-wrapper > h3.header {
+    line-height: 95px;
+}
+
+a.sidenav-trigger.top-nav {
+    z-index: 2;
+    position: absolute;
+    top: 16px;
+    left: 26px;
+    float: none;
+    color: #ffffff;
+    font-size: 46px;
+}
+
+.sidenav {
+    width: 225px;
+    background-color: #383c4a;
+}
+
+ul.sidenav.sidenav-fixed {
+    overflow: hidden;
+}
+
+ul.sidenav.sidenav-fixed:hover {
+    overflow-y: auto;
+}
+
+.sidenav li {
+    line-height: unset;
+}
+
+.sidenav li > a:not(.is-image) {
+    height: unset;
+    min-height: 48px;
+    line-height: 48px;
+    color: rgba(255, 255, 255, 0.87);
+}
+
+.sidenav .collapsible > li.active .collapsible-body {
+    display: block;
+}
+
+.sidenav li > a, .sidenav .collapsible-header {
+    padding: 0 22px;
+}
+
+.sidenav > li > a:not(.is-image), .sidenav .collapsible-header {
+    border-left: 2px solid transparent;
+    transition: background-color .15s ease-out, border-color .15s ease-out;
+}
+
+.sidenav li.active, .sidenav .collapsible-body > ul:not(.collapsible) > li.active, .sidenav.sidenav-fixed .collapsible-body > ul:not(.collapsible) > li.active {
+    background-color: unset;
+}
+
+.sidenav > li > a:hover:not(.is-image), .sidenav > li.active > a:not(.is-image), li.active > .collapsible-header, .sidenav .collapsible-header:hover, .sidenav .collapsible-body li.active > a {
+    background-color: rgba(0, 0, 0, .15);
+    border-color: #5294e2;
+}
+
+.sidenav > li.logout > a:hover {
+    border-color: #f44336;
+}
+
+.sidenav .collapsible-body, .sidenav.fixed .collapsible-body {
+    background-color: rgba(0, 0, 0, .15);;
+}
+
+.sidenav .collapsible-body li a {
+    padding: 0 0 0 54px;
+    font-weight: 400;
+}
+
+.sidenav .user-view {
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.sidenav .user-view .background {
+    opacity: .7;
+}
+
+.sidenav .user-view > a, .sidenav .user-view .circle {
+    display: inline-block;
+}
+
+.sidenav .user-view .name {
+    margin-top: 5px;
+}
+
+#side-nav::-webkit-scrollbar {
+    width: 5px;
+}
+
+#side-nav::-webkit-scrollbar-thumb {
+    background-color: #5294e2;
+}
+
+/* cards */
+.card {
+    background-color: #464f69;
+}
+
+.card h1 {
+    margin-top: 10px;
+}
+
+.card > .avatar {
+    position: absolute;
+    top: -48px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    max-width: 90px;
+    border: 4px solid #464f69;
+}
+
+/* buttons */
+.btn, .btn-large, .btn-small {
+    background-color: #5294e2;
+}
+
+.btn:hover, .btn-large:hover, .btn-small:hover {
+    background: #609fea;
+}
+
+.btn:focus, .btn-large:focus, .btn-small:focus, .btn-floating:focus {
+    background-color: #3673b9;
+}
+
+.btn-large span.mdi {
+    font-size: 1.6rem;
+}
+
+/* modals */
+.modal {
+    max-height: 85%;
+    background-color: #272a34;
+}
+
+.modal .modal-footer {
+    background-color: #1d1f27;
+}
+
+/* dropdowns/selects */
+.dropdown-content {
+    background-color: #30333f;
+}
+
+.dropdown-content li > a, .dropdown-content li > span {
+    color: #5294e2;
+}
+
+/* forms */
+input, textarea {
+    color: white;
+}
+
+input:not([type]):focus:not([readonly]) + label, input[type=text]:not(.browser-default):focus:not([readonly]) + label, input[type=password]:not(.browser-default):focus:not([readonly]) + label, input[type=email]:not(.browser-default):focus:not([readonly]) + label, input[type=url]:not(.browser-default):focus:not([readonly]) + label, input[type=time]:not(.browser-default):focus:not([readonly]) + label, input[type=date]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label, input[type=tel]:not(.browser-default):focus:not([readonly]) + label, input[type=number]:not(.browser-default):focus:not([readonly]) + label, input[type=search]:not(.browser-default):focus:not([readonly]) + label, textarea.materialize-textarea:focus:not([readonly]) + label {
+    color: #5294e2;
+}
+
+input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
+    border-color: #5294e2;
+    -webkit-box-shadow: 0 1px 0 0 #5294e2;
+    box-shadow: 0 1px 0 0 #5294e2;
+}
+
+[type="radio"]:not(:checked) + span, [type="radio"]:checked + span {
+    padding-left: 25px;
+}
+
+[type="radio"]:checked + span:after, [type="radio"].with-gap:checked + span:before, [type="radio"].with-gap:checked + span:after, .select-wrapper input.select-dropdown:focus {
+    border-color: #5294e2;
+}
+
+input[type=range] + .thumb, [type="radio"]:checked + span:after, [type="radio"].with-gap:checked + span:after, .switch label input[type=checkbox]:checked + .lever:after {
+    background-color: #5294e2;
+}
+
+.switch label input[type=checkbox]:checked + .lever {
+    background-color: #72abef;
+}
+
+input[type=range] {
+    border: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track, input[type=range]::-moz-range-track {
+    background-color: rgba(255, 255, 255, .7);
+}
+
+input[type=range]::-webkit-slider-thumb {
+    background-color: #5294e2;
+}
+
+input[type=range]::-moz-range-thumb {
+    background-color: #5294e2;
+}
+
+.keyboard-focused input[type=range]:focus:not(.active)::-webkit-slider-thumb, .keyboard-focused input[type=range]:focus:not(.active)::-moz-range-thumb {
+    -webkit-box-shadow: 0 0 0 10px rgba(82, 148, 226, 0.5);
+    box-shadow: 0 0 0 10px rgba(82, 148, 226, 0.5);
+}
+
+[type="checkbox"] + span:not(.lever):before, [type="checkbox"]:not(.filled-in) + span:not(.lever):after {
+    border-color: #f9f9f9;
+}
+
+[type="checkbox"]:checked + span:not(.lever):before {
+    border-right-color: #5294e2;
+    border-bottom-color: #5294e2;
+}
+
+input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before, input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::before {
+    background-color: rgba(82, 148, 226, 0.3);
+}
+
+[type="checkbox"].filled-in:checked + span:not(.lever):after {
+    background-color: #5294e2;
+    border-color: #5294e2;
+}
+
+[type="radio"]:not(:checked)+span:before, [type="radio"]:not(:checked)+span:after {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* player settings */
+img.theme-preview {
+    width: 100%;
+}
+
+.theme-block:not(:last-child), .theme-block .material-placeholder {
+    margin-bottom: 8px;
+}
+
+/* users page */
+.users .card {
+    margin-top: 60px;
+}
+
+.users .card-content {
+    padding-top: 45px;
+}
+
+.users .card .card-content .name {
+    color: #b9b9b9;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.btn-flat {
+    color: #eaeaea;
+}
+
+.user-buttons .btn:not(:first-child), .user-buttons .btn-flat:not(:first-child) {
+    margin-top: 5px;
+}
+
+.user-buttons .btn:hover {
+    background-color: initial;
+}
+
+.users .card .btn, .users .card .btn-flat {
+    width: 75%;
+}
+
+.btn-profile {
+    background-color: #5294e2;
+}
+
+.btn-perms {
+    background-color: #9e3fb7;
+}
+
+.btn.ban-user, .btn-flat.ban-user {
+    background-color: #c14141;
+}
+
+.btn.unban-user, .btn-flat.unban-user {
+    background-color: #66a05a;
+}
+
+.user-buttons .btn:focus, .user-buttons .btn-flat:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* pagination */
+.pagination li.active {
+    background-color: #5294e2;
+}
+
+.pagination li a {
+    color: #e0e0e0;
+}
+
+/* collapsible */
+.collapsible {
+    border: none;
+}
+
+.collapsible-header, .keyboard-focused .collapsible-header:focus {
+    background-color: #3c455f;
+    border-color: rgba(255, 255, 255, .2);
+}
+
+.collapsible li:last-child:not(.active) .collapsible-header {
+    border-color: transparent;
+}
+
+.collapsible-body {
+    border-bottom: none;
+}
+
+/* admin index */
+.btn-danger {
+    background-color: #c14141;
+}
+
+.btn-danger:hover {
+    background-color: #a92525;
+}
+
+/* admin music */
+h5.song-title {
+    display: inline-block;
+    max-width: 85%;
+    font-size: 1.4rem;
+}
+
+#music_order .select-wrapper {
+    display: inline-block;
+    margin-right: 8px;
+    width: 90%;
+}
+
+/* misc */
+h1 > .mdi {
+    margin-right: 6px;
+}
+
+#materialbox-overlay {
+    background-color: rgba(10, 10, 10, 0.65);
+}
+
+.success-text {
+    color: #4CAF50;
+}
+
+.warning-text {
+    color: #fd2818;
+}
+
+@media only screen and (max-width: 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+
+    nav .nav-wrapper {
+        text-align: center;
+    }
+}
+
+/* codemirror stuff */
+/*
+    Name:       material
+    Author:     Michael Kaminsky (http://github.com/mkaminsky11)
+
+    Original material color scheme by Mattia Astorino (https://github.com/equinusocio/material-theme)
+
+*/
+.cm-s-material.CodeMirror {
+    background-color: #263238;
+    color: rgba(233, 237, 237, 1)
+}
+
+.cm-s-material .CodeMirror-gutters {
+    background: #263238;
+    color: #537f7e;
+    border: none
+}
+
+.cm-s-material .CodeMirror-guttermarker, .cm-s-material .CodeMirror-guttermarker-subtle, .cm-s-material .CodeMirror-linenumber {
+    color: #537f7e
+}
+
+.cm-s-material .CodeMirror-cursor {
+    border-left: 1px solid #f8f8f0
+}
+
+.cm-s-material div.CodeMirror-selected {
+    background: rgba(255, 255, 255, .15)
+}
+
+.cm-s-material.CodeMirror-focused div.CodeMirror-selected {
+    background: rgba(255, 255, 255, .1)
+}
+
+.cm-s-material .CodeMirror-line::selection, .cm-s-material .CodeMirror-line > span::selection, .cm-s-material .CodeMirror-line > span > span::selection {
+    background: rgba(255, 255, 255, .1)
+}
+
+.cm-s-material .CodeMirror-line::-moz-selection, .cm-s-material .CodeMirror-line > span::-moz-selection, .cm-s-material .CodeMirror-line > span > span::-moz-selection {
+    background: rgba(255, 255, 255, .1)
+}
+
+.cm-s-material .CodeMirror-activeline-background {
+    background: rgba(0, 0, 0, 0)
+}
+
+.cm-s-material .cm-keyword {
+    color: rgba(199, 146, 234, 1)
+}
+
+.cm-s-material .cm-operator {
+    color: rgba(233, 237, 237, 1)
+}
+
+.cm-s-material .cm-variable-2 {
+    color: #80cbc4
+}
+
+.cm-s-material .cm-type, .cm-s-material .cm-variable-3 {
+    color: #82b1ff
+}
+
+.cm-s-material .cm-builtin {
+    color: #decb6b
+}
+
+.cm-s-material .cm-atom {
+    color: #f77669
+}
+
+.cm-s-material .cm-number {
+    color: #f77669
+}
+
+.cm-s-material .cm-def {
+    color: rgba(233, 237, 237, 1)
+}
+
+.cm-s-material .cm-string {
+    color: #c3e88d
+}
+
+.cm-s-material .cm-string-2 {
+    color: #80cbc4
+}
+
+.cm-s-material .cm-comment {
+    color: #546e7a
+}
+
+.cm-s-material .cm-variable {
+    color: #82b1ff
+}
+
+.cm-s-material .cm-tag {
+    color: #80cbc4
+}
+
+.cm-s-material .cm-meta {
+    color: #80cbc4
+}
+
+.cm-s-material .cm-attribute {
+    color: #ffcb6b
+}
+
+.cm-s-material .cm-property {
+    color: #80cbae
+}
+
+.cm-s-material .cm-qualifier {
+    color: #decb6b
+}
+
+.cm-s-material .cm-type, .cm-s-material .cm-variable-3 {
+    color: #decb6b
+}
+
+.cm-s-material .cm-tag {
+    color: rgba(255, 83, 112, 1)
+}
+
+.cm-s-material .cm-error {
+    color: rgba(255, 255, 255, 1);
+    background-color: #ec5f67
+}
+
+.cm-s-material .CodeMirror-matchingbracket {
+    text-decoration: underline;
+    color: #fff !important
+}
+
+.cm-s-material.CodeMirror {
+    background-color: #23293f;
+}
+
+.cm-s-material .CodeMirror-gutters {
+    background-color: #2b324a;
+}
+
+.cm-s-material .CodeMirror-guttermarker, .cm-s-material .CodeMirror-guttermarker-subtle, .cm-s-material .CodeMirror-linenumber {
+    color: #e6e6e6;
+}

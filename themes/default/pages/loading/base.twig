@@ -10,7 +10,7 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="{{ assets }}/css/loading.css?{{ cache_buster }}">
     {% block css %}{% endblock %}
-    {% if user.steamid %}
+    {% if user.steamid and css_exists %}
         <link rel="stylesheet" href="{{ site.path }}/data/users/{{ user.steamid }}.css?{{ cache_buster }}">
     {% endif %}
 </head>

@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block title %}Admin | K-Load{% endblock %}
+{% block nav_title %}Admin{% endblock %}
 
 {% block css_body %}
     <style>
@@ -20,8 +21,7 @@
                 <div class="card">
                     <div class="card-content">
                         <h1 class="flow-text" style="margin:0">Your server.cfg you should have this:</h1>
-                        <pre style="padding: 5px 0;background-color:#161927;"><code
-                                    style="color: #27ff2f;background-color:#161927;">sv_loadingurl "{{ site.url }}?steamid=%s&mapname=%m"</code></pre>
+                        <pre style="padding: 5px 4px;background-color:#161927;"><code style="color: #27ff2f;background-color:#161927;">sv_loadingurl "{{ site.url }}?steamid=%s&mapname=%m"</code></pre>
                         <small>copy and paste this in, if it already exists change the value</small>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         <form action="{{ site.path ~ '/dashboard/admin?action=update_apikeys' }}" method="post">
                             {{ csrf|raw }}
                             <div class="input-field col s12">
-                                <input name="apikeys[steam]" type="text" class="validate" value="{{ api_keys.steam }}">
+                                <input name="apikeys[steam]" type="text" class="validate" value="{{ api_keys.steam }}" autocomplete="off" autocapitalize="off" spellcheck="false" >
                                 <label>Steam API Key</label>
                             </div>
                             <div class="col s12 right-align">
@@ -48,16 +48,7 @@
                         </div>
                         <form action="{{ site.path ~ '/dashboard/admin?action=update_theme' }}" method="post">
                             {{ csrf|raw }}
-                            {% for loading_theme in themes %}
-                                <div class="col s12 m4 center-align theme-block">
-                                    <img class="materialboxed " src="{{ loading_theme.preview }}"
-                                         style="display:inline-block;width:150px;">
-                                    <input id="theme_{{ loading_theme.name }}" class="with-gap" name="theme"
-                                           type="radio" value="{{ loading_theme.name }}"
-                                           {% if loading_theme.name == theme %}checked{% endif %} />
-                                    <label for="theme_{{ loading_theme.name }}">{{ loading_theme.name|capitalize }}</label>
-                                </div>
-                            {% endfor %}
+                            {% include '@partials/backgrounds.twig' with {'themes': themes, 'value': theme, 'hide_xl': 1} only %}
                             <div class="col s12 center-align">
                                 <input type="submit" name="save_theme" class="btn" value="Save">
                             </div>
@@ -84,9 +75,7 @@
                             {% if updates.amount > 0 %}
                                 <a href="{{ site.path }}/dashboard/admin?action=update" class="btn">Update</a>
                             {% endif %}
-                            <a href="{{ site.path }}/dashboard/admin?action=refresh_themes"
-                               class="btn orange tooltipped" data-tooltip="Fixes the config to display all themes">Refresh
-                                Themes</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=refresh_themes" class="btn btn-danger tooltipped" data-tooltip="Fixes the config to display all themes">Refresh Themes</a>
                         </div>
                     </div>
                 </div>
@@ -95,10 +84,10 @@
                     <div class="card-content">
                         <h1 class="card-title">Clear Cache</h1>
                         <div class="center-align">
-                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache" class="btn red">All Cache</a>
-                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache_data" class="btn pink">Data
+                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache" class="btn btn-danger">All Cache</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache_data" class="btn">Data
                                 Cache</a>
-                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache_template" class="btn pink">Template
+                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache_template" class="btn">Template
                                 Cache</a>
                         </div>
                     </div>
@@ -108,10 +97,10 @@
                     <div class="card-content">
                         <h1 class="card-title">Users</h1>
                         <div class="center-align">
-                            <a href="{{ site.path }}/dashboard/admin?action=refresh_css" class="btn orange">Recompile
+                            <a href="{{ site.path }}/dashboard/admin?action=refresh_css" class="btn">Recompile
                                 CSS</a>
-                            <a href="{{ site.path }}/dashboard/admin?action=unban_all" class="btn green">Unban All</a>
-                            <a href="{{ site.path }}/dashboard/admin?action=reset_perms" class="btn red">Reset Perms</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=unban_all" class="btn btn-danger">Unban All</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=reset_perms" class="btn btn-danger">Reset Perms</a>
                         </div>
                     </div>
                 </div>
@@ -125,6 +114,10 @@
     <script>
         $('.btn').click(function () {
             return window.confirm('Are you sure you want to do this?');
+        });
+
+        $(document).ready(function(){
+            $('.materialboxed').materialbox();
         });
     </script>
 {% endblock %}

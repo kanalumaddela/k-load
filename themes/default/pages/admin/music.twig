@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
-{% block title %}Settings | K-Load{% endblock %}
+{% block title %}Music | K-Load{% endblock %}
+{% block nav_title %}Music{% endblock %}
 
 {% block content %}
     <form method="post" action="{{ site.path }}/dashboard/admin/music" class="row"
@@ -105,13 +106,9 @@
         </div>
 
         <div class="col s12 center">
-            <button class="btn blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save"
-                    value="1">Save Changes
-            </button>
+            <button class="btn blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1">Save Changes</button>
         </div>
     </form>
-
-    <hr/>
 
     <div class="row" style="margin-top: 15px;">
         <div class="col s12">
@@ -120,12 +117,6 @@
                     <h1 class="flow-text"><span class="mdi mdi-music"></span>Music Files</h1>
 
                     <div id="music_files" class="row">
-                        <!--
-                        <a class="btn-floating play-song blue" style="margin-right: 5px"><i class="mdi mdi-play"></i></a>
-                        <a class="btn-floating pause-song orange" style="margin-right: 5px"><i class="mdi mdi-pause"></i></a>
-                        <a class="btn-floating stop-song red" style="margin-right: 5px"><i class="mdi mdi-stop"></i></a>
-                        <a class="btn-floating edit-song orange" style="margin-right: 5px"><i class="mdi mdi-pencil"></i></a>
-                        -->
                         {% for file in music_files %}
                             <div id="{{ file.row_id }}" class="col s12" data-file="{{ file.filename }}">
                                 <h5 class="song-title truncate">
@@ -144,7 +135,6 @@
                         <label for="music_file_upload" class="btn green tooltipped"
                                data-tooltip="Only '.ogg' files are allowed" data-position="top" data-delay="25"><span
                                     class="mdi mdi-upload"></span>Upload</label>
-                        <!--<a class="btn green"></a>-->
                     </div>
                 </div>
             </div>
@@ -218,7 +208,6 @@
                                 deleteSongEventInit();
                             } else {
                                 toast('File already exists, but has been uploaded and overwritten', 4000, 'orange');
-                                console.log('already exists jew');
                             }
 
                             toast(data.message, 2000, 'green');
@@ -255,7 +244,6 @@
                         }
 
                         toast(data.message, 5000, (data.success ? 'green' : 'red'));
-                        console.log(data);
                     })
                 }
             });
@@ -267,7 +255,9 @@
 
         deleteSongEventInit();
 
-        $('.materialize-select').material_select();
+        $(document).ready(function() {
+            $('.materialize-select').formSelect();
+        });
 
         function createElem_youtube() {
             return elem('div', {className: 'input-field child'},
@@ -288,7 +278,7 @@
         }
 
         function createElemCallback_musicSelect() {
-            if (recentClone != previousClone) {
+            if (recentClone !== previousClone) {
                 $(recentClone).material_select();
                 previousClone = recentClone;
             }

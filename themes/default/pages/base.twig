@@ -10,37 +10,58 @@
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"/>
+    <!--
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.5.95/css/materialdesignicons.min.css"/>
     {% block css_head %}{% endblock %}
+    <link rel="stylesheet" href="{{ assets_theme }}/css/site-improved.css">
+    <!--
     <link rel="stylesheet" href="{{ assets_theme }}/css/site.css">
+    -->
 </head>
 <body>
 {% block css_body %}{% endblock %}
-
 {% block body %}
     {% if user %}
-        {{ csrf|raw }}
-        {% include '@partials/navigation.twig' %}
-        <main class="container">{% block content %}{% endblock %}</main>
+        <header>
+            <nav class="top-nav">
+                <div class="nav-wrapper">
+                    <h3 class="header" style="margin: 0">{% block nav_title %}K-Load{% endblock %}</h3>
+                </div>
+            </nav>
+            {% include '@partials/navigation.twig' %}
+        </header>
+        <main><div class="container">{{ csrf|raw }}{% block content %}{% endblock %}</div></main>
     {% else %}
-        <div class="true-center center-align">
-            <h3>K-Load Dashboard</h3>
-            <a href="{{ login_url }}" style=" padding: 10px 40px; border: 2px solid; border-radius: 50px; ">Login</a>
+        <div style="height: 100vh" class="valign-wrapper center">
+            <div class="card" style="margin-top: -50px;margin-left: auto;margin-right: auto;">
+                <div class="card-content" style="padding: 50px">
+                    <h3 style="margin: 0 0 40px 0">K-Load Dashboard</h3>
+                    <a href="{{ login_url }}" style="padding: 10px 40px;border: 2px solid;border-radius: 50px;color:#66d0ff">Login with Steam <span class="mdi mdi-steam"></span></a>
+                </div>
+            </div>
         </div>
     {% endif %}
 {% endblock %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 {% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/mode/css/css.js"></script>
 {% endif %}
 <script>var site = {{ site_json|raw }};
     var alert = '{{ alert }}';
-    $(".button-collapse").sideNav();</script>
-<script src="{{ assets }}/js/site.js"></script>
+
+    $(document).ready(function(){
+        $('.sidenav').sidenav({});
+        $('.collapsible').collapsible();
+        $('.tooltipped').tooltip();
+    });
+</script>
+<script src="{{ assets_theme }}/js/site.js"></script>
 {% block js %}{% endblock %}
 </body>
 </html>

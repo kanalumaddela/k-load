@@ -1,41 +1,60 @@
+<!--
 <nav class="hide-on-large-only">
     <div class="nav-wrapper">
         <a href="#" class="brand-logo">K-Load</a>
         <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi mdi-menu"></i></a>
     </div>
 </nav>
+-->
 
-<ul id="slide-out" class="side-nav fixed">
-    <li class="center-align no-hover">
-        <img class="avatar" src="{{ user.avatarfull }}" onerror="this.src='{{ assets }}/img/avatar.jpg'"
-             style="margin-top:25px;margin-bottom:40px;">
+<div class="container">
+    <a href="#" data-target="side-nav" class="top-nav sidenav-trigger full hide-on-large-only">
+        <span class="mdi mdi-menu" style="display: block;"></span>
+    </a>
+</div>
+
+<ul id="side-nav" class="sidenav sidenav-fixed">
+    <li>
+        <div class="user-view">
+            <a href="#user" class="is-image">
+                <img class="circle" style="border-radius: 3px" src="{{ user.avatarfull }}" onerror="this.src='{{ assets }}/img/avatar.jpg'">
+            </a>
+            <br>
+            <a href="#name">
+                <span class="white-text name">{{ user.personaname }}</span>
+            </a>
+            <a href="{{ user.profileurl }}" target="_blank">
+                <span class="white-text email">{{ user.steamid2 }} <span class="mdi mdi-open-in-new"></span></span>
+            </a>
+        </div>
     </li>
-    <li class="{% if (site.host ~ site.path ~ '/dashboard') == site.current %}active{% endif %}">
+
+
+    <li class="bold{% if (site.host ~ site.path ~ '/dashboard') == site.current %} active{% endif %}">
         <a href="{{ site.path }}/dashboard">
             <span class="mdi mdi-home-outline"></span>
             Home
         </a>
     </li>
-    <li class="{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %}active{% endif %} tooltipped"
-        data-delay="100" data-position="top" data-tooltip="These are settings to customize how it looks for YOU only">
+    <li class="bold{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %} active{% endif %} tooltipped" data-delay="100" data-position="right" data-tooltip="These are settings to customize how it looks for YOU only">
         <a href="{{ site.path }}/dashboard/settings">
             <span class="mdi mdi-tune"></span>
             My Settings
         </a>
     </li>
 
-    <li class="{% if (site.host ~ site.path ~ '/dashboard/users') in site.current %}active{% endif %}">
+    <li class="bold{% if (site.host ~ site.path ~ '/dashboard/users') in site.current %} active{% endif %}">
         <a href="{{ site.path }}/dashboard/users">
             <span class="mdi mdi-account-multiple"></span>
             Users
         </a>
     </li>
     {% if (user.admin and user.perms|length > 0) or user.super %}
-        <li class="no-padding">
+        <li>
             <ul class="collapsible collapsible-accordion">
-                <li>
-                    <a class="collapsible-header {% if (site.host ~ site.path ~ '/dashboard/admin') in site.current %}active{% endif %} tooltipped"
-                       data-delay="100" data-position="top"
+                <li class="bold {% if (site.host ~ site.path ~ '/dashboard/admin') in site.current %}active{% endif %}">
+                    <a class="collapsible-header tooltipped"
+                       data-delay="100" data-position="right"
                        data-tooltip="These are global settings that affect ALL players">
                         <span class="mdi mdi-wrench"></span>
                         Admin
@@ -84,7 +103,7 @@
         </li>
     {% endif %}
     <li class="logout">
-        <a href="{{ site.path }}/dashboard/logout">
+        <a class="waves-effect waves-red" href="{{ site.path }}/dashboard/logout">
             <span class="mdi mdi-logout"></span>
             Logout
         </a>

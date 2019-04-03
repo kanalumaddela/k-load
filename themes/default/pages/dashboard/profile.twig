@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block title %}{{ player.name|default(player.steamid) }} | K-Load{% endblock %}
+{% block nav_title %}User: {{ player.name|default(player.steamid) }} [{{ player.id }}]{% endblock %}
 
 {% block head %}
     <meta property="og:title" content="{{ player.name|default(player.steamid) }} | K-Load"/>
@@ -28,7 +29,7 @@
             margin: 0;
         }
 
-        .settings [type="checkbox"] + label {
+        .settings [type="checkbox"] + span {
             padding-left: 20px;
         }
 
@@ -67,20 +68,20 @@
         <div class="col s12 m6">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title"><i class="mdi mdi-panorama left"></i>Backgrounds</span>
+                    <span class="card-title"><span class="mdi mdi-panorama left"></span>Backgrounds</span>
                     <div class="row settings">
                         <div class="col s12">
                             Enabled
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.backgrounds.enable %}checked{% endif %} />
-                                <label></label>
+                                <input type="checkbox" {% if player.settings.backgrounds.enable %}checked="checked"{% endif %} />
+                                <span></span>
                             </p>
                         </div>
                         <div class="col s12">
                             Random
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.backgrounds.random %}checked{% endif %} />
-                                <label></label>
+                                <input type="checkbox" {% if player.settings.backgrounds.random %}checked="checked"{% endif %} />
+                                <span></span>
                             </p>
                         </div>
                         <div class="col s12">
@@ -96,7 +97,7 @@
         <div class="col s12 m6">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title"><i class="mdi mdi-youtube-play left"></i>YouTube</span>
+                    <span class="card-title"><span class="mdi mdi-youtube-play left"></span>YouTube</span>
                     <div class="row settings">
                         <div class="col s12">
                             Enabled
@@ -117,7 +118,7 @@
                         </div>
                         {% if player.settings.youtube.list %}
                             <div class="col s12 center-align">
-                                <button class="btn modal-trigger" href="#youtube_videos">Videos</button>
+                                <button class="btn modal-trigger" data-target="youtube_videos">Videos</button>
                             </div>
                         {% endif %}
                     </div>
@@ -127,7 +128,7 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title"><i class="mdi mdi-language-css3 left"></i>CSS</span>
+                    <span class="card-title"><span class="mdi mdi-language-css3 left"></span>CSS</span>
                     <pre>{{ player.css }}</pre>
                 </div>
             </div>
@@ -143,34 +144,34 @@
                 {% endfor %}
             </div>
             <div class="modal-footer">
-                <a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+                <a href="#" class="modal-action modal-close waves-effect btn-flat">Close</a>
             </div>
         </div>
     {% endif %}
     {% if player.steamid != user.steamid %}
         <div class="fixed-action-btn">
             <a class="btn-floating btn-large blue">
-                <i class="large mdi mdi-account-settings-variant"></i>
+                <span class="mdi mdi-account-settings large"></span>
             </a>
             <ul>
                 <li>
                     <a class="btn-floating tooltipped pink copy-user" data-tooltip="Copy User's Settings"
                        data-position="left" data-steamid="{{ player.steamid }}">
-                        <i class="mdi mdi-content-copy"></i>
+                        <span class="mdi mdi-content-copy"></span>
                     </a>
                 </li>
                 {% if not player.banned and (perms.ban or user.super) %}
                     <li>
                         <a class="btn-floating tooltipped red ban-user" data-tooltip="Ban User" data-position="left"
                            data-steamid="{{ player.steamid }}">
-                            <i class="mdi mdi-gavel"></i>
+                            <span class="mdi mdi-gavel"></span>
                         </a>
                     </li>
                 {% elseif player.banned and (perms.unban or user.super) %}
                     <li>
                         <a class="btn-floating tooltipped green unban-user" data-tooltip="Unban User"
                            data-position="left" data-steamid="{{ player.steamid }}">
-                            <i class="mdi mdi-lock-open-outline"></i>
+                            <span class="mdi mdi-lock-open-outline"></span>
                         </a>
                     </li>
                 {% endif %}
@@ -180,5 +181,10 @@
 {% endblock %}
 
 {% block js %}
-    <script>$('.modal').modal();</script>
+    <script>
+        $('.modal').modal();
+        $(document).ready(function(){
+            $('.fixed-action-btn').floatingActionButton();
+        });
+    </script>
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
-{% block tiitle %}Backgrounds | K-Load{% endblock %}
+{% block title %}Backgrounds | K-Load{% endblock %}
+{% block nav_title %}Backgrounds{% endblock %}
 
 {% block css_body %}
     <style>
@@ -57,7 +58,7 @@
                                 </div>
 
                                 <div class="fixed-action-btn">
-                                    <button id="save-btn" class="btn-floating btn-large blue" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+                                    <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
                                 </div>
                             </form>
                         </div>
@@ -115,10 +116,13 @@
                                                 <div class="row">
                                                     {% for background in gmBackgrounds %}
                                                         <div class="col s12 m4 l3">
-                                                            <span class="k-load-background" data-src="{{ background.src }}">
+                                                            <a class="k-load-background" href="{{ background.src }}" target="_blank">
                                                                 {{ background.name }}
-                                                            </span>
-                                                            <span class="mdi mdi-close red-text right"></span>
+                                                                <span class="mdi mdi-open-in-new"></span>
+                                                            </a>
+                                                            <a href="#" class="delete-bg" data-bg="{{ background.src }}">
+                                                                <span class="mdi mdi-close red-text right"></span>
+                                                            </a>
                                                         </div>
                                                     {% endfor %}
                                                 </div>
@@ -139,6 +143,16 @@
         $(document).ready(function(){
             $('.modal').modal();
             $('.collapsible').collapsible();
+        });
+
+        $('.delete-bg').click(function () {
+            const type = 'delete-bg';
+            var background = $(this).data('bg');
+            var data = {csrf, type, background};
+
+            if (window.confirm('Are you sure you want to delete this background?')) {
+                userAction(data);
+            }
         });
     </script>
 {% endblock %}

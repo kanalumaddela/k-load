@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block title %}Messages | K-Load{% endblock %}
+{% block nav_title %}Messages{% endblock %}
 
 {% block css_body %}
     <style>
@@ -24,9 +25,6 @@
     </style>
 {% endblock %}
 {% block content %}
-    <h3><i class="mdi mdi-format-list-numbers left"></i>Messages</h3>
-    <p>Here you can create messages for specific gamemodes or messages in general.</p>
-
     {% include '@partials/gamemode-examples.twig' %}
 
     <form method="post" action="{{ site.path }}/dashboard/admin/messages" class="row"
@@ -86,8 +84,7 @@
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue" type="submit" name="save" value="1"><span
-                        class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
     </form>

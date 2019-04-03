@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block title %}Users | K-Load{% endblock %}
+{% block nav_title %}Users{% endblock %}
 
 {% block content %}
     <form id="search_users" class="row" method="get" action="{{ site.path }}/dashboard/users">
@@ -21,18 +22,18 @@
                         <p class="name {% if player.banned %}red-text{% endif %}">{{ player.name }}</p>
                         <br>
                         <div class="user-buttons">
-                            <a class="btn-flat btn-profile" href="{{ site.path }}/dashboard/users/{{ player.steamid }}">Profile</a>
+                            <a class="btn btn-profile" href="{{ site.path }}/dashboard/users/{{ player.steamid }}">Profile</a>
                             {% if player.steamid != user.steamid and user.admin %}
                                 {% if user.super %}
-                                    <a class="btn-flat btn-perms modal-trigger" href="#perms_{{ player.steamid }}">Perms</a>
+                                    <a class="btn btn-perms modal-trigger" href="#perms_{{ player.steamid }}">Perms</a>
                                 {% endif %}
                                 {% if player.banned %}
                                     {% if user.super or user.perms.unban %}
-                                        <a class="btn-flat unban-user" data-steamid="{{ player.steamid }}">Unban</a>
+                                        <a class="btn unban-user" data-steamid="{{ player.steamid }}">Unban</a>
                                     {% endif %}
                                 {% else %}
                                     {% if user.super or user.perms.ban %}
-                                        <a class="btn-flat ban-user" data-steamid="{{ player.steamid }}">Ban</a>
+                                        <a class="btn ban-user" data-steamid="{{ player.steamid }}">Ban</a>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
@@ -62,10 +63,12 @@
                                 {% for perm, permFriendly in permissions %}
                                     <div class="col s6 m4">
                                         <p>
-                                            <input type="checkbox" id="perm_{{ perm }}_{{ player.steamid }}"
-                                                   class="filled-in perm" name="perms[]" value="{{ perm }}"
-                                                   {% if perm in player.perms %}checked{% endif %} />
-                                            <label for="perm_{{ perm }}_{{ player.steamid }}">{{ permFriendly }}</label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in perm" name="perms[]" value="{{ perm }}" {% if perm in player.perms %}checked{% endif %} />
+                                                <span>
+                                                    {{ permFriendly }}
+                                                </span>
+                                            </label>
                                         </p>
                                     </div>
                                 {% endfor %}

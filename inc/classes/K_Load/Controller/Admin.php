@@ -141,6 +141,9 @@ class Admin
                         $data['alert'] = 'Not a valid action';
                         break;
                 }
+
+                Util::flash('alert', $data['alert']);
+                Util::redirect('/dashboard/admin');
             }
         }
 
@@ -177,11 +180,13 @@ class Admin
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Save successful' : 'Failed to save, please try again');
+
+            Util::flash('alert', $alert);
+            Util::redirect('/dashboard/admin/general');
         }
 
         $data = [
             'settings' => Util::getSetting('community_name', 'description', 'youtube'),
-            'alert'    => (isset($alert) ? $alert : ''),
         ];
         $data['settings']['youtube'] = \json_decode($data['settings']['youtube'], true);
 
@@ -235,7 +240,7 @@ class Admin
             foreach ($bgImages as $image) {
                 $images[] = [
                     'src'  => APP_PATH.\str_replace(DIRECTORY_SEPARATOR, '/', \str_replace(APP_ROOT, '', $image)),
-                    'name' => basename($image),
+                    'name' => \basename($image),
                 ];
             }
 
@@ -336,11 +341,13 @@ class Admin
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Rules have been saved' : 'Failed to save, please try again');
+
+            Util::flash('alert', $alert);
+            Util::redirect('/dashboard/admin/rules');
         }
 
         $data = [
             'settings' => Util::getSetting('rules'),
-            'alert'    => (isset($alert) ? $alert : ''),
         ];
         $data['settings']['rules'] = \json_decode($data['settings']['rules'], true);
 
@@ -362,11 +369,13 @@ class Admin
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Messages have been saved' : 'Failed to save, please try again');
+
+            Util::flash('alert', $alert);
+            Util::redirect('/dashboard/admin/messages');
         }
 
         $data = [
             'settings' => Util::getSetting('messages'),
-            'alert'    => (isset($alert) ? $alert : ''),
         ];
         $data['settings']['messages'] = \json_decode($data['settings']['messages'], true);
 
@@ -381,25 +390,27 @@ class Admin
         }
 
         if (isset($_POST['save']) && isset($_POST['staff'])) {
-            foreach ($_POST['staff'] as $gamemode => $ranks) {
-                $_POST['staff'][$gamemode] = \array_values($ranks);
+            if (isset($_POST['staff']) && \is_array($_POST['staff'])) {
+                foreach ($_POST['staff'] as $gamemode => $ranks) {
+                    $_POST['staff'][$gamemode] = \array_values($ranks);
+                }
+            } else {
+                $_POST['staff'] = '[]';
             }
+
             $success = Util::updateSetting(['staff'], [$_POST['staff']], $_POST['csrf']);
+
             if ($success) {
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
             $alert = ($success ? 'Staff have been saved' : 'Failed to save, please try again');
-        } elseif (isset($_POST['save']) && !isset($_POST['staff'])) {
-            $success = Util::updateSetting(['staff'], ['[]'], $_POST['csrf']);
-            if ($success) {
-                Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
-            }
-            $alert = ($success ? 'Staff have been saved' : 'Failed to save, please try again');
+
+            Util::flash('alert', $alert);
+            Util::redirect('/dashboard/admin/staff');
         }
 
         $data = [
             'settings' => Util::getSetting('staff'),
-            'alert'    => (isset($alert) ? $alert : ''),
         ];
         $data['settings']['staff'] = \json_decode($data['settings']['staff'], true);
 

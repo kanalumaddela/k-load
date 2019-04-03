@@ -20,10 +20,6 @@ class Main
         }
         $map = $_GET['mapname'] ?? null;
 
-        if (!empty($steamid) && !\file_exists(APP_ROOT.'/data/users/'.$steamid.'.css')) {
-            \touch(APP_ROOT.'/data/users/'.$steamid.'.css');
-        }
-
         if (ENABLE_CACHE) {
             if (!empty($steamid)) {
                 $data['user'] = Cache::remember('player-'.$steamid, 0, function () use ($steamid) {
@@ -55,7 +51,6 @@ class Main
             }
 
             $data['settings'] = Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music');
-
             $data['backgrounds'] = Util::getBackgrounds();
         }
 
@@ -86,6 +81,8 @@ class Main
         $theme = $config['loading_theme'] ?? 'default';
         $theme = (THEME_OVERRIDE ? ($_GET['theme'] ?? ($data['user']['settings']['theme'] ?? $theme)) : ($data['user']['settings']['theme'] ?? ($_GET['theme'] ?? $theme)));
 
+        $data['css_exists'] = \file_exists(APP_ROOT.'/data/users/'.$steamid.'.css');
+
         if (Template::isLoadingTheme($theme)) {
             Template::theme($theme);
             Template::init();
@@ -99,11 +96,8 @@ class Main
                 if (ENABLE_CACHE) {
                     $data['custom'][$addon_name_real] = Cache::remember('custom-'.$addon_name_real, 120, function () use ($steamid, $map, $addon_name) {
                         $addon_instance = new $addon_name($steamid, $map);
-                        if (\method_exists($addon_instance, 'data')) {
-                            return $addon_instance->data();
-                        } else {
-                            return;
-                        }
+
+                        return \method_exists($addon_instance, 'data') ? $addon_instance->data() : null;
                     });
                 } else {
                     $addon_instance = new $addon_name($steamid, $map);

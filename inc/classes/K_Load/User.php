@@ -136,6 +136,8 @@ class User
                 return $banned;
             }
         }
+
+        return false;
     }
 
     public static function unban($steamid, $csrf)
@@ -153,6 +155,8 @@ class User
                 return $unbanned;
             }
         }
+
+        return false;
     }
 
     public static function update($steamid, $settings)
@@ -230,6 +234,8 @@ class User
 
             return $result;
         }
+
+        return false;
     }
 
     public static function copy($steamid, $player, $csrf)
@@ -315,7 +321,7 @@ class User
             'unban'          => 'Unban',
             'backgrounds'    => 'Backgrounds',
             'community_name' => 'Community Name',
-            'description'    => 'description',
+            'description'    => 'Description',
             'rules'          => 'Rules',
             'messages'       => 'Messages',
             'staff'          => 'Staff',

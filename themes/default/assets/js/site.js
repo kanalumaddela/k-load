@@ -1,6 +1,3 @@
-/*
-	K-Load v{{ script_version_name }}
-*/
 var csrf = $('#csrf').val();
 const elem = (tag, attrs, ...children) => {
     const elem = document.createElement(tag);
@@ -11,7 +8,6 @@ const elem = (tag, attrs, ...children) => {
             elem.setAttribute(key, attrs[key]);
         }
     });
-    // {{ user_id sha256 key }}
     // Object.keys(attrs).forEach(key => elem[key] = attrs[key]); <-- original
 
     children.forEach(child => {
@@ -23,19 +19,20 @@ const elem = (tag, attrs, ...children) => {
     return elem;
 };
 
+const lang = (key, default_phrase) => {
+    return language[key] ? language_fallback[key] : (default_phrase ? default_phrase : '');
+};
+
 function toast(message = '', time = 5000, css = '') {
-    if (typeof Materialize !== 'undefined') {
-        if (time == -1) {
-            Materialize.toast(message, Infinity, css, function () {
-                current_message = '';
-            });
-        } else {
-            Materialize.toast(message, time, css, function () {
-                current_message = '';
-            });
-        }
+    if (typeof M !== 'undefined') {
+        M.toast({
+            html: message,
+            displayLength: time,
+            classes: css,
+            activationPercent: .6
+        });
     } else {
-        console.log(message);
+        window.alert(message);
     }
 }
 
@@ -44,7 +41,7 @@ function addElem() {
         var type = $(this).data('type');
         var parent = $(this).data('parent');
         var parent_dom = $(this).prev(parent);
-        if (parent_dom.length == 0) {
+        if (parent_dom.length === 0) {
             parent_dom = $.find(parent);
             if (parent_dom.length > 1) {
                 parent_dom = parent_dom[0];
@@ -138,7 +135,7 @@ if (typeof css_check != 'undefined' && css_check != null) {
         }
     });
 }
-if (alert != '') {
+if (alert !== '') {
     toast(alert, 5000, 'blue');
 }
 $('textarea').on('input', function () {

@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block title %}Staff | K-Load{% endblock %}
+{% block nav_title %}Staff{% endblock %}
 
 {% block css_body %}
     <style>
@@ -35,9 +36,6 @@
     </style>
 {% endblock %}
 {% block content %}
-    <h3><i class="mdi mdi-format-list-numbers left"></i>Staff</h3>
-    <p>Here you can create staff for specific gamemodes or staff in general.</p>
-
     {% include '@partials/gamemode-examples.twig' %}
 
     <form method="post" action="{{ site.path }}/dashboard/admin/staff" class="row"
@@ -57,7 +55,7 @@
                                 <h5 class="flow-text">Staff</h5>
                                 <div class="staff row">
                                     {% for staff_member in staff %}
-                                        <div class="input-field col s12 m6 l4 center-align child">
+                                        <div class="input-field col s12 m6 l4 xl3 center-align child">
                                             <div>
                                                 <p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>
                                                 <input type="number" class="staff-steamid"
@@ -89,8 +87,7 @@
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue" type="submit" name="save" value="1"><span
-                        class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
     </form>
@@ -100,15 +97,15 @@
 {% block js %}
     <script>
         function fixGamemode(elem, isChildren = false) {
+            var gamemode,staff;
             if (!isChildren) {
-                var gamemode = elem.value;
-                var staff = $(elem).next().children('.staff').children('.input-field.child');
-                console.log(staff);
+                gamemode = elem.value;
+                staff = $(elem).next().children('.staff').children('.input-field.child');
             } else {
-                var gamemode = $(elem).parent().parent().parent().parent().parent().find('.gamemode');
+                gamemode = $(elem).parent().parent().parent().parent().parent().find('.gamemode');
                 if (gamemode.length > 0) {
                     gamemode = gamemode[0].value;
-                    var staff = $(elem).parent().parent().parent().find('.input-field.child');
+                    staff = $(elem).parent().parent().parent().find('.input-field.child');
                 }
             }
 
@@ -158,7 +155,7 @@
             fake_cnt++;
             var steam_input_title = '<p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>';
             var rank_input_title = '<p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>';
-            return elem('div', {className: 'input-field col s12 m6 l4 center-align child'},
+            return elem('div', {className: 'input-field col s12 m6 l4 xl3 center-align child'},
                 elem('div', {},
                     elem('p', {innerHTML: '<span class="mdi mdi-steam"></span> SteamID (64 bit)'}),
                     elem('input', {

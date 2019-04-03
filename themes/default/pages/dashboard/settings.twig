@@ -1,6 +1,7 @@
 {% extends 'base.twig' %}
 
-{% block title %}Settings | K-Load{% endblock %}
+{% block title %}My Settings | K-Load{% endblock %}
+{% block nav_title %}My Settings{% endblock %}
 
 {% block css_head %}
     {{ parent() }}
@@ -8,30 +9,27 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Settings</h3>
-    <form method="post" action="{{ site.path }}/dashboard/settings" class="row"
-          style="padding-top:15px;padding-bottom:15px;">
+    <form method="post" action="{{ site.path }}/dashboard/settings" class="row" style="padding-top:15px;padding-bottom:15px;">
         {{ csrf|raw }}
 
         <div class="col s12">
             {% if user.admin %}
-                <p>To edit the loading screen for all users visit <a
-                            href="{{ site.path ~ '/dashboard/admin/general' }}">{{ site.url ~ '/dashboard/admin/general' }}</a>
+                <p>To edit the loading screen for all users visit <a href="{{ site.path ~ '/dashboard/admin/general' }}">{{ site.url ~ '/dashboard/admin/general' }}</a>
                 </p>
             {% endif %}
             <div class="card">
                 <div class="card-content row">
                     <h1 class="flow-text col s12"><span class="mdi mdi-format-color-fill"></span>Theme</h1>
-                    {% for theme in themes %}
-                        <div class="col s12 m3 center-align theme-block">
-                            <img class="materialboxed " src="{{ theme.preview }}"
-                                 style="display:inline-block;width:150px;">
-                            <input id="theme_{{ theme.name }}" class="with-gap" name="theme" type="radio"
-                                   value="{{ theme.name }}"
-                                   {% if theme.name == user.settings.theme %}checked{% endif %} />
-                            <label for="theme_{{ theme.name }}">{{ theme.name|capitalize }}</label>
-                        </div>
-                    {% endfor %}
+                    {% include '@partials/backgrounds.twig' with {'themes': themes, 'value': user.settings.theme} only %}
+                    {#{% for theme in themes %}#}
+                        {#<div class="col s12 m4 l3 xl2 center-align theme-block">#}
+                            {#<img class="materialboxed theme-preview" src="{{ theme.preview }}" data-caption="{{ theme.name|capitalize }}">#}
+                            {#<label>#}
+                                {#<input id="theme_{{ theme.name }}" class="with-gap" name="theme" type="radio" value="{{ theme.name }}" {% if theme.name == user.settings.theme %}checked{% endif %} />#}
+                                {#<span>{{ theme.name|capitalize }}</span>#}
+                            {#</label>#}
+                        {#</div>#}
+                    {#{% endfor %}#}
                 </div>
             </div>
         </div>
@@ -90,9 +88,13 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <h1 class="flow-text"><span class="mdi mdi-youtube-play"></span>YouTube / Music
-                        <small>The available options control both various music sources</small>
-                    </h1>
+                    <div>
+                        <h1 class="flow-text">
+                            <span class="mdi mdi-youtube"></span>YouTube / <span class="mdi mdi-music"></span>Music
+                            <br>
+                            <small style="margin-top: -10px">The available options control both various music sources</small>
+                        </h1>
+                    </div>
                     <div>
                         <div class="row">
                             <div class="switch col s6">
@@ -143,7 +145,7 @@
                                 </div>
                                 <div>
                                     <a class="btn green add-elem" data-type="youtube" data-parent="#yt_vids"><span
-                                                class="mdi mdi-plus"></span>Add</a>
+                                                class="mdi mdi-plus"></span>Add Video</a>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +159,7 @@
                 <div class="card-content">
                     <h1 class="flow-text"><span class="mdi mdi-language-css3"></span>Custom CSS</h1>
                     <div class="input-field">
-                        <textarea id="css" name="css">{{ user.css|raw }}</textarea>
+                        <textarea id="css" name="css" autocomplete="off" autocapitalize="off" spellcheck="false">{{ user.css|raw }}</textarea>
                         <span class="counter" data-max="500">{{ user.css|length }}/500</span>
                     </div>
                 </div>
@@ -168,8 +170,7 @@
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save"
-                    type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
     </form>
@@ -185,5 +186,9 @@
                 )
             );
         }
+
+        $(document).ready(function(){
+            $('.materialboxed').materialbox();
+        });
     </script>
 {% endblock %}
