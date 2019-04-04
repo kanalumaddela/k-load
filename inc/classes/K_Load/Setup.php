@@ -11,7 +11,6 @@ class Setup
     public static function install($config)
     {
         Cache::clear();
-        Database::disconnect();
         Database::clear();
 
         if (Util::installed()) {
@@ -19,12 +18,11 @@ class Setup
         }
 
         \file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
-        $config = include APP_ROOT.'/data/config.php';
 
         Steam::Key($config['apikeys']['steam']);
+        $config = include APP_ROOT.'/data/config.php';
         Database::connect($config['mysql']);
 
-        Cache::remove('version');
         $migrations = \glob(APP_ROOT.\sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
         foreach ($migrations as $folder) {
             $path_arr = \explode(DIRECTORY_SEPARATOR, $folder);
