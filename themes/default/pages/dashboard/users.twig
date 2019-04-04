@@ -19,7 +19,7 @@
                 <div class="card center-align">
                     <img class="avatar circle" src="{% if steamInfo[player.steamid] %}{{ steamInfo[player.steamid].avatarfull }}{% else %}{{ site.path }}/api/player/{{ player.steamid }}/avatarfull?raw{% endif %}">
                     <div class="card-content">
-                        <p class="name {% if player.banned %}red-text{% endif %}">{{ player.name }}</p>
+                        <p class="name {% if player.banned %}red-text{% endif %}">{{ player.name|default('Unknown\'s') }}</p>
                         <br>
                         <div class="user-buttons">
                             <a class="btn btn-profile" href="{{ site.path }}/dashboard/users/{{ player.steamid }}">Profile</a>
@@ -48,7 +48,7 @@
                         <input type="hidden" name="type" value="perms"/>
                         <input type="hidden" name="player" value="{{ player.steamid }}"/>
                         <div class="modal-content">
-                            <h5>{{ player.name }}'s Permissions</h5>
+                            <h5>{{ player.name|default('Unknown\'s') }}'s Permissions</h5>
                             <br>
                             <div class="row">
                                 <div class="switch col s12">
