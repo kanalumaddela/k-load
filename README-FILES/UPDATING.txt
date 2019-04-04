@@ -2,20 +2,10 @@ Please check the script page first if there other instructions than what is list
 
 URL: https://www.gmodstore.com/market/view/5000/versions
 
-1. Copy the "k-load/inc/migrations" and "k-load/inc/updates" folder and MERGE/OVERWRITE them with the respective folders on your website.
-	- If you have K-Load installed at loading.example.com, the folder paths would be "inc/migrations" and "inc/updates"
-	- If you have K-Load installed in a folder such as www.example.com/loading, the folder paths would be "loading/inc/migrations" and "loading/inc/updates"
+1. Copy the contents of the `k-load` folder onto your K-Load installation.
 
-2. Open the K-Load dashboard in your browser and go to the "Core" section which is underneath the "Admin" tab on the left sidebar.
+2. Upload and overwrite all the files and folders.
 
-3. You should see in the upper right hand of the page there is a box that says "Updates".
-   It should say there are x updates available along with the latest version and your current version.
+3. Visit the admin section of the dashboard and run the updater to run the database migrations.
 
-4. Click the "Update" button and then select "OK" in the popup to automatically copy and update the loading screen.
-
-5. If there are issues, an error will show or you may have to check the "action" logs and "mysql" logs which
-   are located in "data/logs/action" and "data/logs/mysql" which are relative to the root of the K-Load installation.
-
-6. If you see an error in the logs relating to failing to copy the files for the update, manually upload the files yourself by
-   extracting the included "full-update.zip" and OVERWRITING the files in your K-Load installation. Its folder structure is very
-   similar so upload it as if you were uploading K-Load itself.
+4. If any errors occur you'll know. Check the logs first before creating a support ticket.
