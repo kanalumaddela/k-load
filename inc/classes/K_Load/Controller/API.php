@@ -47,7 +47,7 @@ class API
         ];
 
         if (\ENABLE_CACHE) {
-            $data['data'] = Cache::remember('steam-api-players-'.$hash, 3600, function() use ($steamids) {
+            $data['data'] = Cache::remember('steam-api-players-'.$hash, 3600, function () use ($steamids) {
                 return Steam::Users($steamids);
             });
         } else {
