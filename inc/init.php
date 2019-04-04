@@ -114,6 +114,7 @@ function kload_exception_handler($exception)
 \set_exception_handler('kload_exception_handler');
 
 // make some new directions
+Util::mkDir(APP_ROOT.'/data/logs');
 Util::mkDir(APP_ROOT.'/data/music');
 Util::mkDir(APP_ROOT.'/data/users');
 
