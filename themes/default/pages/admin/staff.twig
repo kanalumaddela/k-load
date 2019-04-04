@@ -132,8 +132,8 @@
                 $.each(staff, function (key, child) {
                     var steamid_input = $(child).find('.staff-steamid')[0];
                     var rank_input = $(child).find('.staff-rank')[0];
-                    steamid_input.setAttribute('name', 'staff[' + gamemode + '][' + cnt + '][steamid]');
-                    rank_input.setAttribute('name', 'staff[' + gamemode + '][' + cnt + '][rank]');
+                    steamid_input.setAttribute('name', 'staff[list][' + gamemode + '][' + cnt + '][steamid]');
+                    rank_input.setAttribute('name', 'staff[list][' + gamemode + '][' + cnt + '][rank]');
                     cnt++;
                 });
             }
