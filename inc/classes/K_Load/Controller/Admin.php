@@ -451,7 +451,6 @@ class Admin
         }
 
         if (isset($_POST['save']) && isset($_POST['staff'])) {
-
             $_POST['staff']['duration'] = (int) $_POST['staff']['duration'] ?? 5000;
 
             if (isset($_POST['staff']['list']) && \is_array($_POST['staff']['list'])) {
