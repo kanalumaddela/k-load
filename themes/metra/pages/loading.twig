@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{{ assets_theme }}/css/columns/medium.css" media="all and (max-width: 565.98px)"/>
     <link rel="stylesheet" href="{{ assets_theme }}/css/columns/small.css" media="all and (max-width: 555.98px)"/>
     <link rel="stylesheet" href="{{ assets_theme }}/css/columns/extra-small.css" media="all and (max-width: 459.98px)"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ assets_theme }}/css/metra.css?{{ cache_buster }}"/>
     <style>
@@ -19,17 +18,25 @@
 {% block body %}
     <div class="pure-center">
         <div class="row">
-            <div class="col xl-12" style="text-align:right;">
-                <img class="avatar circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}"
-                     style="max-width:50px;">
-                <p>{{ user.personaname|default('Player') }}</p>
+            <div class="col xl-12 user-bar" style="text-align:right;">
+                {% if settings.logo and logo_exists %}
+                    <img class="logo" src="{{assets}}/img/{{ settings.logo }}">
+                {% endif %}
+                <div style="margin-right: 10px">
+                    <p style="margin-bottom: 4px;font-size: 1.35rem;">{{ user.personaname|default('Player') }}</p>
+                    {% if user.steamid2 %}
+                        <p style="font-size: .85rem;font-weight: 300;">{{ user.steamid2 }}</p>
+                    {% endif %}
+                </div>
+                <img class="avatar" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}" style="max-width:75px;">
             </div>
             <div class="col xl-3 hide-md">
                 <div class="card server-info blue">
                     <h2><i class="fas fa-gamepad"></i> Gamemode</h2>
-                    <p class="gamemode"></p>
+                    <p class="gamemode" style="font-size: 1.2rem;"></p>
+                    <br>
                     <h2><i class="fas fa-users"></i> Max Players</h2>
-                    <p class="max-players"></p>
+                    <p class="max-players" style="font-size: 1.2rem;"></p>
                 </div>
             </div>
             <div class="col xl-3 md-6">
@@ -42,19 +49,19 @@
             <div class="col xl-6 hide-md">
                 <div class="card news orange">
                     <h2><i class="fas fa-comment-alt"></i> Messages</h2>
-                    <p class="messages" style="font-size: 2rem;"></p>
+                    <p class="messages" style="margin-top: 25px;font-size: 1.5rem;"></p>
                 </div>
             </div>
             <div class="col xl-6 md-12 hide-lg">
                 <div class="card rules dark-blue">
                     <h2><i class="fas fa-gavel"></i> Rules</h2>
-                    <div id="rules"></div>
+                    <div id="k-load-rules"></div>
                 </div>
             </div>
             <div class="col xl-3 hide-lg">
                 <div class="card staff magneta">
                     <h2><i class="fas fa-users"></i> Staff</h2>
-                    <div id="staff"></div>
+                    <div id="k-load-staff"></div>
                 </div>
             </div>
             <div class="col xl-3 md-6 hide-lg show-md">
@@ -73,9 +80,9 @@
             <div class="col xl-6 md-12">
                 <div class="card download purple text-right">
                     <div>
-                        <h2><i class="fas fa-circle-notch fa-spin"></i> <span
-                                    class="status">Retrieving server info...</span></h2>
-                        <p>Progress [<span class="progress"></span>]</p>
+                        <h2  style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><i class="fas fa-circle-notch fa-spin"></i> <span class="status">Retrieving server info...</span></h2>
+                        <p>Progress [ <span class="progress"></span> ]</p>
+                        <p>Files: <span class="files-downloaded"></span>/<span class="files-needed"></span></p>
                         <div class="loading-bar"></div>
                     </div>
                 </div>
@@ -85,5 +92,9 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{ assets_theme }}/js/metra.js?{{ cache_buster }}"></script>
+    <script>
+        staff_per_page = 2;
+        rules_per_page = 5;
+        staff_fade_delay = 500;
+    </script>
 {% endblock %}

@@ -423,7 +423,8 @@ class Admin
         }
 
         if (isset($_POST['save']) && isset($_POST['messages'])) {
-            $_POST['messages']['duration'] = (isset($_POST['messages']['duration']) ? (int) $_POST['messages']['duration'] : 5000);
+            $_POST['messages']['random'] = isset($_POST['messages']['random']) ? (int) $_POST['messages']['random'] : 0;
+            $_POST['messages']['duration'] = isset($_POST['messages']['duration']) ? (int) $_POST['messages']['duration'] : 5000;
             $_POST['messages']['fade'] = (isset($_POST['messages']['fade']) ? (int) $_POST['messages']['fade'] : 500);
             $success = Util::updateSetting(['messages'], [$_POST['messages']], $_POST['csrf']);
             if ($success) {

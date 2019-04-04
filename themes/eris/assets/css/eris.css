@@ -59,31 +59,25 @@ h1, h2, h3, h4, h5, h6 {
     height: 45px;
     line-height: 45px;
     background-color: #d02e2e;
-    font-family: 'Oswald', sans-serif;
     font-size: 1.25rem;
     border-radius: 15px 15px 0 0;
     overflow: hidden;
 }
 
-#rules {
-    margin-top: 0;
-    overflow: hidden;
+.avatar {
+    border-radius: 50%;
 }
 
-#rules > .rule-block:not(:first-child) {
-    display: none;
-}
-
-#rules .rule {
+.k-load-rule {
     position: relative;
-    opacity: 0;
-    margin-bottom: 6px;
     padding: 8px 12px;
     background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: 3px;
 }
-
-#rules .rule:before {
+.k-load-rule:not(:last-child) {
+    margin-bottom: 6px;
+}
+.k-load-rule:before {
     position: absolute;
     content: '';
     top: 0;
@@ -91,37 +85,33 @@ h1, h2, h3, h4, h5, h6 {
     width: 3px;
     height: 100%;
     background-color: #d02e2e;
-    border-radius: 4px 0 0 4px;
+    border-radius: 3px 0 0 3px;
 }
 
-#rules .separator {
-    height: 2px;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-#rules .separator:last-child {
-    display: none;
-}
-
-#staff > .staff-block:not(:first-child) {
-    display: none;
-}
-
-#staff .member {
+.k-load-staff {
     display: inline-block;
     margin: 10px 0;
     width: 25%;
+    text-align: center;
 }
 
-.member .name {
+.k-load-staff .avatar {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+}
+
+.k-load-staff-info > span {
+    display: block;
+}
+
+.k-load-staff--name {
     padding: 0 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.member .rank {
-    color: #909090;
+.k-load-staff--rank {
+    color: #a3a3a3;
     font-size: 12px;
 }
 

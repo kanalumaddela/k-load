@@ -374,6 +374,10 @@ img.theme-preview {
     right: 20px;
 }
 
+.delete-bg {
+    cursor: pointer;
+}
+
 /* admin music */
 h5.song-title {
     display: inline-block;

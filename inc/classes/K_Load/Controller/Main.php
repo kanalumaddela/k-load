@@ -14,11 +14,15 @@ class Main
     {
         global $config;
 
-        $steamid = $_GET['steamid'] ?? null;
-        if ($steamid == '%s') {
+        $steamid = $_GET['sid'] ?? $_GET['steamid'] ?? null;
+        if ($steamid === '%s') {
             $steamid = null;
         }
-        $map = $_GET['mapname'] ?? null;
+
+        $map = $_GET['map'] ?? $_GET['mapname'] ?? null;
+        if ($map === '%m') {
+            $map = null;
+        }
 
         if (ENABLE_CACHE) {
             if (!empty($steamid)) {
@@ -78,12 +82,18 @@ class Main
         }
 
         $data['map'] = $map;
-        $theme = $config['loading_theme'] ?? 'default';
-        $theme = (THEME_OVERRIDE ? ($_GET['theme'] ?? ($data['user']['settings']['theme'] ?? $theme)) : ($data['user']['settings']['theme'] ?? ($_GET['theme'] ?? $theme)));
+        $theme_default = $config['loading_theme'] ?? 'default';
+        $theme = (THEME_OVERRIDE ? ($_GET['theme'] ?? ($data['user']['settings']['theme'] ?? $theme_default)) : ($data['user']['settings']['theme'] ?? ($_GET['theme'] ?? $theme_default)));
 
         $data['css_exists'] = \file_exists(APP_ROOT.'/data/users/'.$steamid.'.css');
 
-        if (Template::isLoadingTheme($theme)) {
+        if (!Template::isLoadingTheme($theme)) {
+            $theme = $theme_default;
+            Template::theme($theme);
+            Template::init();
+        }
+
+        if ($theme !== 'default') {
             Template::theme($theme);
             Template::init();
         }

@@ -36,6 +36,17 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
+                            <div class="input-field col s12">
+                                <p>Randomize Messages?</p>
+                                <div class="switch">
+                                    <label>
+                                        No
+                                        <input type="checkbox" name="messages[random]" value="1" {% if settings.messages.random %}checked{% endif %} />
+                                        <span class="lever"></span>
+                                        Yes
+                                    </label>
+                                </div>
+                            </div>
                             <div class="input-field col s12 m6">
                                 <p>Message Duration</p>
                                 <input name="messages[duration]" type="number" placeholder="e.g. 5000"

@@ -104,16 +104,12 @@ p {
     background: linear-gradient(90deg, rgba(15, 18, 21, 0.65), transparent);
 }
 
-#rules-list > .rule-block:not(:first-child), #staff-list > .staff-block:not(:first-child) {
-    display: none;
-}
-
-.rule {
-    padding: 12.5px 5px;
+.k-load-rule {
+    padding: 12px 20px;
     /*margin: 8px 0;*/
 }
 
-.rule:not(:last-child) {
+.k-load-rule:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -121,29 +117,33 @@ p {
     padding: 0 5px;
 }
 
-.staff-member {
+.k-load-staff {
     padding: 14px 0;
 }
 
-.staff-member:not(:last-child) {
+.k-load-staff:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.staff-member > * {
+.k-load-staff > * {
     display: inline-block;
     vertical-align: middle;
 }
 
-.staff-member .avatar {
+.k-load-staff .avatar {
     max-width: 45px;
 }
-
-.staff-member > div {
-    margin-left: 7px;
+.k-load-staff-info {
+    margin-left: 10px;
 }
-
-.staff-member h5 {
-    margin-top: -4px;
+.k-load-staff-info > span {
+    display: block;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.k-load-staff--rank {
+    font-size: .9rem;
+    color: #31c3fd;
 }
 
 .info {

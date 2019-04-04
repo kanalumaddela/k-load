@@ -15,7 +15,7 @@
 {% block body %}
     <div class="overlay dark dots"></div>
 
-    <div id="staff" class="sidebar fixed left vertical-center"></div>
+    <div id="k-load-staff" class="sidebar fixed left vertical-center"></div>
 
     <div class="pure-center">
         <div id="load-circle">
@@ -35,61 +35,18 @@
 {% endblock %}
 {% block js %}
     <script>
-        function DownloadingFile_custom(file, progress) {
+        function progressCallback(decimal, percentage, roundedPercentage) {
+            if (roundedPercentage <= 98) {
+                roundedPercentage = roundedPercentage + ((100 - roundedPercentage) * 0.025);
+            }
+
             var circle_height = document.getElementById('load-circle-inner').height;
             circle_height = circle_height.animVal.value;
-            var amount = progress * 100;
             var polygon = circle_height;
-            var imageclip = polygon - (progress * polygon);
+            var imageclip = polygon - (decimal * polygon);
             document.getElementById("load-circle-inner").setAttribute("style", "clip: rect(" + imageclip + "px " + polygon + "px " + polygon + "px 0px);");
         }
 
-        function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode, demo) {
-            showStaff(gamemode);
-        }
-
-        function showStaff(gamemode) {
-            if (staff[gamemode] instanceof Array === false) {
-                gamemode = 'global';
-            }
-            if (staff[gamemode] instanceof Array) {
-                if (staff[gamemode].length > 0) {
-                    for (var i = 0; i < staff[gamemode].length; i++) {
-                        var steamid = staff[gamemode][i].steamid || null;
-                        if (!steamid) {
-                            continue;
-                        }
-                        var rank = staff[gamemode][i].rank || 'Staff';
-
-                        document.getElementById('staff').appendChild(
-                            elem('div', {}, [
-                                elem('img', {
-                                    className: 'avatar circle',
-                                    src: site.path + '/api/player/' + steamid + '/avatarmedium?raw'
-                                }),
-                                elem('span', {className: 'name name_' + steamid, innerText: steamid}),
-                                elem('span', {className: 'rank rank_' + steamid, innerText: rank})
-                            ])
-                        );
-                    }
-                    var staff_elems = document.getElementById('staff').children;
-                    var staff_cnt = 0;
-                    getStaff();
-                    var staff_interval = setInterval(function () {
-                        $(staff_elems[staff_cnt]).fadeOut(500, function () {
-                            staff_cnt++;
-                            if (staff_cnt >= staff_elems.length) {
-                                staff_cnt = 0;
-                            }
-                            $(staff_elems[staff_cnt]).fadeIn().css("display", "inline-block");
-                        });
-                    }, 3500);
-                } else {
-                    document.getElementById('staff').style.display = "none";
-                }
-            } else {
-                document.getElementById('staff').style.display = "none";
-            }
-        }
+        staff_per_page = 1;
     </script>
 {% endblock %}

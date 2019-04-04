@@ -38,6 +38,27 @@ class API
         Util::json($data, true, isset($_GET['formatted']));
     }
 
+    public static function players($steamids)
+    {
+        $hash = \md5($steamids);
+
+        $data = [
+            'success' => false,
+        ];
+
+        if (\ENABLE_CACHE) {
+            $data['data'] = Cache::remember('steam-api-players-'.$hash, 3600, function() use ($steamids) {
+                return Steam::Users($steamids);
+            });
+        } else {
+            $data['data'] = Steam::Users($steamids);
+        }
+
+        $data['success'] = !\is_null($data['data']);
+
+        Util::json($data, true);
+    }
+
     public static function group($name)
     {
         $data = (ENABLE_CACHE ? Cache::remember('api-group-'.$name, 60, function () use ($name) {

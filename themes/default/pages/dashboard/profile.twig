@@ -97,20 +97,20 @@
         <div class="col s12 m6">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title"><span class="mdi mdi-youtube-play left"></span>YouTube</span>
+                    <span class="card-title"><span class="mdi mdi-music left"></span>YouTube/Music</span>
                     <div class="row settings">
                         <div class="col s12">
                             Enabled
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.youtube.enable %}checked{% endif %} />
-                                <label></label>
+                                <input type="checkbox" {% if player.settings.youtube.enable %}checked="checked"{% endif %} />
+                                <span></span>
                             </p>
                         </div>
                         <div class="col s12">
                             Random
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.youtube.random %}checked{% endif %} />
-                                <label></label>
+                                <input type="checkbox" {% if player.settings.youtube.random %}checked="checked"{% endif %} />
+                                <span></span>
                             </p>
                         </div>
                         <div class="col s12">

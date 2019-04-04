@@ -95,20 +95,16 @@
             height: 25px;
         }
 
-        #rules {
+        #k-load-rules {
             margin-top: 10px;
             counter-reset: rule;
         }
 
-        #rules > .rule-block:not(:first-child) {
-            display: none;
-        }
-
-        #rules .rule {
+        .k-load-rule {
             padding: 10px 0;
         }
 
-        #rules .rule:before {
+        .k-load-rule:before {
             display: inline-block;
             margin-right: 10px;
             content: counter(rule);
@@ -212,7 +208,7 @@
             </div>
             <div>
                 <h1>Rules</h1>
-                <div id="rules"></div>
+                <div id="k-load-rules"></div>
             </div>
         </div>
     </div>
@@ -221,68 +217,6 @@
 
 {% block js %}
     <script>
-        function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode, demo) {
-            showRules(gamemode);
-        }
-
-        function showRules(gamemode) {
-            var rule_parent = document.getElementById('rules');
-            if (rules[gamemode] instanceof Array === false) {
-                gamemode = 'global';
-            }
-            if (rules[gamemode] instanceof Array) {
-                if (rules[gamemode].length > 0) {
-                    var real_cnt = 0;
-                    var rule_blocks = Math.ceil(rules[gamemode].length / 7);
-                    for (var x = 0; x < rule_blocks; x++) {
-                        var children = [];
-                        for (var i = 0; i < 7; i++) {
-                            var rule = rules[gamemode][real_cnt] || null;
-                            real_cnt++;
-                            if (!rule) {
-                                continue;
-                            }
-
-                            children.push(elem('div', {className: 'rule', innerText: rule}));
-                        }
-                        var rule_block = elem('div', {id: 'rule_block_' + x, className: 'rule-block'}, children);
-                        rule_parent.appendChild(rule_block);
-                        var rule_cnt = 0;
-                        var anim_dur = 1000;
-                        $('#rule_block_' + rule_cnt).children().each(function () {
-                            var elem = this;
-                            setTimeout(function () {
-                                $(elem).animate({opacity: '1'}, {duration: 600});
-                            }, anim_dur);
-                            anim_dur = anim_dur + 600;
-                        });
-                    }
-
-                    if (rules[gamemode].length > 7) {
-                        var rule_elems = $('.rule-block');
-                        rule_interval = setInterval(function () {
-                            $('#rule_block_' + rule_cnt).fadeOut(500, function () {
-                                anim_dur = 1000;
-                                rule_cnt++;
-                                if (rule_cnt >= rule_elems.length) {
-                                    rule_cnt = 0;
-                                }
-                                $('#rule_block_' + rule_cnt).fadeIn(300);
-
-                                if ($('#rule_block_' + rule_cnt).children().css("opacity") == '0') {
-                                    $('#rule_block_' + rule_cnt).children().each(function () {
-                                        var elem = this;
-                                        setTimeout(function () {
-                                            $(elem).animate({opacity: '1'}, {duration: 600});
-                                        }, anim_dur);
-                                        anim_dur = anim_dur + 600;
-                                    });
-                                }
-                            });
-                        }, 15000);
-                    }
-                }
-            }
-        }
+        rules_per_page = 7;
     </script>
 {% endblock %}

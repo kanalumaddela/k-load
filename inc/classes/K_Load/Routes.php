@@ -20,6 +20,7 @@ class Routes
         self::$router->any(APP_PATH.'/dashboard/logout', ['K_Load\Controller\Main', 'logout']);
 
         self::$router->get(APP_PATH.'/api/player/{steamid:i}/{info}?', ['K_Load\Controller\API', 'player']);
+        self::$router->get(APP_PATH.'/api/players/{steamids}', ['K_Load\Controller\API', 'players']);
         self::$router->get(APP_PATH.'/api/groups/{group:c}', ['K_Load\Controller\API', 'group']);
 
         self::$router->any(APP_PATH.'/dashboard', ['K_Load\Controller\Dashboard', 'index']);

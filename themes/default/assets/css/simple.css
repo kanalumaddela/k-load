@@ -39,7 +39,8 @@ h1, h2, h3, h4, h5, h6 {
     width: 190px;
     height: 190px;
     fill: #1173c3;
-    -webkit-transition: all 0.3s linear;
+    clip: rect(190px 190px 190px 0px);
+    -webkit-transition: clip 0.2s linear;
 }
 
 #load-circle > .avatar {
@@ -51,8 +52,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sidebar {
-    width: 120px;
-    height: 130px;
+    width: 140px;
+    height: 140px;
     vertical-align: middle;
     background-color: #1a1a1a;
     border-top: 5px solid;
@@ -72,38 +73,39 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 50% 0 0 50%;
 }
 
-#staff {
-    line-height: 115px;
+.k-load-staff-block {
+    margin-top: 15px;
+}
+
+.k-load-staff {
     text-align: center;
-    overflow: hidden;
 }
 
-#staff > div {
-    display: inline-block;
-    vertical-align: middle;
-    line-height: 20px;
+.k-load-staff .avatar {
+    margin-bottom: 5px;
+    max-width: 50px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,.35);
 }
 
-#staff > div:not(:first-child) {
-    display: none;
-}
-
-#staff > div > span {
+.k-load-staff-info > span {
     display: block;
 }
 
-#staff .avatar {
-    max-width: 40px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-#staff .name {
-    max-width: 100px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+.k-load-staff--name {
+    max-width: 125px;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-#staff .rank {
-    font-size: 0.7rem;
+.k-load-staff--rank {
+    font-size: 0.8rem;
+}
+
+.sidebar > .progress {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 300;
+    font-size: 36px;
 }

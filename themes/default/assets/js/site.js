@@ -145,7 +145,7 @@ if (typeof css_check != 'undefined' && css_check != null) {
     });
 }
 if (alert !== '') {
-    toast(alert, 5000, 'blue');
+    toast(alert, 5000);
 }
 $('textarea').on('input', function () {
     var length = this.value.length;

@@ -233,6 +233,15 @@ body, .no-margin {
     opacity: 0;
     -webkit-transition: opacity .75s ease-out;
 }
-.k-load-background.active {
+.k-load-background.active, .k-load-rule-block.active, .k-load-staff-block.active {
     opacity: 1;
+}
+.k-load-rule-block, .k-load-staff-block {
+    display: none;
+    opacity: 0;
+    -webkit-transition: opacity .5s ease;
+}
+.messages {
+    opacity: 0;
+    -webkit-transition-property: opacity;
 }

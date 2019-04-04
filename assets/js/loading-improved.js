@@ -143,6 +143,21 @@ const debounce = function (func, wait, immediate) {
     };
 };
 
+const api = function (method, query, callback) {
+    const xmlhttp = new XMLHttpRequest();
+    const url = site.path + '/api/' + method + '/' + query;
+
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            const data = JSON.parse(this.response);
+            callback(data);
+        }
+    };
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+};
+
 /**
  * Remove all children from a parent element.
  */
@@ -187,6 +202,18 @@ const width = function (selector, width) {
 };
 
 /**
+ * Set the src of the elements matching the selector
+ *
+ * @param {string} selector
+ * @param {string} src
+ */
+const image = function (selector, src) {
+    [].forEach.call(getElements(selector), function (elem) {
+        elem.src = src;
+    });
+};
+
+/**
  * gmod js function
  *
  * @param servername
@@ -216,6 +243,8 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
     text('.gamemode', gamemodeFriendly);
     updateProgress();
     setBackgrounds(gamemode);
+    setMessages(gamemode);
+
     setRules(gamemode, rules_per_page);
     setStaff(gamemode, staff_per_page);
 
@@ -262,7 +291,8 @@ function SetFilesTotal(total) {
 function DownloadingFile(file) {
     files.downloaded++;
 
-    text('.files-downloading', files.downloaded);
+    text('.file-downloading', file);
+    text('.files-downloaded', files.downloaded);
     SetStatusChanged('Downloading ' + file);
     updateProgress();
 
@@ -297,8 +327,8 @@ function SetStatusChanged(status) {
  * Recalculate the progress and set progress.
  */
 function updateProgress() {
-    if (files.needed <= 0 || files.downloaded >= files.needed) {
-        files.needed = files.downloaded + 5;
+    if ((files.needed <= 0 || files.downloaded >= files.needed) && !inDemoMode) {
+        files.needed = files.downloaded + 1;
         SetFilesNeeded(files.needed);
     }
 
@@ -337,6 +367,71 @@ function setDownloadProgress(decimal, force) {
     }
 }
 
+function checkGamemode(gamemode, list)  {
+    var gamemodeExists = gamemode in list;
+    const globalExists = 'global' in list;
+
+    if (!gamemodeExists && globalExists) {
+        gamemode = 'global';
+        gamemodeExists = true;
+    }
+
+    return gamemodeExists ? gamemode : null;
+}
+
+/**
+ * Messages
+ */
+var messageInterval, messageCounter = 0, messagesActive = false;
+document.head.appendChild(elem('style', {innerHTML: '.messages{-webkit-transition-duration: '+(messages.fade/1000)+'s}'}));
+function setMessages(gamemode) {
+    gamemode = checkGamemode(gamemode, messages.list);
+
+    if (gamemode) {
+        messagesActive = true;
+        text('.messages', '');
+
+        var gmMessages = messages.list[gamemode];
+
+        if (messages.random) {
+            shuffle(gmMessages);
+        }
+        const message_elems = getElements('.messages');
+
+        [].forEach.call(message_elems, function (item) {
+            item.addEventListener('webkitTransitionEnd', function () {
+                const opacity = window.getComputedStyle(this, null).getPropertyValue('opacity');
+
+                if (opacity === '0') {
+                    if (!messagesActive) {
+                        item.innerText = '';
+                        messageCounter = 0;
+                    } else {
+                        messageCounter++;
+
+                        if (messageCounter >= gmMessages.length) {
+                            messageCounter = 0;
+                        }
+
+                        item.innerText = gmMessages[messageCounter];
+                        item.style.opacity = '1';
+                    }
+                }
+
+                if (opacity === '1') {
+                    setTimeout(function () {
+                        item.style.opacity  = '0';
+                    }, messages.duration);
+                }
+            });
+
+            item.innerText = gmMessages[messageCounter];
+            item.style.opacity = 0;
+            item.style.opacity = 1;
+        });
+    }
+}
+
 /**
  * Rules
  */
@@ -351,15 +446,9 @@ function setRules(gamemode, perPage) {
         }
     }
 
-    var gamemodeExists = gamemode in rules.list;
-    const globalExists = 'global' in rules.list;
+    gamemode = checkGamemode(gamemode, rules.list);
 
-    if (!gamemodeExists && globalExists) {
-        gamemode = 'global';
-        gamemodeExists = true;
-    }
-
-    if (gamemodeExists && rules_block) {
+    if (gamemode && rules_block) {
         clearInterval(rulesInterval);
         clearChildren(rules_block);
 
@@ -389,24 +478,26 @@ function setRules(gamemode, perPage) {
         rules_block.childNodes[ruleBlockCounter].style.display = 'block';
         rules_block.childNodes[ruleBlockCounter].classList.add('active');
 
-        rulesInterval = setInterval(function () {
-            rules_block.childNodes[ruleBlockCounter].classList.remove('active');
-            setTimeout(function () {
-                rules_block.childNodes[ruleBlockCounter].style.display = 'none';
+        if (num_blocks > 1) {
+            rulesInterval = setInterval(function () {
+                rules_block.childNodes[ruleBlockCounter].classList.remove('active');
+                setTimeout(function () {
+                    rules_block.childNodes[ruleBlockCounter].style.display = 'none';
 
-                var nextSib = rules_block.childNodes[ruleBlockCounter].nextSibling;
+                    var nextSib = rules_block.childNodes[ruleBlockCounter].nextSibling;
 
-                if (nextSib) {
-                    ruleBlockCounter++;
-                } else {
-                    ruleBlockCounter = 0;
-                    nextSib = rules_block.childNodes[ruleBlockCounter];
-                }
+                    if (nextSib) {
+                        ruleBlockCounter++;
+                    } else {
+                        ruleBlockCounter = 0;
+                        nextSib = rules_block.childNodes[ruleBlockCounter];
+                    }
 
-                nextSib.style.display = 'block';
-                nextSib.classList.add('active');
-            }, 250);
-        }, rules.duration);
+                    nextSib.style.display = 'block';
+                    nextSib.classList.add('active');
+                }, staff_fade_delay);
+            }, rules.duration);
+        }
     }
 }
 
@@ -414,7 +505,7 @@ function setRules(gamemode, perPage) {
  * Staff
  */
 const staff_block = document.getElementById('k-load-staff');
-var staffInterval, staffBlockCounter = 0;
+var staffInterval, staffBlockCounter = 0, staffActive = false;
 
 function setStaff(gamemode, perPage) {
     if ('list' in staff === false) {
@@ -424,21 +515,18 @@ function setStaff(gamemode, perPage) {
         }
     }
 
-    var gamemodeExists = gamemode in staff.list;
-    const globalExists = 'global' in staff.list;
+    gamemode = checkGamemode(gamemode, staff.list);
 
-    if (!gamemodeExists && globalExists) {
-        gamemode = 'global';
-        gamemodeExists = true;
-    }
-
-    if (gamemodeExists && rules_block) {
+    if (gamemode && staff_block) {
         clearInterval(staffInterval);
         clearChildren(staff_block);
+
+        staffActive = true;
 
         const gmStaff = staff.list[gamemode];
         const num_blocks = Math.ceil(gmStaff.length / perPage);
         var staffCount = 0;
+        var steamids = [];
 
 
         for (var i = 0; i < num_blocks; i++) {
@@ -447,18 +535,16 @@ function setStaff(gamemode, perPage) {
             for (var x = 0; x < perPage; x++) {
                 if (staffCount < gmStaff.length) {
                     var staff_member = gmStaff[staffCount];
-
-                    console.log('json of staff: ' + JSON.stringify(staff_member));
+                    steamids.push(staff_member.steamid);
 
                     children.push(
                         elem('div', {className: 'k-load-staff'}, [
                             elem('img', {
-                                className: 'avatar',
-                                src: site.path + '/api/player/' + staff_member.steamid + '/avatarmedium?raw'
+                                className: 'avatar avatar-'+staff_member.steamid
                             }),
                             elem('div', {className: 'k-load-staff-info'}, [
                                 elem('span', {
-                                    className: 'k-load-staff--name user-' + staff_member.steamid,
+                                    className: 'k-load-staff--name username-' + staff_member.steamid,
                                     innerText: staff_member.steamid
                                 }),
                                 elem('span', {className: 'k-load-staff--rank', innerText: staff_member.rank})
@@ -470,33 +556,53 @@ function setStaff(gamemode, perPage) {
                 }
             }
 
-            staff_block.appendChild(
-                elem('div', {id: 'k-load-staff-block-' + i, className: 'k-load-staff-block'}, children)
-            );
+            var tmp_staff_block = elem('div', {id: 'k-load-staff-block-' + i, className: 'k-load-staff-block'}, children);
+            staff_block.appendChild(tmp_staff_block);
         }
+
+        api('players', steamids.join(','), fixStaff);
 
         staff_block.childNodes[staffBlockCounter].style.display = 'block';
         staff_block.childNodes[staffBlockCounter].classList.add('active');
 
-        rulesInterval = setInterval(function () {
-            staff_block.childNodes[staffBlockCounter].classList.remove('active');
-            setTimeout(function () {
-                staff_block.childNodes[staffBlockCounter].style.display = 'none';
+        if (num_blocks > 1) {
+            staffInterval = setInterval(function () {
+                staff_block.childNodes[staffBlockCounter].classList.remove('active');
+                const tmpCounter = staffBlockCounter;
+                setTimeout(function () {
+                    staff_block.childNodes[tmpCounter].style.display = 'none';
 
-                var nextSib = staff_block.childNodes[staffBlockCounter].nextSibling;
+                    var nextSib = staff_block.childNodes[tmpCounter].nextSibling;
 
-                if (nextSib) {
-                    staffBlockCounter++;
-                } else {
-                    staffBlockCounter = 0;
-                    nextSib = staff_block.childNodes[staffBlockCounter];
-                }
+                    if (nextSib) {
+                        staffBlockCounter = tmpCounter+1;
+                    } else {
+                        staffBlockCounter = 0;
+                        nextSib = staff_block.childNodes[staffBlockCounter];
+                    }
 
-                nextSib.style.display = 'block';
-                nextSib.classList.add('active');
-            }, 250);
-        }, staff.duration);
+                    nextSib.style.display = 'block';
+                    setTimeout(function () {
+                        nextSib.classList.add('active');
+                    }, 25);
+                }, staff_fade_delay);
+            }, staff.duration);
+        }
     }
+}
+
+function fixStaff(data) {
+    if (data.success) {
+        data = data.data;
+
+        data.forEach(function(row) {
+            text('.username-'+row.steamid, row.personaname);
+            image('.avatar-'+row.steamid, row.avatarmedium);
+        });
+    }
+
+    staff_block.childNodes[staffBlockCounter].style.display = 'block';
+    staff_block.childNodes[staffBlockCounter].classList.add('active');
 }
 
 /**
@@ -545,18 +651,12 @@ window.addEventListener('resize', fixBackgrounds);
  * @param {string} gamemode
  */
 function setBackgrounds(gamemode) {
-    var gamemodeExists = gamemode in backgrounds.list;
-    const globalExists = 'global' in backgrounds.list;
+    gamemode = checkGamemode(gamemode, backgrounds.list);
 
-    if (!gamemodeExists && globalExists) {
-        gamemode = 'global';
-        gamemodeExists = true;
-    }
-
-    if (!backgrounds.enable || backgroundsActive || !gamemodeExists) {
+    if (!backgrounds.enable || backgroundsActive || !gamemode) {
         clearBackgrounds();
 
-        if (!backgrounds.enable || !gamemodeExists) {
+        if (!backgrounds.enable || !gamemode) {
             backgroundsActive = false;
             return;
         }
@@ -657,27 +757,30 @@ function queueBackground(milliseconds) {
 /**
  * Start up demo mode.
  */
+var inDemoMode = false;
 function demoMode() {
-    files.needed = Math.floor(Math.random() * 1000) + 100;
+    inDemoMode = true;
 
+    SetFilesNeeded(Math.floor(Math.random() * 250) + 50);
     GameDetails('Demo Server', window.location.href, 'demo_map_name', 24, '76561198152390718', 'demo');
 
     demoInterval = setInterval(function () {
-        DownloadingFile('example/folder/file-' + str_random_v2() + '.ext');
-
         if (files.downloaded >= files.needed) {
             files.downloaded = 0;
         }
-    }, 200);
+
+        DownloadingFile('example/folder/file-' + str_random_v2() + '.ext');
+    }, 125);
 }
 
 /**
  * Stop demo mode.
  */
 function resetDemoMode() {
+    inDemoMode = false;
     files.downloaded = 0;
     files.needed = 1;
-    backgroundsActive = false;
+    messagesActive = backgroundsActive = false;
     SetStatusChanged('');
     setDownloadProgress(0, false);
 
