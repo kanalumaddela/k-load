@@ -346,7 +346,7 @@ class User
             return false;
         }
 
-        return \array_key_exists($perm, $_SESSION['perms']) || self::isSuper($_SESSION['steamid']);
+        return \array_key_exists($perm, self::getCurrentPerms()) || self::isSuper($_SESSION['steamid']);
     }
 
     public static function isBanned($steamid)

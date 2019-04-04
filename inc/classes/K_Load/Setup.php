@@ -43,6 +43,8 @@ class Setup
 
         // force db conn
         $config = include APP_ROOT.'/data/config.php';
+        Database::disconnect();
+        Database::clear();
         Database::connect($config['mysql']);
         User::add($_SESSION['steamid']);
 
