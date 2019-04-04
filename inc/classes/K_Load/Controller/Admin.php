@@ -206,8 +206,8 @@ class Admin
                 'Background deleted successfully',
                 'Failed to delete background',
             ];
-            if (User::validateCSRF($_SESSION['steamid'],  $_POST['csrf'])) {
-                if (\substr($_POST['background'], 0,1) === '/') {
+            if (User::validateCSRF($_SESSION['steamid'], $_POST['csrf'])) {
+                if (\substr($_POST['background'], 0, 1) === '/') {
                     $location = \APP_ROOT.\str_replace('/', \DIRECTORY_SEPARATOR, $_POST['background']);
                 } else {
                     $location = \APP_ROOT.'/assets/img/backgrounds/'.$_POST['background'];
