@@ -39,6 +39,7 @@ class Setup
         Cache::clear();
 
         \session_destroy();
+        unset($_SESSION);
 
         Util::log('action', 'K-Load has been installed', true);
         die('K-Load has been installed. Visit <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>');
