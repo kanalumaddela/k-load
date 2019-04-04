@@ -118,6 +118,8 @@ class Main
             }
         }
 
+        $data['backgrounds'] = \json_encode($data['backgrounds'] );
+
         Template::render('loading.twig', $data);
     }
 
