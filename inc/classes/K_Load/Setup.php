@@ -41,13 +41,6 @@ class Setup
 
         Cache::clear();
 
-        // force db conn
-        $config = include APP_ROOT.'/data/config.php';
-        Database::disconnect();
-        Database::clear();
-        Database::connect($config['mysql']);
-        User::add($_SESSION['steamid']);
-
         Util::log('action', 'K-Load has been installed', true);
         die('K-Load has been installed. Visit <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>');
     }
