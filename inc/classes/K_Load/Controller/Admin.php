@@ -358,7 +358,6 @@ class Admin
                         break;
                     default:
                         Util::log('error', $name.' failed to upload: Unknown error, check your upload_max_filesize and post_max_size in your php.ini');
-                        continue;
                         break;
                 }
             }
