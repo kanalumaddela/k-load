@@ -10,7 +10,7 @@ class Setup
 {
     public static function install($config)
     {
-        Cache::remove('version');
+        Cache::clear();
         Database::disconnect();
         Database::clear();
 
@@ -34,8 +34,7 @@ class Setup
             \file_exists($folder.'/create.php') and include $folder.'/create.php';
             \file_exists($folder.'/alter.php') and include $folder.'/alter.php';
             \file_exists($folder.'/insert.php') and include $folder.'/insert.php';
-            Cache::remove('version');
-            $installed = Util::version() == $ver;
+            $installed = Util::version(true) == $ver;
             Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
         }
 
