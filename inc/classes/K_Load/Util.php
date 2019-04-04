@@ -78,6 +78,7 @@ class Util
                 \unlink($location);
             }
         }
+
         \rmdir($folder);
     }
 

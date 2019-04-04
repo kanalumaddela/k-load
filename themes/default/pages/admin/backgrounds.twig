@@ -89,7 +89,7 @@
                             <div class="file-field input-field">
                                 <div class="btn">
                                     <span>File</span>
-                                    <input name="bg-files[]" type="file" multiple>
+                                    <input name="bg-files[]" type="file" multiple required>
                                 </div>
                                 <div class="file-path-wrapper">
                                     <input class="file-path validate" type="text" placeholder="Upload one or more files">
@@ -111,17 +111,21 @@
                                 <ul class="collapsible" data-collapsible="expandable">
                                     {% for gamemode, gmBackgrounds in backgrounds %}
                                         <li>
-                                            <div class="collapsible-header">{{ gamemode }}</div>
+                                            <div class="collapsible-header">
+                                                {{ gamemode }}
+                                                <a class="btn-flat waves-effect waves-red delete-bg red-text" data-bg="{{ gamemode }}">
+                                                    <span class="mdi mdi-close"></span>
+                                                </a>
+                                            </div>
                                             <div class="collapsible-body">
                                                 <div class="row">
                                                     {% for background in gmBackgrounds %}
                                                         <div class="col s12 m4 l3">
-                                                            <a class="k-load-background" href="{{ background.src }}" target="_blank">
+                                                            <a class="k-load-background--name" href="{{ background.src }}" target="_blank">
                                                                 {{ background.name }}
-                                                                <span class="mdi mdi-open-in-new"></span>
                                                             </a>
-                                                            <a href="#" class="delete-bg" data-bg="{{ background.src }}">
-                                                                <span class="mdi mdi-close red-text right"></span>
+                                                            <a class="delete-bg red-text right" data-bg="{{ background.src }}">
+                                                                <span class="mdi mdi-close"></span>
                                                             </a>
                                                         </div>
                                                     {% endfor %}
@@ -147,12 +151,29 @@
 
         $('.delete-bg').click(function () {
             const type = 'delete-bg';
-            var background = $(this).data('bg');
-            var data = {csrf, type, background};
+            const background = $(this).data('bg');
+            const data = {csrf, type, background};
+            const btn = this;
 
-            if (window.confirm('Are you sure you want to delete this background?')) {
-                userAction(data);
+            if (window.confirm('Are you sure you want to delete this?')) {
+                userAction(data, false, function (response) {
+                    if (response.success) {
+                        let parent = $(btn).parent();
+
+                        if (parent.hasClass('collapsible-header')) {
+                            parent = parent.parent();
+                        }
+
+                        parent.fadeOut(function() {
+                            $(this).remove();
+                        });
+                    }
+                });
             }
         });
+
+        function removeBg() {
+
+        }
     </script>
 {% endblock %}

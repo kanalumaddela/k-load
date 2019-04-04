@@ -97,15 +97,24 @@ $('.unban-user').click(function () {
     }
 });
 
-function userAction(data) {
+function userAction(data, refresh, callback) {
     $.post(site.current, data, function (response) {
         console.log(response);
         toast(response.message);
         if (response.success) {
-            toast('Refreshing the page...');
-            setTimeout(function () {
-                location.reload();
-            }, 1000);
+            if (refresh !== false) {
+                toast('Refreshing the page...');
+                setTimeout(function () {
+                    location.reload();
+                }, 1000);
+            }
+
+            if (response.csrf) {
+                csrf = response.csrf;
+            }
+        }
+        if (callback) {
+            callback(response);
         }
     });
 }

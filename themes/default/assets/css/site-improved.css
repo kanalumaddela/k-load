@@ -9,7 +9,7 @@ header, main, footer {
     padding-left: 225px;
 }
 
-a:hover {
+a:not([class*="btn"]):hover {
     color: #80cdff;
 }
 
@@ -254,7 +254,7 @@ input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before, input[type=
     border-color: #5294e2;
 }
 
-[type="radio"]:not(:checked)+span:before, [type="radio"]:not(:checked)+span:after {
+[type="radio"]:not(:checked) + span:before, [type="radio"]:not(:checked) + span:after {
     border-color: rgba(255, 255, 255, 0.25);
 }
 
@@ -333,6 +333,10 @@ img.theme-preview {
     border: none;
 }
 
+.collapsible-header {
+    position: relative;
+}
+
 .collapsible-header, .keyboard-focused .collapsible-header:focus {
     background-color: #3c455f;
     border-color: rgba(255, 255, 255, .2);
@@ -353,6 +357,17 @@ img.theme-preview {
 
 .btn-danger:hover {
     background-color: #a92525;
+}
+
+/* admin background */
+.k-load-background--name {
+    word-wrap: break-word;
+}
+
+.collapsible-header > .delete-bg {
+    position: absolute;
+    top: 8px;
+    right: 20px;
 }
 
 /* admin music */

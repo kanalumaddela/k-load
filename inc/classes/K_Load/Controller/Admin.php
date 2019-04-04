@@ -200,6 +200,48 @@ class Admin
             Util::redirect('/dashboard');
         }
 
+        if (\count($_POST) === 3 && \count(\array_diff(\array_keys($_POST), ['csrf', 'type', 'background'])) === 0) {
+            $deleted = false;
+            $messages = [
+                'Background deleted successfully',
+                'Failed to delete background',
+            ];
+            if (User::validateCSRF($_SESSION['steamid'],  $_POST['csrf'])) {
+                if (\substr($_POST['background'], 0,1) === '/') {
+                    $location = \APP_ROOT.\str_replace('/', \DIRECTORY_SEPARATOR, $_POST['background']);
+                } else {
+                    $location = \APP_ROOT.'/assets/img/backgrounds/'.$_POST['background'];
+                }
+
+                if (\file_exists($location)) {
+                    if (\is_dir($location)) {
+                        $messages = [
+                            'Gamemode backgrounds deleted successfully',
+                            'Failed to delete gamemode backgrounds',
+                        ];
+                        Util::rmDir($location);
+                    } else {
+                        \unlink($location);
+                    }
+                }
+
+                $deleted = !\file_exists($location);
+            }
+
+            $data = [
+                'success' => $deleted,
+                'message' => $deleted ? $messages[0] : $messages[1].', refresh or try again',
+            ];
+
+            if ($deleted) {
+                Util::log('action', $_SESSION['steamid'].' deleted '.$_POST['background']);
+                User::refreshCSRF($_SESSION['steamid']);
+                $data['csrf'] = User::getCSRF($_SESSION['steamid']);
+            }
+
+            Util::json($data, true);
+        }
+
         if (isset($_POST['save']) && isset($_SESSION['steamid'])) {
             $_POST['backgrounds']['enable'] = (isset($_POST['backgrounds']['enable']) ? (int) $_POST['backgrounds']['enable'] : 0);
             $_POST['backgrounds']['random'] = (isset($_POST['backgrounds']['random']) ? (int) $_POST['backgrounds']['random'] : 0);

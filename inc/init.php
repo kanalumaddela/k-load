@@ -71,7 +71,7 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 // exception handler
-function kload_exception_handler(Exception $exception)
+function kload_exception_handler($exception)
 {
     global $start;
 

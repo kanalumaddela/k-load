@@ -310,7 +310,7 @@ function setDownloadProgress(decimal, force) {
 
     text('.percentage', percentage + '%');
 
-    var roundedPercentage = Math.round(10*percentage)/10;
+    var roundedPercentage = Math.round(10 * percentage) / 10;
     roundedPercentage = roundedPercentage.toFixed(1);
 
     if (currentProgress === roundedPercentage && !force) {
@@ -486,7 +486,6 @@ function queueBackground(milliseconds) {
  */
 function demoMode() {
     files.needed = Math.floor(Math.random() * 1000) + 100;
-    console.log(files.needed);
 
     GameDetails('Demo Server', window.location.href, 'demo_map_name', 24, '76561198152390718', 'demo');
 
@@ -510,6 +509,60 @@ function resetDemoMode() {
     setDownloadProgress(0, false);
 
     clearInterval(demoInterval);
+}
+
+/**
+ * Music/Youtube
+ */
+function loadYoutubeAPI() {
+    if (typeof yt_player === 'undefined') {
+        document.body.appendChild(elem('script', {src: 'https://www.youtube.com/iframe_api'}));
+    }
+}
+
+var audio, yt_player, music_counter = 0;
+var yt_list = youtube.list.slice(0), music_list = music.order.slice(0);
+
+if (music.enable) {
+    if (music.random) {
+        shuffle(yt_list);
+        shuffle(music_list);
+    }
+
+    switch (music.source) {
+        case 'youtube':
+            if (yt_list.length > 0) {
+                loadYoutubeAPI();
+            }
+            break;
+        case 'files':
+            if (music_list.length > 0) {
+                audio = new Audio(site.url + '/data/music/' + music_list[music_counter]);
+                audio.volume = music.volume / 100;
+                audio.load();
+
+                audio.addEventListener('canplay', function () {
+                    this.play();
+                });
+
+                audio.addEventListener('ended', function () {
+                    music_counter += 1;
+                    if (music_counter > music_list.length) {
+                        music_counter = 0;
+                    }
+
+                    const song = music_list[music_counter];
+
+                    musicName = song.replace('.ogg', '');
+
+                    updatePlaying({title: musicName, author: ''});
+
+                    this.src = site.url + '/data/music/' + song;
+                    this.load();
+                    this.play();
+                });
+            }
+    }
 }
 
 /**
