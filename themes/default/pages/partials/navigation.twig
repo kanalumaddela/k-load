@@ -81,6 +81,11 @@
                                     <a href="{{ site.path }}/dashboard/admin/messages">Messages</a>
                                 </li>
                             {% endif %}
+                            {% if user.super or user.perms.music %}
+                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/music') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/music">Music</a>
+                                </li>
+                            {% endif %}
                             {% if user.super or user.perms.rules %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/rules') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/rules">Rules</a>
@@ -89,11 +94,6 @@
                             {% if user.super or user.perms.staff %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/staff') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/staff">Staff</a>
-                                </li>
-                            {% endif %}
-                            {% if user.super or user.perms.music %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/music') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin/music">Music</a>
                                 </li>
                             {% endif %}
                         </ul>

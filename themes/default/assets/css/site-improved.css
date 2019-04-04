@@ -258,6 +258,10 @@ input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before, input[type=
     border-color: rgba(255, 255, 255, 0.25);
 }
 
+.input-field .helper-text {
+    color: rgba(255, 255, 255, 0.54);
+}
+
 /* player settings */
 img.theme-preview {
     width: 100%;

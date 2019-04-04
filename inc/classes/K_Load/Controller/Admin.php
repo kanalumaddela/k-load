@@ -206,8 +206,8 @@ class Admin
                 'Background deleted successfully',
                 'Failed to delete background',
             ];
-            if (User::validateCSRF($_SESSION['steamid'],  $_POST['csrf'])) {
-                if (\substr($_POST['background'], 0,1) === '/') {
+            if (User::validateCSRF($_SESSION['steamid'], $_POST['csrf'])) {
+                if (\substr($_POST['background'], 0, 1) === '/') {
                     $location = \APP_ROOT.\str_replace('/', \DIRECTORY_SEPARATOR, $_POST['background']);
                 } else {
                     $location = \APP_ROOT.'/assets/img/backgrounds/'.$_POST['background'];
@@ -378,7 +378,10 @@ class Admin
         }
 
         if (isset($_POST['save']) && isset($_POST['rules'])) {
+            $_POST['rules']['duration'] = (int) $_POST['rules']['duration'] ?? 10000;
+
             $success = Util::updateSetting(['rules'], [$_POST['rules']], $_POST['csrf']);
+
             if ($success) {
                 Cache::store('settings', Util::getSetting('backgrounds', 'community_name', 'description', 'youtube', 'rules', 'staff', 'messages', 'music'), 0);
             }
@@ -388,9 +391,25 @@ class Admin
             Util::redirect('/dashboard/admin/rules');
         }
 
+        $tmpRules = \json_decode(Util::getSetting('rules')['rules'], true);
+
+        if (!isset($tmpRules['duration'])) {
+            $tmpRules = [
+                'duration' => 10000,
+                'list'     => $tmpRules,
+            ];
+
+            $success = Util::updateSetting(['rules'], [$tmpRules], null, true);
+
+            if (!$success) {
+                throw new \Exception('Failed to implement new rules data. Please check the mysql error logs in data/logs/mysql');
+            }
+        }
+
         $data = [
             'settings' => Util::getSetting('rules'),
         ];
+
         $data['settings']['rules'] = \json_decode($data['settings']['rules'], true);
 
         Template::render('@admin/rules.twig', $data);
@@ -432,12 +451,15 @@ class Admin
         }
 
         if (isset($_POST['save']) && isset($_POST['staff'])) {
-            if (isset($_POST['staff']) && \is_array($_POST['staff'])) {
-                foreach ($_POST['staff'] as $gamemode => $ranks) {
-                    $_POST['staff'][$gamemode] = \array_values($ranks);
+
+            $_POST['staff']['duration'] = (int) $_POST['staff']['duration'] ?? 5000;
+
+            if (isset($_POST['staff']['list']) && \is_array($_POST['staff']['list'])) {
+                foreach ($_POST['staff']['list'] as $gamemode => $ranks) {
+                    $_POST['staff']['list'][$gamemode] = \array_values($ranks);
                 }
             } else {
-                $_POST['staff'] = '[]';
+                $_POST['staff']['list'] = '[]';
             }
 
             $success = Util::updateSetting(['staff'], [$_POST['staff']], $_POST['csrf']);
@@ -449,6 +471,21 @@ class Admin
 
             Util::flash('alert', $alert);
             Util::redirect('/dashboard/admin/staff');
+        }
+
+        $tmpStaff = \json_decode(Util::getSetting('staff')['staff'], true);
+
+        if (!isset($tmpStaff['duration'])) {
+            $tmpStaff = [
+                'duration' => 5000,
+                'list'     => $tmpStaff,
+            ];
+
+            $success = Util::updateSetting(['staff'], [$tmpStaff], null, true);
+
+            if (!$success) {
+                throw new \Exception('Failed to implement new staff data. Please check the mysql error logs in data/logs/mysql');
+            }
         }
 
         $data = [

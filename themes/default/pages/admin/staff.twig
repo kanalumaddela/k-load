@@ -42,8 +42,25 @@
           style="padding-top:15px;padding-bottom:15px;">
         {{ csrf|raw }}
 
+        <div class="row">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <p>Staff Block Duration</p>
+                                <input name="staff[duration]" type="number" placeholder="e.g. 5000" class="tooltipped"
+                                       data-tooltip="1s = 1000ms" value="{{ settings.staff.duration|default(5000) }}">
+                                <span class="helper-text">Staff are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="staff_categories" class="row">
-            {% for gamemode,staff in settings.staff %}
+            {% for gamemode,staff in settings.staff.list %}
                 <div class="col s12 child">
                     <div class="card">
                         <span class="mdi mdi-close red-text delete-elem cat"></span>
@@ -59,12 +76,12 @@
                                             <div>
                                                 <p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>
                                                 <input type="number" class="staff-steamid"
-                                                       name="staff[{{ gamemode }}][{{ loop.index0 }}][steamid]"
+                                                       name="staff[list][{{ gamemode }}][{{ loop.index0 }}][steamid]"
                                                        oninput="fixGamemode(this, true)"
                                                        value="{{ staff_member.steamid }}">
                                                 <p><span class="mdi mdi-sitemap"></span> Rank</p>
                                                 <input type="text" class="staff-rank"
-                                                       name="staff[{{ gamemode }}][{{ loop.index0 }}][rank]"
+                                                       name="staff[list][{{ gamemode }}][{{ loop.index0 }}][rank]"
                                                        oninput="fixGamemode(this, true)"
                                                        value="{{ staff_member.rank }}">
                                                 <a class="btn-floating red delete-elem"><i
@@ -87,7 +104,8 @@
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save"
+                    type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
     </form>
@@ -97,7 +115,7 @@
 {% block js %}
     <script>
         function fixGamemode(elem, isChildren = false) {
-            var gamemode,staff;
+            var gamemode, staff;
             if (!isChildren) {
                 gamemode = elem.value;
                 staff = $(elem).next().children('.staff').children('.input-field.child');
@@ -161,7 +179,7 @@
                     elem('input', {
                         type: 'number',
                         className: 'staff-steamid',
-                        name: 'staff[global][' + fake_cnt + '][steamid]',
+                        name: 'staff[list][global][' + fake_cnt + '][steamid]',
                         onInput: 'fixGamemode(this, true)'
                     }),
 
@@ -169,7 +187,7 @@
                     elem('input', {
                         type: 'text',
                         className: 'staff-rank',
-                        name: 'staff[global][' + fake_cnt + '][rank]',
+                        name: 'staff[list][global][' + fake_cnt + '][rank]',
                         onInput: 'fixGamemode(this, true)'
                     }),
 

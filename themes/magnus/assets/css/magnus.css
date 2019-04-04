@@ -66,25 +66,28 @@ h1, h2, h3, h4, h2, h6, p {
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
-#rules {
-    margin-top: 0;
-    overflow: hidden;
-}
 
-#rules > .rule-block:not(:first-child), #staff > .staff-block:not(:first-child) {
-    display: none;
-}
-
-#rules .rule {
-    position: relative;
+#k-load-rules .k-load-rule-block {
     opacity: 0;
-    margin-bottom: 6px;
-    padding: 6px 12px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    -webkit-transition: opacity .4s ease;
 }
 
-#rules .rule:before {
+#k-load-rules .k-load-rule-block.active {
+    opacity: 1;
+}
+
+#k-load-rules .k-load-rule {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    padding: 6px 12px;
+}
+
+#k-load-rules .k-load-rule:not(:last-child) {
+    margin-bottom: 6px;
+}
+
+#k-load-rules .k-load-rule:before {
     position: absolute;
     content: '';
     top: 0;
@@ -92,17 +95,64 @@ h1, h2, h3, h4, h2, h6, p {
     width: 3px;
     height: 100%;
     background-color: #66bfe6;
-    border-radius: 4px 0 0 4px;
+    border-radius: 3px 0 0 3px;
 }
 
-#rules .separator {
-    height: 2px;
-    background-color: rgba(255, 255, 255, 0.1);
+#k-load-staff .k-load-staff-block {
+    opacity: 0;
+    -webkit-transition: opacity .4s ease;
 }
 
-#rules .separator:last-child {
-    display: none;
+#k-load-staff .k-load-staff-block.active {
+    opacity: 1;
 }
+
+#k-load-staff .k-load-staff {
+    position: relative;
+    padding: 6px 12px;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#k-load-staff .k-load-staff:before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background-color: #66bfe6;
+    border-radius: 3px 0 0 3px;
+}
+
+#k-load-staff .k-load-staff:not(:last-child) {
+    margin-bottom: 7px;
+}
+
+#k-load-staff .k-load-staff > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#k-load-staff .k-load-staff .avatar {
+    margin-right: 8px;
+    max-width: 50px;
+    border-radius: 50%;
+}
+
+#k-load-staff .k-load-staff-info > span {
+    display: block;
+}
+
+.k-load-staff--name {
+    font-weight: 600;
+}
+
+.k-load-staff--rank {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
 
 #server-info > table {
     width: 100%;
@@ -119,48 +169,6 @@ h1, h2, h3, h4, h2, h6, p {
 #description {
     margin: 10px 0;
     font-size: 1rem;
-}
-
-#staff {
-    overflow: hidden !important;
-}
-
-#staff > .staff-block > .member > * {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-#staff > .staff-block > .member {
-    position: relative;
-    margin-bottom: 4px;
-    padding: 6px 12px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-}
-
-#staff > .staff-block > .member:before {
-    position: absolute;
-    content: '';
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background-color: #66bfe6;
-    border-radius: 4px 0 0 4px;
-}
-
-.member .avatar.small {
-    max-width: 50px;
-    margin-right: 8px;
-}
-
-.member .name {
-    font-weight: 600;
-}
-
-.member .rank {
-    font-size: 0.8rem;
-    opacity: 0.7;
 }
 
 #loading-bar-outer {

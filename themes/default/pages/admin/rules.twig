@@ -31,8 +31,25 @@
           style="padding-top:15px;padding-bottom:15px;">
         {{ csrf|raw }}
 
+        <div class="row">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <p>Rule Block Duration</p>
+                                <input name="rules[duration]" type="number" placeholder="e.g. 5000" class="tooltipped"
+                                       data-tooltip="1s = 1000ms" value="{{ settings.rules.duration|default(10000) }}">
+                                <span class="helper-text">Rules are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="rule_categories" class="row">
-            {% for gamemode, rules in settings.rules %}
+            {% for gamemode, rules in settings.rules.list %}
                 <div class="col s12 child">
                     <div class="card">
                         <span class="mdi mdi-close red-text delete-elem cat"></span>
@@ -44,7 +61,7 @@
                             <div class="rules">
                                 {% for rule in rules %}
                                     <div class="input-field child">
-                                        <input type="text" name="rules[{{ gamemode }}][]" value="{{ rule }}"
+                                        <input type="text" name="rules[list][{{ gamemode }}][]" value="{{ rule }}"
                                                oninput="fixGamemode(this, true)" style="width: 80%">
                                         <a class="btn-floating red delete-elem"><i class="mdi mdi-delete"></i></a>
                                     </div>
@@ -62,7 +79,8 @@
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save"
+                    type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
     </form>
@@ -72,22 +90,23 @@
 {% block js %}
     <script>
         function fixGamemode(elem, isChildren = false) {
+            var gamemode, rules;
             if (!isChildren) {
-                var gamemode = elem.value;
-                var rules = $(elem).next().next('.rules').children();
+                gamemode = elem.value;
+                rules = $(elem).next().next('.rules').children();
                 $('.gamemode-text').text(gamemode);
             } else {
-                var gamemode = $(elem).parent().parent().parent().find('.gamemode');
+                gamemode = $(elem).parent().parent().parent().find('.gamemode');
                 if (gamemode.length > 0) {
                     gamemode = gamemode[0].value;
-                    var rules = $(elem).parent().parent().find('.input-field.child');
+                    rules = $(elem).parent().parent().find('.input-field.child');
                 }
             }
 
             if (rules.length > 0) {
                 $.each(rules, function (key, child) {
-                    var input = $(child).find('input')[0];
-                    input.setAttribute('name', 'rules[' + gamemode + '][]');
+                    const input = $(child).find('input')[0];
+                    input.setAttribute('name', 'rules[list][' + gamemode + '][]');
                 });
             }
         }
@@ -122,7 +141,7 @@
             return elem('div', {className: 'input-field child'},
                 elem('input', {
                     type: 'text',
-                    name: 'rules[global][]',
+                    name: 'rules[list][global][]',
                     onInput: 'fixGamemode(this, true)',
                     style: 'width: 80%'
                 }),

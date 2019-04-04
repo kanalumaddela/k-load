@@ -25,6 +25,8 @@
     var rules = {{ settings.rules|default('{}')|raw }};
     var staff = {{ settings.staff|default('{}')|raw }};
     var music = {{ settings.music|default('{}')|raw }};
+    var rules_per_page = 7;
+    var staff_per_page = 7;
 </script>
 {% block js %}{% endblock %}
 <script src="{{ assets }}/js/loading-improved.js?{{ cache_buster }}"></script>

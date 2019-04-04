@@ -144,6 +144,15 @@ const debounce = function (func, wait, immediate) {
 };
 
 /**
+ * Remove all children from a parent element.
+ */
+const clearChildren = function (parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+};
+
+/**
  * Return a NodeList matching the given selector.
  *
  * @param {string} selector
@@ -207,6 +216,8 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
     text('.gamemode', gamemodeFriendly);
     updateProgress();
     setBackgrounds(gamemode);
+    setRules(gamemode, rules_per_page);
+    setStaff(gamemode, staff_per_page);
 
     if (typeof GameDetails_custom === 'function') {
         GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode);
@@ -326,7 +337,171 @@ function setDownloadProgress(decimal, force) {
     }
 }
 
+/**
+ * Rules
+ */
+const rules_block = document.getElementById('k-load-rules');
+var rulesInterval, ruleBlockCounter = 0;
 
+function setRules(gamemode, perPage) {
+    if ('list' in rules === false) {
+        rules = {
+            duration: 10000,
+            list: rules
+        }
+    }
+
+    var gamemodeExists = gamemode in rules.list;
+    const globalExists = 'global' in rules.list;
+
+    if (!gamemodeExists && globalExists) {
+        gamemode = 'global';
+        gamemodeExists = true;
+    }
+
+    if (gamemodeExists && rules_block) {
+        clearInterval(rulesInterval);
+        clearChildren(rules_block);
+
+        const gmRules = rules.list[gamemode];
+        const num_blocks = Math.ceil(gmRules.length / perPage);
+        var ruleCount = 0;
+
+
+        for (var i = 0; i < num_blocks; i++) {
+            var children = [];
+
+            for (var x = 0; x < perPage; x++) {
+                if (ruleCount < gmRules.length) {
+                    children.push(
+                        elem('div', {className: 'k-load-rule', innerText: gmRules[ruleCount]})
+                    );
+
+                    ruleCount++;
+                }
+            }
+
+            rules_block.appendChild(
+                elem('div', {id: 'k-load-rule-block-' + i, className: 'k-load-rule-block'}, children)
+            );
+        }
+
+        rules_block.childNodes[ruleBlockCounter].style.display = 'block';
+        rules_block.childNodes[ruleBlockCounter].classList.add('active');
+
+        rulesInterval = setInterval(function () {
+            rules_block.childNodes[ruleBlockCounter].classList.remove('active');
+            setTimeout(function () {
+                rules_block.childNodes[ruleBlockCounter].style.display = 'none';
+
+                var nextSib = rules_block.childNodes[ruleBlockCounter].nextSibling;
+
+                if (nextSib) {
+                    ruleBlockCounter++;
+                } else {
+                    ruleBlockCounter = 0;
+                    nextSib = rules_block.childNodes[ruleBlockCounter];
+                }
+
+                nextSib.style.display = 'block';
+                nextSib.classList.add('active');
+            }, 250);
+        }, rules.duration);
+    }
+}
+
+/**
+ * Staff
+ */
+const staff_block = document.getElementById('k-load-staff');
+var staffInterval, staffBlockCounter = 0;
+
+function setStaff(gamemode, perPage) {
+    if ('list' in staff === false) {
+        staff = {
+            duration: 5000,
+            list: staff
+        }
+    }
+
+    var gamemodeExists = gamemode in staff.list;
+    const globalExists = 'global' in staff.list;
+
+    if (!gamemodeExists && globalExists) {
+        gamemode = 'global';
+        gamemodeExists = true;
+    }
+
+    if (gamemodeExists && rules_block) {
+        clearInterval(staffInterval);
+        clearChildren(staff_block);
+
+        const gmStaff = staff.list[gamemode];
+        const num_blocks = Math.ceil(gmStaff.length / perPage);
+        var staffCount = 0;
+
+
+        for (var i = 0; i < num_blocks; i++) {
+            var children = [];
+
+            for (var x = 0; x < perPage; x++) {
+                if (staffCount < gmStaff.length) {
+                    var staff_member = gmStaff[staffCount];
+
+                    console.log('json of staff: ' + JSON.stringify(staff_member));
+
+                    children.push(
+                        elem('div', {className: 'k-load-staff'}, [
+                            elem('img', {
+                                className: 'avatar',
+                                src: site.path + '/api/player/' + staff_member.steamid + '/avatarmedium?raw'
+                            }),
+                            elem('div', {className: 'k-load-staff-info'}, [
+                                elem('span', {
+                                    className: 'k-load-staff--name user-' + staff_member.steamid,
+                                    innerText: staff_member.steamid
+                                }),
+                                elem('span', {className: 'k-load-staff--rank', innerText: staff_member.rank})
+                            ])
+                        ])
+                    );
+
+                    staffCount++;
+                }
+            }
+
+            staff_block.appendChild(
+                elem('div', {id: 'k-load-staff-block-' + i, className: 'k-load-staff-block'}, children)
+            );
+        }
+
+        staff_block.childNodes[staffBlockCounter].style.display = 'block';
+        staff_block.childNodes[staffBlockCounter].classList.add('active');
+
+        rulesInterval = setInterval(function () {
+            staff_block.childNodes[staffBlockCounter].classList.remove('active');
+            setTimeout(function () {
+                staff_block.childNodes[staffBlockCounter].style.display = 'none';
+
+                var nextSib = staff_block.childNodes[staffBlockCounter].nextSibling;
+
+                if (nextSib) {
+                    staffBlockCounter++;
+                } else {
+                    staffBlockCounter = 0;
+                    nextSib = staff_block.childNodes[staffBlockCounter];
+                }
+
+                nextSib.style.display = 'block';
+                nextSib.classList.add('active');
+            }, 250);
+        }, staff.duration);
+    }
+}
+
+/**
+ * Backgrounds
+ */
 const backgroundsHtml = elem('div', {id: 'k-load-backgrounds'});
 const backgroundCss = elem('style', {
     type: 'text/css',
@@ -402,9 +577,7 @@ function setBackgrounds(gamemode) {
  * Remove all backgrounds from container.
  */
 function clearBackgrounds() {
-    while (backgroundsHtml.firstChild) {
-        backgroundsHtml.removeChild(backgroundsHtml.firstChild);
-    }
+    clearChildren(backgroundsHtml);
 
     backgroundsAdded = [];
 }
@@ -514,14 +687,64 @@ function resetDemoMode() {
 /**
  * Music/Youtube
  */
+var audio, yt_player, music_counter = 0;
+var yt_list = youtube.list.slice(0), music_list = music.order.slice(0);
+const music_block = document.getElementById('music-block');
+
 function loadYoutubeAPI() {
     if (typeof yt_player === 'undefined') {
         document.body.appendChild(elem('script', {src: 'https://www.youtube.com/iframe_api'}));
     }
 }
 
-var audio, yt_player, music_counter = 0;
-var yt_list = youtube.list.slice(0), music_list = music.order.slice(0);
+function onYouTubeIframeAPIReady() {
+    document.body.appendChild(elem('div', {id: 'youtube_player'}));
+    yt_player = new YT.Player('youtube_player', {
+        height: '0',
+        width: '0',
+        playerVars: {
+            autoplay: 0,
+            controls: 0,
+            fs: 0,
+            iv_load_policy: 3,
+            modestbranding: 1,
+            showinfo: 0
+        },
+        events: {
+            'onReady': onYTMusicPlayerReady,
+            'onStateChange': onMusicPlayerStateChange
+        }
+    });
+}
+
+function onYTMusicPlayerReady(event) {
+    youtube.index = 0;
+    event.target.setVolume((music.volume || 15));
+    event.target.cueVideoById(yt_list[youtube.index], 0, "small");
+}
+
+function onMusicPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.CUED) {
+        event.target.playVideo();
+    }
+    if (event.data === YT.PlayerState.PLAYING) {
+        updatePlaying(event.target.getVideoData());
+    }
+    if (event.data === YT.PlayerState.ENDED) {
+        youtube.index++;
+        if (youtube.index >= yt_list.length) {
+            youtube.index = 0
+        }
+        event.target.cueVideoById(yt_list[youtube.index]);
+    }
+}
+
+function updatePlaying(data) {
+    if (data.title.length > 0 && data.title.length !== '') {
+        text('.youtube-playing-author', data.author);
+        text('.youtube-playing-title', data.title);
+    }
+}
 
 if (music.enable) {
     if (music.random) {
@@ -533,16 +756,27 @@ if (music.enable) {
         case 'youtube':
             if (yt_list.length > 0) {
                 loadYoutubeAPI();
+                if (music_block) {
+                    music_block.classList.add('fade-in');
+                }
             }
             break;
         case 'files':
             if (music_list.length > 0) {
+                if (music_block) {
+                    music_block.classList.add('fade-in');
+                }
+
                 audio = new Audio(site.url + '/data/music/' + music_list[music_counter]);
                 audio.volume = music.volume / 100;
                 audio.load();
 
                 audio.addEventListener('canplay', function () {
-                    this.play();
+                    const aud = this;
+
+                    setTimeout(function () {
+                        aud.play();
+                    }, 650);
                 });
 
                 audio.addEventListener('ended', function () {
@@ -559,7 +793,6 @@ if (music.enable) {
 
                     this.src = site.url + '/data/music/' + song;
                     this.load();
-                    this.play();
                 });
             }
     }
