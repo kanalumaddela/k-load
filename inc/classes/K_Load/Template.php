@@ -2,7 +2,6 @@
 
 namespace K_Load;
 
-use Steam;
 use Twig\Markup;
 
 class Template
@@ -56,7 +55,6 @@ class Template
             return APP_PATH.'/assets/'.\ltrim($file, '/');
         });
         self::$twig->addFunction($function);
-
 
         $site_urls = [
             'host'    => APP_HOST,
