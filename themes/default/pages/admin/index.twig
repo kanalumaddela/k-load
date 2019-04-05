@@ -29,7 +29,7 @@
                 <div class="card">
                     <div class="card-content row">
                         <form action="{{ site.path ~ '/dashboard/admin?action=update_apikeys' }}" method="post">
-                            {{ csrf|raw }}
+                            {{ csrf() }}
                             <div class="input-field col s12">
                                 <input name="apikeys[steam]" type="text" class="validate" value="{{ api_keys.steam }}" autocomplete="off" autocapitalize="off" spellcheck="false" >
                                 <label>Steam API Key</label>
@@ -47,7 +47,7 @@
                             <h1 class="card-title">Default Theme</h1>
                         </div>
                         <form action="{{ site.path ~ '/dashboard/admin?action=update_theme' }}" method="post">
-                            {{ csrf|raw }}
+                            {{ csrf() }}
                             {% include '@partials/backgrounds.twig' with {'themes': themes, 'value': theme, 'hide_xl': 1} only %}
                             <div class="col s12 center-align">
                                 <input type="submit" name="save_theme" class="btn" value="Save">

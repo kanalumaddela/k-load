@@ -19,7 +19,7 @@
     {% if user %}
 
         <!-- required -->
-        {{ csrf|raw }}
+        {{ csrf() }}
         <!-- content to show when logged in -->
 
     {% else %}

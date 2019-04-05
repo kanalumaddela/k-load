@@ -10,7 +10,7 @@
 
 {% block content %}
     <form method="post" action="{{ site.path }}/dashboard/settings" class="row" style="padding-top:15px;padding-bottom:15px;">
-        {{ csrf|raw }}
+        {{ csrf() }}
 
         <div class="col s12">
             {% if user.admin %}

@@ -3,6 +3,7 @@
 namespace K_Load;
 
 use Steam;
+use Twig\Markup;
 
 class Template
 {
@@ -37,9 +38,25 @@ class Template
             'cache'       => (ENABLE_CACHE ? APP_ROOT.'/data/cache/templates' : false),
         ];
         self::$twig = new \Twig\Environment(self::$twig_loader, self::$twig_env_params);
+
         if (DEBUG) {
             self::$twig->addExtension(new \Twig\Extension\DebugExtension());
         }
+
+        $function = new \Twig\TwigFunction('csrf', function () {
+            return new Markup('<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">', 'utf8');
+        });
+        self::$twig->addFunction($function);
+
+        $function = new \Twig\TwigFunction('theme_asset', function ($file) {
+            return APP_PATH.'/themes/'.self::$theme.'/assets/'.\ltrim($file, '/');
+        });
+        self::$twig->addFunction($function);
+        $function = new \Twig\TwigFunction('asset', function ($file) {
+            return APP_PATH.'/assets/'.\ltrim($file, '/');
+        });
+        self::$twig->addFunction($function);
+
 
         $site_urls = [
             'host'    => APP_HOST,
@@ -48,12 +65,12 @@ class Template
             'current' => APP_URL_CURRENT,
         ];
 
+        self::$twig->addGlobal('site', $site_urls);
+
         self::$data = [
             'assets'       => APP_PATH.'/assets',
             'assets_theme' => APP_PATH.'/themes/'.self::$theme.'/assets',
-            //'login_url' => steam::loginUrl(),
             'login_url'    => $steamLogin->getLoginURL(),
-            'site'         => $site_urls,
             'site_json'    => \json_encode($site_urls),
             'cache_buster' => \bin2hex(\random_bytes(3)),
         ];

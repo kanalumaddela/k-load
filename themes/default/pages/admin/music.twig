@@ -6,7 +6,7 @@
 {% block content %}
     <form method="post" action="{{ site.path }}/dashboard/admin/music" class="row"
           style="padding-top:15px;margin-bottom:15px;">
-        {{ csrf|raw }}
+        {{ csrf() }}
 
         <div class="col s12 m6">
             <div class="card">

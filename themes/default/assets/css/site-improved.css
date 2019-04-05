@@ -86,9 +86,9 @@ ul.sidenav.sidenav-fixed:hover {
     background-color: unset;
 }
 
-.sidenav > li > a:hover:not(.is-image), .sidenav > li.active > a:not(.is-image), li.active > .collapsible-header, .sidenav .collapsible-header:hover, .sidenav .collapsible-body li.active > a {
+.sidenav > li > a:hover:not(.is-image), .sidenav > li.active > a:not(.is-image), li.active > .collapsible-header, .sidenav .collapsible-header:hover, .sidenav .collapsible-body li.active > a, .sidenav .collapsible li.active .collapsible-header, .sidenav .collapsible li .collapsible-header:hover {
     background-color: rgba(0, 0, 0, .15);
-    border-color: #5294e2;
+    border-color: #5294e2 !important;
 }
 
 .sidenav > li.logout > a:hover {

@@ -6,7 +6,7 @@
 {% block content %}
     {% if user.admin %}
         <form method="post" action="{{ site.path }}/dashboard/admin/general" class="row" style="padding-top:15px;padding-bottom:15px;">
-            {{ csrf|raw }}
+            {{ csrf() }}
 
             {% if user.super or user.perms.community_name or user.perms.backgrounds %}
                 <div class="col s12 m6">

@@ -48,7 +48,7 @@ class Setup
     public static function update()
     {
         if (User::isSuper($_SESSION['steamid'])) {
-            Cache::remove('version');
+            Cache::clear();
             $version = (int) \str_replace('.', '', Util::version(true));
             $migrations = \glob(APP_ROOT.\sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
             foreach ($migrations as $folder) {
@@ -63,7 +63,8 @@ class Setup
                     \file_exists($folder.'/alter.php') and include $folder.'/alter.php';
                     \file_exists($folder.'/insert.php') and include $folder.'/insert.php';
 
-                    $installed = Util::version() == $ver;
+                    $installed = Util::version(true) == $ver;
+
                     Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
                 }
             }

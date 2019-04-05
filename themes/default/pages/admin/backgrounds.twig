@@ -19,7 +19,7 @@
                     <div class="card">
                         <div class="card-content">
                             <form method="post" action="{{ site.path }}/dashboard/admin/backgrounds">
-                                {{ csrf|raw }}
+                                {{ csrf() }}
                                 <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>Backgrounds</h1>
                                 <div class="row">
                                     <div class="col s12 m6">
@@ -81,7 +81,7 @@
                 <div id="upload-backgrounds" class="modal bottom-sheet">
                     <div class="modal-content">
                         <form id="upload-backgrounds-form" method="post" action="{{ site.path }}/dashboard/admin/backgrounds/upload" enctype="multipart/form-data">
-                            {{ csrf|raw }}
+                            {{ csrf() }}
                             <div class="input-field">
                                 <input id="upload-backgrounds-gamemode-input" type="text" name="gamemode" value="global" placeholder="Enter a gamemode id, refer to the list above">
                                 <label for="upload-backgrounds-gamemode-input">Gamemode</label>

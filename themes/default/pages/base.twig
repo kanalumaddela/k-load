@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.5.95/css/materialdesignicons.min.css"/>
     {% block css_head %}{% endblock %}
-    <link rel="stylesheet" href="{{ assets_theme }}/css/site-improved.css">
+    <link rel="stylesheet" href="{{ theme_asset('css/site-improved.css') }}">
     <!--
     <link rel="stylesheet" href="{{ assets_theme }}/css/site.css">
     -->
@@ -33,7 +33,7 @@
             </nav>
             {% include '@partials/navigation.twig' %}
         </header>
-        <main><div class="container">{{ csrf|raw }}{% block content %}{% endblock %}</div></main>
+        <main><div class="container">{{ csrf() }}{% block content %}{% endblock %}</div></main>
     {% else %}
         <div style="height: 100vh" class="valign-wrapper center">
             <div class="card" style="margin-top: -50px;margin-left: auto;margin-right: auto;">
@@ -61,7 +61,7 @@
         $('.tooltipped').tooltip();
     });
 </script>
-<script src="{{ assets_theme }}/js/site.js"></script>
+<script src="{{ theme_asset('js/site.js') }}"></script>
 {% block js %}{% endblock %}
 </body>
 </html>
