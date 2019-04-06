@@ -47,13 +47,13 @@ return [
     'default_theme'  => '',
     'refresh_themes' => '',
 
-    'clear_cache'      => '',
-    'all_cache'        => '',
-    'data_cache'       => '',
-    'template_cache'   => '',
-    'recompile_css'    => '',
-    'unban_all'        => '',
-    'reset_perms'      => '',
+    'clear_cache'                  => '',
+    'all_cache'                    => '',
+    'data_cache'                   => '',
+    'template_cache'               => '',
+    'recompile_css'                => '',
+    'unban_all'                    => '',
+    'reset_perms'                  => '',
 
     // admin general
     'gamemode'                     => '',
@@ -63,19 +63,19 @@ return [
     'examples_of_gamemodes_notice' => '',
 
     // admin backgrounds
-    'upload_backgrounds'   => '',
-    'uploaded_backgrounds' => '',
-    'max_uploads'          => '',
-    'max_size'             => '',
+    'upload_backgrounds'           => '',
+    'uploaded_backgrounds'         => '',
+    'max_uploads'                  => '',
+    'max_size'                     => '',
 
     // admin staff
-    'rank'             => '',
-    'staff_member_add' => '',
+    'rank'                         => '',
+    'staff_member_add'             => '',
 
     // admin music
-    'general_music_options' => '',
-    'video_add'             => '',
-    'song_add'              => '',
-    'songs_to_play'         => '',
+    'general_music_options'        => '',
+    'video_add'                    => '',
+    'song_add'                     => '',
+    'songs_to_play'                => '',
 
 ];

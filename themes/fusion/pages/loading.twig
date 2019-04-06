@@ -4,7 +4,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="{{ site.url }}/themes/metra/assets/css/grid.css"/>
-    <link href="{{ assets_theme }}/css/fusion.css?{{ cache_buster }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ assets_theme }}/css/fusion.css?{{ cache_buster }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rajdhani:300,400,600">
     <style>
         body:before {
@@ -123,10 +123,9 @@
 
 {% block js %}
     <script>
-        staff = {};
         staff_per_page = 5;
 
-        function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode, demo) {
+        function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
             const gamemodeRules = checkGamemode(gamemode, rules.list);
             const gamemodeStaff = checkGamemode(gamemode, staff.list);
 

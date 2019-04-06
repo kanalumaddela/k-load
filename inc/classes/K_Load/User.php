@@ -37,12 +37,24 @@ class User
         return Database::conn()->count('kload_users')->execute();
     }
 
-    public static function get($steamid)
+    public static function get($steamid, ...$columns)
     {
         $logged_in = isset($_SESSION['steamid']);
         $super = (isset($_SESSION['steamid']) ? (self::isSuper($_SESSION['steamid'] ?? 0)) : 0);
 
-        return Database::conn()->select('SELECT `id`, `name`, `steamid`, `steamid2`, `steamid3`, `settings`, '.($logged_in ? '`custom_css` AS `css`,' : '').' `admin`, '.(($super || $logged_in) ? '`perms`,' : '\'[]\' as `perms`')."`banned`, DATE_FORMAT(`registered`, '%m/%d/%Y %r') AS `registered` FROM `kload_users`")->where("`steamid` = '?'", [$steamid])->execute() ?? [];
+        if (empty($columns)) {
+            $columns = '`id`, `name`, `steamid`, `steamid2`, `steamid3`, `settings`, '.($logged_in ? '`custom_css` AS `css`,' : '').' `admin`, '.($super || $logged_in ? '`perms`,' : '\'[]\' as `perms`,').' `banned`, DATE_FORMAT(`registered`, \'%m/%d/%Y %r\') AS `registered`';
+        } else {
+            foreach ($columns as $index => $column) {
+                if (empty($column)) {
+                    unset($columns[$index]);
+                }
+            }
+
+            $columns = '`'.\implode('`,`', \array_values($columns)).'`';
+        }
+
+        return Database::conn()->select('SELECT '.$columns.' FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute() ?? [];
     }
 
     /**
@@ -215,7 +227,6 @@ class User
                 if (\file_exists(APP_ROOT.'/data/users/'.$steamid.'.css')) {
                     \unlink(APP_ROOT.'/data/users/'.$steamid.'.css');
                 }
-                \touch(APP_ROOT.'/data/users/'.$steamid.'.css');
             }
         }
 
@@ -259,24 +270,29 @@ class User
 
     public static function session($steamid)
     {
+        $user = self::get($steamid);
+
         $steaminfo = Steam::User($steamid);
         if ($steaminfo) {
+            if ($steaminfo['personaname'] !== $user['name']) {
+                Database::conn()->add("UPDATE `kload_users` SET `name` = '?' WHERE `steamid` = '?'", [$steaminfo['personaname'], $steamid])->execute();
+            }
+
             $_SESSION = ($_SESSION ?? []) + $steaminfo;
-            Database::conn()->add("UPDATE `kload_users` SET `name` = '?' WHERE `steamid` = '?'", [$steaminfo['personaname'], $steamid])->execute();
         }
-        $user = self::get($steamid);
+
         if (isset($user['settings'])) {
             $user['settings'] = \json_decode($user['settings'], true);
         }
         $user['admin'] = (int) $user['admin'];
         $user['super'] = self::isSuper($steamid);
         if (isset($user['perms'])) {
-            $user['perms'] = \array_fill_keys(\array_keys(\array_flip(\json_decode($user['perms'], true))), 1);
+            $user['perms'] = \array_fill_keys(\json_decode($user['perms']), 1);
         }
 
         $_SESSION = \array_replace_recursive($_SESSION, $user);
 
-        if ($_SESSION['settings'] != $user['settings']) {
+        if ($_SESSION['settings'] !== $user['settings']) {
             $_SESSION['settings'] = $user['settings'];
         }
         self::refreshCSRF($steamid);

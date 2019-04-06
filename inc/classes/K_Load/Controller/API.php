@@ -16,7 +16,7 @@ class API
             unset($_SESSION['steamid']);
         }
 
-        $data = (ENABLE_CACHE ? Cache::remember('api-player-'.$steamid, 120, function () use ($steamid) {
+        $data = (ENABLE_CACHE ? Cache::remember('api-player-'.$steamid, 120, function() use ($steamid) {
             $data = User::get($steamid) + (Steam::User($steamid) ?? []);
 
             return $data;
@@ -47,7 +47,7 @@ class API
         ];
 
         if (\ENABLE_CACHE) {
-            $data['data'] = Cache::remember('steam-api-players-'.$hash, 3600, function () use ($steamids) {
+            $data['data'] = Cache::remember('steam-api-players-'.$hash, 3600, function() use ($steamids) {
                 return Steam::Users($steamids);
             });
         } else {
@@ -61,7 +61,7 @@ class API
 
     public static function group($name)
     {
-        $data = (ENABLE_CACHE ? Cache::remember('api-group-'.$name, 60, function () use ($name) {
+        $data = (ENABLE_CACHE ? Cache::remember('api-group-'.$name, 60, function() use ($name) {
             return Steam::Group($name)->asXML();
         }) : Steam::Group($name)->asXML());
 

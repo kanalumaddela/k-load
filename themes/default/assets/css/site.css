@@ -104,9 +104,11 @@ code {
 .side-nav .collapsible-body, .side-nav.fixed .collapsible-body {
     background-color: rgba(0, 0, 0, 0.3);
 }
+
 .side-nav .collapsible .collapsible-body li, .side-nav.fixed .collapsible .collapsible-body li {
     border-left: 3px solid transparent;
 }
+
 .side-nav .collapsible-body > ul:not(.collapsible) > li:hover, .side-nav .collapsible-body > ul:not(.collapsible) > li.active, .side-nav.fixed .collapsible-body > ul:not(.collapsible) > li.active {
     background-color: rgba(255, 255, 255, 0.06);
     border-color: #2196f3;
@@ -194,7 +196,8 @@ input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):
     -webkit-box-shadow: 0 1px 0 0 #2196f3;
     box-shadow: 0 1px 0 0 #2196f3;
 }
-input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-default):focus:not([readonly])+label, input[type=password]:not(.browser-default):focus:not([readonly])+label, input[type=email]:not(.browser-default):focus:not([readonly])+label, input[type=url]:not(.browser-default):focus:not([readonly])+label, input[type=time]:not(.browser-default):focus:not([readonly])+label, input[type=date]:not(.browser-default):focus:not([readonly])+label, input[type=datetime]:not(.browser-default):focus:not([readonly])+label, input[type=datetime-local]:not(.browser-default):focus:not([readonly])+label, input[type=tel]:not(.browser-default):focus:not([readonly])+label, input[type=number]:not(.browser-default):focus:not([readonly])+label, input[type=search]:not(.browser-default):focus:not([readonly])+label, textarea.materialize-textarea:focus:not([readonly])+label {
+
+input:not([type]):focus:not([readonly]) + label, input[type=text]:not(.browser-default):focus:not([readonly]) + label, input[type=password]:not(.browser-default):focus:not([readonly]) + label, input[type=email]:not(.browser-default):focus:not([readonly]) + label, input[type=url]:not(.browser-default):focus:not([readonly]) + label, input[type=time]:not(.browser-default):focus:not([readonly]) + label, input[type=date]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label, input[type=tel]:not(.browser-default):focus:not([readonly]) + label, input[type=number]:not(.browser-default):focus:not([readonly]) + label, input[type=search]:not(.browser-default):focus:not([readonly]) + label, textarea.materialize-textarea:focus:not([readonly]) + label {
     color: #2196f3;
 }
 
@@ -221,6 +224,7 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 #materialbox-overlay {
     background-color: rgba(0, 0, 0, 0.6);
 }
+
 img.materialboxed.initialized.active {
     box-shadow: 0 0 15px #000;
 }
@@ -244,27 +248,35 @@ img.materialboxed.initialized.active {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
 .btn-flat {
     color: #eaeaea;
 }
+
 .user-buttons .btn-flat:not(:first-child) {
     margin-top: 5px;
 }
+
 .users .card .btn-flat {
     width: 75%;
 }
+
 .btn-profile {
     background-color: #2196f3;
 }
+
 .btn-perms {
     background-color: #9e29bd;
 }
+
 .btn-flat.unban-user {
-    background-color:#509e40;
+    background-color: #509e40;
 }
+
 .btn-flat.ban-user {
     background-color: #c53a3a;
 }
+
 .btn-flat:focus {
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -493,11 +505,11 @@ div.disabled {
     background-color: rgba(0, 0, 0, 0.15);
 }
 
-[type="checkbox"]+label:before, [type="checkbox"]:not(.filled-in)+label:after {
+[type="checkbox"] + label:before, [type="checkbox"]:not(.filled-in) + label:after {
     border: 2px solid #43485b;
 }
 
-[type="checkbox"]:checked+label:before {
+[type="checkbox"]:checked + label:before {
     border-right: 2px solid #2196f3;
     border-bottom: 2px solid #2196f3;
 }
@@ -511,6 +523,7 @@ div.disabled {
     border-color: rgba(255, 255, 255, 0.2);
     transition: background-color .2s ease-out;
 }
+
 .collapsible-header.active {
     background-color: #2196f3;
 }
@@ -519,7 +532,7 @@ div.disabled {
     border-color: transparent;
 }
 
-.collapsible-body  {
+.collapsible-body {
     border-bottom: none;
 }
 
@@ -527,7 +540,7 @@ header, main, footer {
     padding-left: 300px;
 }
 
-@media only screen and (max-width : 992px) {
+@media only screen and (max-width: 992px) {
     header, main, footer {
         padding-left: 0;
     }

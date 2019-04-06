@@ -49,16 +49,22 @@
                                     </div>
                                     <div class="input-field col s12 m6">
                                         <p>Background Duration</p>
-                                        <input name="backgrounds[duration]" type="number" placeholder="e.g. 5000" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.duration }}">
+                                        <input name="backgrounds[duration]" type="number" placeholder="e.g. 5000"
+                                               class="tooltipped" data-tooltip="1s = 1000ms"
+                                               value="{{ settings.backgrounds.duration }}">
                                     </div>
                                     <div class="input-field col s12 m6">
                                         <p>Background Fade</p>
-                                        <input name="backgrounds[fade]" type="number" placeholder="e.g. 750" class="tooltipped" data-tooltip="1s = 1000ms" value="{{ settings.backgrounds.fade }}">
+                                        <input name="backgrounds[fade]" type="number" placeholder="e.g. 750"
+                                               class="tooltipped" data-tooltip="1s = 1000ms"
+                                               value="{{ settings.backgrounds.fade }}">
                                     </div>
                                 </div>
 
                                 <div class="fixed-action-btn">
-                                    <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+                                    <button id="save-btn" class="btn-floating btn-large blue tooltipped"
+                                            data-position="top" data-tooltip="Save" type="submit" name="save" value="1">
+                                        <span class="mdi mdi-content-save"></span></button>
                                 </div>
                             </form>
                         </div>
@@ -72,7 +78,8 @@
                             <div class="center">
                                 <a href="#upload-backgrounds" class="btn modal-trigger">Upload</a>
                                 <p style="margin: 4px 0">{{ upload_requirements.max_uploads }} max uploads at a time</p>
-                                <p style="margin: 4px 0">{{ upload_requirements.file_size }} max size per uploaded file</p>
+                                <p style="margin: 4px 0">{{ upload_requirements.file_size }} max size per uploaded
+                                    file</p>
                             </div>
                         </div>
                     </div>
@@ -80,10 +87,12 @@
 
                 <div id="upload-backgrounds" class="modal bottom-sheet">
                     <div class="modal-content">
-                        <form id="upload-backgrounds-form" method="post" action="{{ site.path }}/dashboard/admin/backgrounds/upload" enctype="multipart/form-data">
+                        <form id="upload-backgrounds-form" method="post"
+                              action="{{ site.path }}/dashboard/admin/backgrounds/upload" enctype="multipart/form-data">
                             {{ csrf() }}
                             <div class="input-field">
-                                <input id="upload-backgrounds-gamemode-input" type="text" name="gamemode" value="global" placeholder="Enter a gamemode id, refer to the list above">
+                                <input id="upload-backgrounds-gamemode-input" type="text" name="gamemode" value="global"
+                                       placeholder="Enter a gamemode id, refer to the list above">
                                 <label for="upload-backgrounds-gamemode-input">Gamemode</label>
                             </div>
                             <div class="file-field input-field">
@@ -92,13 +101,14 @@
                                     <input name="bg-files[]" type="file" multiple required>
                                 </div>
                                 <div class="file-path-wrapper">
-                                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                                    <input class="file-path validate" type="text"
+                                           placeholder="Upload one or more files">
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" form="upload-backgrounds-form" class="btn green" value="upload" />
+                        <input type="submit" form="upload-backgrounds-form" class="btn green" value="upload"/>
                         <a href="#" class="modal-action modal-close btn red">Cancel</a>
                     </div>
                 </div>
@@ -113,7 +123,8 @@
                                         <li>
                                             <div class="collapsible-header">
                                                 {{ gamemode }}
-                                                <a class="btn-flat waves-effect waves-red delete-bg red-text" data-bg="{{ gamemode }}">
+                                                <a class="btn-flat waves-effect waves-red delete-bg red-text"
+                                                   data-bg="{{ gamemode }}">
                                                     <span class="mdi mdi-close"></span>
                                                 </a>
                                             </div>
@@ -121,10 +132,12 @@
                                                 <div class="row">
                                                     {% for background in gmBackgrounds %}
                                                         <div class="col s12 m4 l3">
-                                                            <a class="k-load-background--name" href="{{ background.src }}" target="_blank">
+                                                            <a class="k-load-background--name"
+                                                               href="{{ background.src }}" target="_blank">
                                                                 {{ background.name }}
                                                             </a>
-                                                            <a class="delete-bg red-text right" data-bg="{{ background.src }}">
+                                                            <a class="delete-bg red-text right"
+                                                               data-bg="{{ background.src }}">
                                                                 <span class="mdi mdi-close"></span>
                                                             </a>
                                                         </div>
@@ -144,7 +157,7 @@
 {% endblock %}
 {% block js %}
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('.modal').modal();
             $('.collapsible').collapsible();
         });
@@ -164,7 +177,7 @@
                             parent = parent.parent();
                         }
 
-                        parent.fadeOut(function() {
+                        parent.fadeOut(function () {
                             $(this).remove();
                         });
                     }

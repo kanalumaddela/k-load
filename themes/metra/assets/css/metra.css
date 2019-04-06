@@ -33,6 +33,7 @@ h1, h2, h2, h4, h5, h6, p {
     display: inline-block;
     vertical-align: middle;
 }
+
 .avatar {
     border-radius: 3px;
 }

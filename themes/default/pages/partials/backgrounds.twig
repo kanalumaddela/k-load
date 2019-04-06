@@ -2,7 +2,8 @@
     <div class="col s12 m4 l3 {% if not hide_xl %}xl2 {% endif %}center-align theme-block">
         <img class="materialboxed theme-preview" src="{{ theme.preview }}" data-caption="{{ theme.name|capitalize }}">
         <label>
-            <input id="theme_{{ theme.name }}" class="with-gap" name="theme" type="radio" value="{{ theme.name }}" {% if theme.name == value %}checked{% endif %} />
+            <input id="theme_{{ theme.name }}" class="with-gap" name="theme" type="radio" value="{{ theme.name }}"
+                   {% if theme.name == value %}checked{% endif %} />
             <span>{{ theme.name|capitalize }}</span>
         </label>
     </div>

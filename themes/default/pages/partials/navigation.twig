@@ -17,7 +17,8 @@
     <li>
         <div class="user-view">
             <a href="#user" class="is-image">
-                <img class="circle" style="border-radius: 3px" src="{{ user.avatarfull }}" onerror="this.src='{{ assets }}/img/avatar.jpg'">
+                <img class="circle" style="border-radius: 3px" src="{{ user.avatarfull }}"
+                     onerror="this.src='{{ assets }}/img/avatar.jpg'">
             </a>
             <br>
             <a href="#name">
@@ -36,7 +37,8 @@
             Home
         </a>
     </li>
-    <li class="bold{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %} active{% endif %} tooltipped" data-delay="100" data-position="right" data-tooltip="These are settings to customize how it looks for YOU only">
+    <li class="bold{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %} active{% endif %} tooltipped"
+        data-delay="100" data-position="right" data-tooltip="These are settings to customize how it looks for YOU only">
         <a href="{{ site.path }}/dashboard/settings">
             <span class="mdi mdi-tune"></span>
             My Settings

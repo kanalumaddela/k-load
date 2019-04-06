@@ -33,13 +33,17 @@
             </nav>
             {% include '@partials/navigation.twig' %}
         </header>
-        <main><div class="container">{{ csrf() }}{% block content %}{% endblock %}</div></main>
+        <main>
+            <div class="container">{{ csrf() }}{% block content %}{% endblock %}</div>
+        </main>
     {% else %}
         <div style="height: 100vh" class="valign-wrapper center">
             <div class="card" style="margin-top: -50px;margin-left: auto;margin-right: auto;">
                 <div class="card-content" style="padding: 50px">
                     <h3 style="margin: 0 0 40px 0">K-Load Dashboard</h3>
-                    <a href="{{ login_url }}" style="padding: 10px 40px;border: 2px solid;border-radius: 50px;color:#66d0ff">Login with Steam <span class="mdi mdi-steam"></span></a>
+                    <a href="{{ login_url }}"
+                       style="padding: 10px 40px;border: 2px solid;border-radius: 50px;color:#66d0ff">Login with Steam
+                        <span class="mdi mdi-steam"></span></a>
                 </div>
             </div>
         </div>
@@ -55,7 +59,7 @@
 <script>var site = {{ site_json|raw }};
     var alert = '{{ alert }}';
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('.sidenav').sidenav({});
         $('.collapsible').collapsible();
         $('.tooltipped').tooltip();

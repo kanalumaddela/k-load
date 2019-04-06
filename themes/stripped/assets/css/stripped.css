@@ -66,7 +66,7 @@ p {
     padding: 35px 25px;
     background-color: #333;
     border-top: 4px solid #42fb61;
-    box-shadow: 0 0 10px rgba(0,0,0,.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .75);
 }
 
 #rules-list > .rule-block:not(:first-child), #staff-list > .staff-block:not(:first-child) {
@@ -92,9 +92,11 @@ p {
 .k-load-staff-info > span {
     display: block;
 }
+
 .k-load-staff--name {
     font-size: 1.2rem;
 }
+
 .k-load-staff--rank {
     font-size: .9rem;
     font-weight: 600;

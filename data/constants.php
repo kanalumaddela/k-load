@@ -4,7 +4,7 @@
 define('DEBUG', false); // default: false
 
 /* cache data retrieved for faster load times */
-define('ENABLE_CACHE', true); // default: true
+define('ENABLE_CACHE', false); // default: true
 
 /* logs all requests, mysql queries, actions performed by admins, etc */
 define('ENABLE_LOG', true); // default: true
@@ -15,7 +15,13 @@ define('CLEAR_CACHE', 'refresh'); // default: refresh
 /* allow registration */
 define('ENABLE_REGISTRATION', true); // default: true
 
-/* override user's theme choice */
+/*
+ * majority of users dont seem to have their players login and use the customization features
+ * so this solely exists to disable player specific theme customizations, BUT still allowing users to login
+ */
+define('IGNORE_PLAYER_CUSTOMIZATIONS', false); // default: false
+
+/* override user's theme choice when ?theme= is specified */
 define('THEME_OVERRIDE', false); // default: false
 
 /* users per page */

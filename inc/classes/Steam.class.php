@@ -81,6 +81,7 @@ class Steam
         $curl = \curl_init();
         \curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($curl, CURLOPT_ENCODING, '');
         \curl_setopt($curl, CURLOPT_URL, $url);
         $result = \curl_exec($curl);
         \curl_close($curl);
@@ -116,8 +117,9 @@ class Steam
     public static function Group($name)
     {
         $curl = \curl_init();
-        \curl_setopt($curl, CURLOPT_URL, 'https://steamcommunity.com/groups/'.$name.'/memberslistxml/?xml=1');
         \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($curl, CURLOPT_ENCODING, '');
+        \curl_setopt($curl, CURLOPT_URL, 'https://steamcommunity.com/groups/'.$name.'/memberslistxml/?xml=1');
         $data = \simplexml_load_string(\curl_exec($curl), 'SimpleXMLElement', LIBXML_NOCDATA);
         \curl_close($curl);
 

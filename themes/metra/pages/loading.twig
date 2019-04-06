@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ assets_theme }}/css/columns/medium.css" media="all and (max-width: 565.98px)"/>
     <link rel="stylesheet" href="{{ assets_theme }}/css/columns/small.css" media="all and (max-width: 555.98px)"/>
     <link rel="stylesheet" href="{{ assets_theme }}/css/columns/extra-small.css" media="all and (max-width: 459.98px)"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ assets_theme }}/css/metra.css?{{ cache_buster }}"/>
     <style>
         body:before {
@@ -22,7 +23,7 @@
         <div class="row">
             <div class="col xl-12 user-bar" style="text-align:right;">
                 {% if settings.logo and logo_exists %}
-                    <img class="logo" src="{{assets}}/img/{{ settings.logo }}">
+                    <img class="logo" src="{{ assets }}/img/{{ settings.logo }}">
                 {% endif %}
                 <div style="margin-right: 10px">
                     <p style="margin-bottom: 4px;font-size: 1.35rem;">{{ user.personaname|default('Player') }}</p>
@@ -30,7 +31,8 @@
                         <p style="font-size: .85rem;font-weight: 300;">{{ user.steamid2 }}</p>
                     {% endif %}
                 </div>
-                <img class="avatar" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}" style="max-width:75px;">
+                <img class="avatar" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}"
+                     style="max-width:75px;">
             </div>
             <div class="col xl-3 hide-md">
                 <div class="card server-info blue">
@@ -82,7 +84,9 @@
             <div class="col xl-6 md-12">
                 <div class="card download purple text-right">
                     <div>
-                        <h2  style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><i class="fas fa-circle-notch fa-spin"></i> <span class="status">Retrieving server info...</span></h2>
+                        <h2 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><i
+                                    class="fas fa-circle-notch fa-spin"></i> <span class="status">Retrieving server info...</span>
+                        </h2>
                         <p>Progress [ <span class="progress"></span> ]</p>
                         <p>Files: <span class="files-downloaded"></span>/<span class="files-needed"></span></p>
                         <div class="loading-bar"></div>

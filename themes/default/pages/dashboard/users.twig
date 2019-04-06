@@ -17,7 +17,9 @@
         {% for player in users %}
             <div class="col s12 m6 l4 xl3">
                 <div class="card center-align">
-                    <img class="avatar circle" src="{% if steamInfo[player.steamid] %}{{ steamInfo[player.steamid].avatarfull }}{% else %}{{ site.path }}/api/player/{{ player.steamid }}/avatarfull?raw{% endif %}">
+                    <img class="avatar circle"
+                         src="{% if steamInfo[player.steamid] %}{{ steamInfo[player.steamid].avatarfull }}{% else %}{{ site.path }}/api/player/{{ player.steamid }}/avatarfull?raw{% endif %}"
+                         onerror="this.src='{{ assets }}/img/avatar.jpg'">
                     <div class="card-content">
                         <p class="name {% if player.banned %}red-text{% endif %}">{{ player.name|default('Unknown') }}</p>
                         <br>
@@ -64,7 +66,9 @@
                                     <div class="col s6 m4">
                                         <p>
                                             <label>
-                                                <input type="checkbox" class="filled-in perm" name="perms[]" value="{{ perm }}" {% if perm in player.perms %}checked{% endif %} />
+                                                <input type="checkbox" class="filled-in perm" name="perms[]"
+                                                       value="{{ perm }}"
+                                                       {% if perm in player.perms %}checked{% endif %} />
                                                 <span>
                                                     {{ permFriendly }}
                                                 </span>

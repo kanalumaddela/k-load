@@ -85,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 5px;
     max-width: 50px;
     border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .35);
 }
 
 .k-load-staff-info > span {

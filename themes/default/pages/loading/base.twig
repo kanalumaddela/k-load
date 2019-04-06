@@ -18,9 +18,9 @@
 {% block body %}{% endblock %}
 <script>
     var site = {{ site_json|default('{}')|raw }};
-    var backgrounds = {{ user.settings.backgrounds|default(settings.backgrounds|default('{}'))|raw }};
+    var backgrounds = {{ settings.backgrounds|default('{}')|raw }};
     backgrounds.list = {{ backgrounds|default('{}')|raw }};
-    var youtube = {{ user.settings.youtube|default(settings.youtube|default('{}'))|raw }};
+    var youtube = {{ settings.youtube|default('{}')|raw }};
     var messages = {{ settings.messages|default('{}')|raw }};
     var rules = {{ settings.rules|default('{}')|raw }};
     var staff = {{ settings.staff|default('{}')|raw }};

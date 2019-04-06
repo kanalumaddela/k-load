@@ -69,8 +69,7 @@ function width(classname, width) {
     });
 }
 
-function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode, demo) {
-    var test = '9ce1a79f4bc579e13423b47792375ae42d862ffabd6920940c13551e54181dda';
+function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
     if (typeof demo === 'undefined') {
         clearInterval(demoprogress);
         files.downloaded = -1;

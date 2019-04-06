@@ -35,15 +35,7 @@ class Util
         $log_folder = APP_ROOT.$log_path.$type;
         $log_loc = APP_ROOT.$log_path.$type.DIRECTORY_SEPARATOR.$log;
 
-        if (!\file_exists($log_folder)) {
-            if (!\mkdir($log_folder, 0700)) {
-                if ($type != 'error') {
-                    self::log('error', 'Failed to create folder for log type: '.$type);
-                }
-            } else {
-                self::log('action', 'Created folder for log type: '.$type);
-            }
-        }
+        Util::mkDir($log_folder, true);
 
         $content = '['.\date('m-d-Y h:i:s A').'] ~ '.$content;
         $file = \fopen($log_loc, 'a');
@@ -85,22 +77,30 @@ class Util
     /**
      * Create a directory.
      *
-     * @param  string
-     *
-     * @throws \Exception
+     * @param string
      *
      * @return bool
+     * @throws \Exception
+     *
      */
-    public static function mkDir($directory)
+    public static function mkDir($directory, $includeHtaccess = false)
     {
+        $directory = \rtrim($directory, '/');
+
         if ($doesntExist = !\file_exists($directory)) {
-            \set_error_handler(function () {
+            \set_error_handler(function() {
             });
             $doesntExist = !\mkdir($directory, 0775, true);
             \restore_error_handler();
             if ($doesntExist) {
                 throw new \Exception('no perms to create directory, fix it');
             }
+
+            if (!$doesntExist && $includeHtaccess) {
+                \file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
+            }
+        } elseif ($includeHtaccess && !\file_exists($directory.'/.htaccess')) {
+            \file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
         }
 
         return !$doesntExist;
@@ -114,7 +114,7 @@ class Util
     public static function version($ignoreCache = false)
     {
         if (ENABLE_CACHE && !$ignoreCache) {
-            $version = Cache::remember('version', 120, function () {
+            $version = Cache::remember('version', 120, function() {
                 $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 
                 return $version !== false ? $version : null;
@@ -131,31 +131,23 @@ class Util
     public static function getSetting(...$keys)
     {
         $data = [];
-        $where = '';
-
-        \sort($keys);
         $length = \count($keys);
-        for ($i = 0; $i < $length; $i++) {
-            if (($i + 1) >= $length) {
-                $where .= "`name` = '?' ";
-            } else {
-                $where .= "`name` = '?' OR ";
-            }
-        }
 
-        $settings = Database::conn()->select('SELECT `name`,`value` FROM `kload_settings`')->where($where, $keys)->orderBy('name')->execute();
+        $where = '`name` IN ('.\implode(',', \array_fill(0, $length, '\'?\'')).')';
+
+        $settings = Database::conn()->select('SELECT `name`,`value` FROM `kload_settings`')->where($where, $keys)->orderBy('name')->execute(false);
 
         if ($settings) {
-            if (!isset($settings['name'])) {
-                foreach ($settings as $index => $setting) {
-                    $data[$keys[$index]] = $setting['value'];
-                }
-            } else {
+            if (isset($settings['name'])) {
                 $data[$settings['name']] = $settings['value'];
+            } else {
+                foreach ($settings as $setting) {
+                    $data[$setting['name']] = $setting['value'];
+                }
             }
         }
 
-        return \count($data) > 0 ? $data : [];
+        return $data;
     }
 
     public static function updateSetting(array $settings, array $data, $csrf, $force = false)
@@ -191,22 +183,34 @@ class Util
 
     public static function getBackgrounds($asArray = false)
     {
-        $backgrounds = \glob(APP_ROOT.\sprintf('%sassets%simg%sbackgrounds%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        $backgroundsRoot = \APP_ROOT.'/assets/img/backgrounds/';
+
+        $backgrounds = \array_diff(scandir($backgroundsRoot), ['.', '..']);
+
         $list = [];
         foreach ($backgrounds as $gamemode) {
-            $images = \glob($gamemode.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
+            if (!\is_dir($backgroundsRoot.$gamemode)) {
+                continue;
+            }
+
+            $images = \array_diff(scandir($backgroundsRoot.$gamemode), ['.', '..']);
 
             if (\count($images) === 0) {
                 continue;
             }
 
-            foreach ($images as $index => $image) {
-                $images[$index] = APP_PATH.\str_replace(DIRECTORY_SEPARATOR, '/', \str_replace(APP_ROOT, '', $image));
+            $imagesFixed = [];
+            foreach ($images as $image) {
+                if (!\is_file($backgroundsRoot.$gamemode.'/'.$image)) {
+                    continue;
+                }
+
+                if (\in_array(\substr($image, -3, 3), ['jpg', 'png'])) {
+                    $imagesFixed[] = APP_PATH.'/assets/img/backgrounds/'.$gamemode.'/'.$image;
+                }
             }
 
-            $gamemode = \explode(DIRECTORY_SEPARATOR, $gamemode);
-            $gamemode = \end($gamemode);
-            $list[$gamemode] = $images;
+            $list[$gamemode] = $imagesFixed;
         }
 
         return !$asArray ? \json_encode($list) : $list;
@@ -219,7 +223,7 @@ class Util
 
     public static function isUrl($url)
     {
-        \set_error_handler(function () {
+        \set_error_handler(function() {
         });
         $headers = \get_headers($url);
         $httpCode = \substr($headers[0], 9, 3);

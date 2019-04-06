@@ -114,7 +114,7 @@ function kload_exception_handler($exception)
 \set_exception_handler('kload_exception_handler');
 
 // make some new directions
-Util::mkDir(APP_ROOT.'/data/logs');
+Util::mkDir(APP_ROOT.'/data/logs', true);
 Util::mkDir(APP_ROOT.'/data/music');
 Util::mkDir(APP_ROOT.'/data/users');
 
@@ -196,7 +196,7 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
         }
     }
 
-    $_SESSION['perms'] = \array_fill_keys(\array_keys(\array_flip(\json_decode(User::getInfo($_SESSION['steamid'], 'perms'), true))), 1);
+    $_SESSION['perms'] = \array_fill_keys(\json_decode(User::getInfo($_SESSION['steamid'], 'perms')), 1);
 }
 
 // template

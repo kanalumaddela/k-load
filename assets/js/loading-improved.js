@@ -619,7 +619,9 @@ const backgroundCssRatioFix = elem('style', {
 });
 
 document.body.appendChild(backgroundsHtml);
-document.head.appendChild(backgroundCss);
+if (backgrounds.enable) {
+    document.head.appendChild(backgroundCss);
+}
 document.head.appendChild(backgroundCssRatioFix);
 
 /**
@@ -724,19 +726,15 @@ function nextBackground() {
     const tmpCounter = backgroundCounter;
 
     setTimeout(function () {
-        switch (tmpCounter) {
-            case 0:
-                backgroundsHtml.childNodes[tmpCounter].classList.add('active');
+        if (tmpCounter === 0) {
+            backgroundsHtml.childNodes[tmpCounter].classList.add('active');
 
-                if (backgroundsAdded.length !== 1) {
-                    backgroundsHtml.childNodes[backgroundsAdded.length - 1].classList.remove('active');
-                }
-
-                break;
-            default:
-                backgroundsHtml.childNodes[tmpCounter - 1].classList.remove('active');
-                backgroundsHtml.childNodes[tmpCounter].classList.add('active');
-                break;
+            if (backgroundsAdded.length !== 1) {
+                backgroundsHtml.childNodes[backgroundsAdded.length - 1].classList.remove('active');
+            }
+        } else {
+            backgroundsHtml.childNodes[tmpCounter - 1].classList.remove('active');
+            backgroundsHtml.childNodes[tmpCounter].classList.add('active');
         }
 
         backgroundCounter = tmpCounter + 1;

@@ -133,14 +133,17 @@ p {
 .k-load-staff .avatar {
     max-width: 45px;
 }
+
 .k-load-staff-info {
     margin-left: 10px;
 }
+
 .k-load-staff-info > span {
     display: block;
     font-weight: bold;
     text-transform: uppercase;
 }
+
 .k-load-staff--rank {
     font-size: .9rem;
     color: #31c3fd;

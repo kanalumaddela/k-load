@@ -4,6 +4,9 @@ use K_Load\Util;
 
 class Database
 {
+    /**
+     * @var \mysqli
+     */
     public static $conn;
 
     private static $host;
@@ -42,7 +45,7 @@ class Database
         self::$pass = $mysql['pass'] ?? '';
         self::$db = $mysql['db'] ?? '';
 
-        \set_error_handler(function () {
+        \set_error_handler(function() {
         });
         self::$conn = new \mysqli(self::$host.(self::$host != 'localhost' ? ':'.self::$port : ''), self::$user, self::$pass, self::$db, self::$port);
         \restore_error_handler();
@@ -228,7 +231,7 @@ class Database
         return $sql;
     }
 
-    public function execute()
+    public function execute($fetch_all = true)
     {
         if (!self::$conn) {
             self::$sql = null;
@@ -243,7 +246,7 @@ class Database
             switch (self::$type) {
                 case 'select':
                     if ($result->num_rows > 1) {
-                        if (\function_exists('mysqli_fetch_all')) {
+                        if (\function_exists('mysqli_fetch_all') && $fetch_all) {
                             $data = $result->fetch_all(MYSQLI_BOTH);
                         } else {
                             $data = [];

@@ -21,7 +21,8 @@
                 <div class="card">
                     <div class="card-content">
                         <h1 class="flow-text" style="margin:0">Your server.cfg you should have this:</h1>
-                        <pre style="padding: 5px 4px;background-color:#161927;"><code style="color: #27ff2f;background-color:#161927;">sv_loadingurl "{{ site.url }}?steamid=%s&mapname=%m"</code></pre>
+                        <pre style="padding: 5px 4px;background-color:#161927;"><code
+                                    style="color: #27ff2f;background-color:#161927;">sv_loadingurl "{{ site.url }}?steamid=%s&mapname=%m"</code></pre>
                         <small>copy and paste this in, if it already exists change the value</small>
                     </div>
                 </div>
@@ -31,7 +32,8 @@
                         <form action="{{ site.path ~ '/dashboard/admin?action=update_apikeys' }}" method="post">
                             {{ csrf() }}
                             <div class="input-field col s12">
-                                <input name="apikeys[steam]" type="text" class="validate" value="{{ api_keys.steam }}" autocomplete="off" autocapitalize="off" spellcheck="false" >
+                                <input name="apikeys[steam]" type="text" class="validate" value="{{ api_keys.steam }}"
+                                       autocomplete="off" autocapitalize="off" spellcheck="false">
                                 <label>Steam API Key</label>
                             </div>
                             <div class="col s12 right-align">
@@ -75,7 +77,9 @@
                             {% if updates.amount > 0 %}
                                 <a href="{{ site.path }}/dashboard/admin?action=update" class="btn">Update</a>
                             {% endif %}
-                            <a href="{{ site.path }}/dashboard/admin?action=refresh_themes" class="btn btn-danger tooltipped" data-tooltip="Fixes the config to display all themes">Refresh Themes</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=refresh_themes"
+                               class="btn btn-danger tooltipped" data-tooltip="Fixes the config to display all themes">Refresh
+                                Themes</a>
                         </div>
                     </div>
                 </div>
@@ -84,7 +88,8 @@
                     <div class="card-content">
                         <h1 class="card-title">Clear Cache</h1>
                         <div class="center-align">
-                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache" class="btn btn-danger">All Cache</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=clear_cache" class="btn btn-danger">All
+                                Cache</a>
                             <a href="{{ site.path }}/dashboard/admin?action=clear_cache_data" class="btn">Data
                                 Cache</a>
                             <a href="{{ site.path }}/dashboard/admin?action=clear_cache_template" class="btn">Template
@@ -99,8 +104,10 @@
                         <div class="center-align">
                             <a href="{{ site.path }}/dashboard/admin?action=refresh_css" class="btn">Recompile
                                 CSS</a>
-                            <a href="{{ site.path }}/dashboard/admin?action=unban_all" class="btn btn-danger">Unban All</a>
-                            <a href="{{ site.path }}/dashboard/admin?action=reset_perms" class="btn btn-danger">Reset Perms</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=unban_all" class="btn btn-danger">Unban
+                                All</a>
+                            <a href="{{ site.path }}/dashboard/admin?action=reset_perms" class="btn btn-danger">Reset
+                                Perms</a>
                         </div>
                     </div>
                 </div>
@@ -116,7 +123,7 @@
             return window.confirm('Are you sure you want to do this?');
         });
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('.materialboxed').materialbox();
         });
     </script>

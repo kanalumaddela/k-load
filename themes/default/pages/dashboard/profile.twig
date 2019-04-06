@@ -73,14 +73,16 @@
                         <div class="col s12">
                             Enabled
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.backgrounds.enable %}checked="checked"{% endif %} />
+                                <input type="checkbox"
+                                       {% if player.settings.backgrounds.enable %}checked="checked"{% endif %} />
                                 <span></span>
                             </p>
                         </div>
                         <div class="col s12">
                             Random
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.backgrounds.random %}checked="checked"{% endif %} />
+                                <input type="checkbox"
+                                       {% if player.settings.backgrounds.random %}checked="checked"{% endif %} />
                                 <span></span>
                             </p>
                         </div>
@@ -102,14 +104,16 @@
                         <div class="col s12">
                             Enabled
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.youtube.enable %}checked="checked"{% endif %} />
+                                <input type="checkbox"
+                                       {% if player.settings.youtube.enable %}checked="checked"{% endif %} />
                                 <span></span>
                             </p>
                         </div>
                         <div class="col s12">
                             Random
                             <p class="right">
-                                <input type="checkbox" {% if player.settings.youtube.random %}checked="checked"{% endif %} />
+                                <input type="checkbox"
+                                       {% if player.settings.youtube.random %}checked="checked"{% endif %} />
                                 <span></span>
                             </p>
                         </div>
@@ -183,7 +187,7 @@
 {% block js %}
     <script>
         $('.modal').modal();
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('.fixed-action-btn').floatingActionButton();
         });
     </script>
