@@ -26,7 +26,7 @@ if (PHP_VERSION_ID < 70000) {
 
 // test write perms, doing it this early cause retards
 if (!\file_exists(__DIR__.'/data/FILE_WRITE_CHECK_DO_NOT_REMOVE')) {
-    \set_error_handler(function() {
+    \set_error_handler(function () {
     });
     $check = mkdir(__DIR__.'/test', 0775, true);
     \restore_error_handler();

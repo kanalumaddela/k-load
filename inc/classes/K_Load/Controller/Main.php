@@ -24,10 +24,9 @@ class Main
             $map = null;
         }
 
-        $data = \ENABLE_CACHE ? Cache::remember('loading-screen'.(!\is_null($steamid) ? '-'.$steamid : ''), 3600, function() use ($steamid, $map) {
+        $data = \ENABLE_CACHE ? Cache::remember('loading-screen'.(!\is_null($steamid) ? '-'.$steamid : ''), 3600, function () use ($steamid, $map) {
             return self::getData($steamid, $map);
         }) : self::getData($steamid, $map);
-
 
         $theme = THEME_OVERRIDE && isset($_GET['theme']) ? $_GET['theme'] : (!IGNORE_PLAYER_CUSTOMIZATIONS && isset($data['user']['settings']['theme']) ? $data['user']['settings']['theme'] : $config['loading_theme']);
         if (!Template::isLoadingTheme($theme)) {
@@ -38,7 +37,6 @@ class Main
             Template::theme($theme);
             Template::init();
         }
-
 
         Template::render('loading.twig', $data);
     }
@@ -76,7 +74,7 @@ class Main
         $steamInfo = null;
 
         if (!empty($steamid)) {
-            $steamInfo = \ENABLE_CACHE ? Cache::remember('loading-steam-api-'.$steamid, 3600, function() use ($steamid) {
+            $steamInfo = \ENABLE_CACHE ? Cache::remember('loading-steam-api-'.$steamid, 3600, function () use ($steamid) {
                 return Steam::User($steamid);
             }) : Steam::User($steamid);
         }
@@ -113,7 +111,7 @@ class Main
 
                 $addon_name_real = \str_replace('addon_', '', $addon_name);
                 if (ENABLE_CACHE) {
-                    $data['custom'][$addon_name_real] = Cache::remember('custom-'.$addon_name_real, 120, function() use ($steamid, $map, $addon_name) {
+                    $data['custom'][$addon_name_real] = Cache::remember('custom-'.$addon_name_real, 120, function () use ($steamid, $map, $addon_name) {
                         $addon_instance = new $addon_name($steamid, $map);
 
                         return \method_exists($addon_instance, 'data') ? $addon_instance->data() : null;
