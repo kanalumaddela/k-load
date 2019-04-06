@@ -41,7 +41,7 @@ class Users
         if (ENABLE_CACHE) {
             $cacheKey = 'pg-'.($data['page'] ?? ($page ?? 1)).'-'.($steamids);
 
-            $steamInfo = Cache::remember($cacheKey, 3600, function() use ($steamids) {
+            $steamInfo = Cache::remember($cacheKey, 3600, function () use ($steamids) {
                 $info = Steam::Info($steamids);
 
                 return $info['response']['players'] ?? null;

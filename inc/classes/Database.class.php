@@ -45,7 +45,7 @@ class Database
         self::$pass = $mysql['pass'] ?? '';
         self::$db = $mysql['db'] ?? '';
 
-        \set_error_handler(function() {
+        \set_error_handler(function () {
         });
         self::$conn = new \mysqli(self::$host.(self::$host != 'localhost' ? ':'.self::$port : ''), self::$user, self::$pass, self::$db, self::$port);
         \restore_error_handler();

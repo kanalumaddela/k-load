@@ -42,16 +42,16 @@ class Template
             self::$twig->addExtension(new \Twig\Extension\DebugExtension());
         }
 
-        $function = new \Twig\TwigFunction('csrf', function() {
+        $function = new \Twig\TwigFunction('csrf', function () {
             return new Markup('<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">', 'utf8');
         });
         self::$twig->addFunction($function);
 
-        $function = new \Twig\TwigFunction('theme_asset', function($file) {
+        $function = new \Twig\TwigFunction('theme_asset', function ($file) {
             return APP_PATH.'/themes/'.self::$theme.'/assets/'.\ltrim($file, '/');
         });
         self::$twig->addFunction($function);
-        $function = new \Twig\TwigFunction('asset', function($file) {
+        $function = new \Twig\TwigFunction('asset', function ($file) {
             return APP_PATH.'/assets/'.\ltrim($file, '/');
         });
         self::$twig->addFunction($function);
@@ -123,7 +123,7 @@ class Template
             if (\file_exists($location.'/pages/loading.twig')) {
                 if ($all || in_array($name, $config['loading_themes'])) {
                     $previews = \glob($location.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
-                    \usort($previews, function($a, $b) {
+                    \usort($previews, function ($a, $b) {
                         return \filemtime($a) - \filemtime($b);
                     });
                     $preview = \count($previews) > 0 ? \str_replace(APP_ROOT, APP_PATH, $previews[0]) : null;

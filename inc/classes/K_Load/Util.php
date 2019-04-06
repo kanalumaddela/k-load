@@ -35,7 +35,7 @@ class Util
         $log_folder = APP_ROOT.$log_path.$type;
         $log_loc = APP_ROOT.$log_path.$type.DIRECTORY_SEPARATOR.$log;
 
-        Util::mkDir($log_folder, true);
+        self::mkDir($log_folder, true);
 
         $content = '['.\date('m-d-Y h:i:s A').'] ~ '.$content;
         $file = \fopen($log_loc, 'a');
@@ -79,16 +79,16 @@ class Util
      *
      * @param string
      *
-     * @return bool
      * @throws \Exception
      *
+     * @return bool
      */
     public static function mkDir($directory, $includeHtaccess = false)
     {
         $directory = \rtrim($directory, '/');
 
         if ($doesntExist = !\file_exists($directory)) {
-            \set_error_handler(function() {
+            \set_error_handler(function () {
             });
             $doesntExist = !\mkdir($directory, 0775, true);
             \restore_error_handler();
@@ -114,7 +114,7 @@ class Util
     public static function version($ignoreCache = false)
     {
         if (ENABLE_CACHE && !$ignoreCache) {
-            $version = Cache::remember('version', 120, function() {
+            $version = Cache::remember('version', 120, function () {
                 $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 
                 return $version !== false ? $version : null;
@@ -223,7 +223,7 @@ class Util
 
     public static function isUrl($url)
     {
-        \set_error_handler(function() {
+        \set_error_handler(function () {
         });
         $headers = \get_headers($url);
         $httpCode = \substr($headers[0], 9, 3);
