@@ -4,6 +4,7 @@ namespace K_Load;
 
 use Database;
 use Steam;
+use function preg_match;
 
 class Test
 {
@@ -14,7 +15,7 @@ class Test
         Steam::Key($key);
 
         $steamid = self::$steamid;
-        if (($nomatch = \preg_match('/\d/', $steamid)) === 0 || $nomatch === false) {
+        if (($nomatch = preg_match('/\d/', $steamid)) === 0 || $nomatch === false) {
             $steamid = '76561198152390718';
         }
 

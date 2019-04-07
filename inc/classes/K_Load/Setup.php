@@ -5,6 +5,14 @@ namespace K_Load;
 use Database;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use Steam;
+use function end;
+use function explode;
+use function file_exists;
+use function file_put_contents;
+use function glob;
+use function session_destroy;
+use function sprintf;
+use function str_replace;
 
 class Setup
 {
@@ -17,28 +25,28 @@ class Setup
             Util::redirect('/dashboard/admin');
         }
 
-        \file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
+        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
 
         Steam::Key($config['apikeys']['steam']);
         $config = include APP_ROOT.'/data/config.php';
         Database::connect($config['mysql']);
 
-        $migrations = \glob(APP_ROOT.\sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        $migrations = glob(APP_ROOT.sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
         foreach ($migrations as $folder) {
-            $path_arr = \explode(DIRECTORY_SEPARATOR, $folder);
-            $ver = \end($path_arr);
-            \file_exists($folder.'/drop.php') and include $folder.'/drop.php';
-            \file_exists($folder.'/delete.php') and include $folder.'/delete.php';
-            \file_exists($folder.'/create.php') and include $folder.'/create.php';
-            \file_exists($folder.'/alter.php') and include $folder.'/alter.php';
-            \file_exists($folder.'/insert.php') and include $folder.'/insert.php';
+            $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
+            $ver = end($path_arr);
+            file_exists($folder.'/drop.php') and include $folder.'/drop.php';
+            file_exists($folder.'/delete.php') and include $folder.'/delete.php';
+            file_exists($folder.'/create.php') and include $folder.'/create.php';
+            file_exists($folder.'/alter.php') and include $folder.'/alter.php';
+            file_exists($folder.'/insert.php') and include $folder.'/insert.php';
             $installed = Util::version(true) == $ver;
             Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
         }
 
         Cache::clear();
 
-        \session_destroy();
+        session_destroy();
         unset($_SESSION);
 
         Util::log('action', 'K-Load has been installed', true);
@@ -49,19 +57,19 @@ class Setup
     {
         if (User::isSuper($_SESSION['steamid'])) {
             Cache::clear();
-            $version = (int) \str_replace('.', '', Util::version(true));
-            $migrations = \glob(APP_ROOT.\sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+            $version = (int) str_replace('.', '', Util::version(true));
+            $migrations = glob(APP_ROOT.sprintf('%sinc%smigrations%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
             foreach ($migrations as $folder) {
-                $path_arr = \explode(DIRECTORY_SEPARATOR, $folder);
-                $ver = \end($path_arr);
-                $tmp_version = (int) \str_replace('.', '', $ver);
+                $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
+                $ver = end($path_arr);
+                $tmp_version = (int) str_replace('.', '', $ver);
 
                 if ($tmp_version > $version) {
-                    \file_exists($folder.'/drop.php') and include $folder.'/drop.php';
-                    \file_exists($folder.'/delete.php') and include $folder.'/delete.php';
-                    \file_exists($folder.'/create.php') and include $folder.'/create.php';
-                    \file_exists($folder.'/alter.php') and include $folder.'/alter.php';
-                    \file_exists($folder.'/insert.php') and include $folder.'/insert.php';
+                    file_exists($folder.'/drop.php') and include $folder.'/drop.php';
+                    file_exists($folder.'/delete.php') and include $folder.'/delete.php';
+                    file_exists($folder.'/create.php') and include $folder.'/create.php';
+                    file_exists($folder.'/alter.php') and include $folder.'/alter.php';
+                    file_exists($folder.'/insert.php') and include $folder.'/insert.php';
 
                     $installed = Util::version(true) == $ver;
 
@@ -80,12 +88,12 @@ class Setup
             'latest' => '',
         ];
 
-        $version = (int) \str_replace('.', '', Util::version());
-        $migrations = \glob(APP_ROOT.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
+        $version = (int) str_replace('.', '', Util::version());
+        $migrations = glob(APP_ROOT.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
         foreach ($migrations as $folder) {
-            $path_arr = \explode(DIRECTORY_SEPARATOR, $folder);
-            $ver = \end($path_arr);
-            $tmp_version = (int) \str_replace('.', '', $ver);
+            $path_arr = explode(DIRECTORY_SEPARATOR, $folder);
+            $ver = end($path_arr);
+            $tmp_version = (int) str_replace('.', '', $ver);
 
             if ($tmp_version > $version) {
                 $updates['amount']++;

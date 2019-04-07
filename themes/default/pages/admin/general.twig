@@ -1,70 +1,73 @@
 {% extends 'base.twig' %}
 
-{% block title %}Settings | K-Load{% endblock %}
-{% block nav_title %}Settings{% endblock %}
+{% block title %}{{ lang('settings') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('settings') }}{% endblock %}
 
 {% block content %}
     {% if user.admin %}
-        <form method="post" action="{{ site.path }}/dashboard/admin/general" class="row"
-              style="padding-top:15px;padding-bottom:15px;">
-            {{ csrf() }}
 
-            {% if user.super or user.perms.community_name or user.perms.backgrounds %}
-                <div class="col s12 m6">
-                    <div class="card">
-                        <div class="card-content">
-                            <h1 class="flow-text"><span class="mdi mdi-settings"></span> General</h1>
-                            <div class="row">
-                                {% if user.super or user.perms.community_name %}
-                                    <div class="input-field col s12">
-                                        <input name="community_name" type="text" class="validate"
-                                               value="{{ settings.community_name }}">
-                                        <label>Community Name</label>
-                                    </div>
-                                {% endif %}
-                                {% if user.super or user.perms.description %}
-                                    <div class="input-field col s12">
+        <h1>reworking this page, dont complain about it</h1>
+
+        <div class="row" style="padding-top:15px;padding-bottom:15px;">
+            <div class="col s12 m6">
+                <form method="post" action="{{ site.path }}/dashboard/admin/general">
+                    {{ csrf() }}
+
+                    {% if user.super or user.perms.community_name or user.perms.backgrounds %}
+                        <div class="card">
+                            <div class="card-content">
+                                <h1 class="flow-text"><span class="mdi mdi-settings"></span> {{ lang('general') }}</h1>
+                                <div class="row">
+                                    {% if user.super or user.perms.community_name %}
+                                        <div class="input-field col s12">
+                                            <input name="community_name" type="text" class="validate"
+                                                   value="{{ settings.community_name }}">
+                                            <label>{{ lang('community_name') }}</label>
+                                        </div>
+                                    {% endif %}
+                                    {% if user.super or user.perms.description %}
+                                        <div class="input-field col s12">
                                         <textarea id="k-load-settings-descriptiion" name="description"
                                                   class="materialize-textarea">{{ settings.description }}</textarea>
-                                        <label for="k-load-settings-descriptiion">Description</label>
-                                        <span class="counter"
-                                              data-max="250">{{ settings.description|length }}/250</span>
-                                    </div>
-                                {% endif %}
-                                {% if user.super or user.perms.backgrounds %}
-                                    <div class="col s12 center">
-                                        <h6>Background settings have moved to</h6>
-                                        <a href="{{ site.path }}/dashboard/admin/backgrounds">{{ site.host }}
-                                            /dashboard/admin/backgrounds</a>
-                                    </div>
-                                {% endif %}
+                                            <label for="k-load-settings-descriptiion">{{ lang('description') }}</label>
+                                            <span class="counter"
+                                                  data-max="250">{{ settings.description|length }}/250</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="center">
+                                    <button class="btn blue" type="submit" name="save" value="1">Save</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            {% if user.super or user.perms.youtube %}
-                <div class="col s12 m6">
-                    <div class="card">
-                        <div class="card-content">
-                            <h1 class="flow-text"><span class="mdi mdi-youtube"></span>YouTube</h1>
-                            <p class="center">
-                                Youtube settings have been moved to
-                                <a href="{{ site.url }}/dashboard/admin/music">{{ site.url }}/dashboard/admin/music</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="fixed-action-btn">
-                <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top"
-                        data-tooltip="Save" type="submit" name="save" value="1"><span
-                            class="mdi mdi-content-save"></span></button>
+                    {% endif %}
+                </form>
             </div>
 
-        </form>
+            <div class="col s12 m6">
+                <form method="post" action="{{ site.path }}/dashboard/admin/general/logo-upload">
+                    {{ csrf() }}
+                    <div class="card">
+                        <div class="card-content center">
+                            <h1 class="flow-text"><span class="mdi mdi-upload"></span>Upload Logo(s)</h1>
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Image</span>
+                                    <input type="file" accept="image/png, image/jpeg">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" placeholder="Click to upload file">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn modal-trigger">{{ lang('upload') }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     {% endif %}
 {% endblock %}
 

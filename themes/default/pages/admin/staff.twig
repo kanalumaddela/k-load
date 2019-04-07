@@ -48,7 +48,7 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="input-field col s12">
-                                <p>Staff Block Duration</p>
+                                <p>{{ lang('block_duration', [lang('staff')]) }}</p>
                                 <input name="staff[duration]" type="number" placeholder="e.g. 5000" class="tooltipped"
                                        data-tooltip="1s = 1000ms" value="{{ settings.staff.duration|default(5000) }}">
                                 <span class="helper-text">Staff are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.</span>
@@ -65,21 +65,21 @@
                     <div class="card">
                         <span class="mdi mdi-close red-text delete-elem cat"></span>
                         <div class="card-content">
-                            <h1 class="flow-text">Gamemode</h1>
+                            <h1 class="flow-text">{{ lang('gamemode') }}</h1>
                             <input class="gamemode" type="text" placeholder="e.g. terrortown"
                                    oninput="fixGamemode(this)" required="" value="{{ gamemode }}">
                             <div>
-                                <h5 class="flow-text">Staff</h5>
+                                <h5 class="flow-text">{{ lang('staff') }}</h5>
                                 <div class="staff row">
                                     {% for staff_member in staff %}
                                         <div class="input-field col s12 m6 l4 xl3 center-align child">
                                             <div>
-                                                <p><span class="mdi mdi-steam"></span> SteamID (64 bit)</p>
+                                                <p><span class="mdi mdi-steam"></span> {{ lang('steamid') }} (64 bit)</p>
                                                 <input type="number" class="staff-steamid"
                                                        name="staff[list][{{ gamemode }}][{{ loop.index0 }}][steamid]"
                                                        oninput="fixGamemode(this, true)"
                                                        value="{{ staff_member.steamid }}">
-                                                <p><span class="mdi mdi-sitemap"></span> Rank</p>
+                                                <p><span class="mdi mdi-sitemap"></span> {{ lang('rank') }}</p>
                                                 <input type="text" class="staff-rank"
                                                        name="staff[list][{{ gamemode }}][{{ loop.index0 }}][rank]"
                                                        oninput="fixGamemode(this, true)"
@@ -91,7 +91,7 @@
 
                                     {% endfor %}
                                 </div>
-                                <a class="btn blue add-elem" data-type="staff" data-parent=".staff">Add Staff Member</a>
+                                <a class="btn blue add-elem" data-type="staff" data-parent=".staff">{{ lang('add_staff_member') }}</a>
                             </div>
                         </div>
                     </div>
@@ -100,11 +100,11 @@
         </div>
 
         <div class="col s12 right-align">
-            <a class="btn green add-elem" data-type="staff_cat" data-parent="#staff_categories">Add Gamemode</a>
+            <a class="btn green add-elem" data-type="staff_cat" data-parent="#staff_categories">{{ lang('add_gamemode') }}</a>
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save"
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
                     type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
@@ -144,7 +144,7 @@
                 elem('div', {className: 'card'},
                     elem('span', {className: 'mdi mdi-close red-text delete-elem cat'}),
                     elem('div', {className: 'card-content'},
-                        elem('h1', {className: 'flow-text', innerText: 'Gamemode'}),
+                        elem('h1', {className: 'flow-text', innerText: "{{ lang('gamemode') }}"}),
                         elem('input', {
                             className: 'gamemode',
                             type: 'text',
@@ -153,11 +153,11 @@
                             required: true
                         }),
                         elem('div', {},
-                            elem('h5', {className: 'flow-text', innerText: 'Staff'}),
+                            elem('h5', {className: 'flow-text', innerText: "{{ lang('staff') }}"}),
                             elem('div', {className: 'staff row'}),
                             elem('a', {
                                 className: 'btn blue add-elem',
-                                innerText: 'Add Staff Member',
+                                innerText: "{{ lang('add_staff_member') }}",
                                 'data-type': 'staff',
                                 'data-parent': '.staff'
                             })

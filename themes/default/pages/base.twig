@@ -10,16 +10,10 @@
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <!--
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-    -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.5.95/css/materialdesignicons.min.css"/>
     {% block css_head %}{% endblock %}
     <link rel="stylesheet" href="{{ theme_asset('css/site-improved.css') }}">
-    <!--
-    <link rel="stylesheet" href="{{ assets_theme }}/css/site.css">
-    -->
 </head>
 <body>
 {% block css_body %}{% endblock %}
@@ -40,9 +34,9 @@
         <div style="height: 100vh" class="valign-wrapper center">
             <div class="card" style="margin-top: -50px;margin-left: auto;margin-right: auto;">
                 <div class="card-content" style="padding: 50px">
-                    <h3 style="margin: 0 0 40px 0">K-Load Dashboard</h3>
+                    <h3 style="margin: 0 0 40px 0">K-Load {{ lang('dashboard') }}</h3>
                     <a href="{{ login_url }}"
-                       style="padding: 10px 40px;border: 2px solid;border-radius: 50px;color:#66d0ff">Login with Steam
+                       style="padding: 10px 40px;border: 2px solid;border-radius: 50px;color:#66d0ff">{{ lang('login_with_steam') }}
                         <span class="mdi mdi-steam"></span></a>
                 </div>
             </div>

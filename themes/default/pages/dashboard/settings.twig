@@ -1,7 +1,7 @@
 {% extends 'base.twig' %}
 
-{% block title %}My Settings | K-Load{% endblock %}
-{% block nav_title %}My Settings{% endblock %}
+{% block title %}{{ lang('my_settings') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('my_settings') }}{% endblock %}
 
 {% block css_head %}
     {{ parent() }}
@@ -21,17 +21,8 @@
             {% endif %}
             <div class="card">
                 <div class="card-content row">
-                    <h1 class="flow-text col s12"><span class="mdi mdi-format-color-fill"></span>Theme</h1>
+                    <h1 class="flow-text col s12"><span class="mdi mdi-format-color-fill"></span>{{ lang('theme') }}</h1>
                     {% include '@partials/backgrounds.twig' with {'themes': themes, 'value': user.settings.theme} only %}
-                    {#{% for theme in themes %}#}
-                    {#<div class="col s12 m4 l3 xl2 center-align theme-block">#}
-                    {#<img class="materialboxed theme-preview" src="{{ theme.preview }}" data-caption="{{ theme.name|capitalize }}">#}
-                    {#<label>#}
-                    {#<input id="theme_{{ theme.name }}" class="with-gap" name="theme" type="radio" value="{{ theme.name }}" {% if theme.name == user.settings.theme %}checked{% endif %} />#}
-                    {#<span>{{ theme.name|capitalize }}</span>#}
-                    {#</label>#}
-                    {#</div>#}
-                    {#{% endfor %}#}
                 </div>
             </div>
         </div>
@@ -39,41 +30,41 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>Backgrounds</h1>
+                    <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>{{ lang('backgrounds') }}</h1>
                     <div class="row">
                         <div class="switch col s6">
                             <p>
-                                Enable?
+                                {{ lang('enable') }}?
                             </p>
                             <label>
-                                No
+                                {{ lang('no') }}
                                 <input type="checkbox" name="backgrounds[enable]" value="1"
                                        {% if user.settings.backgrounds.enable %}checked{% endif %} />
                                 <span class="lever"></span>
-                                Yes
+                                {{ lang('yes') }}
                             </label>
                         </div>
                         <div class="switch col s6">
                             <p>
-                                Randomize?
+                                {{ lang('randomize') }}?
                             </p>
                             <label>
-                                No
+                                {{ lang('no') }}
                                 <input type="checkbox" name="backgrounds[random]" value="1"
                                        {% if user.settings.backgrounds.random %}checked{% endif %} />
                                 <span class="lever"></span>
-                                Yes
+                                {{ lang('yes') }}
                             </label>
                         </div>
                         <div class="input-field col s6">
-                            Background Duration (ms)
+                            {{ lang('background_duration') }} (ms)
                             <p class="range-field">
                                 <input type="number" name="backgrounds[duration]" placeholder="e.g. 5000"
                                        value="{{ user.settings.backgrounds.duration }}"/>
                             </p>
                         </div>
                         <div class="input-field col s6">
-                            Background Fade (ms)
+                            {{ lang('background_fade') }} (ms)
                             <p class="range-field">
                                 <input type="number" name="backgrounds[fade]" placeholder="e.g. 750"
                                        value="{{ user.settings.backgrounds.fade }}"/>
@@ -92,7 +83,7 @@
                 <div class="card-content">
                     <div>
                         <h1 class="flow-text">
-                            <span class="mdi mdi-youtube"></span>YouTube / <span class="mdi mdi-music"></span>Music
+                            <span class="mdi mdi-youtube"></span>YouTube / <span class="mdi mdi-music"></span>{{ lang('music') }}
                             <br>
                             <small style="margin-top: -10px">The available options control both various music sources
                             </small>
@@ -102,38 +93,38 @@
                         <div class="row">
                             <div class="switch col s6">
                                 <p>
-                                    Enable?
+                                    {{ lang('enable') }}?
                                 </p>
                                 <label>
-                                    No
+                                    {{ lang('no') }}
                                     <input type="checkbox" name="youtube[enable]" value="1"
                                            {% if user.settings.youtube.enable %}checked{% endif %} />
                                     <span class="lever"></span>
-                                    Yes
+                                    {{ lang('yes') }}
                                 </label>
                             </div>
                             <div class="switch col s6">
                                 <p>
-                                    Randomize?
+                                    {{ lang('randomize') }}?
                                 </p>
                                 <label>
-                                    No
+                                    {{ lang('no') }}
                                     <input type="checkbox" name="youtube[random]" value="1"
                                            {% if user.settings.youtube.random %}checked{% endif %} />
                                     <span class="lever"></span>
-                                    Yes
+                                    {{ lang('yes') }}
                                 </label>
                             </div>
                         </div>
                         <div class="input-field">
-                            Volume
+                            {{ lang('volume') }}
                             <p class="range-field">
                                 <input type="range" id="volume" min="0" max="100" name="youtube[volume]"
                                        value="{{ user.settings.youtube.volume|default(15) }}"/>
                             </p>
                         </div>
                         <div>
-                            <h5>YouTube Videos to Play <span class="red" style="padding: 0 10px;font-weight: bold;">DEPRECATED</span>
+                            <h5>{{ lang('yt_videos_to_play') }} <span class="red" style="padding: 0 10px;font-weight: bold;">NO LONGER WORKS</span>
                             </h5>
                             <div class="disabled">
                                 <div id="yt_vids">
@@ -148,7 +139,7 @@
                                 </div>
                                 <div>
                                     <a class="btn green add-elem" data-type="youtube" data-parent="#yt_vids"><span
-                                                class="mdi mdi-plus"></span>Add Video</a>
+                                                class="mdi mdi-plus"></span>{{ lang('add_video') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +165,7 @@
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save"
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
                     type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 

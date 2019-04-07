@@ -22,7 +22,7 @@ define('ENABLE_REGISTRATION', true); // default: true
 define('IGNORE_PLAYER_CUSTOMIZATIONS', false); // default: false
 
 /* override user's theme choice when ?theme= is specified */
-define('THEME_OVERRIDE', false); // default: false
+define('THEME_OVERRIDE', true); // default: false
 
 /* users per page */
 define('USERS_PER_PAGE', 16); // default: 16

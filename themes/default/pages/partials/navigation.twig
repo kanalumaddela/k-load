@@ -1,12 +1,3 @@
-<!--
-<nav class="hide-on-large-only">
-    <div class="nav-wrapper">
-        <a href="#" class="brand-logo">K-Load</a>
-        <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi mdi-menu"></i></a>
-    </div>
-</nav>
--->
-
 <div class="container">
     <a href="#" data-target="side-nav" class="top-nav sidenav-trigger full hide-on-large-only">
         <span class="mdi mdi-menu" style="display: block;"></span>
@@ -34,21 +25,21 @@
     <li class="bold{% if (site.host ~ site.path ~ '/dashboard') == site.current %} active{% endif %}">
         <a href="{{ site.path }}/dashboard">
             <span class="mdi mdi-home-outline"></span>
-            Home
+            {{ lang('home') }}
         </a>
     </li>
     <li class="bold{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %} active{% endif %} tooltipped"
-        data-delay="100" data-position="right" data-tooltip="These are settings to customize how it looks for YOU only">
+        data-delay="100" data-position="right" data-tooltip="{{ lang('my_settings_tooltip') }}">
         <a href="{{ site.path }}/dashboard/settings">
             <span class="mdi mdi-tune"></span>
-            My Settings
+            {{ lang('my_settings') }}
         </a>
     </li>
 
     <li class="bold{% if (site.host ~ site.path ~ '/dashboard/users') in site.current %} active{% endif %}">
         <a href="{{ site.path }}/dashboard/users">
             <span class="mdi mdi-account-multiple"></span>
-            Users
+            {{ lang('users') }}
         </a>
     </li>
     {% if (user.admin and user.perms|length > 0) or user.super %}
@@ -57,45 +48,45 @@
                 <li class="bold {% if (site.host ~ site.path ~ '/dashboard/admin') in site.current %}active{% endif %}">
                     <a class="collapsible-header tooltipped"
                        data-delay="100" data-position="right"
-                       data-tooltip="These are global settings that affect ALL players">
+                       data-tooltip="{{ lang('admin_tooltip') }}">
                         <span class="mdi mdi-wrench"></span>
-                        Admin
+                        {{ lang('admin') }}
                     </a>
                     <div class="collapsible-body">
                         <ul>
                             {% if user.super %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin">Core</a>
+                                    <a href="{{ site.path }}/dashboard/admin">{{ lang('core') }}</a>
                                 </li>
                             {% endif %}
                             {% if user.super or user.perms.community_name or user.perms.backgrounds or user.perms.description or user.perms.youtube %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/general') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin/general">General</a>
+                                    <a href="{{ site.path }}/dashboard/admin/general">{{ lang('general') }}</a>
                                 </li>
                             {% endif %}
                             {% if user.super or user.perms.backgrounds %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/backgrounds') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin/backgrounds">Backgrounds</a>
+                                    <a href="{{ site.path }}/dashboard/admin/backgrounds">{{ lang('backgrounds') }}</a>
                                 </li>
                             {% endif %}
                             {% if user.super or user.perms.messages %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/messages') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin/messages">Messages</a>
+                                    <a href="{{ site.path }}/dashboard/admin/messages">{{ lang('messages') }}</a>
                                 </li>
                             {% endif %}
                             {% if user.super or user.perms.music %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/music') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin/music">Music</a>
+                                    <a href="{{ site.path }}/dashboard/admin/music">{{ lang('music') }}</a>
                                 </li>
                             {% endif %}
                             {% if user.super or user.perms.rules %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/rules') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin/rules">Rules</a>
+                                    <a href="{{ site.path }}/dashboard/admin/rules">{{ lang('rules') }}</a>
                                 </li>
                             {% endif %}
                             {% if user.super or user.perms.staff %}
                                 <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/staff') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin/staff">Staff</a>
+                                    <a href="{{ site.path }}/dashboard/admin/staff">{{ lang('staff') }}</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -107,7 +98,7 @@
     <li class="logout">
         <a class="waves-effect waves-red" href="{{ site.path }}/dashboard/logout">
             <span class="mdi mdi-logout"></span>
-            Logout
+            {{ lang('logout') }}
         </a>
     </li>
 </ul>

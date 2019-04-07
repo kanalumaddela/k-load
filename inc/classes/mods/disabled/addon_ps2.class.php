@@ -16,7 +16,7 @@ class addon_ps2
             'database' => '',
         ];
 
-        $conn = new \mysqli($mysql['host'].':'.$mysql['port'], $mysql['user'], $mysql['pass'], $mysql['database'], $mysql['port']);
+        $conn = new mysqli($mysql['host'].':'.$mysql['port'], $mysql['user'], $mysql['pass'], $mysql['database'], $mysql['port']);
         if ($conn->connect_error) {
             Util::log('addons', 'Pointshop 2 - Failed to connect: '.$conn->connect_error);
         } else {
@@ -32,6 +32,6 @@ class addon_ps2
 
     public function data()
     {
-        return \number_format($this->points);
+        return number_format($this->points);
     }
 }

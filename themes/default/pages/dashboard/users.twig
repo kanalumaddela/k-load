@@ -1,15 +1,15 @@
 {% extends 'base.twig' %}
 
-{% block title %}Users | K-Load{% endblock %}
-{% block nav_title %}Users{% endblock %}
+{% block title %}{{ lang('users') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('users') }}{% endblock %}
 
 {% block content %}
     <form id="search_users" class="row" method="get" action="{{ site.path }}/dashboard/users">
         <div class="input-field col s12 m10">
-            <input placeholder="Enter a name or any valid steamid" name="search" type="text" class="" required="">
+            <input placeholder="{{ lang('users_search_placeholder') }}" name="search" type="text" class="" required="">
         </div>
         <div class="input-field col s12 m2 center">
-            <input form="search_users" class="btn" type="submit" value="Search">
+            <input form="search_users" class="btn" type="submit" value="{{ lang('search') }}">
         </div>
     </form>
 
@@ -24,18 +24,18 @@
                         <p class="name {% if player.banned %}red-text{% endif %}">{{ player.name|default('Unknown') }}</p>
                         <br>
                         <div class="user-buttons">
-                            <a class="btn btn-profile" href="{{ site.path }}/dashboard/users/{{ player.steamid }}">Profile</a>
+                            <a class="btn btn-profile" href="{{ site.path }}/dashboard/users/{{ player.steamid }}">{{ lang('profile') }}</a>
                             {% if player.steamid != user.steamid and user.admin %}
                                 {% if user.super %}
-                                    <a class="btn btn-perms modal-trigger" href="#perms_{{ player.steamid }}">Perms</a>
+                                    <a class="btn btn-perms modal-trigger" href="#perms_{{ player.steamid }}">{{ lang('permissions') }}</a>
                                 {% endif %}
                                 {% if player.banned %}
                                     {% if user.super or user.perms.unban %}
-                                        <a class="btn unban-user" data-steamid="{{ player.steamid }}">Unban</a>
+                                        <a class="btn unban-user" data-steamid="{{ player.steamid }}">{{ lang('unban') }}</a>
                                     {% endif %}
                                 {% else %}
                                     {% if user.super or user.perms.ban %}
-                                        <a class="btn ban-user" data-steamid="{{ player.steamid }}">Ban</a>
+                                        <a class="btn ban-user" data-steamid="{{ player.steamid }}">{{ lang('ban') }}</a>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
@@ -50,16 +50,16 @@
                         <input type="hidden" name="type" value="perms"/>
                         <input type="hidden" name="player" value="{{ player.steamid }}"/>
                         <div class="modal-content">
-                            <h5>{{ player.name|default('Unknown') }}'s Permissions</h5>
+                            <h5>{{ player.name|default('Unknown') }}'s {{ lang('permissions') }}</h5>
                             <br>
                             <div class="row">
                                 <div class="switch col s12">
                                     <label>
-                                        Player
+                                        {{ lang('player') }}
                                         <input type="checkbox" name="admin" value="1"
                                                {% if player.admin %}checked{% endif %} />
                                         <span class="lever"></span>
-                                        Admin
+                                        {{ lang('admin') }}
                                     </label>
                                 </div>
                                 {% for perm, permFriendly in permissions %}
@@ -70,7 +70,7 @@
                                                        value="{{ perm }}"
                                                        {% if perm in player.perms %}checked{% endif %} />
                                                 <span>
-                                                    {{ permFriendly }}
+                                                    {{ lang(perm) }}
                                                 </span>
                                             </label>
                                         </p>
@@ -79,9 +79,10 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <a class="btn-flat modal-close waves-effect">Close</a>
-                            <input form="perms_form_{{ player.steamid }}" type="submit" class="btn green" name="save"
-                                   value="Save"/>
+                            <a class="btn-flat modal-close waves-effect">{{ lang('close') }}</a>
+                            <button form="perms_form_{{ player.steamid }}" type="submit" class="btn green" name="save">
+                                {{ lang('save') }}
+                            </button>
                         </div>
                     </form>
                 </div>

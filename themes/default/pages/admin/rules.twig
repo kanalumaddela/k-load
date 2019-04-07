@@ -37,7 +37,7 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="input-field col s12">
-                                <p>Rule Block Duration</p>
+                                <p>{{ lang('block_duration',  [lang('rule')]) }}</p>
                                 <input name="rules[duration]" type="number" placeholder="e.g. 5000" class="tooltipped"
                                        data-tooltip="1s = 1000ms" value="{{ settings.rules.duration|default(10000) }}">
                                 <span class="helper-text">Rules are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.</span>
@@ -54,10 +54,10 @@
                     <div class="card">
                         <span class="mdi mdi-close red-text delete-elem cat"></span>
                         <div class="card-content">
-                            <label>Gamemode</label>
+                            <label>{{ lang('gamemode') }}</label>
                             <input class="gamemode" type="text" placeholder="gamemode" value="{{ gamemode }}"
                                    oninput="fixGamemode(this)" required/>
-                            <label>Rules</label>
+                            <label>{{ lang('rules') }}</label>
                             <div class="rules">
                                 {% for rule in rules %}
                                     <div class="input-field child">
@@ -67,7 +67,7 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a class="btn blue add-elem" data-type="rule" data-parent=".rules">Add Rule</a>
+                            <a class="btn blue add-elem" data-type="rule" data-parent=".rules">{{ lang('add_rules') }}</a>
                         </div>
                     </div>
                 </div>
@@ -75,11 +75,11 @@
         </div>
 
         <div class="col s12 right-align">
-            <a class="btn green add-elem" data-type="rule_cat" data-parent="#rule_categories">Add Gamemode</a>
+            <a class="btn green add-elem" data-type="rule_cat" data-parent="#rule_categories">{{ lang('add_gamemode') }}</a>
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save"
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
                     type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
@@ -116,7 +116,7 @@
                 elem('div', {className: 'card'},
                     elem('span', {className: 'mdi mdi-close red-text delete-elem cat'}),
                     elem('div', {className: 'card-content'},
-                        elem('label', {innerText: 'Gamemode'}),
+                        elem('label', {innerText: "{{ lang('gamemode') }}"}),
                         elem('input', {
                             className: 'gamemode',
                             type: 'text',
@@ -124,11 +124,11 @@
                             onInput: 'fixGamemode(this)',
                             required: true
                         }),
-                        elem('label', {innerText: 'Rules'}),
+                        elem('label', {innerText: "{{ lang('rules') }}"}),
                         elem('div', {className: 'rules'}),
                         elem('a', {
                             className: 'btn blue add-elem',
-                            innerText: 'Add Rule',
+                            innerText: "{{ lang('add_rule') }}",
                             'data-type': 'rule',
                             'data-parent': '.rules'
                         })

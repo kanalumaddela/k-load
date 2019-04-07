@@ -1,7 +1,7 @@
 {% extends 'base.twig' %}
 
-{% block title %}Music | K-Load{% endblock %}
-{% block nav_title %}Music{% endblock %}
+{% block title %}{{ lang('music') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('music') }}{% endblock %}
 
 {% block content %}
     <form method="post" action="{{ site.path }}/dashboard/admin/music" class="row"
@@ -11,34 +11,34 @@
         <div class="col s12 m6">
             <div class="card">
                 <div class="card-content">
-                    <h1 class="flow-text"><span class="mdi mdi-settings"></span>General Music Options</h1>
+                    <h1 class="flow-text"><span class="mdi mdi-settings"></span>{{ lang('music_general_options') }}</h1>
                     <div class="row">
                         <div class="switch col s6">
                             <p>
-                                Enable?
+                                {{ lang('enable') }}?
                             </p>
                             <label>
-                                No
+                                {{ lang('no') }}
                                 <input type="checkbox" name="music[enable]" value="1"
                                        {% if music.enable %}checked{% endif %} />
                                 <span class="lever"></span>
-                                Yes
+                                {{ lang('yes') }}
                             </label>
                         </div>
                         <div class="switch col s6">
                             <p>
-                                Randomize?
+                                {{ lang('randomize') }}?
                             </p>
                             <label>
-                                No
+                                {{ lang('no') }}
                                 <input type="checkbox" name="music[random]" value="1"
                                        {% if music.random %}checked{% endif %} />
                                 <span class="lever"></span>
-                                Yes
+                                {{ lang('yes') }}
                             </label>
                         </div>
                         <div class="input-field col s12">
-                            Volume
+                            {{ lang('volume') }}
                             <p class="range-field">
                                 <input type="range" id="volume" min="0" max="100" name="music[volume]"
                                        value="{{ music.volume|default(15) }}"/>
@@ -52,10 +52,10 @@
                                         {% if settings.music.source == 'soundcloud' %}selected{% endif %}>SoundCloud
                                     (not added yet)
                                 </option>
-                                <option value="files" {% if music.source == 'files' %}selected{% endif %}>Music Files
+                                <option value="files" {% if music.source == 'files' %}selected{% endif %}>{{ lang('music_files') }}
                                 </option>
                             </select>
-                            <label>Music Source</label>
+                            <label>{{ lang('music_source') }}</label>
                         </div>
                     </div>
                 </div>
@@ -71,13 +71,13 @@
                             <div class="input-field child">
                                 <input type="text" name="youtube[list][]" placeholder="YouTube URL"
                                        value="https://www.youtube.com/watch?v={{ youtube_id }}" style="width: 80%;">
-                                <a class="btn-floating delete-elem red"><i class="mdi mdi-delete"></i></a>
+                                <a class="btn-floating delete-elem red tooltipped" data-tooltip="{{ lang('delete') }}"><i class="mdi mdi-delete"></i></a>
                             </div>
                         {% endfor %}
                     </div>
                     <div>
                         <a class="btn green add-elem" data-type="youtube" data-parent="#yt_vids"><span
-                                    class="mdi mdi-plus"></span>Add Video</a>
+                                    class="mdi mdi-plus"></span>{{ lang('add_video') }}</a>
                     </div>
                 </div>
             </div>
@@ -86,28 +86,29 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <h1 class="flow-text"><span class="mdi mdi-format-list-checks"></span>Songs to Play
+                    <h1 class="flow-text"><span class="mdi mdi-format-list-checks"></span>
+                        {{ lang('songs_to_play') }}
                         <small>(duplicate songs will get removed when saving)</small>
                     </h1>
                     <div id="music_order">
                         {% for song in music.order %}
                             <div class="input-field child">
                                 {% include '@partials/music-order-select.twig' with {'song': song, 'music_files': music_files} only %}
-                                <a class="btn-floating delete-elem red"><i class="mdi mdi-delete"></i></a>
+                                <a class="btn-floating delete-elem red tooltipped" data-tooltip="{{ lang('remove') }}"><i class="mdi mdi-delete"></i></a>
                             </div>
                         {% endfor %}
                     </div>
                     <div>
                         <a class="btn green add-elem" data-type="musicSelect" data-parent="#music_order"><span
-                                    class="mdi mdi-plus"></span>Add Song</a>
+                                    class="mdi mdi-plus"></span>{{ lang('add_song') }}</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col s12 center">
-            <button class="btn blue tooltipped" data-position="top" data-tooltip="Save" type="submit" name="save"
-                    value="1">Save Changes
+            <button class="btn blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}" type="submit" name="save"
+                    value="1">{{ lang('music_save') }}
             </button>
         </div>
     </form>
@@ -116,7 +117,7 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <h1 class="flow-text"><span class="mdi mdi-music"></span>Music Files</h1>
+                    <h1 class="flow-text"><span class="mdi mdi-music"></span>{{ lang('music_files') }}</h1>
 
                     <div id="music_files" class="row">
                         {% for file in music_files %}
@@ -136,7 +137,7 @@
                         <input id="music_file_upload" type="file" style="display: none;" accept="audio/ogg"/>
                         <label for="music_file_upload" class="btn green tooltipped"
                                data-tooltip="Only '.ogg' files are allowed" data-position="top" data-delay="25"><span
-                                    class="mdi mdi-upload"></span>Upload</label>
+                                    class="mdi mdi-upload"></span>{{ lang('upload') }}</label>
                     </div>
                 </div>
             </div>
@@ -276,7 +277,7 @@
         function createElem_musicSelect() {
             recentClone = music_files_select.cloneNode(true);
 
-            return elem('div', {className: 'input-field child'}, recentClone, elem('a', {className: 'btn-floating delete-elem red'}, elem('i', {className: 'mdi mdi-delete'})));
+            return elem('div', {className: 'input-field child'}, recentClone, elem('a', {className: 'btn-floating delete-elem red tooltipped', 'data-tooltip': "{{ lang('remove') }}"}, elem('i', {className: 'mdi mdi-delete'})));
         }
 
         function createElemCallback_musicSelect() {

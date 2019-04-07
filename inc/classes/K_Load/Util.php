@@ -2,11 +2,61 @@
 
 namespace K_Load;
 
+use const APP_HOST;
+use const APP_PATH;
+use function array_column;
 use Database;
+use const ENABLE_CACHE;
+use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use MatthiasMullie\Minify\CSS;
 use Steam;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use function addcslashes;
+use function array_diff;
+use function array_fill;
+use function array_keys;
+use function bin2hex;
+use function count;
+use function date;
+use function end;
+use function explode;
+use function fclose;
+use function file_exists;
+use function file_put_contents;
+use function filesize;
+use function fopen;
+use function fwrite;
+use function get_headers;
+use function gettype;
+use function glob;
+use function hash;
+use function header;
+use function implode;
+use function in_array;
+use function is_dir;
+use function is_file;
+use function json_encode;
+use function mkdir;
+use function preg_match;
+use function random_bytes;
+use function range;
+use function rawurldecode;
+use function rename;
+use function restore_error_handler;
+use function rmdir;
+use function rtrim;
+use function session_status;
+use function set_error_handler;
+use function sprintf;
+use function strpos;
+use function strtolower;
+use function substr;
+use function unlink;
+use function urldecode;
+use function var_export;
+use const APP_ROOT;
 
 class Util
 {
@@ -18,7 +68,7 @@ class Util
 
         switch ($type) {
             case 'access':
-                if (\strpos($_SERVER['REQUEST_URI'], 'raw') !== false) {
+                if (strpos($_SERVER['REQUEST_URI'], 'raw') !== false) {
                     return;
                 }
                 $content = $_SERVER['REQUEST_METHOD'].' '.$_SERVER['REQUEST_URI'].' - '.$_SERVER['REMOTE_ADDR'];
@@ -31,24 +81,24 @@ class Util
         }
 
         $log = $type.'.log';
-        $log_path = \sprintf('%sdata%slogs%s', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+        $log_path = sprintf('%sdata%slogs%s', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
         $log_folder = APP_ROOT.$log_path.$type;
         $log_loc = APP_ROOT.$log_path.$type.DIRECTORY_SEPARATOR.$log;
 
         self::mkDir($log_folder, true);
 
-        $content = '['.\date('m-d-Y h:i:s A').'] ~ '.$content;
-        $file = \fopen($log_loc, 'a');
-        \fwrite($file, $content."\n");
-        \fclose($file);
+        $content = '['.date('m-d-Y h:i:s A').'] ~ '.$content;
+        $file = fopen($log_loc, 'a');
+        fwrite($file, $content."\n");
+        fclose($file);
 
-        if (\filesize($log_loc) >= 1048576) {
-            $versions = \glob($log_loc.'.*');
-            $recent_ver = \end($versions);
-            $tmp = \explode('.', $recent_ver);
+        if (filesize($log_loc) >= 1048576) {
+            $versions = glob($log_loc.'.*');
+            $recent_ver = end($versions);
+            $tmp = explode('.', $recent_ver);
 
-            $recent = (int) \end($tmp);
-            \rename($log_loc, $log_loc.'.'.($recent + 1));
+            $recent = (int) end($tmp);
+            rename($log_loc, $log_loc.'.'.($recent + 1));
         }
     }
 
@@ -62,16 +112,16 @@ class Util
 
     public static function rmDir($folder)
     {
-        $content = \glob($folder.'/*');
+        $content = glob($folder.'/*');
         foreach ($content as $location) {
-            if (\is_dir($location)) {
+            if (is_dir($location)) {
                 self::rmdir($location);
             } else {
-                \unlink($location);
+                unlink($location);
             }
         }
 
-        \rmdir($folder);
+        rmdir($folder);
     }
 
     /**
@@ -79,28 +129,28 @@ class Util
      *
      * @param string
      *
+     * @return bool
      * @throws \Exception
      *
-     * @return bool
      */
     public static function mkDir($directory, $includeHtaccess = false)
     {
-        $directory = \rtrim($directory, '/');
+        $directory = rtrim($directory, '/');
 
-        if ($doesntExist = !\file_exists($directory)) {
-            \set_error_handler(function () {
+        if ($doesntExist = !file_exists($directory)) {
+            set_error_handler(function() {
             });
-            $doesntExist = !\mkdir($directory, 0775, true);
-            \restore_error_handler();
+            $doesntExist = !mkdir($directory, 0775, true);
+            restore_error_handler();
             if ($doesntExist) {
-                throw new \Exception('no perms to create directory, fix it');
+                throw new Exception('no perms to create directory, fix it');
             }
 
             if (!$doesntExist && $includeHtaccess) {
-                \file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
+                file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
             }
-        } elseif ($includeHtaccess && !\file_exists($directory.'/.htaccess')) {
-            \file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
+        } elseif ($includeHtaccess && !file_exists($directory.'/.htaccess')) {
+            file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
         }
 
         return !$doesntExist;
@@ -114,7 +164,7 @@ class Util
     public static function version($ignoreCache = false)
     {
         if (ENABLE_CACHE && !$ignoreCache) {
-            $version = Cache::remember('version', 120, function () {
+            $version = Cache::remember('version', 120, function() {
                 $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 
                 return $version !== false ? $version : null;
@@ -130,12 +180,16 @@ class Util
 
     public static function getSetting(...$keys)
     {
+        $queryBuilder = Database::conn()->select('SELECT `name`,`value` FROM `kload_settings`');
+
+        if (!empty($keys)) {
+            $length = count($keys);
+            $where = '`name` IN ('.implode(',', array_fill(0, $length, '\'?\'')).')';
+            $queryBuilder->where($where, $keys);
+        }
+
         $data = [];
-        $length = \count($keys);
-
-        $where = '`name` IN ('.\implode(',', \array_fill(0, $length, '\'?\'')).')';
-
-        $settings = Database::conn()->select('SELECT `name`,`value` FROM `kload_settings`')->where($where, $keys)->orderBy('name')->execute(false);
+        $settings = $queryBuilder->orderBy('name')->execute(false);
 
         if ($settings) {
             if (isset($settings['name'])) {
@@ -150,6 +204,26 @@ class Util
         return $data;
     }
 
+    public static function getSettings()
+    {
+        return self::getSetting();
+    }
+
+    public static function getSettingKeys($ignoreCache = false)
+    {
+        if (ENABLE_CACHE && !$ignoreCache) {
+            $keys = Cache::remember('setting-keys', 0, function() {
+                $tmp = Database::conn()->select('SELECT `name` FROM `kload_settings`')->orderBy('name')->execute(false);
+
+                return array_column($tmp, 'name');
+            });
+        } else {
+            $keys = array_column(Database::conn()->select('SELECT `name` FROM `kload_settings`')->orderBy('name')->execute(false), 'name');
+        }
+
+        return $keys;
+    }
+
     public static function updateSetting(array $settings, array $data, $csrf, $force = false)
     {
         if ((!User::validateCSRF($_SESSION['steamid'], $csrf) || User::isBanned($_SESSION['steamid'])) && !$force) {
@@ -161,7 +235,7 @@ class Util
         }
 
         $i = 0;
-        $sucess = true;
+        $success = true;
 
         foreach ($data as $insert) {
             $setting = $settings[$i];
@@ -174,38 +248,43 @@ class Util
 
             self::log('action', $_SESSION['steamid'].($result ? ' updated ' : ' attempted to update ').$setting);
             if (!$result) {
-                $sucess = false;
+                $success = false;
             }
         }
 
-        return $sucess;
+        if ($success) {
+            Cache::store('settings', Util::getSettings(), 0);
+            Cache::remove('loading-screen');
+        }
+
+        return $success;
     }
 
     public static function getBackgrounds($asArray = false)
     {
-        $backgroundsRoot = \APP_ROOT.'/assets/img/backgrounds/';
+        $backgroundsRoot = APP_ROOT.'/assets/img/backgrounds/';
 
-        $backgrounds = \array_diff(scandir($backgroundsRoot), ['.', '..']);
+        $backgrounds = array_diff(scandir($backgroundsRoot), ['.', '..']);
 
         $list = [];
         foreach ($backgrounds as $gamemode) {
-            if (!\is_dir($backgroundsRoot.$gamemode)) {
+            if (!is_dir($backgroundsRoot.$gamemode)) {
                 continue;
             }
 
-            $images = \array_diff(scandir($backgroundsRoot.$gamemode), ['.', '..']);
+            $images = array_diff(scandir($backgroundsRoot.$gamemode), ['.', '..']);
 
-            if (\count($images) === 0) {
+            if (count($images) === 0) {
                 continue;
             }
 
             $imagesFixed = [];
             foreach ($images as $image) {
-                if (!\is_file($backgroundsRoot.$gamemode.'/'.$image)) {
+                if (!is_file($backgroundsRoot.$gamemode.'/'.$image)) {
                     continue;
                 }
 
-                if (\in_array(\substr($image, -3, 3), ['jpg', 'png'])) {
+                if (in_array(substr($image, -3, 3), ['jpg', 'png'])) {
                     $imagesFixed[] = APP_PATH.'/assets/img/backgrounds/'.$gamemode.'/'.$image;
                 }
             }
@@ -213,21 +292,21 @@ class Util
             $list[$gamemode] = $imagesFixed;
         }
 
-        return !$asArray ? \json_encode($list) : $list;
+        return !$asArray ? json_encode($list) : $list;
     }
 
     public static function isAjax()
     {
-        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && \strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     public static function isUrl($url)
     {
-        \set_error_handler(function () {
+        set_error_handler(function() {
         });
-        $headers = \get_headers($url);
-        $httpCode = \substr($headers[0], 9, 3);
-        \restore_error_handler();
+        $headers = get_headers($url);
+        $httpCode = substr($headers[0], 9, 3);
+        restore_error_handler();
 
         return $httpCode >= 200 && $httpCode <= 400;
     }
@@ -235,9 +314,9 @@ class Util
     public static function json($data, $header = false, $formatted = false)
     {
         if ($header) {
-            \header('Content-Type: application/json');
+            header('Content-Type: application/json');
         }
-        echo \json_encode($data, ($formatted ? JSON_PRETTY_PRINT : 0));
+        echo json_encode($data, ($formatted ? JSON_PRETTY_PRINT : 0));
         if ($header) {
             die();
         }
@@ -245,7 +324,7 @@ class Util
 
     public static function minify($css)
     {
-        $minifier = new \MatthiasMullie\Minify\CSS();
+        $minifier = new CSS();
         $minifier->add($css);
 
         return $minifier->minify();
@@ -254,29 +333,29 @@ class Util
     public static function redirect($url)
     {
         if (self::startsWith('/', $url)) {
-            $url = APP_PATH.$url;
+            $url = APP_HOST.APP_PATH.$url;
         }
-        \header('Location: '.$url, true, 302);
+        header('Location: '.$url, true, 302);
         die();
     }
 
     public static function startsWith($search, $string)
     {
-        return \strpos($string, $search) === 0;
+        return strpos($string, $search) === 0;
     }
 
     public static function token()
     {
-        return \hash('sha256', \bin2hex(\random_bytes(16)));
+        return hash('sha256', bin2hex(random_bytes(16)));
     }
 
     public static function var_export($var, $indent = '')
     {
-        switch (\gettype($var)) {
+        switch (gettype($var)) {
             case 'string':
-                return '"'.\addcslashes($var, "\\\$\"\r\n\t\v\f").'"';
+                return '"'.addcslashes($var, "\\\$\"\r\n\t\v\f").'"';
             case 'array':
-                $indexed = \array_keys($var) === \range(0, \count($var) - 1);
+                $indexed = array_keys($var) === range(0, count($var) - 1);
                 $r = [];
                 foreach ($var as $key => $value) {
                     $r[] = "$indent	"
@@ -284,25 +363,25 @@ class Util
                         .self::var_export($value, "$indent	");
                 }
 
-                return "[\n".\implode(",\n", $r)."\n".$indent.']';
+                return "[\n".implode(",\n", $r)."\n".$indent.']';
             case 'boolean':
                 return $var ? 'TRUE' : 'FALSE';
             default:
-                return \var_export($var, true);
+                return var_export($var, true);
         }
     }
 
     public static function YouTubeID($url)
     {
-        $url = \urldecode(\rawurldecode($url));
-        \preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
+        $url = urldecode(rawurldecode($url));
+        preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
 
         return $match[1] ?? null;
     }
 
     public static function array_for_JS(array $array)
     {
-        return '`'.\implode('`,`', $array).'`';
+        return '`'.implode('`,`', $array).'`';
     }
 
     public static function to_top(&$array, $key)
@@ -314,7 +393,7 @@ class Util
 
     public static function flash($key, $value)
     {
-        if (\session_status() == PHP_SESSION_ACTIVE) {
+        if (session_status() == PHP_SESSION_ACTIVE) {
             $_SESSION['flash'][$key] = $value;
         }
     }

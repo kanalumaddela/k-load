@@ -1,7 +1,7 @@
 {% extends 'base.twig' %}
 
-{% block title %}Messages | K-Load{% endblock %}
-{% block nav_title %}Messages{% endblock %}
+{% block title %}{{ lang('messages') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('messages') }}{% endblock %}
 
 {% block css_body %}
     <style>
@@ -37,25 +37,25 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="input-field col s12">
-                                <p>Randomize Messages?</p>
+                                <p>{{ lang('randomize') }}</p>
                                 <div class="switch">
                                     <label>
-                                        No
+                                        {{ lang('no') }}
                                         <input type="checkbox" name="messages[random]" value="1"
                                                {% if settings.messages.random %}checked{% endif %} />
                                         <span class="lever"></span>
-                                        Yes
+                                        {{ lang('yes') }}
                                     </label>
                                 </div>
                             </div>
                             <div class="input-field col s12 m6">
-                                <p>Message Duration</p>
+                                <p>{{ lang('message_duration') }}</p>
                                 <input name="messages[duration]" type="number" placeholder="e.g. 5000"
                                        class="tooltipped" data-tooltip="1s = 1000ms"
                                        value="{{ settings.messages.duration }}">
                             </div>
                             <div class="input-field col s12 m6">
-                                <p>Message Fade</p>
+                                <p>{{ lang('message_fade') }}</p>
                                 <input name="messages[fade]" type="number" placeholder="e.g. 750" class="tooltipped"
                                        data-tooltip="1s = 1000ms" value="{{ settings.messages.fade }}">
                             </div>
@@ -71,10 +71,10 @@
                     <div class="card">
                         <span class="mdi mdi-close red-text delete-elem cat"></span>
                         <div class="card-content">
-                            <label>Gamemode</label>
+                            <label>{{ lang('gamemode') }}</label>
                             <input class="gamemode" type="text" placeholder="gamemode" value="{{ gamemode }}"
                                    oninput="fixGamemode(this)" required/>
-                            <label>Messages</label>
+                            <label>{{ lang('messages') }}</label>
                             <div class="messages">
                                 {% for message in messages %}
                                     <div class="input-field child">
@@ -84,7 +84,7 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a class="btn blue add-elem" data-type="message" data-parent=".messages">Add Message</a>
+                            <a class="btn blue add-elem" data-type="message" data-parent=".messages">{{ lang('add_message') }}</a>
                         </div>
                     </div>
                 </div>
@@ -92,11 +92,11 @@
         </div>
 
         <div class="col s12 right-align">
-            <a class="btn green add-elem" data-type="message_cat" data-parent="#message_categories">Add Gamemode</a>
+            <a class="btn green add-elem" data-type="message_cat" data-parent="#message_categories">{{ lang('add_gamemode') }}</a>
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="Save"
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
                     type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
@@ -144,7 +144,7 @@
                         elem('div', {className: 'messages'}),
                         elem('a', {
                             className: 'btn blue add-elem',
-                            innerText: 'Add message',
+                            innerText: "{{ lang('messages') }}",
                             'data-type': 'message',
                             'data-parent': '.messages'
                         })

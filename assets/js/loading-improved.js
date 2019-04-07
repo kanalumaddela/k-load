@@ -847,11 +847,27 @@ function updatePlaying(data) {
     }
 }
 
+function audioFadeIn() {
+    if (audio.volume < music.volumeDecimal) {
+        audio.volume = Math.round((audio.volume + .01) * 100) / 100;
+        setTimeout(audioFadeIn, 50);
+    }
+}
+
+function audioFadeOut() {
+    if (audio.volume > 0) {
+        audio.volume = Math.round((audio.volume - .01) * 100) / 100;
+        setTimeout(audioFadeOut, 50);
+    }
+}
+
 if (music.enable) {
     if (music.random) {
         shuffle(yt_list);
         shuffle(music_list);
     }
+
+    music.volumeDecimal = music.volume / 100;
 
     switch (music.source) {
         case 'youtube':
@@ -869,30 +885,44 @@ if (music.enable) {
                 }
 
                 audio = new Audio(site.url + '/data/music/' + music_list[music_counter]);
-                audio.volume = music.volume / 100;
+                audio.volume = 0;
                 audio.load();
 
                 audio.addEventListener('canplay', function () {
-                    const aud = this;
+                    var aud = this;
 
                     setTimeout(function () {
                         aud.play();
-                    }, 650);
+
+                        audioFadeIn();
+
+                    }, 250);
+                });
+
+                audio.addEventListener('timeupdate', function () {
+                    if (isNaN(audio.duration)) {
+                        return;
+                    }
+                    if (audio.duration - audio.currentTime <= 1) {
+                        audioFadeOut();
+                    }
                 });
 
                 audio.addEventListener('ended', function () {
+                    this.volume = 0;
                     music_counter += 1;
-                    if (music_counter > music_list.length) {
+
+                    if (music_counter >= music_list.length) {
                         music_counter = 0;
                     }
 
-                    const song = music_list[music_counter];
+                    var tmpSong = music_list[music_counter];
 
-                    musicName = song.replace('.ogg', '');
+                    musicName = tmpSong.replace('.ogg', '');
 
                     updatePlaying({title: musicName, author: ''});
 
-                    this.src = site.url + '/data/music/' + song;
+                    this.src = site.url + '/data/music/' + tmpSong;
                     this.load();
                 });
             }

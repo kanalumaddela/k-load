@@ -5,6 +5,23 @@ namespace K_Load;
 use Database;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use Steam;
+use function array_fill_keys;
+use function array_key_exists;
+use function array_keys;
+use function array_merge;
+use function array_replace_recursive;
+use function array_values;
+use function ceil;
+use function count;
+use function file_exists;
+use function file_put_contents;
+use function filter_var;
+use function implode;
+use function in_array;
+use function json_decode;
+use function json_encode;
+use function sort;
+use function unlink;
 
 class User
 {
@@ -19,7 +36,7 @@ class User
     {
         $data['page'] = $page - 1;
         $data['total'] = Database::conn()->count('kload_users')->where("`name` LIKE '%?%' OR `steamid` LIKE '%?%' OR `steamid2` LIKE '%?%' OR `steamid3` LIKE '%?%'", [$query, $query, $query, $query])->execute();
-        $data['pages'] = \ceil($data['total'] / USERS_PER_PAGE);
+        $data['pages'] = ceil($data['total'] / USERS_PER_PAGE);
         if ($data['page'] > $data['total']) {
             $data['page'] = $data['total'];
         }
@@ -51,7 +68,7 @@ class User
                 }
             }
 
-            $columns = '`'.\implode('`,`', \array_values($columns)).'`';
+            $columns = '`'.implode('`,`', array_values($columns)).'`';
         }
 
         return Database::conn()->select('SELECT '.$columns.' FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute() ?? [];
@@ -65,7 +82,7 @@ class User
      */
     public static function getInfo($steamid, ...$columns)
     {
-        return Database::conn()->select('SELECT `'.(\implode('`,`', $columns)).'` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute();
+        return Database::conn()->select('SELECT `'.(implode('`,`', $columns)).'` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute();
     }
 
     public static function action($steamid, $post)
@@ -107,7 +124,7 @@ class User
                 'steamid3' => '',
             ];
         }
-        $settings = \json_encode([
+        $settings = json_encode([
             'theme'       => $config['loading_theme'] ?? 'default',
             'backgrounds' => [
                 'enable'   => 1,
@@ -141,7 +158,7 @@ class User
         self::refreshCSRF($_SESSION['steamid']);
 
         if (self::isAdmin($_SESSION['steamid']) && ($steamid != $_SESSION['steamid']) && !self::isSuper($steamid)) {
-            if (self::isSuper($_SESSION['steamid']) || (\array_key_exists('ban', $_SESSION['perms']) && self::isAdmin($_SESSION['steamid']) && !self::isAdmin($steamid))) {
+            if (self::isSuper($_SESSION['steamid']) || (array_key_exists('ban', $_SESSION['perms']) && self::isAdmin($_SESSION['steamid']) && !self::isAdmin($steamid))) {
                 $banned = Database::conn()->add("UPDATE `kload_users` SET `banned` = 1 WHERE `steamid` = '?'", [$steamid])->execute();
                 Util::log('action', $_SESSION['steamid'].($banned ? ' banned ' : ' attempted to ban ').$steamid);
 
@@ -160,7 +177,7 @@ class User
         self::refreshCSRF($_SESSION['steamid']);
 
         if (self::isAdmin($_SESSION['steamid'])) {
-            if (\array_key_exists('unban', $_SESSION['perms']) || self::isSuper($_SESSION['steamid'])) {
+            if (array_key_exists('unban', $_SESSION['perms']) || self::isSuper($_SESSION['steamid'])) {
                 $unbanned = Database::conn()->add("UPDATE `kload_users` SET `banned` = 0 WHERE `steamid` = '?'", [$steamid])->execute();
                 Util::log('action', $_SESSION['steamid'].($unbanned ? ' unbanned ' : ' attempted to unban ').$steamid);
 
@@ -178,7 +195,7 @@ class User
         }
         self::refreshCSRF($steamid);
 
-        $css = (isset($settings['css']) ? \filter_var($settings['css'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : '');
+        $css = (isset($settings['css']) ? filter_var($settings['css'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : '');
 
         $settings['theme'] = Template::isLoadingTheme($settings['theme']) ? $settings['theme'] : 'default';
 
@@ -191,7 +208,7 @@ class User
         $settings['youtube']['random'] = (isset($settings['youtube']['random']) ? (int) $settings['youtube']['random'] : 0);
         $settings['youtube']['volume'] = (isset($settings['youtube']['volume']) ? (int) $settings['youtube']['volume'] : 0);
         $settings['youtube']['list'] = (isset($settings['youtube']['list']) ? $settings['youtube']['list'] : []);
-        if (\count($settings['youtube']['list']) > 0) {
+        if (count($settings['youtube']['list']) > 0) {
             $yt_ids = [];
             foreach ($settings['youtube']['list'] as $url) {
                 $url = trim($url);
@@ -210,22 +227,22 @@ class User
         $steamInfo = Steam::User($steamid);
         $data = $steamInfo ? $steamInfo : [];
         $data['settings'] = $settings;
-        $data['settings']['backgrounds'] = \json_encode($settings['backgrounds']);
-        $data['settings']['youtube'] = \json_encode($settings['youtube']);
+        $data['settings']['backgrounds'] = json_encode($settings['backgrounds']);
+        $data['settings']['youtube'] = json_encode($settings['youtube']);
         $steamids = Steam::Convert($steamid);
         if ($steamids) {
             $data = $data + $steamids;
         }
 
-        $updated = Database::conn()->add("UPDATE `kload_users` SET `settings` = '?', `custom_css` = '?' WHERE `steamid` = '?'", [\json_encode($settings), $css, $steamid])->execute() ?? false;
+        $updated = Database::conn()->add("UPDATE `kload_users` SET `settings` = '?', `custom_css` = '?' WHERE `steamid` = '?'", [json_encode($settings), $css, $steamid])->execute() ?? false;
 
         if ($updated) {
             Cache::store('player-'.$steamid, $data, 0);
             if (!empty($css)) {
-                \file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', Util::minify($css));
+                file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', Util::minify($css));
             } else {
-                if (\file_exists(APP_ROOT.'/data/users/'.$steamid.'.css')) {
-                    \unlink(APP_ROOT.'/data/users/'.$steamid.'.css');
+                if (file_exists(APP_ROOT.'/data/users/'.$steamid.'.css')) {
+                    unlink(APP_ROOT.'/data/users/'.$steamid.'.css');
                 }
             }
         }
@@ -240,8 +257,8 @@ class User
                 Steam::Logout();
             }
             self::refreshCSRF($_SESSION['steamid']);
-            $result = Database::conn()->add("UPDATE `kload_users` SET `admin` = '?', `perms` = '?' WHERE `steamid` = '?'", [(isset($post['admin']) ? (int) $post['admin'] : 0), (isset($post['perms']) ? \json_encode($post['perms']) : '[]'), $steamid])->execute();
-            Util::log('action', $_SESSION['steamid'].($result ? ' set ' : ' attempted to set ').'permissions - ['.(isset($post['perms']) ? \implode(',', $post['perms']) : 'N/A').'] and admin - '.(isset($post['admin']) ? (int) $post['admin'] : 0).' on '.$steamid);
+            $result = Database::conn()->add("UPDATE `kload_users` SET `admin` = '?', `perms` = '?' WHERE `steamid` = '?'", [(isset($post['admin']) ? (int) $post['admin'] : 0), (isset($post['perms']) ? json_encode($post['perms']) : '[]'), $steamid])->execute();
+            Util::log('action', $_SESSION['steamid'].($result ? ' set ' : ' attempted to set ').'permissions - ['.(isset($post['perms']) ? implode(',', $post['perms']) : 'N/A').'] and admin - '.(isset($post['admin']) ? (int) $post['admin'] : 0).' on '.$steamid);
 
             return $result;
         }
@@ -260,9 +277,9 @@ class User
         Util::log('action', $steamid.($success ? ' copied ' : ' attempted to copy ').'settings from '.$player);
         if ($success) {
             unset($_SESSION['settings']);
-            $_SESSION = \array_merge($_SESSION, self::get($_SESSION['steamid']));
+            $_SESSION = array_merge($_SESSION, self::get($_SESSION['steamid']));
             Cache::remove('player-'.$steamid);
-            \file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', Util::minify(Database::conn()->select('SELECT `custom_css` FROM `kload_users`')->where("`steamid` = '?'", [$player])->execute()));
+            file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', Util::minify(Database::conn()->select('SELECT `custom_css` FROM `kload_users`')->where("`steamid` = '?'", [$player])->execute()));
         }
 
         return $success;
@@ -282,15 +299,15 @@ class User
         }
 
         if (isset($user['settings'])) {
-            $user['settings'] = \json_decode($user['settings'], true);
+            $user['settings'] = json_decode($user['settings'], true);
         }
         $user['admin'] = (int) $user['admin'];
         $user['super'] = self::isSuper($steamid);
         if (isset($user['perms'])) {
-            $user['perms'] = \array_fill_keys(\json_decode($user['perms']), 1);
+            $user['perms'] = array_fill_keys(json_decode($user['perms']), 1);
         }
 
-        $_SESSION = \array_replace_recursive($_SESSION, $user);
+        $_SESSION = array_replace_recursive($_SESSION, $user);
 
         if ($_SESSION['settings'] !== $user['settings']) {
             $_SESSION['settings'] = $user['settings'];
@@ -327,7 +344,7 @@ class User
     {
         global $config;
 
-        return \in_array($steamid, $config['admins']);
+        return in_array($steamid, $config['admins']);
     }
 
     public static function getPerms($friendly = false)
@@ -345,8 +362,8 @@ class User
             'music'          => 'Music',
         ];
 
-        $keys = \array_keys($perms);
-        \sort($keys);
+        $keys = array_keys($perms);
+        sort($keys);
 
         return !$friendly ? $keys : $perms;
     }
@@ -362,7 +379,7 @@ class User
             return false;
         }
 
-        return \array_key_exists($perm, self::getCurrentPerms()) || self::isSuper($_SESSION['steamid']);
+        return array_key_exists($perm, self::getCurrentPerms()) || self::isSuper($_SESSION['steamid']);
     }
 
     public static function isBanned($steamid)

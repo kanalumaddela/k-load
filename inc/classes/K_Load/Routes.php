@@ -2,6 +2,8 @@
 
 namespace K_Load;
 
+use Phroute\Phroute\RouteCollector;
+
 class Routes
 {
     /**
@@ -11,7 +13,7 @@ class Routes
 
     public static function init()
     {
-        self::$router = new \Phroute\Phroute\RouteCollector();
+        self::$router = new RouteCollector();
 
         self::$router->any(APP_PATH, ['K_Load\Controller\Main', 'index']);
         self::$router->any(APP_PATH.'/login', ['K_Load\Controller\Main', 'login']);
