@@ -2,18 +2,19 @@
 
 namespace K_Load;
 
-use const APP_HOST;
-use const APP_PATH;
-use function array_column;
 use Database;
-use const ENABLE_CACHE;
 use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use MatthiasMullie\Minify\CSS;
 use Steam;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use const APP_HOST;
+use const APP_PATH;
+use const APP_ROOT;
+use const ENABLE_CACHE;
 use function addcslashes;
+use function array_column;
 use function array_diff;
 use function array_fill;
 use function array_keys;
@@ -56,7 +57,6 @@ use function substr;
 use function unlink;
 use function urldecode;
 use function var_export;
-use const APP_ROOT;
 
 class Util
 {
@@ -129,16 +129,16 @@ class Util
      *
      * @param string
      *
-     * @return bool
      * @throws \Exception
      *
+     * @return bool
      */
     public static function mkDir($directory, $includeHtaccess = false)
     {
         $directory = rtrim($directory, '/');
 
         if ($doesntExist = !file_exists($directory)) {
-            set_error_handler(function() {
+            set_error_handler(function () {
             });
             $doesntExist = !mkdir($directory, 0775, true);
             restore_error_handler();
@@ -164,7 +164,7 @@ class Util
     public static function version($ignoreCache = false)
     {
         if (ENABLE_CACHE && !$ignoreCache) {
-            $version = Cache::remember('version', 120, function() {
+            $version = Cache::remember('version', 120, function () {
                 $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 
                 return $version !== false ? $version : null;
@@ -212,7 +212,7 @@ class Util
     public static function getSettingKeys($ignoreCache = false)
     {
         if (ENABLE_CACHE && !$ignoreCache) {
-            $keys = Cache::remember('setting-keys', 0, function() {
+            $keys = Cache::remember('setting-keys', 0, function () {
                 $tmp = Database::conn()->select('SELECT `name` FROM `kload_settings`')->orderBy('name')->execute(false);
 
                 return array_column($tmp, 'name');
@@ -253,7 +253,7 @@ class Util
         }
 
         if ($success) {
-            Cache::store('settings', Util::getSettings(), 0);
+            Cache::store('settings', self::getSettings(), 0);
             Cache::remove('loading-screen');
         }
 
@@ -302,7 +302,7 @@ class Util
 
     public static function isUrl($url)
     {
-        set_error_handler(function() {
+        set_error_handler(function () {
         });
         $headers = get_headers($url);
         $httpCode = substr($headers[0], 9, 3);

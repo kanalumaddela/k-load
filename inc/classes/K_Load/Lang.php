@@ -1,12 +1,9 @@
 <?php
 
-
 namespace K_Load;
 
-
-use const APP_ROOT;
-use function dump;
 use Exception;
+use const APP_ROOT;
 use function file_exists;
 use function is_array;
 use function is_null;
@@ -14,7 +11,6 @@ use function vsprintf;
 
 class Lang
 {
-
     const LANG_FOLDER = APP_ROOT.'/inc/lang';
 
     protected static $lang = [];

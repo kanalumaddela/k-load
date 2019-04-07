@@ -2,7 +2,6 @@
 
 namespace K_Load;
 
-use function lang;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -20,6 +19,7 @@ use function filemtime;
 use function glob;
 use function json_decode;
 use function json_encode;
+use function lang;
 use function ltrim;
 use function random_bytes;
 use function sprintf;
@@ -64,25 +64,25 @@ class Template
             self::$twig->addExtension(new DebugExtension());
         }
 
-        $function = new TwigFunction('csrf', function() {
+        $function = new TwigFunction('csrf', function () {
             return new Markup('<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">', 'utf8');
         });
         self::$twig->addFunction($function);
 
         // theme assets
-        $function = new TwigFunction('theme_asset', function($file) {
+        $function = new TwigFunction('theme_asset', function ($file) {
             return APP_PATH.'/themes/'.self::$theme.'/assets/'.ltrim($file, '/');
         });
         self::$twig->addFunction($function);
 
         // assets
-        $function = new TwigFunction('asset', function($file) {
+        $function = new TwigFunction('asset', function ($file) {
             return APP_PATH.'/assets/'.ltrim($file, '/');
         });
         self::$twig->addFunction($function);
 
         // lang
-        $function = new TwigFunction('lang', function($key, $default = null) {
+        $function = new TwigFunction('lang', function ($key, $default = null) {
             return lang($key, $default);
         });
         self::$twig->addFunction($function);
@@ -154,7 +154,7 @@ class Template
             if (file_exists($location.'/pages/loading.twig')) {
                 if ($all || in_array($name, $config['loading_themes'])) {
                     $previews = glob($location.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
-                    usort($previews, function($a, $b) {
+                    usort($previews, function ($a, $b) {
                         return filemtime($a) - filemtime($b);
                     });
                     $preview = count($previews) > 0 ? str_replace(APP_ROOT, APP_PATH, $previews[0]) : null;
