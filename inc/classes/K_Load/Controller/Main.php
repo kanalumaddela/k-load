@@ -8,6 +8,10 @@ use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
+use const APP_ROOT;
+use const ENABLE_CACHE;
+use const ENABLE_REGISTRATION;
+use const IGNORE_PLAYER_CUSTOMIZATIONS;
 use function array_diff;
 use function array_merge;
 use function basename;
@@ -19,10 +23,6 @@ use function json_encode;
 use function method_exists;
 use function scandir;
 use function str_replace;
-use const APP_ROOT;
-use const ENABLE_CACHE;
-use const ENABLE_REGISTRATION;
-use const IGNORE_PLAYER_CUSTOMIZATIONS;
 
 class Main
 {
@@ -40,7 +40,7 @@ class Main
             $map = null;
         }
 
-        $data = ENABLE_CACHE ? Cache::remember('loading-screen'.(!is_null($steamid) ? '-'.$steamid : ''), 3600, function() use ($steamid, $map) {
+        $data = ENABLE_CACHE ? Cache::remember('loading-screen'.(!is_null($steamid) ? '-'.$steamid : ''), 3600, function () use ($steamid, $map) {
             return self::getData($steamid, $map);
         }) : self::getData($steamid, $map);
 
@@ -79,7 +79,7 @@ class Main
         $steamInfo = null;
 
         if (!empty($steamid)) {
-            $steamInfo = ENABLE_CACHE ? Cache::remember('loading-steam-api-'.$steamid, 3600, function() use ($steamid) {
+            $steamInfo = ENABLE_CACHE ? Cache::remember('loading-steam-api-'.$steamid, 3600, function () use ($steamid) {
                 return Steam::User($steamid);
             }) : Steam::User($steamid);
         }
@@ -116,7 +116,7 @@ class Main
 
                 $addon_name_real = str_replace('addon_', '', $addon_name);
                 if (ENABLE_CACHE) {
-                    $data['custom'][$addon_name_real] = Cache::remember('custom-'.$addon_name_real, 120, function() use ($steamid, $map, $addon_name) {
+                    $data['custom'][$addon_name_real] = Cache::remember('custom-'.$addon_name_real, 120, function () use ($steamid, $map, $addon_name) {
                         $addon_instance = new $addon_name($steamid, $map);
 
                         return method_exists($addon_instance, 'data') ? $addon_instance->data() : null;

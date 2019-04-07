@@ -8,5 +8,5 @@ $settings = Util::getSetting('messages');
 $settings['messages'] = json_decode($settings, true);
 if (!isset($settings['messages']['list'])) {
     $settings['messages']['list'] = [];
-    Util::updateSetting(['messages'], [$settings['messages']], null,  true);
+    Util::updateSetting(['messages'], [$settings['messages']], null, true);
 }
