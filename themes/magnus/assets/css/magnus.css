@@ -30,7 +30,7 @@ h1, h2, h3, h4, h2, h6, p {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-#top-bar > * {
+#top-bar > *:not(script) {
     display: inline-block;
     vertical-align: middle;
 }
