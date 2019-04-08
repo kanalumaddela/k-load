@@ -3,13 +3,13 @@
 namespace K_Load;
 
 use Exception;
-use const APP_ROOT;
 use function file_exists;
 use function is_array;
 use function is_null;
 use function is_numeric;
 use function sprintf;
 use function vsprintf;
+use const APP_ROOT;
 
 class Lang
 {
@@ -22,7 +22,7 @@ class Lang
     public static function init($language = 'en')
     {
         if (!self::exists($language)) {
-            throw new Exception('Language `'.$language.'` not found');
+            throw new Exception('Language `'.$language.'` not found in `inc/lang/` folder');
         }
 
         self::$lang = include self::LANG_FOLDER.'/'.$language.'.php';

@@ -894,6 +894,12 @@ if (music.enable) {
                     setTimeout(function () {
                         aud.play();
 
+                        var tmpSong = music_list[music_counter];
+
+                        musicName = tmpSong.replace('.ogg', '');
+
+                        updatePlaying({title: musicName, author: ''});
+
                         audioFadeIn();
 
                     }, 250);

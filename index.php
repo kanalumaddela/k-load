@@ -4,10 +4,12 @@
 define('APP_START', microtime(true));
 
 // data/constants.php
-include __DIR__.'/data/constants.php';
+if (file_exists(__DIR__.'/data/constants.php')) {
+    require_once __DIR__.'/data/constants.php';
+}
 
 // show errors
-if (DEBUG) {
+if (defined('DEBUG') && DEBUG) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);

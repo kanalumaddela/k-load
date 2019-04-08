@@ -8,10 +8,6 @@ use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
-use const APP_ROOT;
-use const ENABLE_CACHE;
-use const ENABLE_REGISTRATION;
-use const IGNORE_PLAYER_CUSTOMIZATIONS;
 use function array_diff;
 use function array_merge;
 use function basename;
@@ -23,6 +19,11 @@ use function json_encode;
 use function method_exists;
 use function scandir;
 use function str_replace;
+use const ALLOW_THEME_OVERRIDE;
+use const APP_ROOT;
+use const ENABLE_CACHE;
+use const ENABLE_REGISTRATION;
+use const IGNORE_PLAYER_CUSTOMIZATIONS;
 
 class Main
 {
@@ -44,7 +45,15 @@ class Main
             return self::getData($steamid, $map);
         }) : self::getData($steamid, $map);
 
-        $theme = THEME_OVERRIDE && isset($_GET['theme']) ? $_GET['theme'] : (!IGNORE_PLAYER_CUSTOMIZATIONS && isset($data['user']['settings']['theme']) ? $data['user']['settings']['theme'] : $config['loading_theme']);
+        $theme = $config['loading_theme'];
+        if (!is_null($steamid)) {
+            $theme = $data['user']['settings']['theme'] ?? $theme;
+        }
+
+        if (isset($_GET['theme']) && (ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
+            $theme = $_GET['theme'];
+        }
+
         if (!Template::isLoadingTheme($theme)) {
             $theme = $config['loading_theme'];
         }
@@ -55,11 +64,6 @@ class Main
         }
 
         Template::render('loading.twig', $data);
-    }
-
-    public static function logout()
-    {
-        Steam::logout();
     }
 
     protected static function getData($steamid, $map)
@@ -131,5 +135,10 @@ class Main
         }
 
         return $data;
+    }
+
+    public static function logout()
+    {
+        Steam::logout();
     }
 }

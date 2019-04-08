@@ -9,10 +9,6 @@ use MatthiasMullie\Minify\CSS;
 use Steam;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use const APP_HOST;
-use const APP_PATH;
-use const APP_ROOT;
-use const ENABLE_CACHE;
 use function addcslashes;
 use function array_column;
 use function array_diff;
@@ -57,51 +53,13 @@ use function substr;
 use function unlink;
 use function urldecode;
 use function var_export;
+use const APP_HOST;
+use const APP_PATH;
+use const APP_ROOT;
+use const ENABLE_CACHE;
 
 class Util
 {
-    public static function log($type = 'access', $content = null, $force = false)
-    {
-        if (!ENABLE_LOG && $force !== true) {
-            return;
-        }
-
-        switch ($type) {
-            case 'access':
-                if (strpos($_SERVER['REQUEST_URI'], 'raw') !== false) {
-                    return;
-                }
-                $content = $_SERVER['REQUEST_METHOD'].' '.$_SERVER['REQUEST_URI'].' - '.$_SERVER['REMOTE_ADDR'];
-                break;
-            default:
-                if (!$content) {
-                    return;
-                }
-                break;
-        }
-
-        $log = $type.'.log';
-        $log_path = sprintf('%sdata%slogs%s', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
-        $log_folder = APP_ROOT.$log_path.$type;
-        $log_loc = APP_ROOT.$log_path.$type.DIRECTORY_SEPARATOR.$log;
-
-        self::mkDir($log_folder, true);
-
-        $content = '['.date('m-d-Y h:i:s A').'] ~ '.$content;
-        $file = fopen($log_loc, 'a');
-        fwrite($file, $content."\n");
-        fclose($file);
-
-        if (filesize($log_loc) >= 1048576) {
-            $versions = glob($log_loc.'.*');
-            $recent_ver = end($versions);
-            $tmp = explode('.', $recent_ver);
-
-            $recent = (int) end($tmp);
-            rename($log_loc, $log_loc.'.'.($recent + 1));
-        }
-    }
-
     public static function dump($var)
     {
         $cloner = new VarCloner();
@@ -124,38 +82,6 @@ class Util
         rmdir($folder);
     }
 
-    /**
-     * Create a directory.
-     *
-     * @param string
-     *
-     * @throws \Exception
-     *
-     * @return bool
-     */
-    public static function mkDir($directory, $includeHtaccess = false)
-    {
-        $directory = rtrim($directory, '/');
-
-        if ($doesntExist = !file_exists($directory)) {
-            set_error_handler(function () {
-            });
-            $doesntExist = !mkdir($directory, 0775, true);
-            restore_error_handler();
-            if ($doesntExist) {
-                throw new Exception('no perms to create directory, fix it');
-            }
-
-            if (!$doesntExist && $includeHtaccess) {
-                file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
-            }
-        } elseif ($includeHtaccess && !file_exists($directory.'/.htaccess')) {
-            file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
-        }
-
-        return !$doesntExist;
-    }
-
     public static function installed()
     {
         return self::version();
@@ -176,37 +102,6 @@ class Util
         }
 
         return $version;
-    }
-
-    public static function getSetting(...$keys)
-    {
-        $queryBuilder = Database::conn()->select('SELECT `name`,`value` FROM `kload_settings`');
-
-        if (!empty($keys)) {
-            $length = count($keys);
-            $where = '`name` IN ('.implode(',', array_fill(0, $length, '\'?\'')).')';
-            $queryBuilder->where($where, $keys);
-        }
-
-        $data = [];
-        $settings = $queryBuilder->orderBy('name')->execute(false);
-
-        if ($settings) {
-            if (isset($settings['name'])) {
-                $data[$settings['name']] = $settings['value'];
-            } else {
-                foreach ($settings as $setting) {
-                    $data[$setting['name']] = $setting['value'];
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    public static function getSettings()
-    {
-        return self::getSetting();
     }
 
     public static function getSettingKeys($ignoreCache = false)
@@ -258,6 +153,111 @@ class Util
         }
 
         return $success;
+    }
+
+    public static function log($type = 'access', $content = null, $force = false)
+    {
+        if (!ENABLE_LOG && $force !== true) {
+            return;
+        }
+
+        switch ($type) {
+            case 'access':
+                if (strpos($_SERVER['REQUEST_URI'], 'raw') !== false) {
+                    return;
+                }
+                $content = $_SERVER['REQUEST_METHOD'].' '.$_SERVER['REQUEST_URI'].' - '.$_SERVER['REMOTE_ADDR'];
+                break;
+            default:
+                if (!$content) {
+                    return;
+                }
+                break;
+        }
+
+        $log = $type.'.log';
+        $log_path = sprintf('%sdata%slogs%s', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+        $log_folder = APP_ROOT.$log_path.$type;
+        $log_loc = APP_ROOT.$log_path.$type.DIRECTORY_SEPARATOR.$log;
+
+        self::mkDir($log_folder, true);
+
+        $content = '['.date('m-d-Y h:i:s A').'] ~ '.$content;
+        $file = fopen($log_loc, 'a');
+        fwrite($file, $content."\n");
+        fclose($file);
+
+        if (filesize($log_loc) >= 1048576) {
+            $versions = glob($log_loc.'.*');
+            $recent_ver = end($versions);
+            $tmp = explode('.', $recent_ver);
+
+            $recent = (int) end($tmp);
+            rename($log_loc, $log_loc.'.'.($recent + 1));
+        }
+    }
+
+    /**
+     * Create a directory.
+     *
+     * @param string
+     *
+     * @return bool
+     * @throws \Exception
+     *
+     */
+    public static function mkDir($directory, $includeHtaccess = false)
+    {
+        $directory = rtrim($directory, '/');
+
+        if ($doesntExist = !file_exists($directory)) {
+            set_error_handler(function () {
+            });
+            $doesntExist = !mkdir($directory, 0775, true);
+            restore_error_handler();
+            if ($doesntExist) {
+                throw new Exception('no perms to create directory, fix it');
+            }
+
+            if (!$doesntExist && $includeHtaccess) {
+                file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
+            }
+        } elseif ($includeHtaccess && !file_exists($directory.'/.htaccess')) {
+            file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
+        }
+
+        return !$doesntExist;
+    }
+
+    public static function getSettings()
+    {
+        return self::getSetting();
+    }
+
+    public static function getSetting(...$keys)
+    {
+        $queryBuilder = Database::conn()->select('SELECT `name`,`value` FROM `kload_settings`');
+
+        if (!empty($keys)) {
+            $length = count($keys);
+            $where = '`name` IN ('.implode(',', array_fill(0, $length, '\'?\'')).')';
+            $queryBuilder->where($where, $keys);
+        }
+
+        $data = [];
+        $settings = $queryBuilder->orderBy('name')->execute(false);
+
+        if ($settings) {
+            if (isset($settings['name'])) {
+                $data[$settings['name']] = $settings['value'];
+            } else {
+                foreach ($settings as $setting) {
+                    $data[$setting['name']] = $setting['value'];
+                }
+            }
+        }
+
+        return $data;
     }
 
     public static function getBackgrounds($asArray = false)

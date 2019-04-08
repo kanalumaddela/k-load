@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * constants.php usage
+ *
+ * These are the available constants and their default value:
+ * - DEBUG                        => false
+ * - APP_LANGUAGE                 => 'en'
+ * - ENABLE_LOG                   => true
+ * - ENABLE_CACHE                 => true          // 
+ * - CLEAR_CACHE                  => 'refresh'     // query to quickly clear cache, 
+ * - ENABLE_REGISTRATION          => true          // allow users to login and customize
+ * - IGNORE_PLAYER_CUSTOMIZATIONS => false         // ignore player customizations, useful for admins who want to see the global settings
+ * - ALLOW_THEME_OVERRIDE         => false         // allow overriding a user's theme with ?theme=<theme>
+ * - USERS_PER_PAGE               => 16            // # of users to display per page
+ * - DATE_FORMAT                  => '%m/%d/%Y %r' // used to format the registered timestamp of a user
+ *
+ * To override anyone of these values simply type this below outside of the comment block:
+ *
+ * define('DEBUG', true)
+ * - if the value is a string/word, make sure it is in single quotes e.g 'value'
+ */

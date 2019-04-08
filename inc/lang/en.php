@@ -1,8 +1,14 @@
 <?php
 
 return [
+    // login/logout
+    'login_with_steam'             => 'Login with Steam',
+    'logout'                       => 'Logout',
+
     // common words
     'home'                         => 'Home',
+    'dashboard'                    => 'Dashboard',
+    'settings'                     => 'Settings',
     'my_settings'                  => 'My Settings',
     'user'                         => 'User',
     'users'                        => 'Users',
@@ -124,5 +130,4 @@ return [
     'staff_block_duration'         => 'Staff Block Duration',
     'staff_block_duration_hint'    => 'Staff are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.',
     'rank'                         => 'Rank',
-
 ];

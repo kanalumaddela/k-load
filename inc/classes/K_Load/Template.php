@@ -28,10 +28,8 @@ use function usort;
 
 class Template
 {
-    private static $data = [];
-
     public static $theme = 'default';
-
+    private static $data = [];
     /**
      * @var \Twig_Environment
      */
@@ -142,6 +140,39 @@ class Template
         return $list;
     }
 
+    public static function render($template, array $data = [], $dontBuild = false)
+    {
+        if (!isset($data['alert'])) {
+            if (isset($_SESSION['flash']['alert'])) {
+                $data['alert'] = $_SESSION['flash']['alert'];
+                unset($_SESSION['flash']['alert']);
+            }
+        }
+
+        if (!$dontBuild) {
+            self::buildData($data);
+            $data = self::$data;
+        }
+
+        self::$twig->load($template)->display($data);
+    }
+
+    public static function buildData(array $data = [])
+    {
+        if (isset($_SESSION['steamid']) && !isset($_GET['steamid']) && (APP_URL.'/') != APP_URL_CURRENT) {
+            self::$data['themes'] = self::loadingThemes(User::isSuper($_SESSION['steamid']));
+            self::$data['user'] = $_SESSION;
+            self::$data['user']['admin'] = User::isSuper($_SESSION['steamid']) ? 1 : (int) User::getInfo($_SESSION['steamid'], 'admin');
+            self::$data['user']['super'] = User::isSuper($_SESSION['steamid']);
+            self::$data['user']['perms'] = array_fill_keys(array_keys(array_flip(json_decode(User::getInfo($_SESSION['steamid'], 'perms'), true))), 1);
+            if (self::$data['user']['perms'] != $_SESSION['perms']) {
+                $_SESSION['perms'] = self::$data['user']['perms'];
+            }
+            self::$data['csrf'] = '<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">';
+        }
+        self::$data = self::$data + $data;
+    }
+
     public static function loadingThemes($all = false)
     {
         global $config;
@@ -170,23 +201,6 @@ class Template
         return $list;
     }
 
-    public static function render($template, array $data = [], $dontBuild = false)
-    {
-        if (!isset($data['alert'])) {
-            if (isset($_SESSION['flash']['alert'])) {
-                $data['alert'] = $_SESSION['flash']['alert'];
-                unset($_SESSION['flash']['alert']);
-            }
-        }
-
-        if (!$dontBuild) {
-            self::buildData($data);
-            $data = self::$data;
-        }
-
-        self::$twig->load($template)->display($data);
-    }
-
     public static function renderReturn($template, array $data = [], $dontBuild = false)
     {
         if (!$dontBuild) {
@@ -195,22 +209,6 @@ class Template
         }
 
         return self::$twig->render($template, $data);
-    }
-
-    public static function buildData(array $data = [])
-    {
-        if (isset($_SESSION['steamid']) && !isset($_GET['steamid']) && (APP_URL.'/') != APP_URL_CURRENT) {
-            self::$data['themes'] = self::loadingThemes(User::isSuper($_SESSION['steamid']));
-            self::$data['user'] = $_SESSION;
-            self::$data['user']['admin'] = User::isSuper($_SESSION['steamid']) ? 1 : (int) User::getInfo($_SESSION['steamid'], 'admin');
-            self::$data['user']['super'] = User::isSuper($_SESSION['steamid']);
-            self::$data['user']['perms'] = array_fill_keys(array_keys(array_flip(json_decode(User::getInfo($_SESSION['steamid'], 'perms'), true))), 1);
-            if (self::$data['user']['perms'] != $_SESSION['perms']) {
-                $_SESSION['perms'] = self::$data['user']['perms'];
-            }
-            self::$data['csrf'] = '<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">';
-        }
-        self::$data = self::$data + $data;
     }
 
     public static function getData()

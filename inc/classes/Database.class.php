@@ -73,6 +73,26 @@ class Database
         return self::$fake_instance;
     }
 
+    public static function run($sql)
+    {
+        $result = self::$conn->query($sql);
+        if ($result) {
+            Util::log('mysql', '[QUERY] - '.$sql);
+        } else {
+            Util::log('mysql', '[FAIL] - '.self::$conn->error."\n\t\t\t\t\t\t\t".'- Query: '.$sql);
+        }
+    }
+
+    public function add($sql, array $data = [])
+    {
+        if (count($data) > 0) {
+            $sql = self::escape($sql, $data);
+        }
+        self::$sql .= " $sql";
+
+        return $this;
+    }
+
     public static function escape($sql, array $data)
     {
         $params = substr_count($sql, '?');
@@ -93,35 +113,6 @@ class Database
         }
 
         return $sql;
-    }
-
-    public function add($sql, array $data = [])
-    {
-        if (count($data) > 0) {
-            $sql = self::escape($sql, $data);
-        }
-        self::$sql .= " $sql";
-
-        return $this;
-    }
-
-    public static function quickEscape($data)
-    {
-        if (is_array($data)) {
-            $data = json_encode($data);
-        }
-
-        return self::$conn->real_escape_string($data);
-    }
-
-    public static function run($sql)
-    {
-        $result = self::$conn->query($sql);
-        if ($result) {
-            Util::log('mysql', '[QUERY] - '.$sql);
-        } else {
-            Util::log('mysql', '[FAIL] - '.self::$conn->error."\n\t\t\t\t\t\t\t".'- Query: '.$sql);
-        }
     }
 
     public function count($table)
@@ -164,6 +155,15 @@ class Database
         }
 
         return $this;
+    }
+
+    public static function quickEscape($data)
+    {
+        if (is_array($data)) {
+            $data = json_encode($data);
+        }
+
+        return self::$conn->real_escape_string($data);
     }
 
     public function select($sql, array $data = [])

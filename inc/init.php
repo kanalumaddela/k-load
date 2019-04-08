@@ -64,6 +64,7 @@ require_once APP_ROOT.'/vendor/autoload.php';
 // make it easier to call classes
 use J0sh0nat0r\SimpleCache\Drivers\File;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use K_Load\Constants;
 use K_Load\Lang;
 use K_Load\Routes;
 use K_Load\Template;
@@ -76,6 +77,8 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
+
+Constants::init();
 
 // exception handler
 function kload_exception_handler($exception)
@@ -206,7 +209,7 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
     $_SESSION['perms'] = array_fill_keys(json_decode(User::getInfo($_SESSION['steamid'], 'perms')), 1);
 }
 
-Lang::init($config['language'] ?? '_template');
+Lang::init(APP_LANGUAGE);
 
 function lang()
 {

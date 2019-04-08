@@ -20,16 +20,25 @@ class Steam
         self::$apikey = $key;
     }
 
+    public static function login()
+    {
+        self::Redirect(self::LoginUrl());
+    }
+
+    public static function Redirect($url = null)
+    {
+        if (!$url) {
+            $url = self::$host;
+        }
+        header('Location: '.$url, true, 302);
+        die();
+    }
+
     public static function LoginUrl()
     {
         global $steamLogin;
 
         return $steamLogin->getLoginURL();
-    }
-
-    public static function login()
-    {
-        self::Redirect(self::LoginUrl());
     }
 
     public static function Logout()
@@ -42,15 +51,6 @@ class Steam
         }
 
         self::Redirect();
-    }
-
-    public static function Redirect($url = null)
-    {
-        if (!$url) {
-            $url = self::$host;
-        }
-        header('Location: '.$url, true, 302);
-        die();
     }
 
     public static function Session($steamid)
@@ -74,6 +74,15 @@ class Steam
         }
     }
 
+    public static function User($steamid, $format = null)
+    {
+        $steamid = explode(',', $steamid);
+        $steamid = $steamid[0];
+        $user = self::Info($steamid, $format);
+
+        return $user['response']['players'][0] ?? null;
+    }
+
     public static function Info($steamids, $format = 'json')
     {
         $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.self::$apikey.'&steamids='.$steamids.'&format='.$format;
@@ -89,15 +98,6 @@ class Steam
         $result = json_decode($result, true);
 
         return $result;
-    }
-
-    public static function User($steamid, $format = null)
-    {
-        $steamid = explode(',', $steamid);
-        $steamid = $steamid[0];
-        $user = self::Info($steamid, $format);
-
-        return $user['response']['players'][0] ?? null;
     }
 
     public static function Users($steamids, $format = null)

@@ -11,6 +11,15 @@ class Routes
      */
     private static $router;
 
+    public static function get()
+    {
+        if (!self::$router) {
+            self::init();
+        }
+
+        return self::$router->getData();
+    }
+
     public static function init()
     {
         self::$router = new RouteCollector();
@@ -45,14 +54,5 @@ class Routes
 
         self::$router->post(APP_PATH.'/test/mysql', ['K_Load\Controller\Test', 'mysql']);
         self::$router->any(APP_PATH.'/test/steam/{key}?', ['K_Load\Controller\Test', 'steam']);
-    }
-
-    public static function get()
-    {
-        if (!self::$router) {
-            self::init();
-        }
-
-        return self::$router->getData();
     }
 }

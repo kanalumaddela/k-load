@@ -12,8 +12,6 @@ use K_Load\Test;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
-use const APP_ROOT;
-use const DIRECTORY_SEPARATOR;
 use function array_column;
 use function array_diff;
 use function array_intersect_key;
@@ -45,6 +43,8 @@ use function strtolower;
 use function substr;
 use function trim;
 use function unlink;
+use const APP_ROOT;
+use const DIRECTORY_SEPARATOR;
 
 class Admin
 {
