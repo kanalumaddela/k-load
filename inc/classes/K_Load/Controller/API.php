@@ -6,12 +6,12 @@ use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
+use const ENABLE_CACHE;
 use function count;
 use function is_null;
 use function md5;
 use function simplexml_load_string;
 use function strpos;
-use const ENABLE_CACHE;
 
 class API
 {
