@@ -5,6 +5,7 @@
         }
     },
     "require": {
+        "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-fileinfo": "*",

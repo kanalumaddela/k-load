@@ -1,3 +1,16 @@
+/*
+ * K-Load v2 (https://demo.maddela.org/k-load/)
+ *
+ * @link https://www.maddela.org
+ * @link https://github.com/kanalumaddela/k-load-v2
+ *
+ * @author kanalumaddela <git@maddela.org>
+ *
+ * @copyright Copyright (c) 2018-2019 Maddela
+ *
+ * @license MIT
+ */
+
 /**
  * List of gamemode ids and their respective friendly/well known name.
  */
@@ -782,6 +795,8 @@ function resetDemoMode() {
     SetStatusChanged('');
     setDownloadProgress(0, false);
 
+    clearInterval(rulesInterval);
+    clearInterval(staffInterval);
     clearInterval(demoInterval);
 }
 

@@ -35,18 +35,22 @@
 {% endblock %}
 {% block js %}
     <script>
-        function progressCallback(decimal, percentage, roundedPercentage) {
-            if (roundedPercentage <= 98) {
-                roundedPercentage = roundedPercentage + ((100 - roundedPercentage) * 0.025);
-            }
+        staff_per_page = 1;
 
+        function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+            const gamemodeStaff = checkGamemode(gamemode, staff.list);
+
+            if (!gamemodeStaff) {
+                document.getElementById('k-load-staff').style.display = 'none';
+            }
+        }
+
+        function progressCallback(decimal) {
             var circle_height = document.getElementById('load-circle-inner').height;
             circle_height = circle_height.animVal.value;
             var polygon = circle_height;
             var imageclip = polygon - (decimal * polygon);
             document.getElementById("load-circle-inner").setAttribute("style", "clip: rect(" + imageclip + "px " + polygon + "px " + polygon + "px 0px);");
         }
-
-        staff_per_page = 1;
     </script>
 {% endblock %}
