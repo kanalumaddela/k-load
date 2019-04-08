@@ -1,17 +1,14 @@
 <?php
 /**
- * K-Load v2 (https://demo.maddela.org/k-load/)
+ * K-Load v2 (https://demo.maddela.org/k-load/).
  *
  * @link https://www.maddela.org
  * @link https://github.com/kanalumaddela/k-load-v2
  *
  * @author kanalumaddela <git@maddela.org>
- *
  * @copyright Copyright (c) 2018-2019 Maddela
- *
  * @license MIT
  */
-
 Database::run("CREATE TABLE IF NOT EXISTS kload_users (
 					id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 					name VARCHAR(32) NULL COMMENT 'steam name',
