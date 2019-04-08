@@ -14,7 +14,7 @@
 
     <div id="info-block" class="fixed top left">
         <h1 class="community-name">{{ settings.community_name }}</h1>
-        <p>We are currently playing <b><span class="gamemode"></span></b> on <b><span class="map"></span></b></p>
+        <p>{{ lang('we_are_currently_playing', ['<b><span class="gamemode"></span></b>', '<b><span class="map"></span></b>'], true) }}</p>
     </div>
 
     <div class="pure-center">
@@ -26,7 +26,7 @@
     </div>
 
     <div id="music-block" class="fixed bottom left">
-        <p style="margin:0 0 5px 0;">You are now listening to</p>
+        <p style="margin:0 0 5px 0;">{{ lang('you_are_now_listening_to') }}</p>
         <p class="youtube-playing-title"></p>
     </div>
 {% endblock %}

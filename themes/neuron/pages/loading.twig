@@ -36,7 +36,7 @@
         </div>
 
         <div style="margin-bottom: 20px">
-            <h1 id="steam_name">{{ user.personaname|default('Welcome') }}</h1>
+            <h1 id="steam_name">{{ user.personaname|default(lang('welcome')) }}</h1>
             {% if user.steamid2 %}
                 <h3 id="steamid">{{ user.steamid2 }}</h3>
             {% endif %}
@@ -53,7 +53,7 @@
 
 {% block js %}
     <script>
-        function GameDetails_custom(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+        function GameDetails_custom() {
             if (isGmod) {
                 document.getElementById('polygon').classList.add('in-gmod');
             }
@@ -66,8 +66,8 @@
                 roundedPercentage = roundedPercentage + ((100 - roundedPercentage) * 0.025);
             }
 
-            const polygonHeight = polygonElem.offsetHeight;
-            const imageClip = polygonHeight - (roundedPercentage / 100 * polygonHeight);
+            var polygonHeight = polygonElem.offsetHeight;
+            var imageClip = polygonHeight - (roundedPercentage / 100 * polygonHeight);
 
             polygonElem.setAttribute("style", "clip: rect(" + imageClip + "px " + polygonHeight + "px " + polygonHeight + "px 0px);");
         }

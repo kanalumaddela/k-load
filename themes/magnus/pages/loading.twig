@@ -25,7 +25,7 @@
             <img class="avatar medium circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
             <div style="margin-top:4px;line-height:30px;width:calc(100% - 150px);">
                 <p class="name">{{ user.personaname|default('Player') }}</p>
-                <p class="messages">Welcome to <span class="server-name"></span></p>
+                <p class="messages"></p>
             </div>
         </div>
 
@@ -38,7 +38,7 @@
             <!-- rules -->
             <div class="col-4">
                 <div>
-                    <h1>Rules</h1>
+                    <h1>{{ lang('rules') }}</h1>
                     <div id="k-load-rules"></div>
                 </div>
             </div>
@@ -54,15 +54,15 @@
                     <p id="description" class="center-text">{{ settings.description }}</p>
                     <table style="margin-top:10px">
                         <tr>
-                            <td>Map:</td>
+                            <td>{{ lang('map') }}:</td>
                             <td class="map">{{ map|default('N/A') }}</td>
                         </tr>
                         <tr>
-                            <td>Gamemode:</td>
+                            <td>{{ lang('gamemode') }}:</td>
                             <td class="gamemode"></td>
                         </tr>
                         <tr>
-                            <td>Max Players:</td>
+                            <td>{{ lang('max_players') }}:</td>
                             <td class="max-players"></td>
                         </tr>
                     </table>
@@ -76,7 +76,7 @@
             <!-- staff -->
             <div class="col-4">
                 <div>
-                    <h1>Staff</h1>
+                    <h1>{{ lang('staff') }}</h1>
                     <div id="k-load-staff"></div>
                 </div>
             </div>

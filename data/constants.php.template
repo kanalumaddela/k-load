@@ -2,6 +2,8 @@
 
 /**
  * constants.php usage
+ * Create a COPY of this file and rename it to `constants.php`. It should
+ * be in this same exact folder.
  *
  * These are the available constants and their default value:
  * - DEBUG                        => false

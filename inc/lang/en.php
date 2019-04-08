@@ -2,15 +2,17 @@
 /**
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
- * @link https://www.maddela.org
- * @link https://github.com/kanalumaddela/k-load-v2
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
  *
- * @author kanalumaddela <git@maddela.org>
+ * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2019 Maddela
- * @license MIT
+ * @license   MIT
  */
 
 return [
+    /*** dashboard specific ***/
+
     // login/logout
     'login_with_steam'             => 'Login with Steam',
     'logout'                       => 'Logout',
@@ -140,4 +142,21 @@ return [
     'staff_block_duration'         => 'Staff Block Duration',
     'staff_block_duration_hint'    => 'Staff are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.',
     'rank'                         => 'Rank',
+
+
+    /*** loading screen specific ***/
+
+    'progress'                 => 'Progress',
+    'info'                     => 'Info',
+    'information'              => 'Information',
+    'about_us'                 => 'About Us',
+    'now_playing'              => 'Now Playing',
+    'max_players'              => 'Max Players',
+    'map'                      => 'Map',
+    'welcome'                  => 'Welcome',
+    'server_rules'             => 'Server Rules',
+    'server_info'              => 'Server Info',
+    'we_are_currently_playing' => 'We are currently playing %s on %s',
+    'you_are_now_joining'      => 'You are now joining',
+    'you_are_now_playing'      => 'You are now playing on %s',
 ];

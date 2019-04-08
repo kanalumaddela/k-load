@@ -24,7 +24,7 @@
             </svg>
             <img class="avatar circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
         </div>
-        <p>{{ user.personaname|default('Welcome') }}</p>
+        <p>{{ user.personaname|default(lang('welcome')) }}</p>
         <span class="messages"></span>
     </div>
 

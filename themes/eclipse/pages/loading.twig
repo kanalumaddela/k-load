@@ -124,7 +124,7 @@
     <div id="box" class="pure-center" style="top: 48%;">
         <div class="box-header">
             <img class="avatar circle small" src="{{ user.avatarmedium|default(assets ~ '/img/avatar.jpg') }}">
-            <span class="connecting-player-name">{{ user.personaname|default('Welcome Player') }}</span>
+            <span class="connecting-player-name">{{ user.personaname|default(lang('welcome')) }}</span>
             <div class="info">
                 <span class="badge status"
                       style="max-width: 450px;white-space: nowrap;">Retrieving server info...</span>
@@ -134,7 +134,7 @@
 
         <div class="box-content">
             <div>
-                <h1>Info</h1>
+                <h1>{{ lang('info') }}</h1>
                 <table>
                     <tbody>
                     <tr>
@@ -207,7 +207,7 @@
                 </table>
             </div>
             <div>
-                <h1>Rules</h1>
+                <h1>{{ lang('rules') }}</h1>
                 <div id="k-load-rules"></div>
             </div>
         </div>

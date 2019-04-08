@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28c6c10739826186876e12a8887efb9e",
+    "content-hash": "a88bea84f8f5205dcc17bef6dadde3f5",
     "packages": [
         {
             "name": "doctormckay/steamid",
@@ -644,6 +644,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-fileinfo": "*",

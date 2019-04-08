@@ -16,7 +16,7 @@
     <div class="overlay fade-in delay long"></div>
     <div style="position:fixed;top:10px;left:15px;">
         <h2>{{ settings.community_name }}</h2>
-        <h4>You are now playing on <span class="server-name"></span></h4>
+        <h4>{{ lang('you_are_now_playing', ['<span class="server-name"></span>'], true) }}</h4>
     </div>
     <div class="pure-center fade-in delay">
         <div>
@@ -25,7 +25,7 @@
         <div id="content">
             <div class="block one">
                 <div><i class="material-icons">map</i></div>
-                <span class="map">{{ map }}</span>
+                <span class="map">{{ map|default('N/A') }}</span>
             </div>
             <div class="spacer vertical"></div>
             <div class="block two">
@@ -39,7 +39,7 @@
             </div>
             <div class="spacer vertical"></div>
             <div class="block four">
-                <div><i class="material-icons">schedule</i></div>
+                <div><i class="material-icons">hourglass_empty</i></div>
                 <span class="progress">%</span>
             </div>
         </div>

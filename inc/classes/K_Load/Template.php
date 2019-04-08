@@ -90,8 +90,8 @@ class Template
         self::$twig->addFunction($function);
 
         // lang
-        $function = new TwigFunction('lang', function ($key, $default = null) {
-            return lang($key, $default);
+        $function = new TwigFunction('lang', function ($key, $default = null, $raw = false) {
+            return $raw ? new Markup(lang($key, $default), 'utf-8') : lang($key, $default);
         });
         self::$twig->addFunction($function);
 

@@ -12,6 +12,7 @@
 
 namespace K_Load\Controller;
 
+use function dump;
 use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\Template;
@@ -60,7 +61,7 @@ class Main
             $theme = $data['user']['settings']['theme'] ?? $theme;
         }
 
-        if (isset($_GET['theme']) && (ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
+        if (isset($_GET['theme']) && (!isset($data['user']['settings']['theme']) || ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
             $theme = $_GET['theme'];
         }
 

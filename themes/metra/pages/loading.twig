@@ -26,7 +26,7 @@
                     <img class="logo" src="{{ assets }}/img/{{ settings.logo }}">
                 {% endif %}
                 <div style="margin-right: 10px">
-                    <p style="margin-bottom: 4px;font-size: 1.35rem;">{{ user.personaname|default('Player') }}</p>
+                    <p style="margin-bottom: 4px;font-size: 1.35rem;">{{ user.personaname|default(lang('welcome')) }}</p>
                     {% if user.steamid2 %}
                         <p style="font-size: .85rem;font-weight: 300;">{{ user.steamid2 }}</p>
                     {% endif %}
@@ -36,43 +36,43 @@
             </div>
             <div class="col xl-3 hide-md">
                 <div class="card server-info blue">
-                    <h2><i class="fas fa-gamepad"></i> Gamemode</h2>
+                    <h2><i class="fas fa-gamepad"></i> {{ lang('gamemode') }}</h2>
                     <p class="gamemode" style="font-size: 1.2rem;"></p>
                     <br>
-                    <h2><i class="fas fa-users"></i> Max Players</h2>
+                    <h2><i class="fas fa-users"></i> {{ lang('max_players') }}</h2>
                     <p class="max-players" style="font-size: 1.2rem;"></p>
                 </div>
             </div>
             <div class="col xl-3 md-6">
                 <div class="card map-info"
                      style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25) ), url('https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/{% if map %}{{ 'garrysmod/' ~ map }}{% else %}nomap{% endif %}.jpg') no-repeat center center / cover;">
-                    <h2><i class="fas fa-map"></i> Map</h2>
+                    <h2><i class="fas fa-map"></i> {{ lang('map') }}</h2>
                     <p>{{ map|default('N/A') }}</p>
                 </div>
             </div>
             <div class="col xl-6 hide-md">
                 <div class="card news orange">
-                    <h2><i class="fas fa-comment-alt"></i> Messages</h2>
+                    <h2><i class="fas fa-comment-alt"></i> {{ lang('messages') }}</h2>
                     <p class="messages" style="margin-top: 25px;font-size: 1.5rem;"></p>
                 </div>
             </div>
             <div class="col xl-6 md-12 hide-lg">
                 <div class="card rules dark-blue">
-                    <h2><i class="fas fa-gavel"></i> Rules</h2>
+                    <h2><i class="fas fa-gavel"></i> {{ lang('rules') }}</h2>
                     <div id="k-load-rules"></div>
                 </div>
             </div>
             <div class="col xl-3 hide-lg">
                 <div class="card staff magneta">
-                    <h2><i class="fas fa-users"></i> Staff</h2>
+                    <h2><i class="fas fa-users"></i> {{ lang('staff') }}</h2>
                     <div id="k-load-staff"></div>
                 </div>
             </div>
             <div class="col xl-3 md-6 hide-lg show-md">
                 <div class="card music green">
-                    <h2><i class="fas fa-music"></i> Music</h2>
+                    <h2><i class="fas fa-music"></i> {{ lang('music') }}</h2>
                     <p class="youtube-playing-title"></p>
-                    <p class="youtube-playing-author">Nothing playing...</p>
+                    <p class="youtube-playing-author"></p>
                 </div>
             </div>
             <div class="col xl-6 hide-md">
@@ -87,8 +87,8 @@
                         <h2 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><i
                                     class="fas fa-circle-notch fa-spin"></i> <span class="status">Retrieving server info...</span>
                         </h2>
-                        <p>Progress [ <span class="progress"></span> ]</p>
-                        <p>Files: <span class="files-downloaded"></span>/<span class="files-needed"></span></p>
+                        <p>{{ lang('progress') }} [ <span class="progress"></span> ]</p>
+                        <p>{{ lang('files') }}: <span class="files-downloaded"></span>/<span class="files-needed"></span></p>
                         <div class="loading-bar"></div>
                     </div>
                 </div>

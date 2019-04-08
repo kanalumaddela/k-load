@@ -23,7 +23,7 @@
                  src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
             <div style="margin-left: 10px">
                 <h1 style="text-transform: uppercase;">{{ settings.community_name }}</h1>
-                <h3 style="margin-top: -12px;">You are now joining <span class="server-name"></span></h3>
+                <h3 style="margin-top: -12px;">{{ lang('you_are_now_joining') }} <span class="server-name"></span></h3>
             </div>
         </div>
         <div class="row">
@@ -31,7 +31,7 @@
             <div class="col xl-3 block">
                 <div>
                     <div class="block-item block-header">
-                        <h2>About Us</h2>
+                        <h2>{{ lang('about_us') }}</h2>
                     </div>
                     <div class="block-item block-content">
                         <div class="absolute-align-vertical" style="top: 45%;padding: 15px;">
@@ -45,7 +45,7 @@
             <div id="rules-parent" class="col xl-3 block">
                 <div>
                     <div class="block-item block-header">
-                        <h2>Rules</h2>
+                        <h2>{{ lang('rules') }}</h2>
                     </div>
                     <div class="block-item block-content no-padding">
                         <div id="k-load-rules">
@@ -58,7 +58,7 @@
             <div id="staff-parent" class="col xl-3 block">
                 <div>
                     <div class="block-item block-header">
-                        <h2>Staff</h2>
+                        <h2>{{ lang('staff') }}</h2>
                     </div>
                     <div class="block-item block-content">
                         <div id="k-load-staff"></div>
@@ -70,7 +70,7 @@
             <div id="music" class="col xl-3 block hide">
                 <div>
                     <div class="block-item block-header">
-                        <h2>Now Playing</h2>
+                        <h2>{{ lang('now_playing') }}</h2>
                     </div>
                     <div class="block-item block-content">
                         <div class="absolute-align-vertical center-text" style="top: 45%;padding: 15px;">
@@ -85,12 +85,12 @@
             <div class="col xl-3 block">
                 <div>
                     <div class="block-item block-header">
-                        <h2>Information</h2>
+                        <h2>{{ lang('information') }}</h2>
                     </div>
                     <div class="block-item block-content no-padding">
                         <div class="absolute-align-vertical">
                             <h2 class="info server-name"></h2>
-                            <h2 class="info"><span class="max-players"></span> Max Players</h2>
+                            <h2 class="info"><span class="max-players"></span> {{ lang('max_players') }}</h2>
                             <h2 class="info map"></h2>
                             <h2 class="info gamemode"></h2>
                         </div>
@@ -102,7 +102,7 @@
             <div id="percentage" class="col xl-3 block hide">
                 <div>
                     <div class="block-item block-header">
-                        <h2>Progress</h2>
+                        <h2>{{ lang('progress') }}</h2>
                     </div>
                     <div class="block-item block-content">
                         <div class="absolute-align-vertical center-text" style="top: 47%;padding: 15px;">
