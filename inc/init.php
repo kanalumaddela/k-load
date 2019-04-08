@@ -112,7 +112,7 @@ function kload_exception_handler($exception)
             'trace'   => DEBUG ? $dumper->dump($cloner->cloneVar($trace), true) : '',
         ],
     ];
-    $data['time'] = round((microtime(true) - APP_START) * 1000, 3);
+    $data['time'] = round((microtime(true) - APP_START)*1000, 3);
 
     $twig->load('error.twig')->display($data);
     die();

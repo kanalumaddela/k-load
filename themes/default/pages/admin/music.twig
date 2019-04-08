@@ -46,7 +46,7 @@
                         </div>
                         <div class="input-field col s12">
                             <select name="music[source]" class="materialize-select">
-                                <option value="youtube" {% if music.source == 'youtube' %}selected{% endif %}>YouTube
+                                <option value="youtube" {% if music.source == 'youtube' %}selected{% endif %}>{{ lang('youtube') }}
                                 </option>
                                 <option value="soundcloud" disabled
                                         {% if settings.music.source == 'soundcloud' %}selected{% endif %}>SoundCloud
@@ -65,11 +65,11 @@
         <div class="col s12 m6">
             <div class="card">
                 <div class="card-content">
-                    <h1 class="flow-text"><span class="mdi mdi-youtube-play"></span>YouTube</h1>
+                    <h1 class="flow-text"><span class="mdi mdi-youtube-play"></span>{{ lang('youtube') }}</h1>
                     <div id="yt_vids">
                         {% for youtube_id in youtube.list %}
                             <div class="input-field child">
-                                <input type="text" name="youtube[list][]" placeholder="YouTube URL"
+                                <input type="text" name="youtube[list][]" placeholder="{{ lang('youtube') }} URL"
                                        value="https://www.youtube.com/watch?v={{ youtube_id }}" style="width: 80%;">
                                 <a class="btn-floating delete-elem red tooltipped" data-tooltip="{{ lang('delete') }}"><i class="mdi mdi-delete"></i></a>
                             </div>
@@ -108,7 +108,7 @@
 
         <div class="col s12 center">
             <button class="btn blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}" type="submit" name="save"
-                    value="1">{{ lang('music_save') }}
+                    value="1">{{ lang('save_music') }}
             </button>
         </div>
     </form>
@@ -137,7 +137,7 @@
                         <input id="music_file_upload" type="file" style="display: none;" accept="audio/ogg"/>
                         <label for="music_file_upload" class="btn green tooltipped"
                                data-tooltip="Only '.ogg' files are allowed" data-position="top" data-delay="25"><span
-                                    class="mdi mdi-upload"></span>{{ lang('upload') }}</label>
+                                    class="mdi mdi-upload"></span>{{ lang('upload_music') }}</label>
                     </div>
                 </div>
             </div>
@@ -264,7 +264,7 @@
 
         function createElem_youtube() {
             return elem('div', {className: 'input-field child'},
-                elem('input', {type: 'text', name: 'youtube[list][]', placeholder: 'YouTube URL', style: 'width:80%;'}),
+                elem('input', {type: 'text', name: 'youtube[list][]', placeholder: '{{ lang('youtube') }} URL', style: 'width:80%;'}),
                 elem('a', {className: 'btn-floating delete-elem red'},
                     elem('i', {className: 'mdi mdi-delete'})
                 )

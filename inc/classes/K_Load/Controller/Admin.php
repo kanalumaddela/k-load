@@ -291,7 +291,7 @@ class Admin
         $data = [
             'settings'            => Util::getSetting('backgrounds'),
             'upload_requirements' => [
-                'max_uploads' => ini_get('max_file_uploads'),
+                'max_uploads' => (int) ini_get('max_file_uploads'),
                 'file_size'   => ini_get('upload_max_filesize'),
             ],
         ];

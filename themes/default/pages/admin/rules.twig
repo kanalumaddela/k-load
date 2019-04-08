@@ -37,10 +37,10 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="input-field col s12">
-                                <p>{{ lang('block_duration',  [lang('rule')]) }}</p>
+                                <p>{{ lang('rule_block_duration') }}</p>
                                 <input name="rules[duration]" type="number" placeholder="e.g. 5000" class="tooltipped"
                                        data-tooltip="1s = 1000ms" value="{{ settings.rules.duration|default(10000) }}">
-                                <span class="helper-text">Rules are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.</span>
+                                <span class="helper-text">{{ lang('rule_block_duration_hint') }}</span>
                             </div>
                         </div>
                     </div>

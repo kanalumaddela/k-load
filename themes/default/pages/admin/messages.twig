@@ -49,13 +49,13 @@
                                 </div>
                             </div>
                             <div class="input-field col s12 m6">
-                                <p>{{ lang('message_duration') }}</p>
+                                <p>{{ lang('message_duration') }} (ms)</p>
                                 <input name="messages[duration]" type="number" placeholder="e.g. 5000"
                                        class="tooltipped" data-tooltip="1s = 1000ms"
                                        value="{{ settings.messages.duration }}">
                             </div>
                             <div class="input-field col s12 m6">
-                                <p>{{ lang('message_fade') }}</p>
+                                <p>{{ lang('message_fade') }} (ms)</p>
                                 <input name="messages[fade]" type="number" placeholder="e.g. 750" class="tooltipped"
                                        data-tooltip="1s = 1000ms" value="{{ settings.messages.fade }}">
                             </div>
@@ -107,15 +107,16 @@
 {% block js %}
     <script>
         function fixGamemode(elem, isChildren = false) {
+            var gamemode, messages;
             if (!isChildren) {
-                var gamemode = elem.value;
-                var messages = $(elem).next().next('.messages').children();
+                gamemode = elem.value;
+                messages = $(elem).next().next('.messages').children();
                 $('.gamemode-text').text(gamemode);
             } else {
-                var gamemode = $(elem).parent().parent().parent().find('.gamemode');
+                gamemode = $(elem).parent().parent().parent().find('.gamemode');
                 if (gamemode.length > 0) {
                     gamemode = gamemode[0].value;
-                    var messages = $(elem).parent().parent().find('.input-field.child');
+                    messages = $(elem).parent().parent().find('.input-field.child');
                 }
             }
 
@@ -132,7 +133,7 @@
                 elem('div', {className: 'card'},
                     elem('span', {className: 'mdi mdi-close red-text delete-elem cat'}),
                     elem('div', {className: 'card-content'},
-                        elem('label', {innerText: 'Gamemode'}),
+                        elem('label', {innerText: "{{ lang('gamemode') }}"}),
                         elem('input', {
                             className: 'gamemode',
                             type: 'text',
@@ -140,11 +141,11 @@
                             onInput: 'fixGamemode(this)',
                             required: true
                         }),
-                        elem('label', {innerText: 'Messages'}),
+                        elem('label', {innerText: "{{ lang('messages') }}"}),
                         elem('div', {className: 'messages'}),
                         elem('a', {
                             className: 'btn blue add-elem',
-                            innerText: "{{ lang('messages') }}",
+                            innerText: "{{ lang('add_message') }}",
                             'data-type': 'message',
                             'data-parent': '.messages'
                         })

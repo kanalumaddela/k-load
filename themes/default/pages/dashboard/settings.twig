@@ -15,7 +15,7 @@
 
         <div class="col s12">
             {% if user.admin %}
-                <p>To edit the loading screen for all users visit <a
+                <p>{{ lang('admin_global_settings_notice') }} <a
                             href="{{ site.path ~ '/dashboard/admin/general' }}">{{ site.url ~ '/dashboard/admin/general' }}</a>
                 </p>
             {% endif %}
@@ -83,7 +83,7 @@
                 <div class="card-content">
                     <div>
                         <h1 class="flow-text">
-                            <span class="mdi mdi-youtube"></span>YouTube / <span class="mdi mdi-music"></span>{{ lang('music') }}
+                            <span class="mdi mdi-youtube"></span>{{ lang('youtube') }} / <span class="mdi mdi-music"></span>{{ lang('music') }}
                             <br>
                             <small style="margin-top: -10px">The available options control both various music sources
                             </small>
@@ -130,7 +130,7 @@
                                 <div id="yt_vids">
                                     {% for youtube_id in user.settings.youtube.list %}
                                         <div class="input-field child">
-                                            <input type="text" name="youtube[list][]" placeholder="YouTube URL"
+                                            <input type="text" name="youtube[list][]" placeholder="{{ lang('youtube') }} URL"
                                                    value="https://www.youtube.com/watch?v={{ youtube_id }}"
                                                    style="width: 80%;">
                                             <a class="btn-floating delete-elem red"><i class="mdi mdi-delete"></i></a>
@@ -176,7 +176,7 @@
     <script>
         function createElem_youtube() {
             return elem('div', {className: 'input-field child'},
-                elem('input', {type: 'text', name: 'youtube[list][]', placeholder: 'YouTube URL', style: 'width:80%;'}),
+                elem('input', {type: 'text', name: 'youtube[list][]', placeholder: '{{ lang('youtube') }} URL', style: 'width:80%;'}),
                 elem('a', {className: 'btn-floating delete-elem red'},
                     elem('i', {className: 'mdi mdi-delete'})
                 )

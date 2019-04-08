@@ -7,6 +7,8 @@ use const APP_ROOT;
 use function file_exists;
 use function is_array;
 use function is_null;
+use function is_numeric;
+use function sprintf;
 use function vsprintf;
 
 class Lang
@@ -36,7 +38,7 @@ class Lang
     {
         $lang = isset(self::$lang[$key]) && !empty(self::$lang[$key]) ? self::$lang[$key] : (isset(self::$fallback[$key]) && !empty(self::$fallback[$key]) ? self::$fallback[$key] : $key);
 
-        if ($lang === $key) {
+        if ($lang === $key && !is_numeric($default)) {
             if (!is_null($default) && !is_array($default)) {
                 $lang = $default;
             }
@@ -44,7 +46,12 @@ class Lang
             return $lang;
         }
 
-        $lang = vsprintf($lang, $default);
+        if (is_array($lang) && is_numeric($default)) {
+            $lang = sprintf($default == 1 ? $lang[0] : $lang[1], $default);
+        } else {
+            $lang = is_array($default) ? vsprintf($lang, $default) : sprintf($lang, $default);
+        }
+
 
         return $lang;
     }

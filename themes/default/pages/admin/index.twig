@@ -20,7 +20,7 @@
 
                 <div class="card">
                     <div class="card-content">
-                        <h1 class="flow-text" style="margin:0">Your server.cfg you should have this:</h1>
+                        <h1 class="flow-text" style="margin:0">{{ lang('server_cfg_notice') }}:</h1>
                         <pre style="padding: 5px 4px;background-color:#161927;overflow: auto;"><code
                                     style="color: #27ff2f;">sv_loadingurl "{{ site.url }}?steamid=%s&mapname=%m"</code></pre>
                         <small>copy and paste this in, if this already exists in your server.cfg, change the value to
@@ -74,8 +74,8 @@
                         <div class="center-align">
                             <p>{{ lang('current_version') }}: {{ version }}</p>
                             {% if updates.amount > 0 %}
-                                <p>There {% if updates.amount != 1 %}are{% else %}is{% endif %} currently <span class="{% if updates.amount > 0 %}green-text{% endif %}">{{ updates.amount }}</span>update(s)</p>
-                                <p>{{ lang('latest_version_available', [updates.latest]) }}</p>
+                                <p>{{ lang('latest_version_available') }}: {{ updates.latest }}</p>
+                                <p>{{ lang('updates_available', updates.amount) }}</p>
                             {% endif %}
                             <br>
                             {% if updates.amount > 0 %}

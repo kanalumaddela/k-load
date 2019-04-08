@@ -1,7 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block title %}{{ player.name|default(player.steamid) }} | K-Load{% endblock %}
-{% block nav_title %}User: {{ player.name|default(player.steamid) }} [{{ player.id }}]{% endblock %}
+{% block nav_title %}{{ lang('user') }}: {{ player.name|default(player.steamid) }} [{{ player.id }}]{% endblock %}
 
 {% block head %}
     <meta property="og:title" content="{{ player.name|default(player.steamid) }} | K-Load"/>
@@ -110,7 +110,7 @@
         <div class="col s12 m6">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title"><span class="mdi mdi-music left"></span>YouTube/{{ lang('music') }}</span>
+                    <span class="card-title"><span class="mdi mdi-music left"></span>{{ lang('youtube') }}/{{ lang('music') }}</span>
                     <div class="row settings">
                         <div class="col s12">
                             {{ lang('enabled') }}
