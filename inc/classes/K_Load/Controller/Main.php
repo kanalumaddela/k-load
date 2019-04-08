@@ -12,7 +12,6 @@
 
 namespace K_Load\Controller;
 
-use function dump;
 use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\Template;
