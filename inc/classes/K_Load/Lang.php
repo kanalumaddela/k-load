@@ -52,7 +52,6 @@ class Lang
             $lang = is_array($default) ? vsprintf($lang, $default) : sprintf($lang, $default);
         }
 
-
         return $lang;
     }
 }
