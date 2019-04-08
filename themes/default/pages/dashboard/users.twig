@@ -1,7 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block title %}{{ lang('users') }} | K-Load{% endblock %}
-{% block nav_title %}{{ lang('users') }}{% endblock %}
+{% block nav_title %}{{ lang('users_page', [page]) }} {% endblock %}
 
 {% block content %}
     <form id="search_users" class="row" method="get" action="{{ site.path }}/dashboard/users">

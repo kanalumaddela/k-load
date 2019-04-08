@@ -835,7 +835,7 @@ function onYouTubeIframeAPIReady() {
 
 function onYTMusicPlayerReady(event) {
     youtube.index = 0;
-    event.target.setVolume((music.volume || 15));
+    event.target.setVolume(0);
     event.target.cueVideoById(yt_list[youtube.index], 0, "small");
 }
 
@@ -844,6 +844,7 @@ function onMusicPlayerStateChange(event) {
         event.target.playVideo();
     }
     if (event.data === YT.PlayerState.PLAYING) {
+        audioFadeIn();
         updatePlaying(event.target.getVideoData());
     }
     if (event.data === YT.PlayerState.ENDED) {
@@ -851,6 +852,7 @@ function onMusicPlayerStateChange(event) {
         if (youtube.index >= yt_list.length) {
             youtube.index = 0
         }
+        event.target.setVolume(0);
         event.target.cueVideoById(yt_list[youtube.index]);
     }
 }
@@ -862,17 +864,38 @@ function updatePlaying(data) {
     }
 }
 
+var tmpAudioFade;
 function audioFadeIn() {
-    if (audio.volume < music.volumeDecimal) {
-        audio.volume = Math.round((audio.volume + .01) * 100) / 100;
-        setTimeout(audioFadeIn, 50);
+    switch (music.source) {
+        case 'youtube':
+            if (yt_player.getVolume() < music.volume) {
+                yt_player.setVolume(yt_player.getVolume() + 1);
+                setTimeout(audioFadeIn, 50);
+            }
+            break;
+        case 'files':
+            if (audio.volume < music.volumeDecimal) {
+                audio.volume = Math.round((audio.volume + .01) * 100) / 100;
+                setTimeout(audioFadeIn, 50);
+            }
+            break;
     }
 }
 
 function audioFadeOut() {
-    if (audio.volume > 0) {
-        audio.volume = Math.round((audio.volume - .01) * 100) / 100;
-        setTimeout(audioFadeOut, 50);
+    switch (music.source) {
+        case 'youtube':
+            if (yt_player.getVolume() > 0) {
+                yt_player.setVolume(yt_player.getVolume() - 1);
+                setTimeout(audioFadeOut, 50);
+            }
+            break;
+        case 'files':
+            if (audio.volume > 0) {
+                audio.volume = Math.round((audio.volume - .01) * 100) / 100;
+                setTimeout(audioFadeOut, 50);
+            }
+            break;
     }
 }
 

@@ -12,6 +12,7 @@
 
 namespace K_Load\Controller;
 
+use function abs;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\Template;
 use K_Load\User;
@@ -38,13 +39,13 @@ class Users
         }
 
         if (isset($_GET['search'])) {
-            $page = (isset($_GET['pg']) ? $_GET['pg'] : 1);
+            $page = (isset($_GET['pg']) ? abs((int) $_GET['pg']) : 1);
             $data = User::search($_GET['search'], $page);
         } else {
             $data['total'] = User::total();
             $data['pages'] = ceil($data['total'] / USERS_PER_PAGE);
-            $data['page'] = (isset($_GET['pg']) ? $_GET['pg'] : 1);
-            $users = User::all(($data['page'] <= $data['pages']) ? $data['page'] : 1);
+            $data['page'] = (isset($_GET['pg']) ? abs((int) $_GET['pg']) : 1);
+            $users = User::all(($data['page'] <= $data['pages']) ? $data['page'] : $data['pages']);
             $data['users'] = isset($users['steamid']) ? [$users] : $users;
             if ($data['page'] > $data['pages']) {
                 $data['page'] = $data['pages'];

@@ -82,16 +82,18 @@ return [
     'loading_screen_access_help'   => 'To preview your customized loading screen, visit:',
     'your_info'                    => 'Your Info',
     'your_perms'                   => 'Your Permissions',
-    'user_is_super'                => 'You are a super admin, you have all the permissions.',
+    'user_is_super'                => 'You are a super admin',
 
     // my settings page
     'admin_global_settings_notice' => 'To edit the loading screen for all users visit',
 
     // users page
+    'users_page' => 'Users - Page %s',
     'users_search_placeholder'     => 'Enter any type of steamid or a name',
     'ban'                          => 'Ban',
     'unban'                        => 'Unban',
     'search'                       => 'Search',
+    'player'                       => 'Player',
 
     // profile page
     'name'                         => 'Name',

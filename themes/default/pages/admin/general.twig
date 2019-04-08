@@ -5,11 +5,16 @@
 
 {% block content %}
     {% if user.admin %}
-
-        <h1>reworking this page, dont complain about it</h1>
-
         <div class="row" style="padding-top:15px;padding-bottom:15px;">
-            <div class="col s12 m6">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        <p>Background settings have moved to: <a href="{{ site.path ~ '/dashboard/admin/backgrounds' }}">{{ site.host ~ site.path ~ '/dashboard/admin/backgrounds' }}</a></p>
+                        <p>YouTube settings have moved to: <a href="{{ site.path ~ '/dashboard/admin/music' }}">{{ site.host ~ site.path ~ '/dashboard/admin/music' }}</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12">
                 <form method="post" action="{{ site.path }}/dashboard/admin/general">
                     {{ csrf() }}
 
@@ -42,28 +47,6 @@
                             </div>
                         </div>
                     {% endif %}
-                </form>
-            </div>
-
-            <div class="col s12 m6">
-                <form method="post" action="{{ site.path }}/dashboard/admin/general/logo-upload">
-                    {{ csrf() }}
-                    <div class="card">
-                        <div class="card-content center">
-                            <h1 class="flow-text"><span class="mdi mdi-upload"></span>Upload Logo(s)</h1>
-                            <div class="file-field input-field">
-                                <div class="btn">
-                                    <span>Image</span>
-                                    <input type="file" accept="image/png, image/jpeg">
-                                </div>
-                                <div class="file-path-wrapper">
-                                    <input class="file-path validate" type="text" placeholder="Click to upload file">
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn modal-trigger">{{ lang('upload') }}</button>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>
