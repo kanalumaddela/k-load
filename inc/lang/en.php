@@ -88,7 +88,7 @@ return [
     'admin_global_settings_notice' => 'To edit the loading screen for all users visit',
 
     // users page
-    'users_page' => 'Users - Page %s',
+    'users_page'                   => 'Users - Page %s',
     'users_search_placeholder'     => 'Enter any type of steamid or a name',
     'ban'                          => 'Ban',
     'unban'                        => 'Unban',
