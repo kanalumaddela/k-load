@@ -143,7 +143,6 @@ return [
     'staff_block_duration_hint'    => 'Staff are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.',
     'rank'                         => 'Rank',
 
-
     /*** loading screen specific ***/
 
     'progress'                 => 'Progress',
