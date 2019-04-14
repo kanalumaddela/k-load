@@ -32,7 +32,7 @@ class Setup
         Cache::clear();
         Database::clear();
 
-        if (Util::installed()) {
+        if (!empty(Util::version(true))) {
             Util::redirect('/dashboard/admin');
         }
 
