@@ -9,5 +9,4 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
-
 Database::run("UPDATE `kload_settings` SET `value` = '2.5.3' WHERE `name` = 'version'");
