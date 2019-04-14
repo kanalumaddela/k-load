@@ -77,7 +77,6 @@ use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\Constants;
 use K_Load\Lang;
 use K_Load\Routes;
-use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
 use kanalumaddela\SteamLogin\SteamLogin;
