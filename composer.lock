@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a88bea84f8f5205dcc17bef6dadde3f5",
+    "content-hash": "90b69eef1b67164cf5361b4a16ff39f2",
     "packages": [
         {
             "name": "doctormckay/steamid",
@@ -340,24 +340,18 @@
         },
         {
             "name": "phroute/phroute",
-            "version": "v2.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mrjgreen/phroute.git",
-                "reference": "dbe2b986f9ee1dd33dc956fcc35d1fa22e8e196c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mrjgreen/phroute/zipball/dbe2b986f9ee1dd33dc956fcc35d1fa22e8e196c",
-                "reference": "dbe2b986f9ee1dd33dc956fcc35d1fa22e8e196c",
-                "shasum": ""
+                "url": "https://github.com/kanalumaddela/phroute",
+                "reference": "7eb31c735833cbeca3d558ac6f29a6e1014e2c7a"
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=7.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "*",
-                "satooshi/php-coveralls": "dev-master"
+                "phpunit/phpunit": "^5.0",
+                "satooshi/php-coveralls": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -365,7 +359,6 @@
                     "Phroute\\Phroute\\": "src/Phroute"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -380,7 +373,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2015-07-22T20:46:43+00:00"
+            "time": "2019-04-08T23:01:05+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -501,20 +494,20 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v3.3.6",
+            "version": "v3.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "b2623bccb969ad595c2090f9be498b74670d0663"
+                "reference": "d34d10236300876d14291e9df85c6ef3d3bb9066"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/b2623bccb969ad595c2090f9be498b74670d0663",
-                "reference": "b2623bccb969ad595c2090f9be498b74670d0663",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/d34d10236300876d14291e9df85c6ef3d3bb9066",
+                "reference": "d34d10236300876d14291e9df85c6ef3d3bb9066",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
+                "php": "^5.5.9|>=7.0.8",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "conflict": {
@@ -526,12 +519,13 @@
             },
             "suggest": {
                 "ext-iconv": "To convert non-UTF-8 strings to UTF-8 (or symfony/polyfill-iconv in case ext-iconv cannot be used).",
+                "ext-intl": "To show region name in time zone dump",
                 "ext-symfony_debug": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -565,7 +559,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2017-07-28T06:06:09+00:00"
+            "time": "2019-02-23T15:06:07+00:00"
         },
         {
             "name": "twig/twig",
@@ -639,6 +633,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "phroute/phroute": 20,
         "kanalumaddela/steam-login": 20
     },
     "prefer-stable": false,
@@ -655,6 +650,6 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.0.0"
+        "php": "7.1.26"
     }
 }

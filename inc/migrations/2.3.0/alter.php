@@ -2,12 +2,12 @@
 /**
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
- * @link https://www.maddela.org
- * @link https://github.com/kanalumaddela/k-load-v2
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
  *
- * @author kanalumaddela <git@maddela.org>
+ * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2019 Maddela
- * @license MIT
+ * @license   MIT
  */
 if (file_exists(APP_ROOT.'/themes/default/preview.png')) {
     unlink(APP_ROOT.'/themes/default/preview.png');

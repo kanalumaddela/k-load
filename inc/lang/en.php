@@ -44,6 +44,8 @@ return [
     'close'                        => 'Close',
     'save'                         => 'Save',
     'save_changes'                 => 'Save Changes',
+    'no'                           => 'No',
+    'yes'                          => 'Yes',
     'enable'                       => 'Enable',
     'enabled'                      => 'Enabled',
     'randomize'                    => 'Randomize',
@@ -127,6 +129,8 @@ return [
     'uploaded_backgrounds'         => 'Uploaded Backgrounds',
     'message_duration'             => 'Message Duration',
     'message_fade'                 => 'Message Fade',
+    'max_uploads'                 => 'Max of %s uploads',
+    'max_file_size'                 => 'Max file size: %s',
 
     // admin music
     'music_general_options'        => 'General Music Options',

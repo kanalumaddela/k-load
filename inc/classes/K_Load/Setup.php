@@ -2,12 +2,12 @@
 /**
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
- * @link https://www.maddela.org
- * @link https://github.com/kanalumaddela/k-load-v2
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
  *
- * @author kanalumaddela <git@maddela.org>
+ * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2019 Maddela
- * @license MIT
+ * @license   MIT
  */
 
 namespace K_Load;
@@ -23,6 +23,7 @@ use function glob;
 use function session_destroy;
 use function sprintf;
 use function str_replace;
+use function var_dump;
 
 class Setup
 {
@@ -35,7 +36,16 @@ class Setup
             Util::redirect('/dashboard/admin');
         }
 
-        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n".'?>');
+        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n");
+
+        if (!file_exists(APP_ROOT.'/data/config.php')) {
+            echo 'failed to create data/config.php<br>';
+            echo 'config given:';
+            echo '<pre>';
+            var_dump($config);
+            echo '</pre>';
+            die();
+        }
 
         Steam::Key($config['apikeys']['steam']);
         $config = include APP_ROOT.'/data/config.php';

@@ -6,10 +6,10 @@
  * be in this same exact folder.
  *
  * These are the available constants and their default value:
- * - DEBUG                        => false
- * - APP_LANGUAGE                 => 'en'
- * - ENABLE_LOG                   => true
- * - ENABLE_CACHE                 => true          // 
+ * - DEBUG                        => false         // debug mode
+ * - APP_LANGUAGE                 => 'en'          // language
+ * - ENABLE_LOG                   => true          // enable logging?
+ * - ENABLE_CACHE                 => true          // enable caching?
  * - CLEAR_CACHE                  => 'refresh'     // query to quickly clear cache, 
  * - ENABLE_REGISTRATION          => true          // allow users to login and customize
  * - IGNORE_PLAYER_CUSTOMIZATIONS => false         // ignore player customizations, useful for admins who want to see the global settings

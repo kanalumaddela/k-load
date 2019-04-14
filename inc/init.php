@@ -2,12 +2,12 @@
 /**
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
- * @link https://www.maddela.org
- * @link https://github.com/kanalumaddela/k-load-v2
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
  *
- * @author kanalumaddela <git@maddela.org>
+ * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2019 Maddela
- * @license MIT
+ * @license   MIT
  */
 
 // important constants
@@ -93,8 +93,6 @@ Constants::init();
 // exception handler
 function kload_exception_handler($exception)
 {
-    global $start;
-
     $cloner = new VarCloner();
     $dumper = new HtmlDumper();
 
@@ -150,8 +148,6 @@ $steamLogin_options = [
 
 $steamLogin = new SteamLogin($steamLogin_options);
 
-Steam::init();
-
 if (SteamLogin::validRequest()) {
     $player = $steamLogin->getPlayer();
     Steam::Session($player->steamid);
@@ -190,11 +186,6 @@ if (!Util::installed() && strpos($_SERVER['REQUEST_URI'], '/test/') === false) {
     die();
 }
 
-if (Util::installed() && strpos($_SERVER['REQUEST_URI'], '/install') !== false) {
-    Util::redirect('/dashboard');
-    die();
-}
-
 if (isset($_SESSION['steamid']) && Util::installed()) {
     if (!User::validateCSRF($_SESSION['steamid'], User::getCSRF($_SESSION['steamid']))) {
         User::refreshCSRF($_SESSION['steamid']);
@@ -225,9 +216,6 @@ function lang()
 {
     return call_user_func_array([Lang::class, 'get'], func_get_args());
 }
-
-// template
-Template::init();
 
 // routing
 $routes = (ENABLE_CACHE ? Cache::remember('routes', 86400, [Routes::class, 'get']) : Routes::get());

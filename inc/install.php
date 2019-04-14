@@ -2,12 +2,12 @@
 /**
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
- * @link https://www.maddela.org
- * @link https://github.com/kanalumaddela/k-load-v2
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
  *
- * @author kanalumaddela <git@maddela.org>
+ * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2019 Maddela
- * @license MIT
+ * @license   MIT
  */
 use K_Load\Setup;
 use K_Load\Template;
@@ -111,7 +111,6 @@ $extensions = [
     <link rel="stylesheet" href="<?= APP_PATH ?>/assets/css/install.css"/>
 </head>
 <body>
-<style type="text/css"></style>
 <div class="container">
     <h1>K-Load Setup</h1>
     <div class="card z-depth-2">
@@ -310,7 +309,9 @@ $extensions = [
     };
 </script>
 <script>
-    $('.stepper').activateStepper({
+    let stepper = $('.stepper');
+
+    stepper.activateStepper({
         autoFocusInput: false,
         autoFormCreation: false
     });
@@ -325,11 +326,11 @@ $extensions = [
                 var css = data.success ? 'green' : 'red';
                 toast(data.message, 5000, css);
                 if (data.success) {
-                    $('.stepper').nextStep();
+                    stepper.nextStep();
                 }
             });
         }
-        $('.stepper').destroyFeedback();
+        stepper.destroyFeedback();
     }
 
     function mysqlTest() {
@@ -349,24 +350,24 @@ $extensions = [
                 var css = data.success ? 'green' : 'red';
                 toast(data.message, 5000, css);
                 if (data.success) {
-                    $('.stepper').nextStep();
+                    stepper.nextStep();
                 }
             });
         }
-        $('.stepper').destroyFeedback();
+        stepper.destroyFeedback();
     }
 
     function toast(message = '', time = 5000, css = '') {
         if (typeof current_message == 'undefined') {
             current_message = ''
         }
-        if (current_message == message) {
+        if (current_message === message) {
             return;
         } else {
             current_message = message;
         }
         if (Materialize) {
-            if (time == -1 || time == 0) {
+            if (time === -1 || time === 0) {
                 Materialize.toast(message, Infinity, css, function () {
                     current_message = '';
                 });

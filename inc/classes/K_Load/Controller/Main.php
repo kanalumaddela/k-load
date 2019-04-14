@@ -2,12 +2,12 @@
 /**
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
- * @link https://www.maddela.org
- * @link https://github.com/kanalumaddela/k-load-v2
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
  *
- * @author kanalumaddela <git@maddela.org>
+ * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2019 Maddela
- * @license MIT
+ * @license   MIT
  */
 
 namespace K_Load\Controller;
@@ -18,11 +18,6 @@ use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
-use const ALLOW_THEME_OVERRIDE;
-use const APP_ROOT;
-use const ENABLE_CACHE;
-use const ENABLE_REGISTRATION;
-use const IGNORE_PLAYER_CUSTOMIZATIONS;
 use function array_diff;
 use function array_merge;
 use function basename;
@@ -34,6 +29,11 @@ use function json_encode;
 use function method_exists;
 use function scandir;
 use function str_replace;
+use const ALLOW_THEME_OVERRIDE;
+use const APP_ROOT;
+use const ENABLE_CACHE;
+use const ENABLE_REGISTRATION;
+use const IGNORE_PLAYER_CUSTOMIZATIONS;
 
 class Main
 {
@@ -55,7 +55,23 @@ class Main
             return self::getData($steamid, $map);
         }) : self::getData($steamid, $map);
 
-        $theme = $config['loading_theme'];
+        // override global setings with user specific settings
+        if (isset($data['user']['settings']) && ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS) {
+            $data['user']['settings'] = json_decode($data['user']['settings'], true);
+            if (empty($data['user']['settings']['youtube']['list'])) {
+                unset($data['user']['settings']['youtube']['list']);
+            }
+            $data['settings']['youtube'] = json_encode(array_merge(json_decode($data['settings']['youtube'], true), $data['user']['settings']['youtube']));
+            unset($data['user']['settings']['youtube']['list']);
+
+            $data['settings']['music'] = json_encode(array_merge(json_decode($data['settings']['music'], true), $data['user']['settings']['youtube']));
+            $data['settings']['backgrounds'] = json_encode(array_merge(json_decode($data['settings']['backgrounds'], true), $data['user']['settings']['backgrounds']));
+
+            unset($data['user']['settings']['youtube']);
+            unset($data['user']['settings']['backgrounds']);
+        }
+
+        $theme = $config['loading_theme'] ?? 'default';
         if (!is_null($steamid)) {
             $theme = $data['user']['settings']['theme'] ?? $theme;
         }
@@ -70,7 +86,6 @@ class Main
 
         if ($theme !== 'default') {
             Template::theme($theme);
-            Template::init();
         }
 
         Template::render('loading.twig', $data);
@@ -82,9 +97,15 @@ class Main
             'map'         => $map,
             'backgrounds' => Util::getBackgrounds(),
             'settings'    => Util::getSettings(),
-            'user'        => array_merge(User::get($steamid, 'name', 'steamid2', 'steamid3', (ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS) ? 'settings' : '', 'admin', 'banned', 'registered'), Steam::Convert($steamid)),
             'css_exists'  => file_exists(APP_ROOT.'/data/users/'.$steamid.'.css'),
         ];
+
+        $user = User::get($steamid, 'name', 'steamid2', 'steamid3', 'settings', 'admin', 'banned', 'registered');
+        if (empty($user)) {
+            $user = Steam::Convert($steamid);
+        }
+
+        $data['user'] = $user;
 
         if (empty($data['settings'])) {
             throw new Exception('Failed to get settings, check the logs in data/logs/mysql');
@@ -100,18 +121,6 @@ class Main
 
         if (is_array($steamInfo)) {
             $data['user'] = array_merge($data['user'], $steamInfo);
-        }
-
-        // override global setings with user specific settings
-        if (isset($data['user']['settings'])) {
-            $data['user']['settings'] = json_decode($data['user']['settings'], true);
-            $data['settings']['youtube'] = json_encode($data['user']['settings']['youtube']);
-            unset($data['user']['settings']['youtube']['list']);
-            $data['settings']['music'] = json_encode(array_merge(json_decode($data['settings']['music'], true), $data['user']['settings']['youtube']));
-            $data['settings']['backgrounds'] = json_encode(array_merge(json_decode($data['settings']['backgrounds'], true), $data['user']['settings']['backgrounds']));
-
-            unset($data['user']['settings']['youtube']);
-            unset($data['user']['settings']['backgrounds']);
         }
 
         // shit addon loading
@@ -130,7 +139,7 @@ class Main
 
                 $addon_name_real = str_replace('addon_', '', $addon_name);
                 if (ENABLE_CACHE) {
-                    $data['custom'][$addon_name_real] = Cache::remember('custom-'.$addon_name_real, 120, function () use ($steamid, $map, $addon_name) {
+                    $data['custom'][$addon_name_real] = Cache::remember('custom-mod-'.$addon_name_real, 120, function () use ($steamid, $map, $addon_name) {
                         $addon_instance = new $addon_name($steamid, $map);
 
                         return method_exists($addon_instance, 'data') ? $addon_instance->data() : null;

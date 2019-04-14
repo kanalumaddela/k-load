@@ -2,42 +2,28 @@
 /**
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
- * @link https://www.maddela.org
- * @link https://github.com/kanalumaddela/k-load-v2
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
  *
- * @author kanalumaddela <git@maddela.org>
+ * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2019 Maddela
- * @license MIT
+ * @license   MIT
  */
 use SteamID\SteamID;
 
 class Steam
 {
-    public static $host;
-    public static $current;
-
     private static $apikey;
-
-    public static function Init()
-    {
-        self::$host = APP_HOST;
-        self::$current = APP_URL_CURRENT;
-    }
 
     public static function Key(string $key)
     {
         self::$apikey = $key;
     }
 
-    public static function login()
-    {
-        self::Redirect(self::LoginUrl());
-    }
-
     public static function Redirect($url = null)
     {
         if (!$url) {
-            $url = self::$host;
+            $url = APP_HOST;
         }
         header('Location: '.$url, true, 302);
         die();
