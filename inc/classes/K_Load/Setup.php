@@ -32,9 +32,9 @@ class Setup
         Cache::clear();
         Database::clear();
 
-        if (!empty(Util::version(true))) {
-            Util::redirect('/dashboard/admin');
-        }
+//        if (!empty(Util::version(true))) {
+//            Util::redirect('/dashboard/admin');
+//        }
 
         file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n");
 

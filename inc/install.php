@@ -120,7 +120,7 @@ $extensions = [
     ?>
         <div style="padding: 25px 10px;text-align: center;"
         ">
-        <a href="<?= steam::loginUrl() ?>">
+        <a href="<?= Steam::loginUrl() ?>">
             <img alt="Sign in through Steam"
                  src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_02.png">
         </a>
