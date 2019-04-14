@@ -125,11 +125,11 @@ return [
     'reset_perms'                  => 'Reset Perms',
 
     // admin backgrounds
-    'upload_backgrounds'           => 'Upload Backgrounds',
-    'uploaded_backgrounds'         => 'Uploaded Backgrounds',
-    'message_duration'             => 'Message Duration',
-    'message_fade'                 => 'Message Fade',
-    'max_uploads'                 => 'Max of %s uploads',
+    'upload_backgrounds'            => 'Upload Backgrounds',
+    'uploaded_backgrounds'          => 'Uploaded Backgrounds',
+    'message_duration'              => 'Message Duration',
+    'message_fade'                  => 'Message Fade',
+    'max_uploads'                   => 'Max of %s uploads',
     'max_file_size'                 => 'Max file size: %s',
 
     // admin music
