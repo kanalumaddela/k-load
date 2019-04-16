@@ -32,14 +32,18 @@ class Setup
         Cache::clear();
         Database::clear();
 
-//        if (!empty(Util::version(true))) {
-//            Util::redirect('/dashboard/admin');
-//        }
-
+        $config['loading_theme'] = 'default';
         file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n");
 
+        if (!empty(Util::version(true)) && !isset($_SESSION['force_install'])) {
+            echo '<h1>A K-Load installation already exists in this database, to force an install, refresh this page via F5</h1>';
+            echo 'Otherwise go to the dashboard: <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>';
+            $_SESSION['force_install'] = 1;
+            die();
+        }
+
         if (!file_exists(APP_ROOT.'/data/config.php')) {
-            echo 'failed to create data/config.php<br>';
+            echo '<h2>failed to create data/config.php</h2>';
             echo 'config given:';
             echo '<pre>';
             var_dump($config);
