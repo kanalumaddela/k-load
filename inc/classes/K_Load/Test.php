@@ -31,7 +31,7 @@ class Test
 
         $info = Steam::User($steamid);
 
-        return !empty($info['personaname']);
+        return !empty($info);
     }
 
     public static function mysql($config)

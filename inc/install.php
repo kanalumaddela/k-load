@@ -9,6 +9,7 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
+
 use K_Load\Setup;
 use K_Load\Template;
 use K_Load\Test;
@@ -146,7 +147,7 @@ $extensions = [
                                 </div>
                                 <ul class="collection">
                                     <?php
-                                    if (PHP_VERSION_ID < 70000) {
+                                    if (PHP_VERSION_ID < 70122) {
                                         echo '<li class="collection-item red-text"><div><i class="mdi mdi-close left"></i>PHP Version: '.PHP_VERSION.'<br>PHP 7 and above is required</div></li>'."\n";
                                     } else {
                                         echo '<li class="collection-item green-text"><div><i class="mdi mdi-check left"></i>PHP Version: '.PHP_VERSION.'</div></li>'."\n";

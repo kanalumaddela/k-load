@@ -6,6 +6,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
     {% block head %}{% endblock %}
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
@@ -18,39 +19,30 @@
 <body>
 {% block css_body %}{% endblock %}
 {% block body %}
-    {% if user %}
-        <header>
-            <nav class="top-nav">
-                <div class="nav-wrapper">
-                    <h3 class="header" style="margin: 0">{% block nav_title %}K-Load{% endblock %}</h3>
-                </div>
-            </nav>
-            {% include '@partials/navigation.twig' %}
-        </header>
-        <main>
-            <div class="container">{{ csrf() }}{% block content %}{% endblock %}</div>
-        </main>
-    {% else %}
-        <div style="height: 100vh" class="valign-wrapper center">
-            <div class="card" style="margin-top: -50px;margin-left: auto;margin-right: auto;">
-                <div class="card-content" style="padding: 50px">
-                    <h3 style="margin: 0 0 40px 0">K-Load {{ lang('dashboard') }}</h3>
-                    <a href="{{ login_url }}"
-                       style="padding: 10px 40px;border: 2px solid;border-radius: 50px;color:#66d0ff">{{ lang('login_with_steam') }}
-                        <span class="mdi mdi-steam"></span></a>
-                </div>
+    <div style="z-index: 9999999;padding: 8px 0 8px 225px;width: 100%;background-color: #d02e2e;text-align: center;">
+        <h6 style="margin: 0;">Demo site is the same as my local dev, not all things may work</h6>
+    </div>
+    <header>
+        <nav class="top-nav">
+            <div class="nav-wrapper">
+                <h3 class="header" style="margin: 0">{% block nav_title %}K-Load{% endblock %}</h3>
             </div>
-        </div>
-    {% endif %}
+        </nav>
+        {% include '@partials/navigation.twig' %}
+    </header>
+    <main>
+        <div class="container">{{ csrf() }}{% block content %}{% endblock %}</div>
+    </main>
 {% endblock %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %}
+{% if (site.url ~ '/dashboard/settings') == site.current %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/mode/css/css.js"></script>
 {% endif %}
-<script>var site = {{ site_json|raw }};
+<script>
+    var site = {{ site_json }};
     var alert = '{{ alert }}';
 
     $(document).ready(function () {

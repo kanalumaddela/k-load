@@ -9,6 +9,7 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
+
 use K_Load\Util;
 
 class Database
@@ -17,6 +18,8 @@ class Database
      * @var \mysqli
      */
     public static $conn;
+
+    protected static $query_log = [];
 
     private static $host;
     private static $port;
@@ -246,7 +249,7 @@ class Database
             self::$sql = null;
             Util::log('mysql', '[FAIL] No Connection');
 
-            return;
+            return false;
         }
 
         $result = self::$conn->query(self::$sql);
@@ -283,9 +286,17 @@ class Database
         } else {
             Util::log('mysql', '[FAIL] - '.self::$conn->error."\n\t\t\t\t\t\t\t".'- Query: '.self::$sql);
         }
+
+        self::$query_log[] = ($result ? '[SUCCESS]' : '[FAIL]').' - '.self::$sql;
+
         self::$sql = null;
         self::$type = null;
 
         return $data;
+    }
+
+    public static function getQueryLog()
+    {
+        return self::$query_log;
     }
 }

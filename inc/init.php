@@ -40,11 +40,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/dashboard') !== false || strpos($_SERVER['
     /*
         sessions on actual loading screen increase load times, dumb fix
     */
-    if (strpos($_SERVER['REQUEST_URI'], '/install') !== false) {
-        session_set_cookie_params(0, APP_PATH.'/install', APP_DOMAIN, IS_HTTPS, true);
-    } else {
-        session_set_cookie_params(0, APP_PATH.'/dashboard', APP_DOMAIN, IS_HTTPS, true);
-    }
+    session_set_cookie_params(0, APP_PATH.(strpos($_SERVER['REQUEST_URI'], '/install') !== false ? '/install' : '/dashboard'), APP_DOMAIN, IS_HTTPS, true);
     session_start();
 }
 
@@ -81,54 +77,14 @@ use K_Load\User;
 use K_Load\Util;
 use kanalumaddela\SteamLogin\SteamLogin;
 use Phroute\Phroute\Dispatcher;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use Twig\Environment;
-use Twig\Extension\DebugExtension;
-use Twig\Loader\FilesystemLoader;
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
+use Symfony\Component\HttpFoundation\Response;
 
 Constants::init();
 
-// exception handler
-function kload_exception_handler($exception)
-{
-    $cloner = new VarCloner();
-    $dumper = new HtmlDumper();
-
-    $code = $exception->getCode();
-    $message = $exception->getMessage();
-    $trace = $exception->getTrace();
-
-    Util::log('exception', 'Code: '.$code.' - '.$message, true);
-    Util::log('exception', "\t\t".'Stack Trace: ', true);
-    foreach ($trace as $file => $info) {
-        Util::log('exception', "\t\t\t[".($file ?? 'N/A').'] - '.$info['function'].' '.($info['file'] ?? '<unknown file>').' on line '.($info['line'] ?? '<unknown>'), true);
-    }
-
-    $twig_loader = new FilesystemLoader(APP_ROOT.'/themes/default/pages');
-
-    $twig_env_params = [
-        'auto_reload' => true,
-        'debug'       => true,
-    ];
-    $twig = new Environment($twig_loader, $twig_env_params);
-    $twig->addExtension(new DebugExtension());
-
-    $data = [
-        'assets' => APP_PATH.'/assets',
-        'error'  => [
-            'code'    => $code,
-            'message' => $message,
-            'trace'   => DEBUG ? $dumper->dump($cloner->cloneVar($trace), true) : '',
-        ],
-    ];
-    $data['time'] = round((microtime(true) - APP_START) * 1000, 3);
-
-    $twig->load('error.twig')->display($data);
-    die();
-}
-
-set_exception_handler('kload_exception_handler');
+// sentry meme
+//Sentry\init(['dsn' => 'https://0bdc6629de78435f807c56358e3cdbae@sentry.io/1455550']);
 
 // make some new directions
 Util::mkDir(APP_ROOT.'/data/logs', true);
@@ -179,6 +135,13 @@ if (!Util::installed() && strpos($_SERVER['REQUEST_URI'], '/test/') === false) {
         if (isset($_SESSION['id'])) {
             session_destroy();
         }
+
+        if (substr(get_headers(APP_URL.'/install')[0], 9, 3) != 200) {
+            echo '<h1>Your webserver isn\'t properly setup to use friendly urls e.g. \'/dashboard\'</h1>';
+            echo '<a href="https://www.gmodstore.com/help/addon/5000/errors/404-not-found">https://www.gmodstore.com/help/addon/5000/errors/404-not-found</a>';
+            die();
+        }
+
         Util::redirect('/install');
     }
     include __DIR__.'/install.php';
@@ -192,6 +155,12 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
 
     if (User::isSuper($_SESSION['steamid']) || ENABLE_REGISTRATION) {
         if (!isset($_SESSION['id'])) {
+            $user = User::get($_SESSION['steamid']);
+
+            if (empty($user)) {
+                User::add($_SESSION['steamid']);
+            }
+
             User::add($_SESSION['steamid']);
             User::session($_SESSION['steamid']);
         }
@@ -206,17 +175,57 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
         }
     }
 
-    $_SESSION['perms'] = array_fill_keys(json_decode(User::getInfo($_SESSION['steamid'], 'perms')), 1);
+    $_SESSION = array_merge($_SESSION, User::get($_SESSION['steamid'], 'admin', 'perms'));
 }
 
 Lang::init(APP_LANGUAGE);
 
-function lang()
-{
-    return call_user_func_array([Lang::class, 'get'], func_get_args());
-}
+require_once __DIR__.'/helpers.php';
 
 // routing
 $routes = (ENABLE_CACHE ? Cache::remember('routes', 86400, [Routes::class, 'get']) : Routes::get());
 $dispatcher = new Dispatcher($routes);
-$response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+$exception = null;
+
+try {
+    $response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+    if ($response instanceof Response) {
+        $response->send();
+    } elseif (!empty($response)) {
+        echo $response;
+    }
+} catch (HttpRouteNotFoundException $e) {
+    if (!empty(pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION))) {
+        header('HTTP/1.0 404 Not Found');
+        die();
+    }
+    $exception = $e;
+} catch (Exception $e) {
+    $exception = $e;
+} finally {
+    $headers_sent = headers_sent();
+
+    if ($headers_sent) {
+        die();
+    }
+
+    if ($exception instanceof Exception) {
+        $sentry_id = Sentry\captureException($exception);
+
+        $errorData = [
+            'sentry_id' => Sentry\captureException($exception),
+            'exception' => $exception,
+        ];
+
+        if ($exception instanceof HttpRouteNotFoundException) {
+            $errorData['code'] = 404;
+        }
+        if ($exception instanceof HttpMethodNotAllowedException) {
+            $errorData['code'] = 405;
+        }
+
+        require_once __DIR__.'/error.php';
+    }
+}

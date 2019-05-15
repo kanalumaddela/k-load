@@ -9,13 +9,14 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
+
 use SteamID\SteamID;
 
 class Steam
 {
     private static $apikey;
 
-    public static function Key(string $key)
+    public static function Key(?string $key)
     {
         self::$apikey = $key;
     }
@@ -39,10 +40,8 @@ class Steam
     public static function Logout()
     {
         session_destroy();
-        if (isset($_SERVER['HTTP_REFERER'])) {
-            if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false) {
-                self::Redirect($_SERVER['HTTP_REFERER']);
-            }
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== false) {
+            self::Redirect($_SERVER['HTTP_REFERER']);
         }
 
         self::Redirect();
@@ -51,7 +50,6 @@ class Steam
     public static function Session($steamid)
     {
         $_SESSION = self::Convert($steamid);
-        $_SESSION['logged_in'] = 1;
         self::Redirect($_GET['openid_return_to'] ?? null);
     }
 

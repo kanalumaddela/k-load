@@ -12,7 +12,9 @@
 
 namespace K_Load\Controller;
 
+use Exception;
 use K_Load\Util;
+use function dump;
 
 class Test
 {
@@ -30,5 +32,17 @@ class Test
     {
         $status = \K_Load\Test::mysql($_POST['mysql']);
         Util::json(['success' => $status, 'message' => ($status ? 'MySQL connection established' : 'Please check the log in <code>data/logs/mysql</code>')], true);
+    }
+
+    public static function exception()
+    {
+        throw new Exception('exception test route');
+    }
+
+    public static function session()
+    {
+        echo '<pre>';
+        var_dump($_SESSION);
+        die();
     }
 }

@@ -17,7 +17,7 @@
 <body>
 {% block body %}{% endblock %}
 <script>
-    var site = {{ site_json|default('{}')|raw }};
+    var site = {{ site_json }};
     var backgrounds = {{ settings.backgrounds|default('{}')|raw }};
     backgrounds.list = {{ backgrounds|default('{}')|raw }};
     var youtube = {{ settings.youtube|default('{}')|raw }};

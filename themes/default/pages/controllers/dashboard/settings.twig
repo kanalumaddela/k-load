@@ -16,12 +16,13 @@
         <div class="col s12">
             {% if user.admin %}
                 <p>{{ lang('admin_global_settings_notice') }} <a
-                            href="{{ site.path ~ '/dashboard/admin/general' }}">{{ site.url ~ '/dashboard/admin/general' }}</a>
+                            href="{{ site.path ~ '/dashboard/admin' }}">{{ site.url ~ '/dashboard/admin' }}</a>
                 </p>
             {% endif %}
             <div class="card">
                 <div class="card-content row">
-                    <h1 class="flow-text col s12"><span class="mdi mdi-format-color-fill"></span>{{ lang('theme') }}</h1>
+                    <h1 class="flow-text col s12"><span class="mdi mdi-format-color-fill"></span>{{ lang('theme') }}
+                    </h1>
                     {% include '@partials/backgrounds.twig' with {'themes': themes, 'value': user.settings.theme} only %}
                 </div>
             </div>
@@ -83,7 +84,8 @@
                 <div class="card-content">
                     <div>
                         <h1 class="flow-text">
-                            <span class="mdi mdi-youtube"></span>{{ lang('youtube') }} / <span class="mdi mdi-music"></span>{{ lang('music') }}
+                            <span class="mdi mdi-youtube"></span>{{ lang('youtube') }} / <span
+                                    class="mdi mdi-music"></span>{{ lang('music') }}
                             <br>
                             <small style="margin-top: -10px">The available options control both various music sources
                             </small>
@@ -124,13 +126,15 @@
                             </p>
                         </div>
                         <div>
-                            <h5>{{ lang('yt_videos_to_play') }} <span class="red" style="padding: 0 10px;font-weight: bold;">NO LONGER WORKS</span>
+                            <h5>{{ lang('yt_videos_to_play') }} <span class="red"
+                                                                      style="padding: 0 10px;font-weight: bold;">NO LONGER WORKS</span>
                             </h5>
                             <div class="disabled">
                                 <div id="yt_vids">
                                     {% for youtube_id in user.settings.youtube.list %}
                                         <div class="input-field child">
-                                            <input type="text" name="youtube[list][]" placeholder="{{ lang('youtube') }} URL"
+                                            <input type="text" name="youtube[list][]"
+                                                   placeholder="{{ lang('youtube') }} URL"
                                                    value="https://www.youtube.com/watch?v={{ youtube_id }}"
                                                    style="width: 80%;">
                                             <a class="btn-floating delete-elem red"><i class="mdi mdi-delete"></i></a>
@@ -165,7 +169,8 @@
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
+            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top"
+                    data-tooltip="{{ lang('save') }}"
                     type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
         </div>
 
@@ -176,7 +181,12 @@
     <script>
         function createElem_youtube() {
             return elem('div', {className: 'input-field child'},
-                elem('input', {type: 'text', name: 'youtube[list][]', placeholder: '{{ lang('youtube') }} URL', style: 'width:80%;'}),
+                elem('input', {
+                    type: 'text',
+                    name: 'youtube[list][]',
+                    placeholder: '{{ lang('youtube') }} URL',
+                    style: 'width:80%;'
+                }),
                 elem('a', {className: 'btn-floating delete-elem red'},
                     elem('i', {className: 'mdi mdi-delete'})
                 )

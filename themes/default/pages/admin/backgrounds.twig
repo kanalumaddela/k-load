@@ -10,7 +10,7 @@
 
 {% block content %}
     {% if user.admin %}
-        {% if user.super or user.perms.backgrounds %}
+        {% if can('backgrounds %}
 
             {% include '@partials/gamemode-examples.twig' %}
 

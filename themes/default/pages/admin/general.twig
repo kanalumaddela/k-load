@@ -9,28 +9,63 @@
             <div class="col s12">
                 <div class="card">
                     <div class="card-content">
-                        <p>Background settings have moved to: <a href="{{ site.path ~ '/dashboard/admin/backgrounds' }}">{{ site.host ~ site.path ~ '/dashboard/admin/backgrounds' }}</a></p>
-                        <p>YouTube settings have moved to: <a href="{{ site.path ~ '/dashboard/admin/music' }}">{{ site.host ~ site.path ~ '/dashboard/admin/music' }}</a></p>
+                        <p>Background settings have moved to: <a
+                                    href="{{ site.path ~ '/dashboard/admin/backgrounds' }}">{{ site.host ~ site.path ~ '/dashboard/admin/backgrounds' }}</a>
+                        </p>
+                        <p>YouTube settings have moved to: <a
+                                    href="{{ site.path ~ '/dashboard/admin/music' }}">{{ site.host ~ site.path ~ '/dashboard/admin/music' }}</a>
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col s12">
-                <form method="post" action="{{ site.path }}/dashboard/admin/general">
+                <form class="row" method="post" action="{{ site.path }}/dashboard/admin/general">
                     {{ csrf() }}
+                    {% if can('community_name') %}
+                        <div class="col s12 m6">
+                            <div class="card">
+                                <div class="card-content">
+                                    <h1 class="flow-text"><span class="mdi mdi-settings"></span> {{ lang('general') }}
+                                    </h1>
+                                    <div class="row">
+                                        {% if can('community_name') %}
+                                            <div class="input-field col s12">
+                                                <input name="community_name" type="text" class="validate"
+                                                       value="{{ settings.community_name }}">
+                                                <label>{{ lang('community_name') }}</label>
+                                            </div>
+                                        {% endif %}
+                                        {% if can('description') %}
+                                            <div class="input-field col s12">
+                                        <textarea id="k-load-settings-descriptiion" name="description"
+                                                  class="materialize-textarea">{{ settings.description }}</textarea>
+                                                <label for="k-load-settings-descriptiion">{{ lang('description') }}</label>
+                                                <span class="counter"
+                                                      data-max="250">{{ settings.description|length }}/250</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
 
-                    {% if user.super or user.perms.community_name or user.perms.backgrounds %}
+                                    <div class="center">
+                                        <button class="btn blue" type="submit" name="save" value="1">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="col s12 m6">
                         <div class="card">
                             <div class="card-content">
                                 <h1 class="flow-text"><span class="mdi mdi-settings"></span> {{ lang('general') }}</h1>
                                 <div class="row">
-                                    {% if user.super or user.perms.community_name %}
+                                    {% if can('community_name') %}
                                         <div class="input-field col s12">
                                             <input name="community_name" type="text" class="validate"
                                                    value="{{ settings.community_name }}">
                                             <label>{{ lang('community_name') }}</label>
                                         </div>
                                     {% endif %}
-                                    {% if user.super or user.perms.description %}
+                                    {% if can('description') %}
                                         <div class="input-field col s12">
                                         <textarea id="k-load-settings-descriptiion" name="description"
                                                   class="materialize-textarea">{{ settings.description }}</textarea>
@@ -46,7 +81,7 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
+                    </div>
                 </form>
             </div>
         </div>

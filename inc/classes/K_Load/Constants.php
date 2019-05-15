@@ -28,7 +28,8 @@ class Constants
         'ignore_player_customizations' => false,
         'allow_theme_override'         => false,
         'users_per_page'               => 16,
-        'date_format'                  => '%m/%d/%Y %r',
+        'date_format'                  => 'm/d/Y r',
+        'demo_mode'                    => false,
     ];
 
     public static function init()

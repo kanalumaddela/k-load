@@ -13,13 +13,13 @@
 namespace K_Load;
 
 use Exception;
-use const APP_ROOT;
 use function file_exists;
 use function is_array;
 use function is_null;
 use function is_numeric;
 use function sprintf;
 use function vsprintf;
+use const APP_ROOT;
 
 class Lang
 {
@@ -29,6 +29,11 @@ class Lang
 
     protected static $fallback = [];
 
+    /**
+     * @param string $language
+     *
+     * @throws \Exception
+     */
     public static function init($language = 'en')
     {
         if (!self::exists($language)) {
@@ -39,11 +44,22 @@ class Lang
         self::$fallback = include self::LANG_FOLDER.'/en.php';
     }
 
+    /**
+     * @param $lang
+     *
+     * @return bool
+     */
     public static function exists($lang)
     {
         return file_exists(APP_ROOT.'/inc/lang/'.$lang.'.php');
     }
 
+    /**
+     * @param      $key
+     * @param null $default
+     *
+     * @return mixed|string|null
+     */
     public static function get($key, $default = null)
     {
         $lang = isset(self::$lang[$key]) && !empty(self::$lang[$key]) ? self::$lang[$key] : (isset(self::$fallback[$key]) && !empty(self::$fallback[$key]) ? self::$fallback[$key] : $key);

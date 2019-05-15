@@ -27,8 +27,10 @@
                     <p>{{ lang('steamid2') }} <code>{{ user.steamid2 }}</code></p>
                     <p>{{ lang('steamid3') }}: <code>{{ user.steamid3 }}</code></p>
                     <br>
-                    <p>{{ lang('profile') }}: <a href="{{ user.profileurl|replace({'http://': 'https://'}) }}" target="_blank"
-                                   style="word-break: break-all;word-wrap:break-word;">{{ user.profileurl }}</a></p>
+                    <p>{{ lang('profile') }}: <a href="{{ user.profileurl|replace({'http://': 'https://'}) }}"
+                                                 target="_blank"
+                                                 style="word-break: break-all;word-wrap:break-word;">{{ user.profileurl }}</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -39,11 +41,12 @@
                     {% if user.super %}
                         <p>{{ lang('user_is_super') }}</p>
                     {% else %}
-                        <p>{{ lang('admin') }}: {% if user.admin %}{{ lang('yes') }}{% else %}{{ lang('no') }}{% endif %}</p>
+                        <p>{{ lang('admin') }}
+                            : {% if user.admin %}{{ lang('yes') }}{% else %}{{ lang('no') }}{% endif %}</p>
                         {% if user.perms|length > 0 %}
                             <br>
-                            {% for perm,value in user.perms %}
-                                <p>{{ lang(perm) }}</p>
+                            {% for perm in user.perms %}
+                                <p>- {{ lang(perm) }}</p>
                             {% endfor %}
                         {% endif %}
                     {% endif %}

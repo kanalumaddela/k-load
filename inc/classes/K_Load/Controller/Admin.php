@@ -22,8 +22,6 @@ use K_Load\Test;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
-use const APP_ROOT;
-use const DIRECTORY_SEPARATOR;
 use function array_column;
 use function array_diff;
 use function array_intersect_key;
@@ -55,6 +53,8 @@ use function strtolower;
 use function substr;
 use function trim;
 use function unlink;
+use const APP_ROOT;
+use const DIRECTORY_SEPARATOR;
 
 class Admin
 {
@@ -73,8 +73,8 @@ class Admin
         ];
         $data['updates'] = Setup::getUpdates();
 
-        if (isset($_SESSION['steamid'])) {
-            if (User::isSuper($_SESSION['steamid']) && isset($_GET['action'])) {
+        if (isset($_SESSION['steamid']) && User::isSuper($_SESSION['steamid'])) {
+            if (isset($_GET['action'])) {
                 switch ($_GET['action']) {
                     case 'update_apikeys':
                         if (count($_POST) > 0) {
@@ -162,7 +162,7 @@ class Admin
                             $users = (array) $users;
                             foreach ($users as $user) {
                                 if (!empty($user['custom_css'])) {
-                                    file_put_contents(APP_ROOT.'/data/users/'.$user['steamid'].'.css', Util::minify($user['custom_css']));
+                                    file_put_contents(APP_ROOT.'/data/users/'.$user['steamid'].'.css', $user['custom_css']);
                                     if (!file_exists(APP_ROOT.'/data/users/'.$user['steamid'].'.css')) {
                                         Util::log('action', 'Failed to recreate CSS file for User: '.$user['steamid']);
                                         $css_fixed = false;
@@ -197,9 +197,10 @@ class Admin
 
     public static function general()
     {
-        $perms = User::getCurrentPerms();
+        //$perms = User::getCurrentPerms();
 
-        if (!array_key_exists('community_name', $perms) && !array_key_exists('backgrounds', $perms) && !array_key_exists('description', $perms) && !array_key_exists('youtube', $perms) && !User::isSuper($_SESSION['steamid'])) {
+
+        if (!User::isSuper($_SESSION['steamid']) && !User::can(['community_name' => false, 'backgrounds' => false, 'description' => false, 'youtube' => false])) {
             Util::redirect('/dashboard');
         }
 

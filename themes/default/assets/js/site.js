@@ -10,6 +10,7 @@
  */
 
 var csrf = $('#csrf').val();
+//var csrf = $('meta[name="csrf-token"]').attr('content');
 const elem = (tag, attrs, ...children) => {
     const elem = document.createElement(tag);
     Object.keys(attrs).forEach(function (key) {

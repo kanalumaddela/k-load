@@ -36,7 +36,7 @@ class Setup
         file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n");
 
         if (!empty(Util::version(true)) && !isset($_SESSION['force_install'])) {
-            echo '<h1>A K-Load installation already exists in this database, to force an install, refresh this page via F5</h1>';
+            echo '<h1>A K-Load installation already exists in this database, to force an install, refresh this page and re</h1>';
             echo 'Otherwise go to the dashboard: <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>';
             $_SESSION['force_install'] = 1;
             die();
@@ -67,6 +67,8 @@ class Setup
             $installed = Util::version(true) == $ver;
             Util::log('action', 'K-Load v'.$ver.($installed ? ' was' : ' failed to').' installed');
         }
+
+        User::add($_SESSION['steamid']);
 
         Cache::clear();
 

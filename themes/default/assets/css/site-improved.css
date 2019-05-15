@@ -429,6 +429,12 @@ h1 > .mdi {
     }
 }
 
+.card .card-content .card-title {
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* codemirror stuff */
 /*
     Name:       material
@@ -563,13 +569,13 @@ h1 > .mdi {
 }
 
 .cm-s-material.CodeMirror {
-    background-color: #23293f;
+    background-color: #23293f
 }
 
 .cm-s-material .CodeMirror-gutters {
-    background-color: #2b324a;
+    background-color: #2b324a
 }
 
 .cm-s-material .CodeMirror-guttermarker, .cm-s-material .CodeMirror-guttermarker-subtle, .cm-s-material .CodeMirror-linenumber {
-    color: #e6e6e6;
+    color: #e6e6e6
 }

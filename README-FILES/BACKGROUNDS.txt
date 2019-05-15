@@ -50,8 +50,8 @@ This currently isn't a thing in K-Load mainly cause of the conflict I saw with y
 #video_background {
     z-index: -9999;
     position: absolute;
-    bottom: 0px;
-    left: 0px;
+    bottom: 0;
+    left: 0;
     min-width: 100%;
     min-height: 100%;
     width: auto;

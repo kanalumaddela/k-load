@@ -7,7 +7,7 @@
 <ul id="side-nav" class="sidenav sidenav-fixed">
     <li>
         <div class="user-view">
-            <a href="#user" class="is-image">
+            <a class="is-image">
                 <img class="circle" style="border-radius: 3px" src="{{ user.avatarfull }}"
                      onerror="this.src='{{ assets }}/img/avatar.jpg'">
             </a>
@@ -22,13 +22,13 @@
     </li>
 
 
-    <li class="bold{% if (site.host ~ site.path ~ '/dashboard') == site.current %} active{% endif %}">
+    <li class="bold{% if (site.url ~ '/dashboard') == site.current %} active{% endif %}">
         <a href="{{ site.path }}/dashboard">
             <span class="mdi mdi-home-outline"></span>
             {{ lang('home') }}
         </a>
     </li>
-    <li class="bold{% if (site.host ~ site.path ~ '/dashboard/settings') == site.current %} active{% endif %} tooltipped"
+    <li class="bold{% if (site.url ~ '/dashboard/settings') == site.current %} active{% endif %} tooltipped"
         data-delay="100" data-position="right" data-tooltip="{{ lang('my_settings_tooltip') }}">
         <a href="{{ site.path }}/dashboard/settings">
             <span class="mdi mdi-tune"></span>
@@ -36,7 +36,7 @@
         </a>
     </li>
 
-    <li class="bold{% if (site.host ~ site.path ~ '/dashboard/users') in site.current %} active{% endif %}">
+    <li class="bold{% if (site.url ~ '/dashboard/users') in site.current %} active{% endif %}">
         <a href="{{ site.path }}/dashboard/users">
             <span class="mdi mdi-account-multiple"></span>
             {{ lang('users') }}
@@ -45,7 +45,7 @@
     {% if (user.admin and user.perms|length > 0) or user.super %}
         <li>
             <ul class="collapsible collapsible-accordion">
-                <li class="bold {% if (site.host ~ site.path ~ '/dashboard/admin') in site.current %}active{% endif %}">
+                <li class="bold {% if (site.url ~ '/dashboard/admin') in site.current %}active{% endif %}">
                     <a class="collapsible-header tooltipped"
                        data-delay="100" data-position="right"
                        data-tooltip="{{ lang('admin_tooltip') }}">
@@ -55,37 +55,37 @@
                     <div class="collapsible-body">
                         <ul>
                             {% if user.super %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin') == site.current %}active{% endif %}">
+                                <li class="{% if (site.url ~ '/dashboard/admin') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin">{{ lang('core') }}</a>
                                 </li>
                             {% endif %}
-                            {% if user.super or user.perms.community_name or user.perms.backgrounds or user.perms.description or user.perms.youtube %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/general') == site.current %}active{% endif %}">
+                            {% if can('community_name') or can('description') %}
+                                <li class="{% if (site.url ~ '/dashboard/admin/general') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/general">{{ lang('general') }}</a>
                                 </li>
                             {% endif %}
-                            {% if user.super or user.perms.backgrounds %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/backgrounds') == site.current %}active{% endif %}">
+                            {% if can('backgrounds') %}
+                                <li class="{% if (site.url ~ '/dashboard/admin/backgrounds') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/backgrounds">{{ lang('backgrounds') }}</a>
                                 </li>
                             {% endif %}
-                            {% if user.super or user.perms.messages %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/messages') == site.current %}active{% endif %}">
+                            {% if can('messages') %}
+                                <li class="{% if (site.url ~ '/dashboard/admin/messages') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/messages">{{ lang('messages') }}</a>
                                 </li>
                             {% endif %}
-                            {% if user.super or user.perms.music %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/music') == site.current %}active{% endif %}">
+                            {% if can('music') %}
+                                <li class="{% if (site.url ~ '/dashboard/admin/music') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/music">{{ lang('music') }}</a>
                                 </li>
                             {% endif %}
-                            {% if user.super or user.perms.rules %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/rules') == site.current %}active{% endif %}">
+                            {% if can('rules') %}
+                                <li class="{% if (site.url ~ '/dashboard/admin/rules') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/rules">{{ lang('rules') }}</a>
                                 </li>
                             {% endif %}
-                            {% if user.super or user.perms.staff %}
-                                <li class="{% if (site.host ~ site.path ~ '/dashboard/admin/staff') == site.current %}active{% endif %}">
+                            {% if can('staff') %}
+                                <li class="{% if (site.url ~ '/dashboard/admin/staff') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/staff">{{ lang('staff') }}</a>
                                 </li>
                             {% endif %}

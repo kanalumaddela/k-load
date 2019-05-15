@@ -19,10 +19,6 @@ use MatthiasMullie\Minify\CSS;
 use Steam;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use const APP_HOST;
-use const APP_PATH;
-use const APP_ROOT;
-use const ENABLE_CACHE;
 use function addcslashes;
 use function array_column;
 use function array_diff;
@@ -67,17 +63,13 @@ use function substr;
 use function unlink;
 use function urldecode;
 use function var_export;
+use const APP_HOST;
+use const APP_PATH;
+use const APP_ROOT;
+use const ENABLE_CACHE;
 
 class Util
 {
-    public static function dump($var)
-    {
-        $cloner = new VarCloner();
-        $dumper = new HtmlDumper();
-
-        return $dumper->dump($cloner->cloneVar($var), true);
-    }
-
     public static function rmDir($folder)
     {
         $content = glob($folder.'/*');
@@ -332,14 +324,6 @@ class Util
         }
     }
 
-    public static function minify($css)
-    {
-        $minifier = new CSS();
-        $minifier->add($css);
-
-        return $minifier->minify();
-    }
-
     public static function redirect($url)
     {
         if (self::startsWith('/', $url)) {
@@ -356,7 +340,12 @@ class Util
 
     public static function token()
     {
-        return hash('sha256', bin2hex(random_bytes(16)));
+        return self::hash();
+    }
+
+    public static function hash($length = 16)
+    {
+        return hash('sha256', bin2hex(random_bytes($length)));
     }
 
     public static function var_export($var, $indent = '')
@@ -405,6 +394,9 @@ class Util
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
             $_SESSION['flash'][$key] = $value;
+        } else {
+            echo 'not active';
+            die();
         }
     }
 }

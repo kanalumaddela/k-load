@@ -10,10 +10,11 @@
  * @license   MIT
  */
 
-namespace K_Load\Controller;
+namespace K_Load\Controllers;
 
 use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use K_Load\LoadingTemplate;
 use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
@@ -21,6 +22,7 @@ use Steam;
 use function array_diff;
 use function array_merge;
 use function basename;
+use function dump;
 use function is_array;
 use function is_file;
 use function is_null;
@@ -29,7 +31,6 @@ use function json_encode;
 use function method_exists;
 use function scandir;
 use function str_replace;
-use function view;
 use const ALLOW_THEME_OVERRIDE;
 use const APP_ROOT;
 use const ENABLE_CACHE;
@@ -38,7 +39,7 @@ use const IGNORE_PLAYER_CUSTOMIZATIONS;
 
 class Main
 {
-    public static function index()
+    public function index()
     {
         global $config;
 
@@ -73,24 +74,21 @@ class Main
         }
 
         $theme = $config['loading_theme'] ?? 'default';
-        if (!is_null($steamid)) {
-            $theme = $data['user']['settings']['theme'] ?? $theme;
-        }
 
-        if (isset($_GET['theme']) && (!isset($data['user']['settings']['theme']) || ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
+        if (!IGNORE_PLAYER_CUSTOMIZATIONS && isset($data['user']['settings']['theme'])) {
+            $theme = $data['user']['settings']['theme'];
+        }
+        if (isset($_GET['theme']) && (ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
             $theme = $_GET['theme'];
         }
 
         if (!Template::isLoadingTheme($theme)) {
-            $theme = $config['loading_theme'];
+            $theme = $config['loading_theme'] ?? 'default';
         }
 
-        if ($theme !== 'default') {
-            //LoadingTemplate::init($theme);
-            Template::theme($theme);
-        }
+        LoadingTemplate::init($theme);
 
-        return view('loading', $data);
+        return LoadingTemplate::render('loading.twig', $data);
     }
 
     protected static function getData($steamid, $map)
@@ -102,8 +100,8 @@ class Main
             'css_exists'  => file_exists(APP_ROOT.'/data/users/'.$steamid.'.css'),
         ];
 
-        $user = User::get($steamid, 'name', 'steamid2', 'steamid3', 'settings', 'admin', 'banned', 'registered');
-        if (empty($user)) {
+        $user = !empty($steamid) ? User::get($steamid) : null;
+        if (empty($user) && !empty($steamid)) {
             $user = Steam::Convert($steamid);
         }
 
@@ -158,7 +156,7 @@ class Main
         return $data;
     }
 
-    public static function logout()
+    public function logout()
     {
         Steam::logout();
     }

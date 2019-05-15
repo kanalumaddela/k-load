@@ -10,6 +10,11 @@
  * @license   MIT
  */
 
+//if ($_SERVER['SERVER_NAME'] === 'demo.maddela.org') {
+//    die('making this better, have patience thx');
+//}
+
+
 // debug time
 define('APP_START', microtime(true));
 
@@ -60,6 +65,13 @@ if (!file_exists(__DIR__.'/data/FILE_WRITE_CHECK_DO_NOT_REMOVE')) {
 // another check for retard setups/hosts
 if (!function_exists('curl_init') || !extension_loaded('curl')) {
     echo '<div style="color:red;text-align:center;"><h1 style="text-transform:uppercase">the php extension "curl" is not loaded/enabled/installed. without it you cannot login</h1><h3>if you are using shared hosting contact them to enable it</h3>';
+    echo '</div>';
+    phpinfo();
+    die();
+}
+// another check for retard setups/hosts
+if (PHP_INT_SIZE === 4) {
+    echo '<div style="color:red;text-align:center;"><h1 style="text-transform:uppercase">You are running the 32 bit version of PHP, 64 bit is required and should be the standard in this modern age</h1>';
     echo '</div>';
     phpinfo();
     die();

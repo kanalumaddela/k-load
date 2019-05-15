@@ -24,18 +24,22 @@
                         <p class="name {% if player.banned %}red-text{% endif %}">{{ player.name|default('Unknown') }}</p>
                         <br>
                         <div class="user-buttons">
-                            <a class="btn btn-profile" href="{{ site.path }}/dashboard/users/{{ player.steamid }}">{{ lang('profile') }}</a>
+                            <a class="btn btn-profile"
+                               href="{{ site.path }}/dashboard/users/{{ player.steamid }}">{{ lang('profile') }}</a>
                             {% if player.steamid != user.steamid and user.admin %}
                                 {% if user.super %}
-                                    <a class="btn btn-perms modal-trigger" href="#perms_{{ player.steamid }}">{{ lang('permissions') }}</a>
+                                    <a class="btn btn-perms modal-trigger"
+                                       href="#perms_{{ player.steamid }}">{{ lang('permissions') }}</a>
                                 {% endif %}
                                 {% if player.banned %}
-                                    {% if user.super or user.perms.unban %}
-                                        <a class="btn unban-user" data-steamid="{{ player.steamid }}">{{ lang('unban') }}</a>
+                                    {% if can('unban') %}
+                                        <a class="btn unban-user"
+                                           data-steamid="{{ player.steamid }}">{{ lang('unban') }}</a>
                                     {% endif %}
                                 {% else %}
-                                    {% if user.super or user.perms.ban %}
-                                        <a class="btn ban-user" data-steamid="{{ player.steamid }}">{{ lang('ban') }}</a>
+                                    {% if can('ban') %}
+                                        <a class="btn ban-user"
+                                           data-steamid="{{ player.steamid }}">{{ lang('ban') }}</a>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}

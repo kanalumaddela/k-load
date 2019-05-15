@@ -50,7 +50,7 @@
             circle_height = circle_height.animVal.value;
             var polygon = circle_height;
             var imageclip = polygon - (decimal * polygon);
-            document.getElementById("load-circle-inner").setAttribute("style", "clip: rect(" + imageclip + "px " + polygon + "px " + polygon + "px 0px);");
+            document.getElementById("load-circle-inner").setAttribute("style", "clip: rect(" + imageclip + "px " + polygon + "px " + polygon + "px 0);");
         }
     </script>
 {% endblock %}

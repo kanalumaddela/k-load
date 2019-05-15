@@ -13,28 +13,25 @@
 namespace K_Load;
 
 use Twig\Environment;
-use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
 use Twig\TwigFunction;
-use function array_fill_keys;
-use function array_flip;
-use function array_keys;
-use function bin2hex;
+use function array_replace_recursive;
 use function count;
 use function end;
 use function explode;
 use function file_exists;
 use function filemtime;
 use function glob;
-use function json_decode;
 use function json_encode;
 use function lang;
 use function ltrim;
-use function random_bytes;
 use function sprintf;
 use function str_replace;
 use function usort;
+use const APP_LANGUAGE;
+use const DEBUG;
+use const DEMO_MODE;
 
 class Template
 {
@@ -52,14 +49,11 @@ class Template
         global $steamLogin;
 
         $theme_loc = APP_ROOT.'/themes/'.self::$theme.'/pages';
-        $theme_loc_fallback = APP_ROOT.'/themes/default/pages';
 
         self::$twig_loader = new FilesystemLoader($theme_loc);
 
-        self::$twig_loader->addPath((file_exists($theme_loc.'/dashboard') ? $theme_loc.'/dashboard' : $theme_loc_fallback.'/dashboard'), 'dashboard');
-        self::$twig_loader->addPath((file_exists($theme_loc.'/admin') ? $theme_loc.'/admin' : $theme_loc_fallback.'/admin'), 'admin');
-        self::$twig_loader->addPath((file_exists($theme_loc.'/partials') ? $theme_loc.'/partials' : $theme_loc_fallback.'/partials'), 'partials');
-        self::$twig_loader->addPath(APP_ROOT.'/themes/default/pages/loading', 'loading');
+        self::$twig_loader->addPath($theme_loc.'/partials', 'partials');
+        self::$twig_loader->addPath($theme_loc.'/controllers', 'controllers');
 
         self::$twig_env_params = [
             'auto_reload' => true,
@@ -68,12 +62,14 @@ class Template
         ];
         self::$twig = new Environment(self::$twig_loader, self::$twig_env_params);
 
-        if (DEBUG) {
-            self::$twig->addExtension(new DebugExtension());
-        }
-
+        // csrf
         $function = new TwigFunction('csrf', function () {
-            return new Markup('<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">', 'utf8');
+            return new Markup('<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid'] ?? null).'">', 'utf8');
+        });
+        self::$twig->addFunction($function);
+
+        $function = new TwigFunction('csrf_token', function () {
+            return User::getCSRF($_SESSION['steamid'] ?? null);
         });
         self::$twig->addFunction($function);
 
@@ -95,6 +91,26 @@ class Template
         });
         self::$twig->addFunction($function);
 
+        // can
+        $function = new TwigFunction('can', function ($perm) {
+            return User::can($perm);
+        });
+        self::$twig->addFunction($function);
+
+        // canOr
+        $function = new TwigFunction('canOr', function (...$perms) {
+            return User::can(...$perms);
+        });
+        self::$twig->addFunction($function);
+
+        // canAnd
+        $function = new TwigFunction('canAnd', function (...$perms) {
+            return User::canAnd(...$perms);
+        });
+        self::$twig->addFunction($function);
+
+        unset($function);
+
         $site_urls = [
             'host'    => APP_HOST,
             'path'    => APP_PATH,
@@ -103,13 +119,18 @@ class Template
         ];
 
         self::$twig->addGlobal('site', $site_urls);
+        self::$twig->addGlobal('app', [
+            'debug'     => DEBUG,
+            'lang'      => APP_LANGUAGE,
+            'demo_mode' => DEMO_MODE,
+        ]);
 
         self::$data = [
             'assets'       => APP_PATH.'/assets',
             'assets_theme' => APP_PATH.'/themes/'.self::$theme.'/assets',
             'login_url'    => $steamLogin->getLoginURL(),
-            'site_json'    => json_encode($site_urls),
-            'cache_buster' => bin2hex(random_bytes(3)),
+            'site_json'    => new Markup(json_encode($site_urls), 'utf-8'),
+            'cache_buster' => Util::hash(3),
         ];
     }
 
@@ -122,11 +143,9 @@ class Template
         return self::$theme;
     }
 
-    public static function isDasbhoardTheme($name)
+    public static function isDashboardTheme($name)
     {
-        $theme = APP_ROOT.'/themes/'.$name.'/pages';
-
-        return file_exists($theme.'/dashboard') && file_exists($theme.'/admin');
+        return file_exists(APP_ROOT.'/themes/'.$name.'/pages/controllers');
     }
 
     public static function isLoadingTheme($name)
@@ -152,7 +171,7 @@ class Template
 
     public static function render($template, array $data = [], $dontBuild = false)
     {
-        if (!isset($data['alert'])) {
+        if (!isset($data['alert']) && isset($_SESSION['flash']['alert'])) {
             if (isset($_SESSION['flash']['alert'])) {
                 $data['alert'] = $_SESSION['flash']['alert'];
                 unset($_SESSION['flash']['alert']);
@@ -168,7 +187,19 @@ class Template
             $data = self::$data;
         }
 
-        self::$twig->load($template)->display($data);
+        $data['flash'] = [];
+
+        if (isset($_SESSION['flash'])) {
+            foreach ($_SESSION['flash'] as $flashKey => $flashValue) {
+                $data['flash'][$flashKey] = $flashValue;
+
+                if (!isset($_SESSION['reflash'])) {
+                    unset($_SESSION['flash'][$flashKey]);
+                }
+            }
+        }
+
+        return self::$twig->load($template)->render($data);
     }
 
     public static function buildData(array $data = [])
@@ -176,15 +207,12 @@ class Template
         if (isset($_SESSION['steamid']) && !isset($_GET['steamid']) && (APP_URL.'/') != APP_URL_CURRENT) {
             self::$data['themes'] = self::loadingThemes(User::isSuper($_SESSION['steamid']));
             self::$data['user'] = $_SESSION;
-            self::$data['user']['admin'] = User::isSuper($_SESSION['steamid']) ? 1 : (int) User::getInfo($_SESSION['steamid'], 'admin');
+            self::$data['user']['admin'] = User::isSuper($_SESSION['steamid']) ? 1 : $_SESSION['admin'];
             self::$data['user']['super'] = User::isSuper($_SESSION['steamid']);
-            self::$data['user']['perms'] = array_fill_keys(array_keys(array_flip(json_decode(User::getInfo($_SESSION['steamid'], 'perms'), true))), 1);
-            if (self::$data['user']['perms'] != $_SESSION['perms']) {
-                $_SESSION['perms'] = self::$data['user']['perms'];
-            }
             self::$data['csrf'] = '<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">';
         }
-        self::$data = self::$data + $data;
+
+        self::$data = array_replace_recursive(self::$data, $data);
     }
 
     public static function loadingThemes($all = false)
@@ -199,10 +227,16 @@ class Template
             if (file_exists($location.'/pages/loading.twig')) {
                 if ($all || in_array($name, $config['loading_themes'])) {
                     $previews = glob($location.DIRECTORY_SEPARATOR.'*.{jpg,png}', GLOB_BRACE);
-                    usort($previews, function ($a, $b) {
-                        return filemtime($a) - filemtime($b);
-                    });
-                    $preview = count($previews) > 0 ? str_replace(APP_ROOT, APP_PATH, $previews[0]) : null;
+
+                    if (count($previews) > 0) {
+                        usort($previews, function ($a, $b) {
+                            return filemtime($a) - filemtime($b);
+                        });
+
+                        $preview = str_replace(APP_ROOT, APP_PATH, $previews[0]);
+                    } else {
+                        $preview = null;
+                    }
 
                     $list[] = [
                         'name'    => $name,
