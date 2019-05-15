@@ -9,7 +9,6 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
-
 use SteamID\SteamID;
 
 class Steam

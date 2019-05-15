@@ -14,7 +14,6 @@ namespace K_Load\Controller;
 
 use Exception;
 use K_Load\Util;
-use function dump;
 
 class Test
 {

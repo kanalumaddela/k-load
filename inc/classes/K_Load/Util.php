@@ -15,10 +15,11 @@ namespace K_Load;
 use Database;
 use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
-use MatthiasMullie\Minify\CSS;
 use Steam;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use const APP_HOST;
+use const APP_PATH;
+use const APP_ROOT;
+use const ENABLE_CACHE;
 use function addcslashes;
 use function array_column;
 use function array_diff;
@@ -63,10 +64,6 @@ use function substr;
 use function unlink;
 use function urldecode;
 use function var_export;
-use const APP_HOST;
-use const APP_PATH;
-use const APP_ROOT;
-use const ENABLE_CACHE;
 
 class Util
 {

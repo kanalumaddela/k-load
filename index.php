@@ -14,7 +14,6 @@
 //    die('making this better, have patience thx');
 //}
 
-
 // debug time
 define('APP_START', microtime(true));
 

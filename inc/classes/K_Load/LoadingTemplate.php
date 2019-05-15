@@ -12,7 +12,6 @@
 
 namespace K_Load;
 
-
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;

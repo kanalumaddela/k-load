@@ -9,7 +9,6 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
-
 use K_Load\Lang;
 use K_Load\Template;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @param       $template
  * @param array $data
- *
  * @param int   $httpCode
  *
  * @return \Symfony\Component\HttpFoundation\Response

@@ -15,6 +15,7 @@ namespace K_Load;
 use Database;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use Steam;
+use const DATE_FORMAT;
 use function array_key_exists;
 use function array_keys;
 use function array_merge;
@@ -22,7 +23,6 @@ use function array_replace_recursive;
 use function ceil;
 use function count;
 use function date;
-use function dump;
 use function file_exists;
 use function file_put_contents;
 use function filter_var;
@@ -33,7 +33,6 @@ use function json_encode;
 use function sort;
 use function strtotime;
 use function unlink;
-use const DATE_FORMAT;
 
 class User
 {
@@ -131,7 +130,7 @@ class User
             unset($_SESSION['settings']);
             $_SESSION = array_merge($_SESSION, self::get($_SESSION['steamid']));
             Cache::remove('player-'.$steamid);
-            file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', User::getUserData($_SESSION['steamid'], 'custom_css'));
+            file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', self::getUserData($_SESSION['steamid'], 'custom_css'));
         }
 
         return $success;
@@ -142,7 +141,7 @@ class User
         $valid = (bool) Database::conn()->select("SELECT (`steamid` = '?' AND `token` = '?' AND CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions`", [$steamid, $token])->execute() ?? false;
 
         if (!$valid) {
-            User::refreshCSRF($steamid);
+            self::refreshCSRF($steamid);
         }
 
         return $valid;

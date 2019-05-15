@@ -16,6 +16,9 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
 use Twig\TwigFunction;
+use const APP_LANGUAGE;
+use const DEBUG;
+use const DEMO_MODE;
 use function array_replace_recursive;
 use function count;
 use function end;
@@ -29,9 +32,6 @@ use function ltrim;
 use function sprintf;
 use function str_replace;
 use function usort;
-use const APP_LANGUAGE;
-use const DEBUG;
-use const DEMO_MODE;
 
 class Template
 {
