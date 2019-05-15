@@ -100,9 +100,9 @@ return [
     // profile page
     'name'                         => 'Name',
     'loading_screen'               => 'Loading Screen',
-    'registered'                => 'Registered',
-    'ban_user'                  => 'Ban User',
-    'copy_user_settings'        => 'Copy User\'s Settings',
+    'registered'                   => 'Registered',
+    'ban_user'                     => 'Ban User',
+    'copy_user_settings'           => 'Copy User\'s Settings',
 
     // admin core
     'config'                    => 'Config',

@@ -22,6 +22,8 @@ use K_Load\Test;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
+use const APP_ROOT;
+use const DIRECTORY_SEPARATOR;
 use function array_column;
 use function array_diff;
 use function array_intersect_key;
@@ -53,8 +55,6 @@ use function strtolower;
 use function substr;
 use function trim;
 use function unlink;
-use const APP_ROOT;
-use const DIRECTORY_SEPARATOR;
 
 class Admin
 {
@@ -198,7 +198,6 @@ class Admin
     public static function general()
     {
         //$perms = User::getCurrentPerms();
-
 
         if (!User::isSuper($_SESSION['steamid']) && !User::can(['community_name' => false, 'backgrounds' => false, 'description' => false, 'youtube' => false])) {
             Util::redirect('/dashboard');
