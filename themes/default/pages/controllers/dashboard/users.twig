@@ -1,0 +1,122 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ lang('users') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('users_page', [page]) }} {% endblock %}
+
+{% block content %}
+    <form id="search_users" class="row" method="get" action="{{ site.path }}/dashboard/users">
+        <div class="input-field col s12 m10">
+            <input placeholder="{{ lang('users_search_placeholder') }}" name="search" type="text" class="" required="">
+        </div>
+        <div class="input-field col s12 m2 center">
+            <input form="search_users" class="btn" type="submit" value="{{ lang('search') }}">
+        </div>
+    </form>
+
+    <div class="row users">
+        {% for player in users %}
+            <div class="col s12 m6 l4 xl3">
+                <div class="card center-align">
+                    <img class="avatar circle"
+                         src="{% if steamInfo[player.steamid] %}{{ steamInfo[player.steamid].avatarfull }}{% else %}{{ site.path }}/api/player/{{ player.steamid }}/avatarfull?raw{% endif %}"
+                         onerror="this.src='{{ assets }}/img/avatar.jpg'">
+                    <div class="card-content">
+                        <p class="name {% if player.banned %}red-text{% endif %}">{{ player.name|default('Unknown') }}</p>
+                        <br>
+                        <div class="user-buttons">
+                            <a class="btn btn-profile"
+                               href="{{ site.path }}/dashboard/users/{{ player.steamid }}">{{ lang('profile') }}</a>
+                            {% if player.steamid != user.steamid and user.admin %}
+                                {% if user.super %}
+                                    <a class="btn btn-perms modal-trigger"
+                                       href="#perms_{{ player.steamid }}">{{ lang('permissions') }}</a>
+                                {% endif %}
+                                {% if player.banned %}
+                                    {% if can('unban') %}
+                                        <a class="btn unban-user"
+                                           data-steamid="{{ player.steamid }}">{{ lang('unban') }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    {% if can('ban') %}
+                                        <a class="btn ban-user"
+                                           data-steamid="{{ player.steamid }}">{{ lang('ban') }}</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if user.super %}
+                <div id="perms_{{ player.steamid }}" class="modal">
+                    <form id="perms_form_{{ player.steamid }}" method="post" action="{{ site.path }}/dashboard/users">
+                        {{ csrf() }}
+                        <input type="hidden" name="type" value="perms"/>
+                        <input type="hidden" name="player" value="{{ player.steamid }}"/>
+                        <div class="modal-content">
+                            <h5>{{ player.name|default('Unknown') }}'s {{ lang('permissions') }}</h5>
+                            <br>
+                            <div class="row">
+                                <div class="switch col s12">
+                                    <label>
+                                        {{ lang('player') }}
+                                        <input type="checkbox" name="admin" value="1"
+                                               {% if player.admin %}checked{% endif %} />
+                                        <span class="lever"></span>
+                                        {{ lang('admin') }}
+                                    </label>
+                                </div>
+                                {% for perm, permFriendly in permissions %}
+                                    <div class="col s6 m4">
+                                        <p>
+                                            <label>
+                                                <input type="checkbox" class="filled-in perm" name="perms[]"
+                                                       value="{{ perm }}"
+                                                       {% if perm in player.perms %}checked{% endif %} />
+                                                <span>
+                                                    {{ lang(perm) }}
+                                                </span>
+                                            </label>
+                                        </p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn-flat modal-close waves-effect">{{ lang('close') }}</a>
+                            <button form="perms_form_{{ player.steamid }}" type="submit" class="btn green" name="save">
+                                {{ lang('save') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="center-align">
+        <ul class="pagination">
+
+            {% for x in 4..1 %}
+                {% set tmp = page-x %}
+                {% if tmp > 0 %}
+                    <li><a href="{{ site.path }}/dashboard/users?pg={{ tmp }}">{{ tmp }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            <li class="active"><a>{{ page }}</a></li>
+
+            {% for x in 1..4 %}
+                {% set tmp = page+x %}
+                {% if tmp <= pages %}
+                    <li><a href="{{ site.path }}/dashboard/users?pg={{ tmp }}">{{ tmp }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+        </ul>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script>$('.modal').modal();</script>
+{% endblock %}
