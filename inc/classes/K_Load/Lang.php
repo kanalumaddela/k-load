@@ -12,8 +12,8 @@
 
 namespace K_Load;
 
-use Exception;
 use const APP_ROOT;
+use Exception;
 use function file_exists;
 use function is_array;
 use function is_null;

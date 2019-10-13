@@ -12,7 +12,6 @@
 
 namespace K_Load\Controllers\Admin;
 
-
 use Exception;
 use K_Load\Controllers\BaseController;
 use K_Load\User;
@@ -27,6 +26,7 @@ class Music extends BaseController
 
     /**
      * @throws \Exception
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index()
@@ -146,7 +146,6 @@ class Music extends BaseController
             Util::saveSetting('music', $data['music']);
         }
 
-
         $data['music_files'] = $files;
         $data['music_files_json'] = new Markup(json_encode($files), 'utf-8');
 
@@ -172,7 +171,7 @@ class Music extends BaseController
         $files = $files['music_files'] ?? [];
 
         /**
-         * @var \Symfony\Component\HttpFoundation\File\UploadedFile $file
+         * @var \Symfony\Component\HttpFoundation\File\UploadedFile
          */
         foreach ($files as $file) {
             $message = '';
@@ -193,7 +192,7 @@ class Music extends BaseController
                     }
                     break;
                 case UPLOAD_ERR_CANT_WRITE:
-                    $message = "Failed to write `%s`. Check permissions.";
+                    $message = 'Failed to write `%s`. Check permissions.';
                     break;
                 case UPLOAD_ERR_OK:
                     if ($file->getClientMimeType() !== 'audio/ogg') {

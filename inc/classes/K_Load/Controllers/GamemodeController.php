@@ -12,9 +12,8 @@
 
 namespace K_Load\Controllers;
 
-
-use K_Load\Util;
 use function array_flip;
+use K_Load\Util;
 use function sprintf;
 use function strtolower;
 
@@ -63,11 +62,9 @@ class GamemodeController extends BaseController
         // darkrp
         // prophunt
 
-
         if (isset(self::$gamemodes[$lower]) && $lower !== $gamemode) {
             Util::flash('alerts', sprintf('`%s` given, proper value fixed and made `%s`', $gamemode, $lower));
         }
-
 
         return $lower;
     }

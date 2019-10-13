@@ -12,18 +12,18 @@
 
 namespace K_Load\Controllers;
 
+use function count;
+use const ENABLE_CACHE;
+use function is_null;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use const JSON_PRETTY_PRINT;
 use K_Load\User;
 use K_Load\Util;
-use Steam;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use function count;
-use function is_null;
 use function md5;
 use function simplexml_load_string;
+use Steam;
 use function strpos;
-use const ENABLE_CACHE;
-use const JSON_PRETTY_PRINT;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class API extends BaseController
 {

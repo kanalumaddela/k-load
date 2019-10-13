@@ -12,18 +12,7 @@
 
 namespace K_Load\Controllers;
 
-use Database;
-use Exception;
-use finfo;
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
-use K_Load\Setup;
-use K_Load\Template;
-use K_Load\Test;
-use K_Load\User;
-use K_Load\Util;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use const APP_ROOT;
 use function array_column;
 use function array_diff;
 use function array_keys;
@@ -34,28 +23,39 @@ use function array_values;
 use function basename;
 use function ceil;
 use function count;
+use Database;
+use const DIRECTORY_SEPARATOR;
 use function end;
+use Exception;
 use function explode;
 use function file_exists;
 use function file_put_contents;
+use const FILEINFO_MIME_TYPE;
+use finfo;
 use function glob;
+use const GLOB_BRACE;
 use function in_array;
 use function ini_get;
 use function is_array;
 use function is_dir;
+use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use function json_decode;
+use K_Load\Setup;
+use K_Load\Template;
+use K_Load\Test;
+use K_Load\User;
+use K_Load\Util;
 use function move_uploaded_file;
 use function preg_replace;
 use function sprintf;
 use function str_replace;
 use function strtolower;
 use function substr;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use function trim;
 use function unlink;
-use const APP_ROOT;
-use const DIRECTORY_SEPARATOR;
-use const FILEINFO_MIME_TYPE;
-use const GLOB_BRACE;
 use const UPLOAD_ERR_FORM_SIZE;
 use const UPLOAD_ERR_INI_SIZE;
 use const UPLOAD_ERR_NO_FILE;
@@ -315,7 +315,7 @@ class Admin extends BaseController
         Util::mkDir($logoFolder);
 
         /**
-         * @var \Symfony\Component\HttpFoundation\File\UploadedFile $file
+         * @var \Symfony\Component\HttpFoundation\File\UploadedFile
          */
         $file = $this->http->files->get('logo');
 
@@ -333,10 +333,10 @@ class Admin extends BaseController
                 $message = 'The uploaded file exceeds the MAX_FILE_SIZE';
                 break;
             case UPLOAD_ERR_NO_TMP_DIR:
-                $message = "Missing temporary folder";
+                $message = 'Missing temporary folder';
                 break;
             case UPLOAD_ERR_CANT_WRITE:
-                $message = "Failed to write file. Check permissions.";
+                $message = 'Failed to write file. Check permissions.';
                 break;
             case UPLOAD_ERR_OK:
                 if (!in_array($file->getClientMimeType(), ['image/png', 'image/jpg', 'image/jpeg'])) {
@@ -591,7 +591,6 @@ class Admin extends BaseController
 
                 $_POST['rules']['list'][$gamemode] = array_values($rules);
             }
-
 
             $success = Util::updateSetting(['rules'], [$_POST['rules']], $_POST['csrf']);
 

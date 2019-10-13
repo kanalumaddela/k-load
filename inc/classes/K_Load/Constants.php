@@ -12,10 +12,10 @@
 
 namespace K_Load;
 
-use Exception;
 use function constant;
 use function define;
 use function defined;
+use Exception;
 use function gettype;
 use function strtoupper;
 
@@ -43,6 +43,7 @@ class Constants
             if (defined($constant) && gettype(constant($constant)) !== gettype($value)) {
                 $type = gettype($value);
                 $givenType = gettype(constant($constant));
+
                 throw new Exception('Expected type `'.$type.'` for '.$constant.'. `'.$givenType.'` was given instead');
             }
 
