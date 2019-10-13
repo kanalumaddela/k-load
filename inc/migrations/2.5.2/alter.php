@@ -9,7 +9,6 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
-
 use K_Load\Util;
 
 Database::run("UPDATE `kload_settings` SET `value` = '2.5.2' WHERE `name` = 'version'");
