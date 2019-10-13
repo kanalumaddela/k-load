@@ -170,7 +170,7 @@ class Music extends BaseController
 
         $files = $files['music_files'] ?? [];
 
-        /**
+        /*
          * @var \Symfony\Component\HttpFoundation\File\UploadedFile
          */
         foreach ($files as $file) {
