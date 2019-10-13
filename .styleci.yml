@@ -1,0 +1,6 @@
+preset: recommended
+
+risky: true
+
+disabled:
+  - alpha_ordered_imports
