@@ -10,15 +10,13 @@
  * @license   MIT
  */
 
-namespace K_Load\Controller;
+namespace K_Load\Controllers;
 
 use Exception;
 use K_Load\Util;
 
-class Test
+class Test extends BaseController
 {
-    public static $steamid = '76561198152390718';
-
     public static function steam($key = null)
     {
         $key = isset($_POST['key']) ? $_POST['key'] : $key;

@@ -12,26 +12,29 @@
 
 namespace K_Load;
 
+use Database;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
 use Twig\TwigFunction;
-use const APP_LANGUAGE;
-use const DEBUG;
-use const DEMO_MODE;
 use function array_replace_recursive;
 use function count;
 use function end;
 use function explode;
 use function file_exists;
 use function filemtime;
+use function floor;
 use function glob;
+use function ini_get;
 use function json_encode;
 use function lang;
 use function ltrim;
 use function sprintf;
 use function str_replace;
 use function usort;
+use const APP_LANGUAGE;
+use const DEBUG;
+use const DEMO_MODE;
 
 class Template
 {
@@ -64,7 +67,7 @@ class Template
 
         // csrf
         $function = new TwigFunction('csrf', function () {
-            return new Markup('<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid'] ?? null).'">', 'utf8');
+            return new Markup('<input type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid'] ?? null).'">', 'utf8');
         });
         self::$twig->addFunction($function);
 
@@ -99,7 +102,7 @@ class Template
 
         // canOr
         $function = new TwigFunction('canOr', function (...$perms) {
-            return User::can(...$perms);
+            return User::canOr(...$perms);
         });
         self::$twig->addFunction($function);
 
@@ -119,11 +122,19 @@ class Template
         ];
 
         self::$twig->addGlobal('site', $site_urls);
-        self::$twig->addGlobal('app', [
-            'debug'     => DEBUG,
-            'lang'      => APP_LANGUAGE,
-            'demo_mode' => DEMO_MODE,
-        ]);
+
+        $app = [
+            'debug'               => DEBUG,
+            'lang'                => APP_LANGUAGE,
+            'demo_mode'           => DEMO_MODE,
+            'post_max_size'       => ini_get('post_max_size'),
+            'upload_max_filesize' => ini_get('upload_max_filesize'),
+            'max_file_uploads'    => ini_get('max_file_uploads'),
+        ];
+
+        $app['true_max_file_uploads'] = floor(Util::convertIniStringToBytes($app['post_max_size']) / Util::convertIniStringToBytes($app['upload_max_filesize']));
+
+        self::$twig->addGlobal('app', $app);
 
         self::$data = [
             'assets'       => APP_PATH.'/assets',
@@ -191,6 +202,11 @@ class Template
 
         if (isset($_SESSION['flash'])) {
             foreach ($_SESSION['flash'] as $flashKey => $flashValue) {
+
+                if ($flashKey === 'alerts') {
+                    $flashValue = new Markup(json_encode($flashValue), 'utf-8');
+                }
+
                 $data['flash'][$flashKey] = $flashValue;
 
                 if (!isset($_SESSION['reflash'])) {
@@ -198,6 +214,8 @@ class Template
                 }
             }
         }
+
+        $data['query_log'] = Database::getQueryLog();
 
         return self::$twig->load($template)->render($data);
     }
@@ -209,7 +227,6 @@ class Template
             self::$data['user'] = $_SESSION;
             self::$data['user']['admin'] = User::isSuper($_SESSION['steamid']) ? 1 : $_SESSION['admin'];
             self::$data['user']['super'] = User::isSuper($_SESSION['steamid']);
-            self::$data['csrf'] = '<input id="csrf" type="hidden" name="csrf" value="'.User::getCSRF($_SESSION['steamid']).'">';
         }
 
         self::$data = array_replace_recursive(self::$data, $data);

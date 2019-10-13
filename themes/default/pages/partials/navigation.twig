@@ -54,9 +54,12 @@
                     </a>
                     <div class="collapsible-body">
                         <ul>
+                            <li class="{% if (site.url ~ '/dashboard/admin') == site.current %}active{% endif %}">
+                                <a href="{{ site.path }}/dashboard/admin">{{ lang('home') }}</a>
+                            </li>
                             {% if user.super %}
-                                <li class="{% if (site.url ~ '/dashboard/admin') == site.current %}active{% endif %}">
-                                    <a href="{{ site.path }}/dashboard/admin">{{ lang('core') }}</a>
+                                <li class="{% if (site.url ~ '/dashboard/admin/core') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/core">{{ lang('core') }}</a>
                                 </li>
                             {% endif %}
                             {% if can('community_name') or can('description') %}

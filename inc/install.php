@@ -9,6 +9,7 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
+
 use K_Load\Setup;
 use K_Load\Template;
 use K_Load\Test;
@@ -56,8 +57,12 @@ if (isset($_POST['install']) && isset($_SESSION['steamid'])) {
         Setup::install($config);
         die();
     } else {
-        $errors[] = (!$mysql_check ? 'Something went wrong with your mysql setup' : '');
-        $errors[] = (!$steam_check ? 'Fix your steam api key' : '');
+        if (!$mysql_check) {
+            $errors[] = 'Something went wrong with your mysql setup';
+        }
+        if (!$steam_check) {
+            $errors[] = 'Fix your steam api key';
+        }
         $config = $_POST;
     }
 
@@ -72,6 +77,10 @@ $extensions = [
     ],
     'cURL'             => [
         'curl',
+        true,
+    ],
+    'Fileinfo'         => [
+        'fileinfo',
         true,
     ],
     'JSON'             => [
@@ -342,7 +351,7 @@ $extensions = [
             db: $("input[name='mysql[db]']").val()
         };
 
-        if (!mysql.host || !mysql.port || !mysql.user || !mysql.pass || !mysql.db) {
+        if (!mysql.host || !mysql.port || !mysql.user || !mysql.db) {
             alert('Please fill in all the fields');
         } else {
             $.post(site.url + '/test/mysql', {mysql}, function (data) {
@@ -358,28 +367,19 @@ $extensions = [
     }
 
     function toast(message = '', time = 5000, css = '') {
-        if (typeof current_message == 'undefined') {
-            current_message = ''
-        }
-        if (current_message === message) {
-            return;
+        if (typeof M !== 'undefined') {
+            M.toast({
+                html: message,
+                displayLength: time,
+                classes: css,
+                activationPercent: .6
+            });
         } else {
-            current_message = message;
-        }
-        if (Materialize) {
-            if (time === -1 || time === 0) {
-                Materialize.toast(message, Infinity, css, function () {
-                    current_message = '';
-                });
-            } else {
-                Materialize.toast(message, time, css, function () {
-                    current_message = '';
-                });
-            }
+            window.alert(message);
         }
     }
 
-    var alerts = ["<?= implode('","', $errors) ?>"];
+    var alerts = [<?= count($errors) > 0 ? '"'.implode('","', $errors).'"' : '' ?>];
     if (alerts.length > 0) {
         alerts.forEach(function (item) {
             toast(item, 5000, 'red');

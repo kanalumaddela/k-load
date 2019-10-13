@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/3.5.95/css/materialdesignicons.min.css"/>
     {% block css_head %}{% endblock %}
-    <link rel="stylesheet" href="{{ theme_asset('css/site-improved.css') }}">
+    <link rel="stylesheet" href="{{ theme_asset('css/site-improved.css') ~ '?' ~ cache_buster }}">
 </head>
 <body>
 {% block css_body %}{% endblock %}
@@ -31,7 +31,7 @@
         {% include '@partials/navigation.twig' %}
     </header>
     <main>
-        <div class="container">{{ csrf() }}{% block content %}{% endblock %}</div>
+        <div class="container">{% block content %}{% endblock %}</div>
     </main>
 {% endblock %}
 
@@ -44,6 +44,7 @@
 <script>
     var site = {{ site_json }};
     var alert = '{{ alert }}';
+    var alerts = {{ flash.alerts|default('[]') }};
 
     $(document).ready(function () {
         $('.sidenav').sidenav({});
@@ -51,7 +52,7 @@
         $('.tooltipped').tooltip();
     });
 </script>
-<script src="{{ theme_asset('js/site.js') }}"></script>
+<script src="{{ theme_asset('js/site.js') ~ '?' ~ cache_buster }}"></script>
 {% block js %}{% endblock %}
 </body>
 </html>

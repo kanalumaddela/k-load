@@ -33,6 +33,10 @@
             padding-left: 20px;
         }
 
+        .card .card-content .card-title {
+            margin-top: -4px;
+        }
+
         @media only screen and (min-width: 601px) {
             .col.s12.m3 {
                 width: 22%;
@@ -73,6 +77,10 @@
                                     <td>{{ lang('registered') }}:</td>
                                     <td>{{ player.registered }}</td>
                                 </tr>
+                                <tr>
+                                    <td>{{ lang('theme') }}:</td>
+                                    <td><code class="code">{{ player.settings.theme }}</code></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -83,7 +91,7 @@
         <div class="col s12 m6">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title"><span class="mdi mdi-panorama left"></span>{{ lang('backgrounds') }}</span>
+                    <h1 class="card-title"><span class="mdi mdi-panorama left"></span>{{ lang('backgrounds') }}</h1>
                     <div class="row settings">
                         <div class="col s12">
                             {{ lang('enabled') }}
@@ -150,8 +158,15 @@
         <div class="col s12">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title"><span class="mdi mdi-language-css3 left"></span>CSS</span>
-                    <pre>{{ player.css }}</pre>
+                    <h1 class="card-title"><span class="mdi mdi-language-css3 left"></span>CSS</h1>
+
+                    {% if player.custom_css is not empty %}
+                        <pre class="code">{{ player.custom_css }}</pre>
+                    {% else %}
+                        <div class="center">
+                            <h6 style="font-style: italic">No custom CSS</h6>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

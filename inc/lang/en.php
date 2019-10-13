@@ -15,6 +15,7 @@ return [
 
     // login/logout
     'login_with_steam'             => 'Login with Steam',
+    'login'                        => 'Login',
     'logout'                       => 'Logout',
 
     // common words
@@ -33,6 +34,7 @@ return [
     'rules'                        => 'Rules',
     'staff'                        => 'Staff',
     'theme'                        => 'Theme',
+    'themes'                       => 'Themes',
     'profile'                      => 'Profile',
     'permissions'                  => 'Permissions',
     'community_name'               => 'Community Name',
@@ -42,6 +44,7 @@ return [
 
     // common setting phrases
     'close'                        => 'Close',
+    'remove'                       => 'Remove',
     'save'                         => 'Save',
     'save_changes'                 => 'Save Changes',
     'no'                           => 'No',
@@ -87,7 +90,7 @@ return [
     'user_is_super'                => 'You are a super admin',
 
     // my settings page
-    'admin_global_settings_notice' => 'To edit the loading screen for all users visit',
+    'admin_global_settings_notice' => 'To edit the loading screen for all users visit:',
 
     // users page
     'users_page'                   => 'Users - Page %s',
@@ -105,49 +108,61 @@ return [
     'copy_user_settings'           => 'Copy User\'s Settings',
 
     // admin core
-    'config'                    => 'Config',
-    'server_cfg_notice'         => 'Your server.cfg you should have this',
-    'default_theme'             => 'Default Theme',
-    'tools'                     => 'Tools',
-    'updates'                   => 'Updates',
-    'current_version'           => 'Current Version',
-    'updates_available'         => [
+    'config'                       => 'Config',
+    'server_cfg_notice'            => 'Your server.cfg you should have this',
+    'default_theme'                => 'Default Theme',
+    'tools'                        => 'Tools',
+    'updates'                      => 'Updates',
+    'current_version'              => 'Current Version',
+    'updates_available'            => [
         'There is %s update available',
         'There are %s updates available',
     ],
-    'latest_version_available'  => 'Latest Version',
-    'clear_cache'               => 'Clear Cache',
-    'cache_all'                 => 'All Cache',
-    'cache_data'                => 'Data Cache',
-    'cache_template'            => 'Template Cache',
-    'recompile_css'             => 'Recompile CSS',
-    'unban_all'                 => 'Unban  All',
-    'reset_perms'               => 'Reset Perms',
+    'latest_version_available'     => 'Latest Version',
+    'refresh_themes'               => 'Refresh Themes',
+    'clear_cache'                  => 'Clear Cache',
+    'cache_all'                    => 'All Cache',
+    'cache_data'                   => 'Data Cache',
+    'cache_template'               => 'Template Cache',
+    'recompile_css'                => 'Recompile CSS',
+    'unban_all'                    => 'Unban  All',
+    'reset_perms'                  => 'Reset Perms',
+
+    // admin general
+    'logo'                         => 'Logo',
+    'upload_logo'                  => 'Upload Logo',
 
     // admin backgrounds
-    'upload_backgrounds'        => 'Upload Backgrounds',
-    'uploaded_backgrounds'      => 'Uploaded Backgrounds',
-    'message_duration'          => 'Message Duration',
-    'message_fade'              => 'Message Fade',
-    'max_uploads'               => 'Max of %s uploads',
-    'max_file_size'             => 'Max file size: %s',
+    'upload_backgrounds'           => 'Upload Backgrounds',
+    'uploaded_backgrounds'         => 'Uploaded Backgrounds',
+    'message_duration'             => 'Message Duration',
+    'message_fade'                 => 'Message Fade',
+    'upload_limits'                => 'Upload Limits',
+    'upload_limit_notice'          => '* Some may not apply to this specific upload, exceeding these limits may cause no files to upload or error',
+    'max_uploads'                  => 'Maximum of %s uploads allowed',
+    'true_max_uploads'             => 'True maximum of %s uploads allowed using max file size limits',
+    'max_file_size'                => 'Maximum size per file: %s',
+    'max_post_size'                => 'Maximum overall upload limit: %s',
 
     // admin music
-    'music_general_options'     => 'General Music Options',
-    'music_source'              => 'Music Source',
-    'music_files'               => 'Music Files',
-    'songs_to_play'             => 'Songs to play',
-    'save_music'                => 'Save Music',
-    'upload_music'              => 'Upload Music',
+    'music_general_options'        => 'General Music Options',
+    'music_source'                 => 'Music Source',
+    'music_files'                  => 'Music Files',
+    'songs_to_play'                => 'Songs to play',
+    'save_music'                   => 'Save Music',
+    'save_music_order'             => 'Save Music Order',
+    'save_youtube'                 => 'Save YouTube',
+    'upload_music'                 => 'Upload Music',
+    'music_upload_notice'          => 'When uploading music, the page automatically refreshes to update the list of songs.',
 
     // admin rules
-    'rule_block_duration'       => 'Rule Block Duration',
-    'rule_block_duration_hint'  => 'Rules are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.',
+    'rule_block_duration'          => 'Rule Block Duration',
+    'rule_block_duration_hint'     => 'Rules are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.',
 
     // admin staff
-    'staff_block_duration'      => 'Staff Block Duration',
-    'staff_block_duration_hint' => 'Staff are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.',
-    'rank'                      => 'Rank',
+    'staff_block_duration'         => 'Staff Block Duration',
+    'staff_block_duration_hint'    => 'Staff are displayed x amount at a time, this is determined by the loading theme. Choose how many millseconds to display each block/section of rules before going on the next one.',
+    'rank'                         => 'Rank',
 
     /*** loading screen specific ***/
 

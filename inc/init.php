@@ -87,6 +87,8 @@ Constants::init();
 //Sentry\init(['dsn' => 'https://0bdc6629de78435f807c56358e3cdbae@sentry.io/1455550']);
 
 // make some new directions
+Util::mkDir(APP_ROOT.'/assets/img/backgrounds/global');
+Util::mkDir(APP_ROOT.'/assets/img/logos');
 Util::mkDir(APP_ROOT.'/data/logs', true);
 Util::mkDir(APP_ROOT.'/data/music');
 Util::mkDir(APP_ROOT.'/data/users');
@@ -122,13 +124,6 @@ if (!ENABLE_CACHE || isset($_GET[CLEAR_CACHE])) {
 $cache = new \J0sh0nat0r\SimpleCache\Cache(File::class, ['dir' => APP_ROOT.'/data/cache']);
 Cache::bind($cache);
 
-// get config if exists
-if (file_exists(APP_ROOT.'/data/config.php')) {
-    $config = include APP_ROOT.'/data/config.php';
-    Steam::Key($config['apikeys']['steam']);
-    Database::connect($config['mysql']);
-}
-
 // check if installed
 if (!Util::installed() && strpos($_SERVER['REQUEST_URI'], '/test/') === false) {
     if (strpos($_SERVER['REQUEST_URI'], '/install') === false) {
@@ -136,10 +131,12 @@ if (!Util::installed() && strpos($_SERVER['REQUEST_URI'], '/test/') === false) {
             session_destroy();
         }
 
-        if (substr(get_headers(APP_URL.'/install')[0], 9, 3) != 200) {
-            echo '<h1>Your webserver isn\'t properly setup to use friendly urls e.g. \'/dashboard\'</h1>';
-            echo '<a href="https://www.gmodstore.com/help/addon/5000/errors/404-not-found">https://www.gmodstore.com/help/addon/5000/errors/404-not-found</a>';
-            die();
+        if (parse_url($_SERVER['SCRIPT_URI'], PHP_URL_HOST) !== parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) {
+            if (substr(get_headers(APP_URL.'/install')[0], 9, 3) != 200) {
+                echo '<h1>Your webserver isn\'t properly setup to use friendly urls e.g. \'/dashboard\'</h1>';
+                echo '<a href="https://www.gmodstore.com/help/addon/5000/errors/404-not-found">https://www.gmodstore.com/help/addon/5000/errors/404-not-found</a>';
+                die();
+            }
         }
 
         Util::redirect('/install');
@@ -148,28 +145,45 @@ if (!Util::installed() && strpos($_SERVER['REQUEST_URI'], '/test/') === false) {
     die();
 }
 
-if (isset($_SESSION['steamid']) && Util::installed()) {
-    if (!User::validateCSRF($_SESSION['steamid'], User::getCSRF($_SESSION['steamid']))) {
-        User::refreshCSRF($_SESSION['steamid']);
+// get config if exists
+if (file_exists(APP_ROOT.'/data/config.php')) {
+    $config = include APP_ROOT.'/data/config.php';
+    Steam::Key($config['apikeys']['steam']);
+    Database::connect($config['mysql']);
+
+    if (Database::$conn === null) {
+        echo 'K-Load | Failed to connect to mysql server';
+        echo '<br>';
+        echo '<br>';
+        echo '<pre>';
+        var_dump(Database::$latestError);
+        echo '</pre>';
+        die();
     }
+} else {
+    Cache::clear();
+    die('K-Load | config file not found');
+}
 
+if (isset($_SESSION['steamid']) && Util::installed()) {
     if (User::isSuper($_SESSION['steamid']) || ENABLE_REGISTRATION) {
-        if (!isset($_SESSION['id'])) {
-            $user = User::get($_SESSION['steamid']);
+        $user = User::get($_SESSION['steamid']);
 
-            if (empty($user)) {
-                User::add($_SESSION['steamid']);
-            }
-
-            User::add($_SESSION['steamid']);
-            User::session($_SESSION['steamid']);
+        if (empty($user)) {
+            $user = User::add($_SESSION['steamid']);
         }
+
+        if (isset($_SESSION['csrf']) && !User::isValidCSRF($_SESSION['steamid'], $_SESSION['csrf'])) {
+            User::refreshCSRF($_SESSION['steamid']);
+        }
+
+        User::session($user, true);
     } else {
         echo 'Registration is not allowed.';
         die();
     }
     if (strpos($_SERVER['REQUEST_URI'], 'api') === false) {
-        if (User::isBanned($_SESSION['steamid'])) {
+        if (!DEMO_MODE && User::isBanned($_SESSION['steamid'])) {
             echo "You're banned";
             die();
         }

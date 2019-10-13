@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -8,8 +9,6 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
-
-@charset "UTF-8";
 
 body {
     color: #ececec;
@@ -31,7 +30,7 @@ a.is-image {
 }
 
 nav {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 nav.top-nav {
@@ -99,7 +98,7 @@ ul.sidenav.sidenav-fixed:hover {
 
 .sidenav > li > a:hover:not(.is-image), .sidenav > li.active > a:not(.is-image), li.active > .collapsible-header, .sidenav .collapsible-header:hover, .sidenav .collapsible-body li.active > a, .sidenav .collapsible li.active .collapsible-header, .sidenav .collapsible li .collapsible-header:hover {
     background-color: rgba(0, 0, 0, .15);
-    border-color: #5294e2 !important;
+    border-color: #52a0f3 !important;
 }
 
 .sidenav > li.logout > a:hover {
@@ -137,7 +136,7 @@ ul.sidenav.sidenav-fixed:hover {
 }
 
 #side-nav::-webkit-scrollbar-thumb {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 /* cards */
@@ -161,7 +160,7 @@ ul.sidenav.sidenav-fixed:hover {
 
 /* buttons */
 .btn, .btn-large, .btn-small {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 .btn:hover, .btn-large:hover, .btn-small:hover {
@@ -192,7 +191,7 @@ ul.sidenav.sidenav-fixed:hover {
 }
 
 .dropdown-content li > a, .dropdown-content li > span {
-    color: #5294e2;
+    color: #52a0f3;
 }
 
 /* forms */
@@ -201,13 +200,13 @@ input, textarea {
 }
 
 input:not([type]):focus:not([readonly]) + label, input[type=text]:not(.browser-default):focus:not([readonly]) + label, input[type=password]:not(.browser-default):focus:not([readonly]) + label, input[type=email]:not(.browser-default):focus:not([readonly]) + label, input[type=url]:not(.browser-default):focus:not([readonly]) + label, input[type=time]:not(.browser-default):focus:not([readonly]) + label, input[type=date]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime]:not(.browser-default):focus:not([readonly]) + label, input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label, input[type=tel]:not(.browser-default):focus:not([readonly]) + label, input[type=number]:not(.browser-default):focus:not([readonly]) + label, input[type=search]:not(.browser-default):focus:not([readonly]) + label, textarea.materialize-textarea:focus:not([readonly]) + label {
-    color: #5294e2;
+    color: #52a0f3;
 }
 
 input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
-    border-color: #5294e2;
-    -webkit-box-shadow: 0 1px 0 0 #5294e2;
-    box-shadow: 0 1px 0 0 #5294e2;
+    border-color: #52a0f3;
+    -webkit-box-shadow: 0 1px 0 0 #52a0f3;
+    box-shadow: 0 1px 0 0 #52a0f3;
 }
 
 [type="radio"]:not(:checked) + span, [type="radio"]:checked + span {
@@ -215,11 +214,11 @@ input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):
 }
 
 [type="radio"]:checked + span:after, [type="radio"].with-gap:checked + span:before, [type="radio"].with-gap:checked + span:after, .select-wrapper input.select-dropdown:focus {
-    border-color: #5294e2;
+    border-color: #52a0f3;
 }
 
 input[type=range] + .thumb, [type="radio"]:checked + span:after, [type="radio"].with-gap:checked + span:after, .switch label input[type=checkbox]:checked + .lever:after {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 .switch label input[type=checkbox]:checked + .lever {
@@ -235,11 +234,11 @@ input[type=range]::-webkit-slider-runnable-track, input[type=range]::-moz-range-
 }
 
 input[type=range]::-webkit-slider-thumb {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 input[type=range]::-moz-range-thumb {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 .keyboard-focused input[type=range]:focus:not(.active)::-webkit-slider-thumb, .keyboard-focused input[type=range]:focus:not(.active)::-moz-range-thumb {
@@ -252,8 +251,8 @@ input[type=range]::-moz-range-thumb {
 }
 
 [type="checkbox"]:checked + span:not(.lever):before {
-    border-right-color: #5294e2;
-    border-bottom-color: #5294e2;
+    border-right-color: #52a0f3;
+    border-bottom-color: #52a0f3;
 }
 
 input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before, input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::before {
@@ -261,8 +260,8 @@ input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before, input[type=
 }
 
 [type="checkbox"].filled-in:checked + span:not(.lever):after {
-    background-color: #5294e2;
-    border-color: #5294e2;
+    background-color: #52a0f3;
+    border-color: #52a0f3;
 }
 
 [type="radio"]:not(:checked) + span:before, [type="radio"]:not(:checked) + span:after {
@@ -315,7 +314,7 @@ img.theme-preview {
 }
 
 .btn-profile {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 .btn-perms {
@@ -336,7 +335,7 @@ img.theme-preview {
 
 /* pagination */
 .pagination li.active {
-    background-color: #5294e2;
+    background-color: #52a0f3;
 }
 
 .pagination li a {
@@ -402,6 +401,11 @@ h5.song-title {
     width: 90%;
 }
 
+#music_song_list .select-wrapper {
+    display: inline-block;
+    width: calc(100% - 45px);
+}
+
 /* misc */
 h1 > .mdi {
     margin-right: 6px;
@@ -433,6 +437,22 @@ h1 > .mdi {
     padding-bottom: 4px;
     margin-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#save-btn > * {
+    vertical-align: bottom;
+    display: inline-block;
+}
+
+pre.code, code.code {
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 0 5px;
+    border-radius: 3px;
+}
+
+.upload-details {
+    padding: 0 10px;
+    border: 1px solid rgba(255, 255, 255, .3);
 }
 
 /* codemirror stuff */

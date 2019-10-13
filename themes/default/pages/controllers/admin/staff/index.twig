@@ -74,7 +74,8 @@
                                     {% for staff_member in staff %}
                                         <div class="input-field col s12 m6 l4 xl3 center-align child">
                                             <div>
-                                                <p><span class="mdi mdi-steam"></span> {{ lang('steamid') }} (64 bit)</p>
+                                                <p><span class="mdi mdi-steam"></span> {{ lang('steamid') }} (64 bit)
+                                                </p>
                                                 <input type="number" class="staff-steamid"
                                                        name="staff[list][{{ gamemode }}][{{ loop.index0 }}][steamid]"
                                                        oninput="fixGamemode(this, true)"
@@ -91,7 +92,8 @@
 
                                     {% endfor %}
                                 </div>
-                                <a class="btn blue add-elem" data-type="staff" data-parent=".staff">{{ lang('add_staff_member') }}</a>
+                                <a class="btn add-elem" data-type="staff"
+                                   data-parent=".staff">{{ lang('add_staff_member') }}</a>
                             </div>
                         </div>
                     </div>
@@ -100,12 +102,15 @@
         </div>
 
         <div class="col s12 right-align">
-            <a class="btn green add-elem" data-type="staff_cat" data-parent="#staff_categories">{{ lang('add_gamemode') }}</a>
+            <a class="btn green add-elem" data-type="staff_cat"
+               data-parent="#staff_categories">{{ lang('add_gamemode') }}</a>
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
-                    type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-large" type="submit" name="save" value="1">
+                <span class="mdi mdi-content-save"></span>
+                <span>{{ lang('save') }}</span>
+            </button>
         </div>
 
     </form>
@@ -156,7 +161,7 @@
                             elem('h5', {className: 'flow-text', innerText: "{{ lang('staff') }}"}),
                             elem('div', {className: 'staff row'}),
                             elem('a', {
-                                className: 'btn blue add-elem',
+                                className: 'btn add-elem',
                                 innerText: "{{ lang('add_staff_member') }}",
                                 'data-type': 'staff',
                                 'data-parent': '.staff'

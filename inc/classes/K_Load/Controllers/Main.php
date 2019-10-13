@@ -19,11 +19,6 @@ use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
-use const ALLOW_THEME_OVERRIDE;
-use const APP_ROOT;
-use const ENABLE_CACHE;
-use const ENABLE_REGISTRATION;
-use const IGNORE_PLAYER_CUSTOMIZATIONS;
 use function array_diff;
 use function array_merge;
 use function basename;
@@ -35,6 +30,11 @@ use function json_encode;
 use function method_exists;
 use function scandir;
 use function str_replace;
+use const ALLOW_THEME_OVERRIDE;
+use const APP_ROOT;
+use const ENABLE_CACHE;
+use const ENABLE_REGISTRATION;
+use const IGNORE_PLAYER_CUSTOMIZATIONS;
 
 class Main
 {
@@ -84,6 +84,8 @@ class Main
         if (!Template::isLoadingTheme($theme)) {
             $theme = $config['loading_theme'] ?? 'default';
         }
+
+        $data['forcedGamemode'] = $_GET['gamemode'] ?? '';
 
         LoadingTemplate::init($theme);
 
@@ -158,5 +160,10 @@ class Main
     public function logout()
     {
         Steam::logout();
+    }
+
+    public function installFix()
+    {
+        Util::redirect('/dashboard');
     }
 }

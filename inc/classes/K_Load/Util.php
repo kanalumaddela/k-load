@@ -16,10 +16,6 @@ use Database;
 use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use Steam;
-use const APP_HOST;
-use const APP_PATH;
-use const APP_ROOT;
-use const ENABLE_CACHE;
 use function addcslashes;
 use function array_column;
 use function array_diff;
@@ -39,10 +35,10 @@ use function fwrite;
 use function get_headers;
 use function gettype;
 use function glob;
-use function hash;
 use function header;
 use function implode;
 use function in_array;
+use function is_array;
 use function is_dir;
 use function is_file;
 use function json_encode;
@@ -63,10 +59,17 @@ use function strtolower;
 use function substr;
 use function unlink;
 use function urldecode;
+use function var_dump;
 use function var_export;
+use const APP_HOST;
+use const APP_PATH;
+use const APP_ROOT;
+use const ENABLE_CACHE;
 
 class Util
 {
+    public static $version = null;
+
     public static function rmDir($folder)
     {
         $content = glob($folder.'/*');
@@ -86,21 +89,19 @@ class Util
         return self::version();
     }
 
-    public static function version($ignoreCache = false)
+    public static function version()
     {
-        if (ENABLE_CACHE && !$ignoreCache) {
-            $version = Cache::remember('version', 120, function () {
-                $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
-
-                return $version !== false ? $version : null;
-            });
-        } else {
-            $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
-
-            return $version !== false ? $version : null;
+        if (!file_exists(APP_ROOT.'/data/config.php')) {
+            return null;
         }
 
-        return $version;
+        if (!Util::$version) {
+            $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
+
+            Util::$version = $version !== false ? $version : null;
+        }
+
+        return Util::$version;
     }
 
     public static function getSettingKeys($ignoreCache = false)
@@ -120,11 +121,13 @@ class Util
 
     public static function updateSetting(array $settings, array $data, $csrf, $force = false)
     {
-        if ((!User::validateCSRF($_SESSION['steamid'], $csrf) || User::isBanned($_SESSION['steamid'])) && !$force) {
+
+        if (!isset($_SESSION['steamid']) && !$force) {
             Steam::Logout();
         }
 
         if (!$force) {
+            User::validateCSRF($_SESSION['steamid'], $csrf);
             User::refreshCSRF($_SESSION['steamid']);
         }
 
@@ -152,6 +155,38 @@ class Util
         }
 
         return $success;
+    }
+
+    public static function saveSetting($setting, $value)
+    {
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
+        $success = Database::conn()->add("INSERT INTO `kload_settings` (`name`, `value`) VALUES ('?', '?') ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)", [$setting, $value])->execute();
+        if ($success) {
+            Cache::store('settings', self::getSettings(), 0);
+        }
+
+        return $success;
+    }
+
+    public static function saveSettings(array $settings)
+    {
+        $parameters = implode(',', array_fill(0, 2, '\'?\''));
+        $valueParams = implode(',', array_fill(0, count($settings), '('.$parameters.')'));
+
+        var_dump($valueParams);
+        die();
+
+        $inserts = [];
+
+        foreach ($settings as $setting => $value) {
+            $inserts[] = $settings;
+            $inserts[] = $value;
+        }
+
+        return Database::conn()->add("INSERT INTO `kload_settings` (`name`, `value`) VALUES ".$valueParams." ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)", $inserts)->execute();
     }
 
     public static function log($type = 'access', $content = null, $force = false)
@@ -342,7 +377,7 @@ class Util
 
     public static function hash($length = 16)
     {
-        return hash('sha256', bin2hex(random_bytes($length)));
+        return bin2hex(random_bytes($length));
     }
 
     public static function var_export($var, $indent = '')
@@ -354,14 +389,14 @@ class Util
                 $indexed = array_keys($var) === range(0, count($var) - 1);
                 $r = [];
                 foreach ($var as $key => $value) {
-                    $r[] = "$indent	"
+                    $r[] = "$indent    "
                         .($indexed ? '' : self::var_export($key).' => ')
-                        .self::var_export($value, "$indent	");
+                        .self::var_export($value, "$indent    ");
                 }
 
                 return "[\n".implode(",\n", $r)."\n".$indent.']';
             case 'boolean':
-                return $var ? 'TRUE' : 'FALSE';
+                return $var ? 'true' : 'false';
             default:
                 return var_export($var, true);
         }
@@ -375,11 +410,6 @@ class Util
         return $match[1] ?? null;
     }
 
-    public static function array_for_JS(array $array)
-    {
-        return '`'.implode('`,`', $array).'`';
-    }
-
     public static function to_top(&$array, $key)
     {
         $temp = [$key => $array[$key]];
@@ -390,10 +420,53 @@ class Util
     public static function flash($key, $value)
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
-            $_SESSION['flash'][$key] = $value;
+            if ($key == 'alerts') {
+                if (!isset($_SESSION['flash']['alerts'])) {
+                    $_SESSION['flash']['alerts'] = [];
+                }
+
+                if (!is_array($value)) {
+                    $value = [
+                        'message'  => $value,
+                        'duration' => 4000,
+                        'css'      => '',
+                    ];
+                } else {
+                    $value['duration'] = $value['duration'] ?? 5000;
+                    $value['css'] = $value['css'] ?? '';
+                }
+
+                $_SESSION['flash']['alerts'][] = $value;
+            } else {
+                $_SESSION['flash'][$key] = $value;
+            }
+
         } else {
-            echo 'not active';
+            echo 'session not active';
             die();
         }
+    }
+
+    public static function createConfig(array $config)
+    {
+        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n");
+    }
+
+    public static function convertIniStringToBytes($value)
+    {
+        $conversions = [
+            'K' => 1024,
+            'M' => 1048576,
+            'G' => 1073741824,
+        ];
+
+        preg_match('/(\d+)(K|M|G)/', $value, $matches);
+
+        if (!isset($matches[1], $matches[2])) {
+            return 0;
+        }
+
+        return $matches[1] * $conversions[$matches[2]];
+
     }
 }

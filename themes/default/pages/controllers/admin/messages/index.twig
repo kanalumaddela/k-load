@@ -79,12 +79,13 @@
                                 {% for message in messages %}
                                     <div class="input-field child">
                                         <input type="text" name="messages[list][{{ gamemode }}][]" value="{{ message }}"
-                                               oninput="fixGamemode(this, true)" style="width: 80%">
+                                               oninput="fixGamemode(this, true)" style="width: calc(100% - 45px)">
                                         <a class="btn-floating red delete-elem"><i class="mdi mdi-delete"></i></a>
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a class="btn blue add-elem" data-type="message" data-parent=".messages">{{ lang('add_message') }}</a>
+                            <a class="btn add-elem" data-type="message"
+                               data-parent=".messages">{{ lang('add_message') }}</a>
                         </div>
                     </div>
                 </div>
@@ -92,12 +93,15 @@
         </div>
 
         <div class="col s12 right-align">
-            <a class="btn green add-elem" data-type="message_cat" data-parent="#message_categories">{{ lang('add_gamemode') }}</a>
+            <a class="btn green add-elem" data-type="message_cat"
+               data-parent="#message_categories">{{ lang('add_gamemode') }}</a>
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
-                    type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-large" type="submit" name="save" value="1">
+                <span class="mdi mdi-content-save"></span>
+                <span>{{ lang('save') }}</span>
+            </button>
         </div>
 
     </form>
@@ -144,7 +148,7 @@
                         elem('label', {innerText: "{{ lang('messages') }}"}),
                         elem('div', {className: 'messages'}),
                         elem('a', {
-                            className: 'btn blue add-elem',
+                            className: 'btn add-elem',
                             innerText: "{{ lang('add_message') }}",
                             'data-type': 'message',
                             'data-parent': '.messages'
@@ -160,7 +164,7 @@
                     type: 'text',
                     name: 'messages[list][global][]',
                     onInput: 'fixGamemode(this, true)',
-                    style: 'width: 80%'
+                    style: 'width: calc(100% - 45px)'
                 }),
                 elem('a', {className: 'btn-floating red delete-elem'},
                     elem('i', {className: 'mdi mdi-delete'})

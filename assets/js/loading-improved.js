@@ -239,6 +239,10 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
         resetDemoMode();
     }
 
+    if (forcedGamemode.length > 0) {
+        gamemode = forcedGamemode;
+    }
+
     var gamemodeFriendly = gamemode;
     if (gamemode in gamemodes) {
         gamemodeFriendly = gamemodes[gamemode];
@@ -255,6 +259,7 @@ function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemo
     updateProgress();
     setBackgrounds(gamemode);
     setMessages(gamemode);
+    setMusic(gamemode);
 
     setRules(gamemode, rules_per_page);
     setStaff(gamemode, staff_per_page);
@@ -616,6 +621,7 @@ function fixStaff(data) {
     staff_block.childNodes[staffBlockCounter].classList.add('active');
 }
 
+
 /**
  * Backgrounds
  */
@@ -635,10 +641,50 @@ if (backgrounds.enable) {
 }
 document.head.appendChild(backgroundCssRatioFix);
 
+function fixBackground(elem) {
+    var windowRatio = window.innerWidth / window.innerHeight;
+
+    if (windowRatio > 1) { // wide screen
+
+    } else if (windowRatio < 1) { // tall screen
+
+    } else { // square
+
+    }
+}
+
+function proccessBackgroundElem(elem) {
+    var imageRatio = elem.naturalWidth / elem.naturalHeight;
+
+    if (imageRatio > 1) { // wide image
+
+    } else if (imageRatio < 1) { // tall image
+
+    } else { // square
+
+    }
+}
+
 /**
  * Fix background sizing to avoid "bars"  on either top/bottom or left/right.
  */
 const fixBackgrounds = debounce(function () {
+    var activeBg = backgroundsHtml.getElementsByClassName('k-load-background active');
+
+    if (activeBg.length === 0) {
+        return;
+    }
+
+    activeBg = activeBg[0];
+
+    console.log('test');
+
+    console.log(activeBg);
+
+    fixBackgroundSizing(activeBg);
+    return;
+
+
     const normalRatio = 16 / 9;
     const ratio = window.innerWidth / window.innerHeight;
     const tolerance = normalRatio * 0.08;
@@ -653,7 +699,29 @@ const fixBackgrounds = debounce(function () {
     if (ratio >= (normalRatio - tolerance) && ratio <= (normalRatio + tolerance) && html.length !== 0) {
         backgroundCssRatioFix.innerHTML = '';
     }
-}, 250);
+}, 100);
+
+function fixBackgroundSizing(elem) {
+    var windowRatio = window.innerWidth / window.innerHeight;
+    var imageRatio = elem.naturalWidth / elem.naturalHeight;
+
+    console.log(elem);
+
+    var multiplier = 0;
+
+    if (elem.naturalWidth > elem.naturalHeight && window) {
+        console.log('change multiplier');
+
+        multiplier = window.innerHeight / elem.naturalHeight;
+
+        console.log(multiplier);
+    } else {
+        multiplier = window.innerWidth / elem.naturalWidth;
+    }
+
+    elem.height = elem.naturalHeight * multiplier;
+    elem.width = elem.naturalWidth * multiplier;
+}
 
 fixBackgrounds();
 window.addEventListener('resize', fixBackgrounds);
@@ -715,6 +783,10 @@ function loadNextBackground() {
             queueBackground(backgrounds.duration);
         });
 
+        bgElem.addEventListener('resize', function () {
+            console.log('resize');
+        });
+
         backgroundsHtml.appendChild(bgElem);
         backgroundsAdded.push(bgSrc);
 
@@ -763,6 +835,7 @@ function queueBackground(milliseconds) {
     }, milliseconds);
 }
 
+
 /**
  * Start up demo mode.
  */
@@ -802,7 +875,7 @@ function resetDemoMode() {
  * Music/Youtube
  */
 var audio, yt_player, music_counter = 0;
-var yt_list = youtube.list.slice(0), music_list = music.order.slice(0);
+var yt_list = youtube.list.slice(0);
 const music_block = document.getElementById('music-block');
 
 function loadYoutubeAPI() {
@@ -897,38 +970,77 @@ function audioFadeOut() {
     }
 }
 
-if (music.enable) {
-    if (music.random) {
-        shuffle(yt_list);
-        shuffle(music_list);
-    }
+function setMusic(gamemode) {
+    gamemode = checkGamemode(gamemode, music.order);
 
-    music.volumeDecimal = music.volume / 100;
+    if (gamemode && music.enable) {
+        var music_list = music.order[gamemode];
 
-    switch (music.source) {
-        case 'youtube':
-            if (yt_list.length > 0) {
-                loadYoutubeAPI();
-                if (music_block) {
-                    music_block.classList.add('fade-in');
+        if (music.random) {
+            shuffle(yt_list);
+            shuffle(music_list);
+        }
+
+        music.volumeDecimal = music.volume / 100;
+
+        switch (music.source) {
+            case 'youtube':
+                if (yt_list.length > 0) {
+                    loadYoutubeAPI();
+                    if (music_block) {
+                        music_block.classList.add('fade-in');
+                    }
                 }
-            }
-            break;
-        case 'files':
-            if (music_list.length > 0) {
-                if (music_block) {
-                    music_block.classList.add('fade-in');
-                }
+                break;
+            case 'files':
+                if (music_list.length > 0) {
+                    if (music_block) {
+                        music_block.classList.add('fade-in');
+                    }
 
-                audio = new Audio(site.url + '/data/music/' + music_list[music_counter]);
-                audio.volume = 0;
-                audio.load();
+                    audio = new Audio(site.url + '/data/music/' + music_list[music_counter]);
+                    audio.volume = 0;
+                    audio.load();
 
-                audio.addEventListener('canplay', function () {
-                    var aud = this;
+                    audio.addEventListener('canplay', function () {
+                        var aud = this;
 
-                    setTimeout(function () {
-                        aud.play();
+                        setTimeout(function () {
+                            var audioPromise = aud.play();
+
+                            var tmpSong = music_list[music_counter];
+                            musicName = tmpSong.replace('.ogg', '');
+
+                            if (audioPromise !== undefined) {
+                                audioPromise.then(_ => {
+
+                                    updatePlaying({title: musicName, author: ''});
+
+                                    audioFadeIn();
+                                }).catch(error => {
+                                    updatePlaying({title: 'Failed to play: ' + musicName, author: ''});
+                                });
+                            }
+
+                        }, 250);
+                    });
+
+                    audio.addEventListener('timeupdate', function () {
+                        if (isNaN(audio.duration)) {
+                            return;
+                        }
+                        if (audio.duration - audio.currentTime <= 1) {
+                            audioFadeOut();
+                        }
+                    });
+
+                    audio.addEventListener('ended', function () {
+                        this.volume = 0;
+                        music_counter += 1;
+
+                        if (music_counter >= music_list.length) {
+                            music_counter = 0;
+                        }
 
                         var tmpSong = music_list[music_counter];
 
@@ -936,38 +1048,11 @@ if (music.enable) {
 
                         updatePlaying({title: musicName, author: ''});
 
-                        audioFadeIn();
-
-                    }, 250);
-                });
-
-                audio.addEventListener('timeupdate', function () {
-                    if (isNaN(audio.duration)) {
-                        return;
-                    }
-                    if (audio.duration - audio.currentTime <= 1) {
-                        audioFadeOut();
-                    }
-                });
-
-                audio.addEventListener('ended', function () {
-                    this.volume = 0;
-                    music_counter += 1;
-
-                    if (music_counter >= music_list.length) {
-                        music_counter = 0;
-                    }
-
-                    var tmpSong = music_list[music_counter];
-
-                    musicName = tmpSong.replace('.ogg', '');
-
-                    updatePlaying({title: musicName, author: ''});
-
-                    this.src = site.url + '/data/music/' + tmpSong;
-                    this.load();
-                });
-            }
+                        this.src = site.url + '/data/music/' + tmpSong;
+                        this.load();
+                    });
+                }
+        }
     }
 }
 

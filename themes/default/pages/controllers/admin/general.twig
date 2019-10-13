@@ -1,0 +1,219 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ lang('settings') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('settings') }}{% endblock %}
+
+{% block css_body %}
+    <style>
+        .logo-block {
+            position: relative;
+        }
+
+        .delete-logo {
+            position: absolute;
+            top: -12px;
+            right: 6px;
+            transform: scale(0);
+            transition: transform .2s ease-out;
+        }
+
+        .logo-block:hover .delete-logo, .logo-block:focus .delete-logo {
+            transform: scale(1);
+        }
+
+        .logo-preview {
+            max-height: 100px;
+        }
+
+        .materialboxed {
+            display: initial;
+        }
+
+        #materialbox-overlay {
+            background-color: rgba(10, 10, 10, 0.85);
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    {% if user.admin %}
+        <div class="row" style="padding-top:15px;padding-bottom:15px;">
+            <div class="col s12">
+                <div class="card">
+                    <div class="card-content">
+                        <p>Background settings have moved to: <a
+                                    href="{{ site.path ~ '/dashboard/admin/backgrounds' }}">{{ site.host ~ site.path ~ '/dashboard/admin/backgrounds' }}</a>
+                        </p>
+                        <p>YouTube settings have moved to: <a
+                                    href="{{ site.path ~ '/dashboard/admin/music' }}">{{ site.host ~ site.path ~ '/dashboard/admin/music' }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12">
+                <div class="row">
+                    {% if can('community_name') %}
+                        <div class="col s12 m6">
+                            <form method="post" action="{{ site.path }}/dashboard/admin/general">
+                                {{ csrf() }}
+                                <div class="card">
+                                    <div class="card-content">
+                                        <h1 class="flow-text"><span
+                                                    class="mdi mdi-settings"></span> {{ lang('general') }}
+                                        </h1>
+                                        <div class="row">
+                                            {% if can('community_name') %}
+                                                <div class="input-field col s12">
+                                                    <input name="community_name" type="text" class="validate"
+                                                           value="{{ settings.community_name }}">
+                                                    <label>{{ lang('community_name') }}</label>
+                                                </div>
+                                            {% endif %}
+                                            {% if can('description') %}
+                                                <div class="input-field col s12">
+                                        <textarea id="k-load-settings-descriptiion" name="description"
+                                                  class="materialize-textarea">{{ settings.description }}</textarea>
+                                                    <label for="k-load-settings-descriptiion">{{ lang('description') }}</label>
+                                                    <span class="counter"
+                                                          data-max="250">{{ settings.description|length }}/250</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="center">
+                                            <button class="btn" type="submit" name="save" value="1">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                    {% if user.super %}
+                        <div class="col s12 m6">
+                            <div class="card">
+                                <div class="card-content">
+                                    <h1 class="flow-text"><span class="mdi mdi-upload"></span> {{ lang('upload_logo') }}
+                                    </h1>
+                                    <form id="logo-upload" enctype="multipart/form-data" method="post"
+                                          action="{{ site.path }}/dashboard/admin/general/logo-upload" class="row">
+                                        {{ csrf() }}
+
+                                        <div class="file-field input-field">
+                                            <div class="btn">
+                                                <span>File</span>
+                                                <input name="logo" type="file" accept="image/jpeg,image/png,.jpg,.png"
+                                                       required>
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="center">
+                                            <button class="btn" type="submit">
+                                                Upload
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col s12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <h1 class="flow-text"><span class="mdi mdi-image"></span> {{ lang('logo') }}</h1>
+
+                                    {% if logos is not empty %}
+                                        <form method="post" action="{{ site.path }}/dashboard/admin/general/logo">
+                                            {{ csrf() }}
+                                            <div class="row">
+                                                {% for logo in logos %}
+                                                    <div class="col s12 m4 l3 center logo-block">
+                                                        <button class="btn-floating red delete-logo" type="button"
+                                                                data-logo="{{ logo }}"><span
+                                                                    class="mdi mdi-delete"></span>
+                                                        </button>
+                                                        <div>
+                                                            <img class="materialboxed logo-preview"
+                                                                 src="{{ site.path }}/assets/img/logos/{{ logo }}"
+                                                                 alt="{{ logo }}">
+                                                        </div>
+                                                        <label>
+                                                            <input class="with-gap" name="logo" type="radio"
+                                                                   value="{{ logo }}"
+                                                                   {% if logo == settings.logo %}checked{% endif %} />
+                                                            <span>{{ logo }}</span>
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class="center">
+                                                <button class="btn" type="submit" name="save" value="1">Save</button>
+                                            </div>
+                                        </form>
+                                    {% else %}
+                                        <div class="center">
+                                            <h5 style="font-style: italic;">No logos uploaded</h5>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('.materialboxed').materialbox();
+        });
+
+        $('.delete-logo').click(function () {
+
+            let logo = $(this).data('logo');
+
+            if (window.confirm('Are you sure you want to delete: ' + logo + '?')) {
+                let parent = $(this).parent();
+
+                let url = site.current;
+                if (url.substr(-1) === '/') {
+                    url = url.substr(0, url.length - 1);
+                }
+
+                url = url + '/logo-delete';
+
+                $.post(url, {logo, csrf}, function (data) {
+                    if (data.success) {
+                        parent.fadeOut(function () {
+                            this.remove();
+                        });
+                    }
+
+                    toast(data.data.message, 3500, data.data.css);
+                    csrf = data.data.csrf;
+                });
+            }
+        });
+
+        function createElem_youtube() {
+            return elem('div', {className: 'input-field child'},
+                elem('input', {
+                    type: 'text',
+                    className: 'validate',
+                    name: 'youtube[list][]',
+                    placeholder: '{{ lang('youtube') }} URL',
+                    style: 'width:calc(100% - 45px);'
+                }),
+                elem('a', {className: 'btn-floating delete-elem red'},
+                    elem('i', {className: 'mdi mdi-delete'})
+                )
+            );
+        }
+    </script>
+{% endblock %}

@@ -75,7 +75,7 @@ class LoadingTemplate
         self::$data = [
             'assets'       => APP_PATH.'/assets',
             'assets_theme' => APP_PATH.'/themes/'.$theme.'/assets',
-            'site_json'    => json_encode($site_urls),
+            'site_json'    => new Markup(json_encode($site_urls), 'utf-8'),
             'cache_buster' => Util::hash(3),
         ];
     }

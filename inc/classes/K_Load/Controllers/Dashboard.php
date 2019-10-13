@@ -16,6 +16,7 @@ use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
+use function array_merge;
 use function is_array;
 
 class Dashboard extends BaseController
@@ -33,7 +34,7 @@ class Dashboard extends BaseController
 
         if ($post->has('save')) {
             $updated = User::update($_SESSION['steamid'], $post->all());
-            $alert = $updated ? 'Background settings have been saved' : 'Failed to save, please try again and check the data/logs if necessary';
+            $alert = $updated ? 'Your settings have been saved' : 'Failed to save, contact the owner to check the data/logs if necessary';
 
             if ($updated) {
                 Cache::remove('loading-screen-'.$_SESSION['steamid']);
@@ -61,7 +62,8 @@ class Dashboard extends BaseController
         if (isset($_SESSION['steamid']) && count($_POST) > 0) {
             if ($_POST['type'] == 'perms') {
                 $success = User::updatePerms($_POST['player'], $_POST);
-                $data['alert'] = $success ? 'User\'s perms have been updated' : 'Failed to update perms';
+                Util::flash('alert', $success ? 'User\'s perms have been updated' : 'Failed to update perms');
+                Util::redirect('/dashboard/users');
             } else {
                 User::action($_POST['player'], $_POST);
             }
@@ -122,10 +124,12 @@ class Dashboard extends BaseController
             User::action($_POST['player'], $_POST);
         }
 
-        $data['player'] = User::get($steamid);
+        $data['player'] = User::get($steamid, ...array_merge(['custom_css'], User::$columns));
 
         if ($data['player'] !== false && count($data['player']) > 0) {
             $data['player']['settings'] = json_decode($data['player']['settings'], true);
+
+            //var_dump($data);die();
 
             return self::view('profile', $data);
         } else {

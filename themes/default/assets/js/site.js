@@ -9,15 +9,14 @@
  * @license   MIT
  */
 
-var csrf = $('#csrf').val();
-//var csrf = $('meta[name="csrf-token"]').attr('content');
+var csrf = $('meta[name="csrf-token"]').attr('content');
 const elem = (tag, attrs, ...children) => {
-    const elem = document.createElement(tag);
+    let parent = document.createElement(tag);
     Object.keys(attrs).forEach(function (key) {
-        if (key in document.createElement(tag)) {
-            elem[key] = attrs[key];
+        if (key in parent) {
+            parent[key] = attrs[key];
         } else {
-            elem.setAttribute(key, attrs[key]);
+            parent.setAttribute(key, attrs[key]);
         }
     });
     // Object.keys(attrs).forEach(key => elem[key] = attrs[key]); <-- original
@@ -26,13 +25,46 @@ const elem = (tag, attrs, ...children) => {
         if (typeof child === "string") {
             child = document.createTextNode(child);
         }
-        elem.appendChild(child);
+        parent.appendChild(child);
     });
-    return elem;
+    return parent;
 };
 
 const lang = (key, default_phrase) => {
     return language[key] ? language_fallback[key] : (default_phrase ? default_phrase : '');
+};
+
+/**
+ * Generate a random string.
+ *
+ * @returns {string}
+ */
+const str_random = function () {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
+/**
+ * Debounce function to prevent excessive calls.
+ * {@link  https://davidwalsh.name/javascript-debounce-function}
+ *
+ * @param func
+ * @param wait
+ * @param immediate
+ * @returns {Function}
+ */
+const debounce = function (func, wait, immediate) {
+    var timeout;
+    return function () {
+        var context = this, args = arguments;
+        var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
 };
 
 function toast(message = '', time = 5000, css = '') {
@@ -62,9 +94,10 @@ function addElem() {
         var func = window['createElem_' + type];
         var callback = window['createElemCallback_' + type];
         if (typeof func === 'function' && typeof parent !== 'undefined') {
-            $(parent_dom).append(func());
+            let child = func();
+            $(parent_dom).append(child);
             if (typeof callback === 'function') {
-                callback();
+                callback(child);
             }
         } else {
             console.log('Function createElem_' + type + '() not found!');
@@ -159,6 +192,13 @@ if (typeof css_check != 'undefined' && css_check != null) {
 if (alert !== '') {
     toast(alert, 5000);
 }
+
+if (alerts.length > 0) {
+    alerts.forEach((alert) => {
+        toast(alert.message, alert.duration, alert.css);
+    })
+}
+
 $('textarea').on('input', function () {
     var length = this.value.length;
     var counter = $(this).next('span.counter');

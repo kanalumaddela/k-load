@@ -9,6 +9,8 @@
  * @license   MIT
  */
 
+var musicName;
+
 var files = {
     downloaded: 0,
     needed: 1
@@ -380,7 +382,7 @@ if (music.enable) {
         case 'files':
             if (music.order.length > 0) {
                 var music_counter = 0;
-                var musicName = music.order[music_counter].replace('.ogg', '');
+                musicName = music.order[music_counter].replace('.ogg', '');
                 updatePlaying({title: musicName, author: ''});
 
                 var audio = new Audio(site.url + '/data/music/' + music.order[music_counter]);

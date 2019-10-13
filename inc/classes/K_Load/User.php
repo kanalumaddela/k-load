@@ -13,26 +13,34 @@
 namespace K_Load;
 
 use Database;
+use Exception;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use Steam;
-use const DATE_FORMAT;
 use function array_key_exists;
 use function array_keys;
 use function array_merge;
 use function array_replace_recursive;
+use function boolval;
 use function ceil;
 use function count;
 use function date;
 use function file_exists;
 use function file_put_contents;
 use function filter_var;
+use function header;
+use function headers_sent;
 use function implode;
 use function in_array;
+use function is_array;
+use function is_bool;
 use function json_decode;
 use function json_encode;
 use function sort;
+use function str_replace;
 use function strtotime;
 use function unlink;
+use const APP_PATH;
+use const DATE_FORMAT;
 
 class User
 {
@@ -119,10 +127,7 @@ class User
 
     public static function copy($steamid, $player, $csrf)
     {
-        if (!self::validateCSRF($steamid, $csrf) || self::isBanned($steamid)) {
-            Steam::Logout();
-        }
-        self::refreshCSRF($steamid);
+        self::validateCSRF($steamid, $csrf);
 
         $success = Database::conn()->add("UPDATE `kload_users` AS `users` LEFT JOIN `kload_users` AS `source` ON `source`.`steamid` = '?' SET `users`.`custom_css` = `source`.`custom_css`, `users`.`settings` = `source`.`settings` WHERE `users`.`steamid` = '?'", [$player, $steamid])->execute();
         Util::log('action', $steamid.($success ? ' copied ' : ' attempted to copy ').'settings from '.$player);
@@ -136,15 +141,53 @@ class User
         return $success;
     }
 
-    public static function validateCSRF($steamid, $token)
+    public static function isValidCSRF($steamid, $token)
     {
-        $valid = (bool) Database::conn()->select("SELECT (`steamid` = '?' AND `token` = '?' AND CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions`", [$steamid, $token])->execute() ?? false;
-
-        if (!$valid) {
-            self::refreshCSRF($steamid);
-        }
+        $valid = Database::conn()->select("SELECT (`steamid` = '?' AND `token` = '?' AND CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions`", [$steamid, $token])->execute() ?? 0;
+        $valid = boolval((int) $valid);
 
         return $valid;
+    }
+
+    public static function validateCSRF($steamid, $token)
+    {
+        $valid = self::isValidCSRF($steamid, $token);
+        $token = self::refreshCSRF($steamid);
+        if (!$valid) {
+            if (Util::isAjax()) {
+                if (headers_sent() === false) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'data' => ['message' => 'CSRF token failed, try again', 'csrf' => $token]]);
+                }
+                die();
+            }
+
+            Util::flash('alerts', ['message' => 'CSRF token failed, try again', 'css' => 'red']);
+
+            if (!empty($_POST)) {
+                unset($_POST['csrf']);
+                Util::flash('alerts', 'Attempted to recover changes made, please re-save/resubmit these changes');
+                Util::flash('post', $_POST);
+            }
+
+            Util::redirect(str_replace(APP_PATH, '', $_SERVER['REQUEST_URI']));
+        }
+    }
+
+    public static function validatePerm($perm)
+    {
+        if (!self::can($perm)) {
+            if (Util::isAjax()) {
+                if (headers_sent() === false) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'data' => ['message' => 'Permission `'.$perm.'` not given.']]);
+                }
+                die();
+            }
+
+            Util::flash('alerts', 'You do not have the `'.$perm.'` permissions');
+            Util::redirect('/dashboard/admin');
+        }
     }
 
     public static function isBanned($steamid)
@@ -169,6 +212,10 @@ class User
         $data = [
             [$steamid, $token],
         ];
+
+        if (isset($_SESSION['steamid']) && $_SESSION['steamid'] === $steamid) {
+            $_SESSION['csrf'] = $token;
+        }
 
         self::$retrievedTokens[$steamid] = $token;
 
@@ -212,10 +259,7 @@ class User
 
     public static function ban($steamid, $csrf)
     {
-        if (!self::validateCSRF($_SESSION['steamid'], $csrf) || self::isBanned($_SESSION['steamid'])) {
-            Steam::Logout();
-        }
-        self::refreshCSRF($_SESSION['steamid']);
+        self::validateCSRF($_SESSION['steamid'], $csrf);
 
         if (self::isAdmin($_SESSION['steamid']) && ($steamid != $_SESSION['steamid']) && !self::isSuper($steamid)) {
             if (self::isSuper($_SESSION['steamid']) || (array_key_exists('ban', $_SESSION['perms']) && self::isAdmin($_SESSION['steamid']) && !self::isAdmin($steamid))) {
@@ -236,10 +280,7 @@ class User
 
     public static function unban($steamid, $csrf)
     {
-        if (!self::validateCSRF($_SESSION['steamid'], $csrf) || self::isBanned($_SESSION['steamid'])) {
-            Steam::Logout();
-        }
-        self::refreshCSRF($_SESSION['steamid']);
+        self::validateCSRF($_SESSION['steamid'], $csrf);
 
         if (self::isAdmin($_SESSION['steamid'])) {
             if (array_key_exists('unban', $_SESSION['perms']) || self::isSuper($_SESSION['steamid'])) {
@@ -253,13 +294,24 @@ class User
         return false;
     }
 
-    public static function add($steamid)
+    public static function add($steamid, $forceAdmin = false)
     {
         global $config;
 
         $steam = Steam::User($steamid);
         $steamids = Steam::Convert($steamid);
-        //$settings = Util::getSettings();
+
+        $globalSettings = Util::getSetting('backgrounds', 'youtube', 'music');
+
+        if (isset($globalSettings['backgrounds'])) {
+            $globalSettings['backgrounds'] = json_encode($globalSettings['backgrounds'], true);
+        }
+        if (isset($globalSettings['youtube'])) {
+            $globalSettings['youtube'] = json_encode($globalSettings['youtube'], true);
+        }
+        if (isset($globalSettings['music'])) {
+            $globalSettings['music'] = json_encode($globalSettings['music'], true);
+        }
 
         if (empty($steamids)) {
             $steamids = [
@@ -271,26 +323,38 @@ class User
         $settings = json_encode([
             'theme'       => $config['loading_theme'] ?? 'default',
             'backgrounds' => [
-                'enable'   => 1,
-                'random'   => 0,
-                'duration' => 5000,
-                'fade'     => 750,
+                'enable'   => $globalSettings['backgrounds']['enable'] ?? 1,
+                'random'   => $globalSettings['backgrounds']['random'] ?? 0,
+                'duration' => $globalSettings['backgrounds']['duration'] ?? 5000,
+                'fade'     => $globalSettings['backgrounds']['fade'] ?? 750,
             ],
             'youtube'     => [
-                'enable' => 0,
-                'random' => 0,
+                'enable' => $globalSettings['youtube']['enable'] ?? $globalSettings['music']['enable'] ?? 0,
+                'random' => $globalSettings['youtube']['random'] ?? $globalSettings['music']['random'] ?? 0,
                 'list'   => [],
             ],
         ]);
 
-        $perms = DEMO_MODE ? self::getPerms() : [];
-        $admin = (int) DEMO_MODE;
+        $admin = (int) $forceAdmin;
 
         $data = [
-            [$steam['personaname'], $steamids['steamid'], $steamids['steamid2'], $steamids['steamid3'], $admin, $perms, $settings],
+            [$steam['personaname'], $steamids['steamid'], $steamids['steamid2'], $steamids['steamid3'], $admin, json_encode([]), $settings],
         ];
 
-        return Database::conn()->insert('INSERT IGNORE INTO `kload_users` (`name`, `steamid`, `steamid2`, `steamid3`, `admin`, `perms`, `settings`)')->values($data)->execute();
+        if ($id = Database::conn()->insert('INSERT IGNORE INTO `kload_users` (`name`, `steamid`, `steamid2`, `steamid3`, `admin`, `perms`, `settings`)')->values($data)->execute()) {
+            if (is_bool($id)) {
+                throw new Exception('$id must be the inserted id, bool given');
+            }
+            return array_merge([
+                'id'       => $id,
+                'name'     => $steam['personaname'],
+                'admin'    => 0,
+                'perms'    => [],
+                'settings' => json_decode($settings, true),
+            ], $steamids);
+        }
+
+        return false;
     }
 
     public static function delete($steamid)
@@ -300,10 +364,7 @@ class User
 
     public static function update($steamid, $settings)
     {
-        if (!self::validateCSRF($steamid, $settings['csrf']) || self::isBanned($steamid)) {
-            Steam::Logout();
-        }
-        self::refreshCSRF($steamid);
+        self::validateCSRF($steamid, $settings['csrf']);
 
         $css = (isset($settings['css']) ? filter_var($settings['css'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : '');
 
@@ -349,12 +410,16 @@ class User
         if ($updated) {
             Cache::store('player-'.$steamid, $data, 0);
             if (!empty($css)) {
-                file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', Util::minify($css));
+                file_put_contents(APP_ROOT.'/data/users/'.$steamid.'.css', $css);
             } else {
                 if (file_exists(APP_ROOT.'/data/users/'.$steamid.'.css')) {
                     unlink(APP_ROOT.'/data/users/'.$steamid.'.css');
                 }
             }
+
+//            if ($steamid === $_SESSION['steamid']) {
+//                self::session($steamid);
+//            }
         }
 
         return $updated;
@@ -363,10 +428,7 @@ class User
     public static function updatePerms($steamid, $post)
     {
         if (self::isSuper($_SESSION['steamid']) && !self::isSuper($steamid)) {
-            if (!self::validateCSRF($_SESSION['steamid'], $post['csrf'])) {
-                Steam::Logout();
-            }
-            self::refreshCSRF($_SESSION['steamid']);
+            self::validateCSRF($_SESSION['steamid'], $post['csrf']);
             $result = Database::conn()->add("UPDATE `kload_users` SET `admin` = '?', `perms` = '?' WHERE `steamid` = '?'", [(isset($post['admin']) ? (int) $post['admin'] : 0), (isset($post['perms']) ? json_encode($post['perms']) : '[]'), $steamid])->execute();
             Util::log('action', $_SESSION['steamid'].($result ? ' set ' : ' attempted to set ').'permissions - ['.(isset($post['perms']) ? implode(',', $post['perms']) : 'N/A').'] and admin - '.(isset($post['admin']) ? (int) $post['admin'] : 0).' on '.$steamid);
 
@@ -376,15 +438,18 @@ class User
         return false;
     }
 
-    public static function session($steamid)
+    public static function session($user, $dontRefresh = false)
     {
-        $user = self::get($steamid);
+        if (!is_array($user)) {
+            $user = self::get($user);
+        }
 
-        $steaminfo = Steam::User($steamid);
+        $steaminfo = Steam::User($user['steamid']);
         if ($steaminfo) {
             if ($steaminfo['personaname'] !== $user['name']) {
-                Database::conn()->add("UPDATE `kload_users` SET `name` = '?' WHERE `steamid` = '?'", [$steaminfo['personaname'], $steamid])->execute();
+                Database::conn()->add("UPDATE `kload_users` SET `name` = '?' WHERE `steamid` = '?'", [$steaminfo['personaname'], $user['steamid']])->execute();
             }
+            unset($steaminfo['steamid']);
 
             $_SESSION = ($_SESSION ?? []) + $steaminfo;
         }
@@ -392,15 +457,20 @@ class User
         if (isset($user['settings'])) {
             $user['settings'] = json_decode($user['settings'], true);
         }
-        $user['admin'] = (int) $user['admin'];
-        $user['super'] = self::isSuper($steamid);
+        $user['admin'] = $user['admin'] == 0 ? self::isSuper($user['steamid']) : boolval((int) $user['admin']);
+        $user['super'] = self::isSuper($user['steamid']);
+
+        if (!$dontRefresh) {
+            self::refreshCSRF($user['steamid']);
+        }
+
+        $user['csrf'] = self::getCSRF($user['steamid']);
 
         $_SESSION = array_replace_recursive($_SESSION, $user);
 
-        if ($_SESSION['settings'] !== $user['settings']) {
-            $_SESSION['settings'] = $user['settings'];
-        }
-        self::refreshCSRF($steamid);
+//        if ($_SESSION['settings'] !== $user['settings']) {
+//            $_SESSION['settings'] = $user['settings'];
+//        }
     }
 
     public static function getCSRF($steamid = null)
@@ -449,6 +519,14 @@ class User
 
     public static function canOr(...$perms)
     {
+        if (!isset($_SESSION['steamid']) || !isset($_SESSION['perms'])) {
+            return false;
+        }
+
+        if (DEMO_MODE || self::isSuper($_SESSION['steamid'])) {
+            return true;
+        }
+
         foreach ($perms as $perm) {
             if (self::can($perm)) {
                 return true;
@@ -460,6 +538,14 @@ class User
 
     public static function canAnd(...$perms)
     {
+        if (!isset($_SESSION['steamid']) || !isset($_SESSION['perms'])) {
+            return false;
+        }
+
+        if (DEMO_MODE || self::isSuper($_SESSION['steamid'])) {
+            return true;
+        }
+
         foreach ($perms as $perm) {
             if (!self::can($perm)) {
                 return false;

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -9,7 +10,6 @@
  * @license   MIT
  */
 
-@charset "UTF-8";
 *, *:before, *:after {
     -webkit-box-sizing: inherit;
     box-sizing: inherit;
@@ -240,7 +240,7 @@ body, .no-margin {
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%,-50%);
-    width: 100%;
+    /*width: 100%;*/
     opacity: 0;
     -webkit-transition: opacity .75s ease-out;
 }

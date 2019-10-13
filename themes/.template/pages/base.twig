@@ -16,20 +16,6 @@
 {% block css_body %}{% endblock %}
 
 {% block body %}
-    {% if user %}
-
-        <!-- required -->
-        {{ csrf() }}
-        <!-- content to show when logged in -->
-
-    {% else %}
-
-        <!-- login page -->
-        <div class="true-center center-align">
-            <a href="{{ login_url }}" style=" padding: 10px 20px; border: 2px solid; border-radius: 53px; ">login</a>
-        </div>
-
-    {% endif %}
 {% endblock %}
 
 <!-- start custom js -->

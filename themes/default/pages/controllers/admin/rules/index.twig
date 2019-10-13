@@ -62,12 +62,13 @@
                                 {% for rule in rules %}
                                     <div class="input-field child">
                                         <input type="text" name="rules[list][{{ gamemode }}][]" value="{{ rule }}"
-                                               oninput="fixGamemode(this, true)" style="width: 80%">
+                                               oninput="fixGamemode(this, true)" style="width: calc(100% - 45px)">
                                         <a class="btn-floating red delete-elem"><i class="mdi mdi-delete"></i></a>
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a class="btn blue add-elem" data-type="rule" data-parent=".rules">{{ lang('add_rules') }}</a>
+                            <a class="btn add-elem" data-type="rule"
+                               data-parent=".rules">{{ lang('add_rule') }}</a>
                         </div>
                     </div>
                 </div>
@@ -75,12 +76,15 @@
         </div>
 
         <div class="col s12 right-align">
-            <a class="btn green add-elem" data-type="rule_cat" data-parent="#rule_categories">{{ lang('add_gamemode') }}</a>
+            <a class="btn green add-elem" data-type="rule_cat"
+               data-parent="#rule_categories">{{ lang('add_gamemode') }}</a>
         </div>
 
         <div class="fixed-action-btn">
-            <button id="save-btn" class="btn-floating btn-large blue tooltipped" data-position="top" data-tooltip="{{ lang('save') }}"
-                    type="submit" name="save" value="1"><span class="mdi mdi-content-save"></span></button>
+            <button id="save-btn" class="btn-large" type="submit" name="save" value="1">
+                <span class="mdi mdi-content-save"></span>
+                <span>{{ lang('save') }}</span>
+            </button>
         </div>
 
     </form>
@@ -127,7 +131,7 @@
                         elem('label', {innerText: "{{ lang('rules') }}"}),
                         elem('div', {className: 'rules'}),
                         elem('a', {
-                            className: 'btn blue add-elem',
+                            className: 'btn add-elem',
                             innerText: "{{ lang('add_rule') }}",
                             'data-type': 'rule',
                             'data-parent': '.rules'
@@ -143,7 +147,7 @@
                     type: 'text',
                     name: 'rules[list][global][]',
                     onInput: 'fixGamemode(this, true)',
-                    style: 'width: 80%'
+                    style: 'width: calc(100% - 45px)'
                 }),
                 elem('a', {className: 'btn-floating red delete-elem'},
                     elem('i', {className: 'mdi mdi-delete'})

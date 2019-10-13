@@ -10,20 +10,22 @@
  * @license   MIT
  */
 
-namespace K_Load\Controller;
+namespace K_Load\Controllers;
 
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
-use const ENABLE_CACHE;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use function count;
 use function is_null;
 use function md5;
 use function simplexml_load_string;
 use function strpos;
+use const ENABLE_CACHE;
+use const JSON_PRETTY_PRINT;
 
-class API
+class API extends BaseController
 {
     public static function player($steamid, $info = null)
     {
@@ -51,7 +53,12 @@ class API
             }
         }
 
-        Util::json($data, true, isset($_GET['formatted']));
+        $encoding = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
+        if (isset($_GET['formatted'])) {
+            $encoding = $encoding | JSON_PRETTY_PRINT;
+        }
+
+        return (new JsonResponse($data))->setEncodingOptions($encoding);
     }
 
     public static function players($steamids)
@@ -72,7 +79,7 @@ class API
 
         $data['success'] = !is_null($data['data']);
 
-        Util::json($data, true);
+        return new JsonResponse($data);
     }
 
     public static function group($name)
@@ -84,6 +91,11 @@ class API
         $data = simplexml_load_string($data);
         $data->success = isset($data);
 
-        Util::json($data, true, ($_SERVER['QUERY_STRING'] == 'formatted'));
+        $encoding = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
+        if (isset($_GET['formatted'])) {
+            $encoding = $encoding | JSON_PRETTY_PRINT;
+        }
+
+        return (new JsonResponse($data))->setEncodingOptions($encoding);
     }
 }

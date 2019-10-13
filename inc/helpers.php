@@ -9,8 +9,11 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
+
 use K_Load\Lang;
 use K_Load\Template;
+use K_Load\User;
+use K_Load\Util;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -60,4 +63,23 @@ function displayLoginPageIfGuest()
         view('login')->send();
         die();
     }
+}
+
+function isAdminUser()
+{
+    $admin = isSuperUser();
+
+    if (!$admin) {
+        $admin = isset($_SESSION['admin']) ? boolval((int) $_SESSION['admin']) === true : false;
+    }
+
+    if (!$admin) {
+        Util::flash('alerts', ['message' => 'You are not an admin', 'css' => 'red']);
+        Util::redirect('/dashboard');
+    }
+}
+
+function isSuperUser()
+{
+    return User::isSuper($_SESSION['steamid'] ?? null);
 }

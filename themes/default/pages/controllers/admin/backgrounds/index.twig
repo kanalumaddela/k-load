@@ -10,7 +10,7 @@
 
 {% block content %}
     {% if user.admin %}
-        {% if can('backgrounds %}
+        {% if can('backgrounds') %}
 
             {% include '@partials/gamemode-examples.twig' %}
 
@@ -20,7 +20,8 @@
                         <div class="card-content">
                             <form method="post" action="{{ site.path }}/dashboard/admin/backgrounds">
                                 {{ csrf() }}
-                                <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>{{ lang('backgrounds') }}</h1>
+                                <h1 class="flow-text"><span class="mdi mdi-wallpaper"></span>{{ lang('backgrounds') }}
+                                </h1>
                                 <div class="row">
                                     <div class="col s12 m6">
                                         <p>{{ lang('enable') }}?</p>
@@ -61,10 +62,10 @@
                                     </div>
                                 </div>
 
-                                <div class="fixed-action-btn">
-                                    <button id="save-btn" class="btn-floating btn-large blue tooltipped"
-                                            data-position="top" data-tooltip="{{ lang('save') }}" type="submit" name="save" value="1">
-                                        <span class="mdi mdi-content-save"></span></button>
+                                <div class="center">
+                                    <button id="save-btn" class="btn" type="submit" name="save" value="1">
+                                        <span>{{ lang('save') }}</span>
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -75,10 +76,9 @@
                     <div class="card">
                         <div class="card-content">
                             <h1 class="flow-text"><span class="mdi mdi-upload"></span>{{ lang('upload_backgrounds') }}</h1>
-                            <div class="center">
+                            {% include '@partials/upload-limits.twig' %}
+                            <div class="center" style="margin-top: 10px">
                                 <a href="#upload-backgrounds" class="btn modal-trigger">{{ lang('upload') }}</a>
-                                <p style="margin: 4px 0">{{ lang('max_uploads', upload_requirements.max_uploads) }}</p>
-                                <p style="margin: 4px 0">{{ lang('max_file_size', upload_requirements.file_size) }}</p>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" form="upload-backgrounds-form" class="btn green">{{ lang('upload') }}</button>
+                        <button type="submit" form="upload-backgrounds-form"
+                                class="btn green">{{ lang('upload') }}</button>
                         <a href="#" class="modal-action modal-close btn red">{{ lang('cancel') }}</a>
                     </div>
                 </div>
@@ -115,7 +116,8 @@
                 <div class="col s12">
                     <div class="card">
                         <div class="card-content">
-                            <h1 class="flow-text"><span class="mdi mdi-image-multiple"></span>{{ lang('uploaded_backgrounds') }}</h1>
+                            <h1 class="flow-text"><span
+                                        class="mdi mdi-image-multiple"></span>{{ lang('uploaded_backgrounds') }}</h1>
                             {% if backgrounds|length  > 0 %}
                                 <ul class="collapsible" data-collapsible="expandable">
                                     {% for gamemode, gmBackgrounds in backgrounds %}

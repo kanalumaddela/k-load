@@ -1,0 +1,122 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ lang('admin') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('admin') }}{% endblock %}
+
+{% block css_body %}
+    <style>
+        .setting-tab {
+            text-align: center;
+            color: inherit;
+        }
+
+        a.setting-tab:not([class*="btn"]):hover {
+            color: inherit;
+        }
+
+        .setting-tab > .card {
+            transition: transform .2s ease;
+        }
+
+        .setting-tab:hover > .card {
+            transform: scale(1.07);
+        }
+
+        .setting-tab-icon {
+            display: block;
+            font-size: 52px;
+        }
+
+        .setting-tab-title {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="center">
+            <h2>Select a Category to Edit</h2><br>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/core" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-code-tags setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('core') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/general" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-settings setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('general') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/backgrounds" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-image-multiple setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('backgrounds') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/messages" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-message-draw setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('messages') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/music" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-music setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('music') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/rules" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-view-list setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('rules') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/staff" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-account-group setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('staff') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col s6 m4 xl3">
+            <a href="{{ site.path }}/dashboard/admin/themes" class="setting-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <i class="mdi mdi-brush setting-tab-icon"></i>
+                        <h4 class="setting-tab-title">{{ lang('themes') }}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endblock %}

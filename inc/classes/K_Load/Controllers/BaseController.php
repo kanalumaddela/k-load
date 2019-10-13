@@ -28,6 +28,12 @@ class BaseController
     public function __construct()
     {
         $this->http = Request::createFromGlobals();
+        $this->boot();
+    }
+
+    public function boot()
+    {
+
     }
 
     public static function view($template, array $data = [])

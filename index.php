@@ -19,7 +19,38 @@ define('APP_START', microtime(true));
 
 // data/constants.php
 if (file_exists(__DIR__.'/data/constants.php')) {
-    require_once __DIR__.'/data/constants.php';
+    function defineUserConstants()
+    {
+        if (!file_exists(__DIR__.'/data/constants.old.php')) {
+
+            $contents = file_get_contents(__DIR__.'/data/constants.php');
+            preg_match_all("/define\('(\w+)', *(\w+)\);/", $contents, $matches, PREG_SET_ORDER);
+
+            if (!empty($matches)) {
+                copy(__DIR__.'/data/constants.php', __DIR__.'/data/constants.old.php');
+
+                $inserts = [];
+
+                foreach ($matches as $constantData) {
+                    $inserts[] = '$'.strtolower($constantData[1]).' = '.(in_array($constantData[2], ['true', 'false']) || is_int($constantData[2]) ? $constantData[2] : '\''.$constantData[2].'\'').';';
+                }
+
+                file_put_contents(__DIR__.'/data/constants.php', '<?php'."\n\n".implode("\n", $inserts));
+            } else {
+                touch(__DIR__.'/data/constants.php');
+            }
+
+        }
+
+        require_once __DIR__.'/data/constants.php';
+
+        foreach (get_defined_vars() as $constant => $value) {
+            define(strtoupper($constant), $value);
+            unset($$constant);
+        }
+    }
+
+    defineUserConstants();
 }
 
 // show errors

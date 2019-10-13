@@ -9,6 +9,7 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
+
 use K_Load\Util;
 
 class Database
@@ -30,8 +31,14 @@ class Database
     private static $type;
     private static $fake_instance;
 
+    public static $latestError = '';
+
     public function __construct()
     {
+        if (file_exists(APP_ROOT.'/data/config.php')) {
+            $config = include_once APP_ROOT.'/data/config.php';
+            self::connect($config['mysql']);
+        }
     }
 
     public static function clear()
@@ -63,6 +70,8 @@ class Database
         if (self::$conn->connect_error) {
             Util::log('mysql', '[FAIL] '.self::$conn->connect_error);
             self::$conn = null;
+
+            self::$latestError = self::$conn->connect_error;
 
             return;
         }
@@ -284,6 +293,7 @@ class Database
             Util::log('mysql', '[QUERY] - '.self::$sql);
         } else {
             Util::log('mysql', '[FAIL] - '.self::$conn->error."\n\t\t\t\t\t\t\t".'- Query: '.self::$sql);
+            self::$latestError = self::$conn->error;
         }
 
         self::$query_log[] = ($result ? '[SUCCESS]' : '[FAIL]').' - '.self::$sql;
