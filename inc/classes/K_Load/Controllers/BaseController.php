@@ -13,8 +13,8 @@
 namespace K_Load\Controllers;
 
 use K_Load\User;
-use Symfony\Component\HttpFoundation\Request;
 use function str_replace;
+use Symfony\Component\HttpFoundation\Request;
 use function view as globalView;
 
 class BaseController
@@ -33,7 +33,6 @@ class BaseController
 
     public function boot()
     {
-
     }
 
     public static function view($template, array $data = [])

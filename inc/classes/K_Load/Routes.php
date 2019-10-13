@@ -51,7 +51,7 @@ class Routes
         self::$router->get(APP_PATH.'/api/groups/{group:c}', [API::class, 'group']);
 
         self::$router->group(['before' => 'auth'], function ($router) {
-            /**
+            /*
              * @var RouteCollector $router
              */
             $router->any(APP_PATH.'/dashboard', [Dashboard::class, 'index']);

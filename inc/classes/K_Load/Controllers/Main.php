@@ -12,29 +12,29 @@
 
 namespace K_Load\Controllers;
 
+use const ALLOW_THEME_OVERRIDE;
+use const APP_ROOT;
+use function array_diff;
+use function array_merge;
+use function basename;
+use const ENABLE_CACHE;
+use const ENABLE_REGISTRATION;
 use Exception;
+use const IGNORE_PLAYER_CUSTOMIZATIONS;
+use function is_array;
+use function is_file;
+use function is_null;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use function json_decode;
+use function json_encode;
 use K_Load\LoadingTemplate;
 use K_Load\Template;
 use K_Load\User;
 use K_Load\Util;
-use Steam;
-use function array_diff;
-use function array_merge;
-use function basename;
-use function is_array;
-use function is_file;
-use function is_null;
-use function json_decode;
-use function json_encode;
 use function method_exists;
 use function scandir;
+use Steam;
 use function str_replace;
-use const ALLOW_THEME_OVERRIDE;
-use const APP_ROOT;
-use const ENABLE_CACHE;
-use const ENABLE_REGISTRATION;
-use const IGNORE_PLAYER_CUSTOMIZATIONS;
 
 class Main
 {

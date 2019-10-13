@@ -22,7 +22,6 @@ if (file_exists(__DIR__.'/data/constants.php')) {
     function defineUserConstants()
     {
         if (!file_exists(__DIR__.'/data/constants.old.php')) {
-
             $contents = file_get_contents(__DIR__.'/data/constants.php');
             preg_match_all("/define\('(\w+)', *(\w+)\);/", $contents, $matches, PREG_SET_ORDER);
 
@@ -39,7 +38,6 @@ if (file_exists(__DIR__.'/data/constants.php')) {
             } else {
                 touch(__DIR__.'/data/constants.php');
             }
-
         }
 
         require_once __DIR__.'/data/constants.php';

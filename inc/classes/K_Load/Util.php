@@ -12,19 +12,21 @@
 
 namespace K_Load;
 
-use Database;
-use Exception;
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
-use Steam;
 use function addcslashes;
+use const APP_HOST;
+use const APP_PATH;
+use const APP_ROOT;
 use function array_column;
 use function array_diff;
 use function array_fill;
 use function array_keys;
 use function bin2hex;
 use function count;
+use Database;
 use function date;
+use const ENABLE_CACHE;
 use function end;
+use Exception;
 use function explode;
 use function fclose;
 use function file_exists;
@@ -41,6 +43,7 @@ use function in_array;
 use function is_array;
 use function is_dir;
 use function is_file;
+use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use function json_encode;
 use function mkdir;
 use function preg_match;
@@ -54,6 +57,7 @@ use function rtrim;
 use function session_status;
 use function set_error_handler;
 use function sprintf;
+use Steam;
 use function strpos;
 use function strtolower;
 use function substr;
@@ -61,10 +65,6 @@ use function unlink;
 use function urldecode;
 use function var_dump;
 use function var_export;
-use const APP_HOST;
-use const APP_PATH;
-use const APP_ROOT;
-use const ENABLE_CACHE;
 
 class Util
 {
@@ -92,16 +92,16 @@ class Util
     public static function version()
     {
         if (!file_exists(APP_ROOT.'/data/config.php')) {
-            return null;
+            return;
         }
 
-        if (!Util::$version) {
+        if (!self::$version) {
             $version = Database::conn()->select('SELECT `value` FROM `kload_settings`')->where("`name` = 'version'")->execute();
 
-            Util::$version = $version !== false ? $version : null;
+            self::$version = $version !== false ? $version : null;
         }
 
-        return Util::$version;
+        return self::$version;
     }
 
     public static function getSettingKeys($ignoreCache = false)
@@ -121,7 +121,6 @@ class Util
 
     public static function updateSetting(array $settings, array $data, $csrf, $force = false)
     {
-
         if (!isset($_SESSION['steamid']) && !$force) {
             Steam::Logout();
         }
@@ -186,7 +185,7 @@ class Util
             $inserts[] = $value;
         }
 
-        return Database::conn()->add("INSERT INTO `kload_settings` (`name`, `value`) VALUES ".$valueParams." ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)", $inserts)->execute();
+        return Database::conn()->add('INSERT INTO `kload_settings` (`name`, `value`) VALUES '.$valueParams.' ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)', $inserts)->execute();
     }
 
     public static function log($type = 'access', $content = null, $force = false)
@@ -440,7 +439,6 @@ class Util
             } else {
                 $_SESSION['flash'][$key] = $value;
             }
-
         } else {
             echo 'session not active';
             die();
@@ -449,7 +447,7 @@ class Util
 
     public static function createConfig(array $config)
     {
-        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.Util::var_export($config).';'."\n");
+        file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.self::var_export($config).';'."\n");
     }
 
     public static function convertIniStringToBytes($value)
@@ -467,6 +465,5 @@ class Util
         }
 
         return $matches[1] * $conversions[$matches[2]];
-
     }
 }

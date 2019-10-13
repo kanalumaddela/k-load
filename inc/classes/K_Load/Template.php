@@ -12,13 +12,12 @@
 
 namespace K_Load;
 
-use Database;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-use Twig\Markup;
-use Twig\TwigFunction;
+use const APP_LANGUAGE;
 use function array_replace_recursive;
 use function count;
+use Database;
+use const DEBUG;
+use const DEMO_MODE;
 use function end;
 use function explode;
 use function file_exists;
@@ -31,10 +30,11 @@ use function lang;
 use function ltrim;
 use function sprintf;
 use function str_replace;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Markup;
+use Twig\TwigFunction;
 use function usort;
-use const APP_LANGUAGE;
-use const DEBUG;
-use const DEMO_MODE;
 
 class Template
 {
@@ -202,7 +202,6 @@ class Template
 
         if (isset($_SESSION['flash'])) {
             foreach ($_SESSION['flash'] as $flashKey => $flashValue) {
-
                 if ($flashKey === 'alerts') {
                     $flashValue = new Markup(json_encode($flashValue), 'utf-8');
                 }

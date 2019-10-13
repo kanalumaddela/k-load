@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
  * @link      https://www.maddela.org
@@ -9,5 +9,3 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
-
-
