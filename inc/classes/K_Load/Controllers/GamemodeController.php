@@ -12,8 +12,8 @@
 
 namespace K_Load\Controllers;
 
-use function array_flip;
 use K_Load\Util;
+use function array_flip;
 use function sprintf;
 use function strtolower;
 

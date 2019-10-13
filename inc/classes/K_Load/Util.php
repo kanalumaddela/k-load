@@ -12,21 +12,19 @@
 
 namespace K_Load;
 
+use Database;
+use Exception;
+use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use Steam;
 use function addcslashes;
-use const APP_HOST;
-use const APP_PATH;
-use const APP_ROOT;
 use function array_column;
 use function array_diff;
 use function array_fill;
 use function array_keys;
 use function bin2hex;
 use function count;
-use Database;
 use function date;
-use const ENABLE_CACHE;
 use function end;
-use Exception;
 use function explode;
 use function fclose;
 use function file_exists;
@@ -43,7 +41,6 @@ use function in_array;
 use function is_array;
 use function is_dir;
 use function is_file;
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use function json_encode;
 use function mkdir;
 use function preg_match;
@@ -57,7 +54,6 @@ use function rtrim;
 use function session_status;
 use function set_error_handler;
 use function sprintf;
-use Steam;
 use function strpos;
 use function strtolower;
 use function substr;
@@ -65,6 +61,10 @@ use function unlink;
 use function urldecode;
 use function var_dump;
 use function var_export;
+use const APP_HOST;
+use const APP_PATH;
+use const APP_ROOT;
+use const ENABLE_CACHE;
 
 class Util
 {

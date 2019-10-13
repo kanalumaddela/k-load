@@ -12,10 +12,10 @@
 
 namespace K_Load;
 
+use Exception;
 use function constant;
 use function define;
 use function defined;
-use Exception;
 use function gettype;
 use function strtoupper;
 

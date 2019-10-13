@@ -12,12 +12,12 @@
 
 namespace K_Load\Controllers;
 
-use function array_merge;
-use function is_array;
 use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use K_Load\User;
 use K_Load\Util;
 use Steam;
+use function array_merge;
+use function is_array;
 
 class Dashboard extends BaseController
 {

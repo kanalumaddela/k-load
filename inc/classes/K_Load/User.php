@@ -12,7 +12,10 @@
 
 namespace K_Load;
 
-use const APP_PATH;
+use Database;
+use Exception;
+use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use Steam;
 use function array_key_exists;
 use function array_keys;
 use function array_merge;
@@ -20,10 +23,7 @@ use function array_replace_recursive;
 use function boolval;
 use function ceil;
 use function count;
-use Database;
 use function date;
-use const DATE_FORMAT;
-use Exception;
 use function file_exists;
 use function file_put_contents;
 use function filter_var;
@@ -33,14 +33,14 @@ use function implode;
 use function in_array;
 use function is_array;
 use function is_bool;
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use function json_decode;
 use function json_encode;
 use function sort;
-use Steam;
 use function str_replace;
 use function strtotime;
 use function unlink;
+use const APP_PATH;
+use const DATE_FORMAT;
 
 class User
 {

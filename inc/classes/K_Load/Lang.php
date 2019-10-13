@@ -12,7 +12,6 @@
 
 namespace K_Load;
 
-use const APP_ROOT;
 use Exception;
 use function file_exists;
 use function is_array;
@@ -20,6 +19,7 @@ use function is_null;
 use function is_numeric;
 use function sprintf;
 use function vsprintf;
+use const APP_ROOT;
 
 class Lang
 {

@@ -13,8 +13,8 @@
 namespace K_Load\Controllers;
 
 use K_Load\User;
-use function str_replace;
 use Symfony\Component\HttpFoundation\Request;
+use function str_replace;
 use function view as globalView;
 
 class BaseController

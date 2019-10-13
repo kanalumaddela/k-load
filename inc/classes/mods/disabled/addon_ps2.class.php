@@ -9,6 +9,7 @@
  * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
+
 use K_Load\Util;
 
 class addon_ps2
