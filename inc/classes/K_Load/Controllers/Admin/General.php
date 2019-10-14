@@ -12,7 +12,6 @@
 
 namespace K_Load\Controllers\Admin;
 
-
 use Database;
 use J0sh0nat0r\SimpleCache\Cache;
 use K_Load\Controllers\AdminController;

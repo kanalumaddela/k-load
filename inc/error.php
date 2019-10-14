@@ -134,7 +134,7 @@
                 <td><?= $errorData['exception']->getMessage() ?></td>
             </tr>
             <?php if (DEBUG) {
-                ?>
+    ?>
                 <tr>
                     <td><h4>Trace:</h4></td>
                     <td style=" max-width: 0; overflow: auto; ">
@@ -142,8 +142,8 @@
                     </td>
                 </tr>
                 <?php
-            } else {
-                ?>
+} else {
+        ?>
                 <tr>
                     <td><h4>Notice:</h4></td>
                     <td>If you'd like to attempt to resolve the issue yourself, add/change <code>DEBUG</code> to
@@ -152,7 +152,7 @@
                     </td>
                 </tr>
                 <?php
-            } ?>
+    } ?>
             </tbody>
         </table>
     </div>
