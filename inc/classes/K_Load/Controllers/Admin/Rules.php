@@ -12,7 +12,6 @@
 
 namespace K_Load\Controllers\Admin;
 
-
 use Exception;
 use K_Load\Controllers\AdminController;
 use K_Load\User;
