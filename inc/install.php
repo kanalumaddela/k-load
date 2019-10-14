@@ -126,7 +126,7 @@ $extensions = [
         <a href="<?= APP_PATH ?>/install?phpinfo" target="_blank"
            style="position:absolute;right:14px;top:8px;">phpinfo</a>
         <?php if (!isset($_SESSION['steamid'])) {
-    ?>
+        ?>
         <div style="padding: 25px 10px;text-align: center;"
         ">
         <a href="<?= Steam::loginUrl() ?>">
@@ -135,7 +135,7 @@ $extensions = [
         </a>
     </div>
     <?php
-} else {
+    } else {
         ?>
         <div class="card-content">
             <form action="<?= APP_PATH.'/install' ?>" method="post" autocomplete="off">
@@ -161,24 +161,24 @@ $extensions = [
                                         echo '<li class="collection-item green-text"><div><i class="mdi mdi-check left"></i>PHP Version: '.PHP_VERSION.'</div></li>'."\n";
                                     }
 
-        $install_error = false;
-        foreach ($extensions as $extension => $info) {
-            $ext_color = 'green';
-            $ext_icon = 'check';
-            $ext_msg = 'is loaded';
+                                    $install_error = false;
+                                    foreach ($extensions as $extension => $info) {
+                                        $ext_color = 'green';
+                                        $ext_icon = 'check';
+                                        $ext_msg = 'is loaded';
 
-            if (!extension_loaded($info[0])) {
-                $ext_color = 'orange';
-                $ext_icon = 'alert-circle';
-                $ext_msg = 'is not loaded!';
-                if ($info[1]) {
-                    $install_error = true;
-                    $ext_color = 'red';
-                    $ext_icon = 'close';
-                }
-            }
-            echo '<li class="collection-item '.$ext_color.'-text"><div><i class="mdi mdi-'.$ext_icon.' left"></i>'.$extension.' extension '.$ext_msg.'</div></li>'."\n";
-        } ?>
+                                        if (!extension_loaded($info[0])) {
+                                            $ext_color = 'orange';
+                                            $ext_icon = 'alert-circle';
+                                            $ext_msg = 'is not loaded!';
+                                            if ($info[1]) {
+                                                $install_error = true;
+                                                $ext_color = 'red';
+                                                $ext_icon = 'close';
+                                            }
+                                        }
+                                        echo '<li class="collection-item '.$ext_color.'-text"><div><i class="mdi mdi-'.$ext_icon.' left"></i>'.$extension.' extension '.$ext_msg.'</div></li>'."\n";
+                                    } ?>
                                 </ul>
                             </div>
                             <div class="step-actions">
@@ -187,7 +187,7 @@ $extensions = [
                         </div>
                     </li>
                     <?php if (!$install_error) {
-            ?>
+                        ?>
                         <li id="settings" class="step">
                             <div class="step-title waves-effect waves-dark">Settings</div>
                             <div class="step-content">
@@ -302,7 +302,7 @@ $extensions = [
                             </div>
                         </li>
                         <?php
-        } ?>
+                    } ?>
                 </ul>
             </form>
         </div>

@@ -21,15 +21,6 @@ class Steam
         self::$apikey = $key;
     }
 
-    public static function Redirect($url = null)
-    {
-        if (!$url) {
-            $url = APP_HOST;
-        }
-        header('Location: '.$url, true, 302);
-        die();
-    }
-
     public static function LoginUrl()
     {
         global $steamLogin;
@@ -45,6 +36,15 @@ class Steam
         }
 
         self::Redirect();
+    }
+
+    public static function Redirect($url = null)
+    {
+        if (!$url) {
+            $url = APP_HOST;
+        }
+        header('Location: '.$url, true, 302);
+        die();
     }
 
     public static function Session($steamid)

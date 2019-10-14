@@ -156,38 +156,6 @@ class Util
         return $success;
     }
 
-    public static function saveSetting($setting, $value)
-    {
-        if (is_array($value)) {
-            $value = json_encode($value);
-        }
-
-        $success = Database::conn()->add("INSERT INTO `kload_settings` (`name`, `value`) VALUES ('?', '?') ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)", [$setting, $value])->execute();
-        if ($success) {
-            Cache::store('settings', self::getSettings(), 0);
-        }
-
-        return $success;
-    }
-
-    public static function saveSettings(array $settings)
-    {
-        $parameters = implode(',', array_fill(0, 2, '\'?\''));
-        $valueParams = implode(',', array_fill(0, count($settings), '('.$parameters.')'));
-
-        var_dump($valueParams);
-        die();
-
-        $inserts = [];
-
-        foreach ($settings as $setting => $value) {
-            $inserts[] = $settings;
-            $inserts[] = $value;
-        }
-
-        return Database::conn()->add('INSERT INTO `kload_settings` (`name`, `value`) VALUES '.$valueParams.' ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)', $inserts)->execute();
-    }
-
     public static function log($type = 'access', $content = null, $force = false)
     {
         if (!ENABLE_LOG && $force !== true) {
@@ -293,6 +261,38 @@ class Util
         return $data;
     }
 
+    public static function saveSetting($setting, $value)
+    {
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
+        $success = Database::conn()->add("INSERT INTO `kload_settings` (`name`, `value`) VALUES ('?', '?') ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)", [$setting, $value])->execute();
+        if ($success) {
+            Cache::store('settings', self::getSettings(), 0);
+        }
+
+        return $success;
+    }
+
+    public static function saveSettings(array $settings)
+    {
+        $parameters = implode(',', array_fill(0, 2, '\'?\''));
+        $valueParams = implode(',', array_fill(0, count($settings), '('.$parameters.')'));
+
+        var_dump($valueParams);
+        die();
+
+        $inserts = [];
+
+        foreach ($settings as $setting => $value) {
+            $inserts[] = $settings;
+            $inserts[] = $value;
+        }
+
+        return Database::conn()->add('INSERT INTO `kload_settings` (`name`, `value`) VALUES '.$valueParams.' ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)', $inserts)->execute();
+    }
+
     public static function getBackgrounds($asArray = false)
     {
         $backgroundsRoot = APP_ROOT.'/assets/img/backgrounds/';
@@ -379,28 +379,6 @@ class Util
         return bin2hex(random_bytes($length));
     }
 
-    public static function var_export($var, $indent = '')
-    {
-        switch (gettype($var)) {
-            case 'string':
-                return '"'.addcslashes($var, "\\\$\"\r\n\t\v\f").'"';
-            case 'array':
-                $indexed = array_keys($var) === range(0, count($var) - 1);
-                $r = [];
-                foreach ($var as $key => $value) {
-                    $r[] = "$indent    "
-                        .($indexed ? '' : self::var_export($key).' => ')
-                        .self::var_export($value, "$indent    ");
-                }
-
-                return "[\n".implode(",\n", $r)."\n".$indent.']';
-            case 'boolean':
-                return $var ? 'true' : 'false';
-            default:
-                return var_export($var, true);
-        }
-    }
-
     public static function YouTubeID($url)
     {
         $url = urldecode(rawurldecode($url));
@@ -448,6 +426,28 @@ class Util
     public static function createConfig(array $config)
     {
         file_put_contents(APP_ROOT.'/data/config.php', '<?php'."\n".'return '.self::var_export($config).';'."\n");
+    }
+
+    public static function var_export($var, $indent = '')
+    {
+        switch (gettype($var)) {
+            case 'string':
+                return '"'.addcslashes($var, "\\\$\"\r\n\t\v\f").'"';
+            case 'array':
+                $indexed = array_keys($var) === range(0, count($var) - 1);
+                $r = [];
+                foreach ($var as $key => $value) {
+                    $r[] = "$indent    "
+                        .($indexed ? '' : self::var_export($key).' => ')
+                        .self::var_export($value, "$indent    ");
+                }
+
+                return "[\n".implode(",\n", $r)."\n".$indent.']';
+            case 'boolean':
+                return $var ? 'true' : 'false';
+            default:
+                return var_export($var, true);
+        }
     }
 
     public static function convertIniStringToBytes($value)

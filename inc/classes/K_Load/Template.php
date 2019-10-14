@@ -47,6 +47,80 @@ class Template
     private static $twig_loader;
     private static $twig_env_params;
 
+    public static function theme($theme = null)
+    {
+        if (isset($theme) && file_exists(APP_ROOT.'/themes/'.$theme)) {
+            self::$theme = $theme;
+        }
+
+        return self::$theme;
+    }
+
+    public static function isDashboardTheme($name)
+    {
+        return file_exists(APP_ROOT.'/themes/'.$name.'/pages/controllers');
+    }
+
+    public static function isLoadingTheme($name)
+    {
+        return file_exists(APP_ROOT.'/themes/'.$name.'/pages/loading.twig');
+    }
+
+    public static function dashboardThemes()
+    {
+        $list = [];
+        $themes = glob(APP_ROOT.sprintf('%sthemes%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
+        foreach ($themes as $location) {
+            $tmp = explode(DIRECTORY_SEPARATOR, $location);
+            $name = end($tmp);
+            $location .= '/pages';
+            if (file_exists($location.'/dashboard') && file_exists($location.'/admin')) {
+                $list[] = $name;
+            }
+        }
+
+        return $list;
+    }
+
+    public static function render($template, array $data = [], $dontBuild = false)
+    {
+        if (!isset($data['alert']) && isset($_SESSION['flash']['alert'])) {
+            if (isset($_SESSION['flash']['alert'])) {
+                $data['alert'] = $_SESSION['flash']['alert'];
+                unset($_SESSION['flash']['alert']);
+            }
+        }
+
+        if (empty(self::$twig)) {
+            self::init();
+        }
+
+        if (!$dontBuild) {
+            self::buildData($data);
+            $data = self::$data;
+        }
+
+        $data['flash'] = [];
+
+        if (isset($_SESSION['flash'])) {
+            foreach ($_SESSION['flash'] as $flashKey => $flashValue) {
+                if ($flashKey === 'alerts') {
+                    $flashValue = new Markup(json_encode($flashValue), 'utf-8');
+                }
+
+                $data['flash'][$flashKey] = $flashValue;
+
+                if (!isset($_SESSION['reflash'])) {
+                    unset($_SESSION['flash'][$flashKey]);
+                }
+            }
+        }
+
+        $data['query_log'] = Database::getQueryLog();
+
+        return self::$twig->load($template)->render($data);
+    }
+
     public static function init()
     {
         global $steamLogin;
@@ -143,80 +217,6 @@ class Template
             'site_json'    => new Markup(json_encode($site_urls), 'utf-8'),
             'cache_buster' => Util::hash(3),
         ];
-    }
-
-    public static function theme($theme = null)
-    {
-        if (isset($theme) && file_exists(APP_ROOT.'/themes/'.$theme)) {
-            self::$theme = $theme;
-        }
-
-        return self::$theme;
-    }
-
-    public static function isDashboardTheme($name)
-    {
-        return file_exists(APP_ROOT.'/themes/'.$name.'/pages/controllers');
-    }
-
-    public static function isLoadingTheme($name)
-    {
-        return file_exists(APP_ROOT.'/themes/'.$name.'/pages/loading.twig');
-    }
-
-    public static function dashboardThemes()
-    {
-        $list = [];
-        $themes = glob(APP_ROOT.sprintf('%sthemes%s*', DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), GLOB_ONLYDIR);
-        foreach ($themes as $location) {
-            $tmp = explode(DIRECTORY_SEPARATOR, $location);
-            $name = end($tmp);
-            $location .= '/pages';
-            if (file_exists($location.'/dashboard') && file_exists($location.'/admin')) {
-                $list[] = $name;
-            }
-        }
-
-        return $list;
-    }
-
-    public static function render($template, array $data = [], $dontBuild = false)
-    {
-        if (!isset($data['alert']) && isset($_SESSION['flash']['alert'])) {
-            if (isset($_SESSION['flash']['alert'])) {
-                $data['alert'] = $_SESSION['flash']['alert'];
-                unset($_SESSION['flash']['alert']);
-            }
-        }
-
-        if (empty(self::$twig)) {
-            self::init();
-        }
-
-        if (!$dontBuild) {
-            self::buildData($data);
-            $data = self::$data;
-        }
-
-        $data['flash'] = [];
-
-        if (isset($_SESSION['flash'])) {
-            foreach ($_SESSION['flash'] as $flashKey => $flashValue) {
-                if ($flashKey === 'alerts') {
-                    $flashValue = new Markup(json_encode($flashValue), 'utf-8');
-                }
-
-                $data['flash'][$flashKey] = $flashValue;
-
-                if (!isset($_SESSION['reflash'])) {
-                    unset($_SESSION['flash'][$flashKey]);
-                }
-            }
-        }
-
-        $data['query_log'] = Database::getQueryLog();
-
-        return self::$twig->load($template)->render($data);
     }
 
     public static function buildData(array $data = [])

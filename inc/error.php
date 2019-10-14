@@ -134,16 +134,16 @@
                 <td><?= $errorData['exception']->getMessage() ?></td>
             </tr>
             <?php if (DEBUG) {
-    ?>
+                ?>
                 <tr>
                     <td><h4>Trace:</h4></td>
                     <td style=" max-width: 0; overflow: auto; ">
                         <pre style="max-height: 300px;overflow-y:auto"><?php var_dump($errorData['exception']->getTrace()) ?></pre>
                     </td>
                 </tr>
-            <?php
-} else {
-        ?>
+                <?php
+            } else {
+                ?>
                 <tr>
                     <td><h4>Notice:</h4></td>
                     <td>If you'd like to attempt to resolve the issue yourself, add/change <code>DEBUG</code> to
@@ -151,8 +151,8 @@
                         your <code>data/constants.php</code> to view the code trace
                     </td>
                 </tr>
-            <?php
-    } ?>
+                <?php
+            } ?>
             </tbody>
         </table>
     </div>

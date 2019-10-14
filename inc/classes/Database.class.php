@@ -18,20 +18,16 @@ class Database
      * @var \mysqli
      */
     public static $conn;
-
+    public static $latestError = '';
     protected static $query_log = [];
-
     private static $host;
     private static $port;
     private static $user;
     private static $pass;
     private static $db;
-
     private static $sql = '';
     private static $type;
     private static $fake_instance;
-
-    public static $latestError = '';
 
     public function __construct()
     {
@@ -39,20 +35,6 @@ class Database
             $config = include_once APP_ROOT.'/data/config.php';
             self::connect($config['mysql']);
         }
-    }
-
-    public static function clear()
-    {
-        self::$host = null;
-        self::$port = null;
-        self::$user = null;
-        self::$pass = null;
-        self::$db = null;
-    }
-
-    public static function ping()
-    {
-        return isset(self::$conn);
     }
 
     public static function connect($mysql = null)
@@ -79,6 +61,20 @@ class Database
         self::$conn->query('SET collation_connection = utf8mb4_unicode_ci');
     }
 
+    public static function clear()
+    {
+        self::$host = null;
+        self::$port = null;
+        self::$user = null;
+        self::$pass = null;
+        self::$db = null;
+    }
+
+    public static function ping()
+    {
+        return isset(self::$conn);
+    }
+
     public static function disconnect()
     {
         self::$conn->close();
@@ -101,6 +97,11 @@ class Database
         } else {
             Util::log('mysql', '[FAIL] - '.self::$conn->error."\n\t\t\t\t\t\t\t".'- Query: '.$sql);
         }
+    }
+
+    public static function getQueryLog()
+    {
+        return self::$query_log;
     }
 
     public function add($sql, array $data = [])
@@ -302,10 +303,5 @@ class Database
         self::$type = null;
 
         return $data;
-    }
-
-    public static function getQueryLog()
-    {
-        return self::$query_log;
     }
 }

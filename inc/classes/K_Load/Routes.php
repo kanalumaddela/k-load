@@ -60,18 +60,18 @@ class Routes
             $router->any(APP_PATH.'/dashboard/users/{steamid:i}', [Dashboard::class, 'user']);
 
             $router->group(['before' => 'admin'], function ($router) {
-                $router->any(APP_PATH.'/dashboard/admin', [Admin::class, 'index']);
-                $router->any(APP_PATH.'/dashboard/admin/core', [Admin::class, 'core']);
-                $router->any(APP_PATH.'/dashboard/admin/general', [Admin::class, 'general']);
-                $router->post(APP_PATH.'/dashboard/admin/general/logo', [Admin::class, 'logo']);
-                $router->post(APP_PATH.'/dashboard/admin/general/logo-upload', [Admin::class, 'logoUpload']);
-                $router->post(APP_PATH.'/dashboard/admin/general/logo-delete', [Admin::class, 'logoDelete']);
-                $router->any(APP_PATH.'/dashboard/admin/backgrounds', [Admin::class, 'backgrounds']);
-                $router->any(APP_PATH.'/dashboard/admin/backgrounds/upload', [Admin::class, 'backgroundsUpload']);
-                $router->any(APP_PATH.'/dashboard/admin/messages', [Admin::class, 'messages']);
-                $router->any(APP_PATH.'/dashboard/admin/rules', [Admin::class, 'rules']);
-                $router->any(APP_PATH.'/dashboard/admin/staff', [Admin::class, 'staff']);
-                $router->any(APP_PATH.'/dashboard/admin/update', [Admin::class, 'update']);
+                $router->any(APP_PATH.'/dashboard/admin', [Admin\General::class, 'index']);
+                $router->any(APP_PATH.'/dashboard/admin/core', [Admin\General::class, 'core']);
+                $router->any(APP_PATH.'/dashboard/admin/general', [Admin\General::class, 'general']);
+                $router->post(APP_PATH.'/dashboard/admin/general/logo', [Admin\General::class, 'logo']);
+                $router->post(APP_PATH.'/dashboard/admin/general/logo-upload', [Admin\General::class, 'logoUpload']);
+                $router->post(APP_PATH.'/dashboard/admin/general/logo-delete', [Admin\General::class, 'logoDelete']);
+                $router->any(APP_PATH.'/dashboard/admin/backgrounds', [Admin\Backgrounds::class, 'index']);
+                $router->any(APP_PATH.'/dashboard/admin/backgrounds/upload', [Admin\Backgrounds::class, 'backgroundsUpload']);
+                $router->any(APP_PATH.'/dashboard/admin/messages', [Admin\Messages::class, 'index']);
+                $router->any(APP_PATH.'/dashboard/admin/rules', [Admin\Rules::class, 'index']);
+                $router->any(APP_PATH.'/dashboard/admin/staff', [Admin\Staff::class, 'index']);
+//                $router->any(APP_PATH.'/dashboard/admin/update', [Admin::class, 'update']);
 
                 $router->any(APP_PATH.'/dashboard/admin/music', [Admin\Music::class, 'index']);
                 $router->post(APP_PATH.'/dashboard/admin/music/upload', [Admin\Music::class, 'musicUpload']);

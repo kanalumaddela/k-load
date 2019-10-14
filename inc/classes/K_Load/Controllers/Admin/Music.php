@@ -13,14 +13,14 @@
 namespace K_Load\Controllers\Admin;
 
 use Exception;
-use K_Load\Controllers\BaseController;
+use K_Load\Controllers\AdminController;
 use K_Load\User;
 use K_Load\Util;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
 use Twig\Markup;
 
-class Music extends BaseController
+class Music extends AdminController
 {
     public static $templateFolder = 'admin/music';
 

@@ -141,14 +141,6 @@ class User
         return $success;
     }
 
-    public static function isValidCSRF($steamid, $token)
-    {
-        $valid = Database::conn()->select("SELECT (`steamid` = '?' AND `token` = '?' AND CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions`", [$steamid, $token])->execute() ?? 0;
-        $valid = boolval((int) $valid);
-
-        return $valid;
-    }
-
     public static function validateCSRF($steamid, $token)
     {
         $valid = self::isValidCSRF($steamid, $token);
@@ -174,36 +166,12 @@ class User
         }
     }
 
-    public static function validatePerm($perm)
+    public static function isValidCSRF($steamid, $token)
     {
-        if (!self::can($perm)) {
-            if (Util::isAjax()) {
-                if (headers_sent() === false) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => false, 'data' => ['message' => 'Permission `'.$perm.'` not given.']]);
-                }
-                die();
-            }
+        $valid = Database::conn()->select("SELECT (`steamid` = '?' AND `token` = '?' AND CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions`", [$steamid, $token])->execute() ?? 0;
+        $valid = boolval((int) $valid);
 
-            Util::flash('alerts', 'You do not have the `'.$perm.'` permissions');
-            Util::redirect('/dashboard/admin');
-        }
-    }
-
-    public static function isBanned($steamid)
-    {
-        if (self::isSuper($steamid)) {
-            return false;
-        }
-
-        return (int) Database::conn()->select('SELECT `banned` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute() ?? false;
-    }
-
-    public static function isSuper($steamid)
-    {
-        global $config;
-
-        return in_array($steamid, $config['admins']);
+        return $valid;
     }
 
     public static function refreshCSRF($steamid)
@@ -278,6 +246,13 @@ class User
         return self::isSuper($steamid) || (int) Database::conn()->select('SELECT `admin` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute();
     }
 
+    public static function isSuper($steamid)
+    {
+        global $config;
+
+        return in_array($steamid, $config['admins']);
+    }
+
     public static function unban($steamid, $csrf)
     {
         self::validateCSRF($_SESSION['steamid'], $csrf);
@@ -292,6 +267,44 @@ class User
         }
 
         return false;
+    }
+
+    public static function validatePerm($perm)
+    {
+        if (!self::can($perm)) {
+            if (Util::isAjax()) {
+                if (headers_sent() === false) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'data' => ['message' => 'Permission `'.$perm.'` not given.']]);
+                }
+                die();
+            }
+
+            Util::flash('alerts', 'You do not have the `'.$perm.'` permissions');
+            Util::redirect('/dashboard/admin');
+        }
+    }
+
+    public static function can($perm)
+    {
+        if (!isset($_SESSION['steamid']) || !isset($_SESSION['perms'])) {
+            return false;
+        }
+
+        if (DEMO_MODE || self::isSuper($_SESSION['steamid'])) {
+            return true;
+        }
+
+        return in_array($perm, $_SESSION['perms']);
+    }
+
+    public static function isBanned($steamid)
+    {
+        if (self::isSuper($steamid)) {
+            return false;
+        }
+
+        return (int) Database::conn()->select('SELECT `banned` FROM `kload_users`')->where("`steamid` = '?'", [$steamid])->execute() ?? false;
     }
 
     public static function add($steamid, $forceAdmin = false)
@@ -554,19 +567,6 @@ class User
         }
 
         return true;
-    }
-
-    public static function can($perm)
-    {
-        if (!isset($_SESSION['steamid']) || !isset($_SESSION['perms'])) {
-            return false;
-        }
-
-        if (DEMO_MODE || self::isSuper($_SESSION['steamid'])) {
-            return true;
-        }
-
-        return in_array($perm, $_SESSION['perms']);
     }
 
     public static function cant($perm)
