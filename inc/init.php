@@ -110,11 +110,6 @@ if (SteamLogin::validRequest()) {
     Steam::Session($player->steamid);
 }
 
-// logging
-if (ENABLE_LOG) {
-    Util::log();
-}
-
 // caching
 if (!ENABLE_CACHE || isset($_GET[CLEAR_CACHE])) {
     if (file_exists(APP_ROOT.'/data/cache')) {

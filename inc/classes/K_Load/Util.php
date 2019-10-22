@@ -92,7 +92,7 @@ class Util
     public static function version()
     {
         if (!file_exists(APP_ROOT.'/data/config.php')) {
-            return;
+            return '';
         }
 
         if (!self::$version) {
@@ -162,18 +162,8 @@ class Util
             return;
         }
 
-        switch ($type) {
-            case 'access':
-                if (strpos($_SERVER['REQUEST_URI'], 'raw') !== false) {
-                    return;
-                }
-                $content = $_SERVER['REQUEST_METHOD'].' '.$_SERVER['REQUEST_URI'].' - '.$_SERVER['REMOTE_ADDR'];
-                break;
-            default:
-                if (!$content) {
-                    return;
-                }
-                break;
+        if (!$content) {
+            return;
         }
 
         $log = $type.'.log';
@@ -382,7 +372,7 @@ class Util
     public static function YouTubeID($url)
     {
         $url = urldecode(rawurldecode($url));
-        preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
+        preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^?&\"'>]+)/", $url, $match);
 
         return $match[1] ?? null;
     }
@@ -458,7 +448,7 @@ class Util
             'G' => 1073741824,
         ];
 
-        preg_match('/(\d+)(K|M|G)/', $value, $matches);
+        preg_match('/(\d+)([KMG])/', $value, $matches);
 
         if (!isset($matches[1], $matches[2])) {
             return 0;

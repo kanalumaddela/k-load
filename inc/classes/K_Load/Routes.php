@@ -71,7 +71,6 @@ class Routes
                 $router->any(APP_PATH.'/dashboard/admin/messages', [Admin\Messages::class, 'index']);
                 $router->any(APP_PATH.'/dashboard/admin/rules', [Admin\Rules::class, 'index']);
                 $router->any(APP_PATH.'/dashboard/admin/staff', [Admin\Staff::class, 'index']);
-//                $router->any(APP_PATH.'/dashboard/admin/update', [Admin::class, 'update']);
 
                 $router->any(APP_PATH.'/dashboard/admin/music', [Admin\Music::class, 'index']);
                 $router->post(APP_PATH.'/dashboard/admin/music/upload', [Admin\Music::class, 'musicUpload']);
