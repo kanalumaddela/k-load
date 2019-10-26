@@ -475,8 +475,8 @@ class User
         $user['admin'] = $user['admin'] == 0 ? self::isSuper($user['steamid']) : boolval((int) $user['admin']);
         $user['super'] = self::isSuper($user['steamid']);
 
-        if (!isset($_SESSION['csrf']) || (!empty($_SESSION['csrf']) && !User::isValidCSRF($_SESSION['steamid'], $_SESSION['csrf']))) {
-            User::refreshCSRF($_SESSION['steamid']);
+        if (!isset($_SESSION['csrf']) || (!empty($_SESSION['csrf']) && !self::isValidCSRF($_SESSION['steamid'], $_SESSION['csrf']))) {
+            self::refreshCSRF($_SESSION['steamid']);
         }
 
         $user['csrf'] = self::getCSRF($user['steamid']);
