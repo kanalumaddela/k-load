@@ -168,8 +168,9 @@ class User
 
     public static function isValidCSRF($steamid, $token)
     {
-        $valid = Database::conn()->select("SELECT (`steamid` = '?' AND `token` = '?' AND CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions`", [$steamid, $token])->execute() ?? 0;
-        $valid = boolval((int) $valid);
+        $data = Database::conn()->select("SELECT (CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions` WHERE `steamid` = '?' AND `token` = '?'", [$steamid, $token])->limit(1)->execute(false) ?? 0;
+
+        $valid = boolval((int) $data);
 
         return $valid;
     }
@@ -452,7 +453,7 @@ class User
         return false;
     }
 
-    public static function session($user, $dontRefresh = false)
+    public static function session($user)
     {
         if (!is_array($user)) {
             $user = self::get($user);
@@ -474,17 +475,13 @@ class User
         $user['admin'] = $user['admin'] == 0 ? self::isSuper($user['steamid']) : boolval((int) $user['admin']);
         $user['super'] = self::isSuper($user['steamid']);
 
-        if (!$dontRefresh) {
-            self::refreshCSRF($user['steamid']);
+        if (!isset($_SESSION['csrf']) || (!empty($_SESSION['csrf']) && !User::isValidCSRF($_SESSION['steamid'], $_SESSION['csrf']))) {
+            User::refreshCSRF($_SESSION['steamid']);
         }
 
         $user['csrf'] = self::getCSRF($user['steamid']);
 
         $_SESSION = array_replace_recursive($_SESSION, $user);
-
-//        if ($_SESSION['settings'] !== $user['settings']) {
-//            $_SESSION['settings'] = $user['settings'];
-//        }
     }
 
     public static function getCSRF($steamid = null)

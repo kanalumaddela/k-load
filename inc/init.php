@@ -161,20 +161,16 @@ if (file_exists(APP_ROOT.'/data/config.php')) {
 }
 
 if (isset($_SESSION['steamid']) && Util::installed()) {
-    if (User::isSuper($_SESSION['steamid']) || ENABLE_REGISTRATION) {
+    if (User::isAdmin($_SESSION['steamid']) || ENABLE_REGISTRATION) {
         $user = User::get($_SESSION['steamid']);
 
         if (empty($user)) {
             $user = User::add($_SESSION['steamid']);
         }
 
-        if (isset($_SESSION['csrf']) && !User::isValidCSRF($_SESSION['steamid'], $_SESSION['csrf'])) {
-            User::refreshCSRF($_SESSION['steamid']);
-        }
-
-        User::session($user, true);
+        User::session($user);
     } else {
-        echo 'Registration is not allowed.';
+        echo 'Registration is disabled, please talk to the owner.';
         die();
     }
     if (strpos($_SERVER['REQUEST_URI'], 'api') === false) {
