@@ -13,8 +13,8 @@
 namespace K_Load;
 
 use Database;
-use Steam;
 use function preg_match;
+use Steam;
 
 class Test
 {

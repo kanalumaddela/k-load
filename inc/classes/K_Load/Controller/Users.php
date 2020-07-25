@@ -12,18 +12,18 @@
 
 namespace K_Load\Controller;
 
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
-use K_Load\Template;
-use K_Load\User;
-use K_Load\Util;
-use Steam;
 use function abs;
 use function array_column;
 use function ceil;
 use function count;
 use function implode;
 use function is_null;
+use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use function json_decode;
+use K_Load\Template;
+use K_Load\User;
+use K_Load\Util;
+use Steam;
 
 class Users
 {
