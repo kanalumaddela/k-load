@@ -12,11 +12,6 @@
 
 namespace K_Load;
 
-use Twig\Environment;
-use Twig\Extension\DebugExtension;
-use Twig\Loader\FilesystemLoader;
-use Twig\Markup;
-use Twig\TwigFunction;
 use function array_fill_keys;
 use function array_flip;
 use function array_keys;
@@ -34,6 +29,11 @@ use function ltrim;
 use function random_bytes;
 use function sprintf;
 use function str_replace;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\Markup;
+use Twig\TwigFunction;
 use function usort;
 
 class Template

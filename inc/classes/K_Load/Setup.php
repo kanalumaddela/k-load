@@ -13,15 +13,15 @@
 namespace K_Load;
 
 use Database;
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
-use Steam;
 use function end;
 use function explode;
 use function file_exists;
 use function file_put_contents;
 use function glob;
+use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
 use function session_destroy;
 use function sprintf;
+use Steam;
 use function str_replace;
 use function var_dump;
 
