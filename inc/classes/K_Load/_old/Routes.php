@@ -17,7 +17,6 @@ use K_Load\Controllers\API;
 use K_Load\Controllers\Dashboard;
 use K_Load\Controllers\Main;
 use Phroute\Phroute\RouteCollector;
-use const APP_PATH;
 
 class Routes
 {

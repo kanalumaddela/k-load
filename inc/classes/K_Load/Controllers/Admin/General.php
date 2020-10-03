@@ -243,7 +243,7 @@ class General extends AdminController
     public function logoUpload()
     {
         if (!User::isSuper($_SESSION['steamid'])) {
-            die();
+            exit();
         }
 
         if (!$this->http->files->has('logo')) {
@@ -322,7 +322,7 @@ class General extends AdminController
     public function logoDelete()
     {
         if (!User::isSuper($_SESSION['steamid'])) {
-            die();
+            exit();
         }
 
         User::validateCSRF($_SESSION['steamid'], $this->http->request->get('csrf'));

@@ -20,7 +20,7 @@ use const K_Load\APP_ROOT;
 define('K_Load\\'.'APP_START', microtime(true));
 
 require_once __DIR__.'/vendor/autoload.php';
-die();
+exit();
 
 // fuck people and shit hosts
 $display_info = false;
@@ -33,7 +33,7 @@ if (!defined('PHP_VERSION_ID')) {
 if (PHP_VERSION_ID < 70200) {
     $display_info = true;
 
-    $display_info_messages[] = <<<EOT
+    $display_info_messages[] = <<<'EOT'
     <div style="text-align: center">
     <h1 style="color: red;text-transform: uppercase"><mark>PHP 7.2 and up</mark> is required<br>see if your host can upgrade or get a better host<h1>
     </div>
@@ -58,11 +58,10 @@ if ($display_info) {
     $phpinfo = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $phpinfo);
     echo $phpinfo;
     echo '<style>body{width:90%;max-width:1200px;margin:auto;background:#06111f;color:#e0e0e0}table{display:block;padding:15px;overflow:auto;background-color:rgba(0,0,0,0.1);}</style>';
-    die();
+    exit();
 }
 
 unset($display_info, $display_info_messages);
-
 
 // test write perms, doing it this early cause retards
 if (!file_exists(__DIR__.'/data/FILE_WRITE_CHECK_DO_NOT_REMOVE')) {
@@ -76,7 +75,7 @@ if (!file_exists(__DIR__.'/data/FILE_WRITE_CHECK_DO_NOT_REMOVE')) {
         echo '<code style="color:#0ed60e;background:black;padding: 5px 3px;">chown -R www-data:www-data /var/www/html</code><p>or whatever the path is to your files</p>';
         echo '</div>';
         phpinfo();
-        die();
+        exit();
     }
     rmdir(__DIR__.'/test');
     if (!file_exists(__DIR__.'/data')) {
@@ -90,9 +89,8 @@ if (!function_exists('curl_init') || !extension_loaded('curl')) {
     echo '<div style="color:red;text-align:center;"><h1 style="text-transform:uppercase">the php extension "curl" is not loaded/enabled/installed. without it you cannot login</h1><h3>if you are using shared hosting contact them to enable it</h3>';
     echo '</div>';
     phpinfo();
-    die();
+    exit();
 }
-
 
 unset($check);
 unset($version);

@@ -104,7 +104,6 @@ class Dashboard extends BaseController
             Setting::where('name', 'music')->update(['value' => json_encode(array_merge($music->value, $musicPost))]);
         }
 
-
         return new RedirectResponse(APP_ROUTE_URL.'/dashboard');
     }
 

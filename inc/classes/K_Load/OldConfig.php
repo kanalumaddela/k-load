@@ -86,7 +86,6 @@ class OldConfig
 
             $array = $array[$segment];
             $val = $array;
-
         }
 
         return $val;

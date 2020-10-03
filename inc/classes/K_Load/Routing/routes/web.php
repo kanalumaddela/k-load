@@ -12,7 +12,6 @@ $router->filter('admin', 'isAdminUser');
 $router->filter('super', 'isSuperUser');
 $router->filter('csrf', 'checkForCsrf');
 
-
 $router->any('/', [Main::class, 'index'], ['before' => 'themeCheck']);
 $router->any('/dashboard/logout', [Main::class, 'logout']);
 

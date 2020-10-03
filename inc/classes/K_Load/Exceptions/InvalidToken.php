@@ -16,7 +16,6 @@ use Throwable;
 
 class InvalidToken extends HttpException
 {
-
     public function __construct(int $statusCode = 500, string $message = '', Throwable $previous = null, array $headers = [], ?int $code = 0)
     {
         $statusCode = 401;

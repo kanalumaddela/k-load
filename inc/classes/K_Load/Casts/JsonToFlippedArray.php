@@ -19,10 +19,6 @@ use function json_encode;
 
 class JsonToFlippedArray
 {
-
-    /**
-     * @inheritDoc
-     */
     public function get($model, string $key, $value, array $attributes)
     {
         dump('tbh');
@@ -30,9 +26,6 @@ class JsonToFlippedArray
         return array_flip(json_decode($value, true));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function set($model, string $key, $value, array $attributes)
     {
         return json_encode($value);
