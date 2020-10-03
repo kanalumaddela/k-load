@@ -20,7 +20,7 @@
     <div id="container" class="pure-center" style="top: 47.5%;">
         <div class="header">
             <img class="avatar" style="max-width: 65px;"
-                 src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
+                 src="{{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }}">
             <div style="margin-left: 10px">
                 <h1 style="text-transform: uppercase;">{{ settings.community_name }}</h1>
                 <h3 style="margin-top: -12px;">{{ lang('you_are_now_joining') }} <span class="server-name"></span></h3>

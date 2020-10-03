@@ -6,7 +6,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
 if (file_exists(APP_ROOT.'/themes/default/preview.png')) {

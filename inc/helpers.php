@@ -6,14 +6,77 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
-use K_Load\Lang;
-use K_Load\Template;
-use K_Load\User;
-use K_Load\Util;
+
+namespace K_Load;
+
+use K_Load\View\LoadingView;
+use K_Load\View\View;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use function addcslashes;
+use function array_keys;
+use function basename;
+use function call_user_func_array;
+use function compact;
+use function count;
+use function func_get_args;
+use function get_defined_vars;
+use function gettype;
+use function implode;
+use function is_dir;
+use function ksort;
+use function range;
+use function scandir;
+use function var_export;
+
+/**
+ * Is the current request https?
+ *
+ * @return bool
+ */
+function is_https()
+{
+    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' : false);
+}
+
+/**
+ * Return defined variables in a file
+ *
+ * @param $file
+ *
+ * @return array
+ */
+function get_vars($file)
+{
+    require_once $file;
+
+    return get_defined_vars();
+}
+
+function var_export_fixed($var, $indent = '')
+{
+    switch (gettype($var)) {
+        case 'string':
+            return '\''.addcslashes($var, "\\\$\"\r\n\t\v\f").'\'';
+        case 'array':
+            $indexed = array_keys($var) === range(0, count($var) - 1);
+            $r = [];
+            foreach ($var as $key => $value) {
+                $r[] = "$indent    "
+                    .($indexed ? '' : var_export_fixed($key).' => ')
+                    .var_export_fixed($value, "$indent    ");
+            }
+
+            return "[\n".implode(",\n", $r)."\n".$indent.']';
+        case 'boolean':
+            return $var ? 'true' : 'false';
+        default:
+            return var_export($var, true);
+    }
+}
 
 /**
  * @param       $template
@@ -24,12 +87,20 @@ use Symfony\Component\HttpFoundation\Response;
  */
 function view($template, array $data = [], $httpCode = 200)
 {
-    $template = str_replace('.twig', '', $template);
-
-    $response = new Response(Template::render($template.'.twig', $data));
+    $response = new Response(View::render($template, $data));
     $response->setCharset('UTF-8');
     $response->headers->set('Content-Type', 'text/html');
     $response->setStatusCode($httpCode);
+
+    return $response;
+}
+
+function loadingView($template, array $data = [])
+{
+    $response = new Response(LoadingView::render($template, $data));
+    $response->setCharset('UTF-8');
+    $response->headers->set('Content-Type', 'text/html');
+    $response->setStatusCode(200);
 
     return $response;
 }
@@ -47,7 +118,7 @@ function lang()
  */
 function loggedIn()
 {
-    $loggedIn = isset($_SESSION['id'], $_SESSION['steamid']);
+    $loggedIn = isset($_SESSION['kload'], $_SESSION['kload']['user'], $_SESSION['kload']['user']['id']);
 
     if (!$loggedIn) {
         session_unset();
@@ -56,29 +127,63 @@ function loggedIn()
     return $loggedIn;
 }
 
+function directoryTree($dir)
+{
+    $arr = [];
+    $name = basename($dir);
+    $arr[$name] = [];
+
+    $folders = $files = [];
+
+    foreach (scandir($dir) as $item) {
+        if ($item === '.' || $item === '..') {
+            continue;
+        }
+
+        $item = $dir.DIRECTORY_SEPARATOR.$item;
+
+        if (is_dir($item)) {
+            $folders[basename($item)] = directoryTree($item);
+        } else {
+            $files[basename($item)] = $item;
+        }
+    }
+
+    ksort($folders);
+    ksort($files);
+
+    $arr = compact('folders', 'files');
+
+    return $arr;
+}
+
+function db()
+{
+    global $capsule;
+
+    return $capsule::connection();
+}
+
+function checkThemeQuery()
+{
+    if (isset($_GET['theme']) && (ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
+        LoadingView::setTheme($_GET['theme']);
+    }
+}
+
 function displayLoginPageIfGuest()
 {
-    if (!loggedIn()) {
-        view('login')->send();
-        die();
+    if (!\K_Load\Facades\Session::user()) {
+        return view('login');
     }
 }
 
-function isAdminUser()
+function redirect($url, $status = 302, array $headers = [])
 {
-    $admin = isSuperUser();
-
-    if (!$admin) {
-        $admin = isset($_SESSION['admin']) ? boolval((int) $_SESSION['admin']) === true : false;
-    }
-
-    if (!$admin) {
-        Util::flash('alerts', ['message' => 'You are not an admin', 'css' => 'red']);
-        Util::redirect('/dashboard');
-    }
+    return new RedirectResponse($url, $status, $headers);
 }
 
-function isSuperUser()
-{
-    return User::isSuper($_SESSION['steamid'] ?? null);
-}
+//function flash($content, $type = 'info')
+//{
+//    return
+//}

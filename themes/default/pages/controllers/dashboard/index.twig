@@ -5,7 +5,7 @@
 {% block content %}
     <div class="row">
         <div class="col s12">
-            <h1 class="flow-text">{{ lang('welcome_user', user.personaname) }}</h1>
+            <h1 class="flow-text">{{ lang('welcome_user', user.name) }}</h1>
         </div>
         <div class="col s12">
             <div class="card">
@@ -27,7 +27,7 @@
                     <p>{{ lang('steamid2') }} <code>{{ user.steamid2 }}</code></p>
                     <p>{{ lang('steamid3') }}: <code>{{ user.steamid3 }}</code></p>
                     <br>
-                    <p>{{ lang('profile') }}: <a href="{{ user.profileurl|replace({'http://': 'https://'}) }}"
+                    <p>{{ lang('profile') }}: <a href="{{ user.profileUrl }}"
                                                  target="_blank"
                                                  style="word-break: break-all;word-wrap:break-word;">{{ user.profileurl }}</a>
                     </p>

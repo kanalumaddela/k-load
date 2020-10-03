@@ -68,8 +68,8 @@
                 <div class="block">
                     <div class="block-content center-text">
                         <img class="player avatar circle"
-                             src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
-                        <h3>{{ user.personaname|default(lang('welcome')) }}</h3>
+                             src="{{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }}">
+                        <h3>{{ user.name|default(lang('welcome')) }}</h3>
                         <p>{{ user.steamid2 }}</p>
                     </div>
                 </div>

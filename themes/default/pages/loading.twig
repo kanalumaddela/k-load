@@ -22,9 +22,9 @@
             <svg id="load-circle-inner">
                 <circle cx="95" cy="95" r="95"/>
             </svg>
-            <img class="avatar circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
+            <img class="avatar circle" src="{{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }}">
         </div>
-        <p>{{ user.personaname|default(lang('welcome')) }}</p>
+        <p>{{ user.name|default(lang('welcome')) }}</p>
         <span class="messages"></span>
     </div>
 

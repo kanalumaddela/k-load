@@ -5,7 +5,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
 
@@ -233,14 +233,19 @@ const image = function (selector, src) {
  * @param maxplayers
  * @param steamid
  * @param gamemode
+ * @param volume
  */
-function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode, volume) {
     if (demoInterval != null) {
         resetDemoMode();
     }
 
     if (forcedGamemode.length > 0) {
         gamemode = forcedGamemode;
+    }
+
+    if (volume) {
+        console.log('client volume: ' + volume);
     }
 
     var gamemodeFriendly = gamemode;
@@ -843,7 +848,8 @@ var inDemoMode = false;
 function demoMode() {
     inDemoMode = true;
 
-    SetFilesNeeded(Math.floor(Math.random() * 250) + 50);
+    SetFilesNeeded(100);
+    // SetFilesNeeded(Math.floor(Math.random() * 100) + 50);
     GameDetails('Demo Server', window.location.href, 'demo_map_name', 24, '76561198152390718', 'demo');
 
     demoInterval = setInterval(function () {

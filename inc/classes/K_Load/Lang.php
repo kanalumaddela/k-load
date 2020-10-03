@@ -6,42 +6,58 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
 
 namespace K_Load;
 
-use Exception;
+use InvalidArgumentException;
 use function file_exists;
 use function is_array;
 use function is_null;
 use function is_numeric;
 use function sprintf;
 use function vsprintf;
-use const APP_ROOT;
 
 class Lang
 {
     const LANG_FOLDER = APP_ROOT.'/inc/lang';
 
-    protected static $lang = [];
+    public $currentLang = 'en';
+
+    protected $lang = [];
 
     protected static $fallback = [];
 
-    /**
-     * @param string $language
-     *
-     * @throws \Exception
-     */
-    public static function init($language = 'en')
+    protected static $booted = false;
+
+    public function __construct($language = 'en')
     {
-        if (!self::exists($language)) {
-            throw new Exception('Language `'.$language.'` not found in `inc/lang/` folder');
+        static::boot();
+
+        if (!static::exists($language)) {
+            throw new InvalidArgumentException('Language `'.$language.'` not found in `inc/lang/` folder');
         }
 
-        self::$lang = include self::LANG_FOLDER.'/'.$language.'.php';
-        self::$fallback = include self::LANG_FOLDER.'/en.php';
+        $this->currentLang = $language;
+        $this->lang = include static::LANG_FOLDER.'/'.$language.'.php';
+    }
+
+    public static function boot()
+    {
+        if (static::$booted) {
+            return;
+        }
+
+        static::$booted = true;
+
+        static::$fallback = include static::LANG_FOLDER.'/en.php';
+    }
+
+    public function getCurrentLang(): string
+    {
+        return $this->currentLang;
     }
 
     /**
@@ -60,9 +76,9 @@ class Lang
      *
      * @return mixed|string|null
      */
-    public static function get($key, $default = null)
+    public function get($key, $default = null)
     {
-        $lang = isset(self::$lang[$key]) && !empty(self::$lang[$key]) ? self::$lang[$key] : (isset(self::$fallback[$key]) && !empty(self::$fallback[$key]) ? self::$fallback[$key] : $key);
+        $lang = isset($this->lang[$key]) && !empty($this->lang[$key]) ? $this->lang[$key] : (isset(static::$fallback[$key]) && !empty(static::$fallback[$key]) ? static::$fallback[$key] : $key);
 
         if ($lang === $key && !is_numeric($default)) {
             if (!is_null($default) && !is_array($default)) {

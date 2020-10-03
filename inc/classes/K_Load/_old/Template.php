@@ -6,14 +6,15 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
 
-namespace K_Load;
+namespace K_Load\_old;
 
-use Database;
+use K_Load\Models\User;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
 use Twig\TwigFunction;
@@ -35,16 +36,21 @@ use function usort;
 use const APP_LANGUAGE;
 use const DEBUG;
 use const DEMO_MODE;
+use const DIRECTORY_SEPARATOR;
 
 class Template
 {
     public static $theme = 'default';
+
     private static $data = [];
+
     /**
      * @var \Twig_Environment
      */
     private static $twig;
+
     private static $twig_loader;
+
     private static $twig_env_params;
 
     public static function theme($theme = null)
@@ -116,7 +122,7 @@ class Template
             }
         }
 
-        $data['query_log'] = Database::getQueryLog();
+        $data['query_log'] = db()->getQueryLog();
 
         return self::$twig->load($template)->render($data);
     }
@@ -138,6 +144,10 @@ class Template
             'cache'       => (ENABLE_CACHE ? APP_ROOT.'/data/cache/templates' : false),
         ];
         self::$twig = new Environment(self::$twig_loader, self::$twig_env_params);
+
+        if (DEBUG) {
+            self::$twig->addExtension(new DebugExtension());
+        }
 
         // csrf
         $function = new TwigFunction('csrf', function () {
@@ -249,7 +259,7 @@ class Template
                             return filemtime($a) - filemtime($b);
                         });
 
-                        $preview = str_replace(APP_ROOT, APP_PATH, $previews[0]);
+                        $preview = str_replace(DIRECTORY_SEPARATOR, '/', str_replace(APP_ROOT, APP_PATH, $previews[0]));
                     } else {
                         $preview = null;
                     }

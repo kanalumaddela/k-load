@@ -1,3 +1,14 @@
+/*
+ * K-Load v2 (https://demo.maddela.org/k-load/).
+ *
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
+ *
+ * @author    kanalumaddela <git@maddela.org>
+ * @copyright Copyright (c) 2018-2020 Maddela
+ * @license   MIT
+ */
+
 @charset "UTF-8";
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
@@ -96,23 +107,68 @@ ul.sidenav.sidenav-fixed:hover {
     background-color: unset;
 }
 
-.sidenav > li > a:hover:not(.is-image), .sidenav > li.active > a:not(.is-image), li.active > .collapsible-header, .sidenav .collapsible-header:hover, .sidenav .collapsible-body li.active > a, .sidenav .collapsible li.active .collapsible-header, .sidenav .collapsible li .collapsible-header:hover {
+.sidenav > li > a:hover:not(.is-image), .sidenav > li.active > a:not(.is-image), li.active > .collapsible-header, .sidenav .collapsible-header:hover, .sidenav .collapsible li.active .collapsible-header, .sidenav .collapsible li .collapsible-header:hover {
     background-color: rgba(0, 0, 0, .15);
     border-color: #52a0f3 !important;
 }
 
-.sidenav > li.logout > a:hover {
-    border-color: #f44336;
+.sidenav .collapsible li.active .collapsible-header {
+    background-color: rgba(0, 0, 0, .25);
 }
+
+.sidenav .collapsible-body li > a {
+    transition: background-color .15s ease-out, border-color .15s ease-out;
+    border-left: 2px solid transparent;
+}
+
+.sidenav .collapsible-body li.active > a, .sidenav li > a:hover {
+    background-color: rgba(0, 0, 0, 0.07);
+    border-color: #52a0f3;
+}
+
+/*.sidenav > li.logout > a:hover {*/
+/*    border-color: #f44336;*/
+/*}*/
 
 .sidenav .collapsible-body, .sidenav.fixed .collapsible-body {
     background-color: rgba(0, 0, 0, .15);;
 }
 
 .sidenav .collapsible-body li a {
-    padding: 0 0 0 54px;
+    padding: 0 0 0 24px;
+    margin-left: 30px;
     font-weight: 400;
 }
+
+.sidenav .collapsible-body li a {
+    position: relative;
+}
+
+.sidenav .collapsible-body li.active > a {
+    border-left: 2px solid #52a0f3;
+}
+
+/*.sidenav .collapsible-body li a:before {*/
+/*    position: absolute;*/
+/*    content: '';*/
+/*    width: 2px;*/
+/*    height: 100%;*/
+/*    left: 40px;*/
+/*    background-color: #525667;*/
+/*}*/
+/*.sidenav .collapsible-body li a:after {*/
+/*    position: absolute;*/
+/*    content: '';*/
+/*    width: 7px;*/
+/*    height: 2px;*/
+/*    left: 42px;*/
+/*    top: 50%;*/
+/*    transform: translateY(-50%);*/
+/*    background-color: #525667;*/
+/*}*/
+/*.sidenav .collapsible-body li:last-child a:before {*/
+/*    height: 53%;*/
+/*}*/
 
 .sidenav .user-view {
     margin-bottom: 0;
@@ -277,8 +333,12 @@ img.theme-preview {
     width: 100%;
 }
 
-.theme-block:not(:last-child), .theme-block .material-placeholder {
+.theme-block .material-placeholder {
     margin-bottom: 8px;
+}
+
+.theme-block:not(:last-child) {
+    margin-bottom: 20px;
 }
 
 /* users page */
@@ -365,6 +425,18 @@ img.theme-preview {
 }
 
 /* admin index */
+.btn-warning {
+    background-color: #f19416;
+}
+
+.btn-warning:hover {
+    background-color: #c14141;
+}
+
+.btn-warning {
+    background-color: #f19416;
+}
+
 .btn-danger {
     background-color: #c14141;
 }
@@ -430,6 +502,12 @@ h1 > .mdi {
 
     nav .nav-wrapper {
         text-align: center;
+    }
+}
+
+@media only screen and (min-width: 993px) {
+    .container {
+        width: 85%;
     }
 }
 
@@ -598,4 +676,49 @@ pre.code, code.code {
 
 .cm-s-material .CodeMirror-guttermarker, .cm-s-material .CodeMirror-guttermarker-subtle, .cm-s-material .CodeMirror-linenumber {
     color: #e6e6e6
+}
+
+/* DARK */
+body, .cm-s-material .CodeMirror-gutters {
+    background-color: #2f2f2f;
+}
+
+.card, .sidenav {
+    background-color: #444444;
+}
+
+.modal {
+    background-color: #3a3a3a;
+}
+
+.modal .modal-footer {
+    background-color: #2f2f2f;
+}
+
+.collapsible {
+    box-shadow: none;
+}
+
+/*.collapsible > li {*/
+/*    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);*/
+/*}*/
+li.active > .collapsible-header {
+    background-color: rgba(0, 0, 0, .08);
+}
+
+.collapsible-header, .keyboard-focused .collapsible-header:focus {
+    background-color: #444444;
+    transition: background-color .2s ease-out;
+}
+
+.collapsible-body {
+    background-color: #444444;
+}
+
+.collapsible.expandable > li.active {
+    margin-bottom: 15px;
+}
+
+.cm-s-material.CodeMirror {
+    background-color: #3a3a3a;
 }

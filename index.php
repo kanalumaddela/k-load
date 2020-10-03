@@ -6,68 +6,63 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
 
 //if ($_SERVER['SERVER_NAME'] === 'demo.maddela.org') {
 //    die('making this better, have patience thx');
 //}
+declare(strict_types=1);
 
-// debug time
-define('APP_START', microtime(true));
+use const K_Load\APP_ROOT;
 
-// data/constants.php
-if (file_exists(__DIR__.'/data/constants.php')) {
-    function defineUserConstants()
-    {
-        if (!file_exists(__DIR__.'/data/constants.old.php')) {
-            $contents = file_get_contents(__DIR__.'/data/constants.php');
-            preg_match_all("/define\('(\w+)', *(\w+)\);/", $contents, $matches, PREG_SET_ORDER);
+define('K_Load\\'.'APP_START', microtime(true));
 
-            if (!empty($matches)) {
-                copy(__DIR__.'/data/constants.php', __DIR__.'/data/constants.old.php');
-
-                $inserts = [];
-
-                foreach ($matches as $constantData) {
-                    $inserts[] = '$'.strtolower($constantData[1]).' = '.(in_array($constantData[2], ['true', 'false']) || is_int($constantData[2]) ? $constantData[2] : '\''.$constantData[2].'\'').';';
-                }
-
-                file_put_contents(__DIR__.'/data/constants.php', '<?php'."\n\n".implode("\n", $inserts));
-            } else {
-                touch(__DIR__.'/data/constants.php');
-            }
-        }
-
-        require_once __DIR__.'/data/constants.php';
-
-        foreach (get_defined_vars() as $constant => $value) {
-            define(strtoupper($constant), $value);
-            unset($$constant);
-        }
-    }
-
-    defineUserConstants();
-}
-
-// show errors
-if (defined('DEBUG') && DEBUG) {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-}
+require_once __DIR__.'/vendor/autoload.php';
+die();
 
 // fuck people and shit hosts
+$display_info = false;
+$display_info_messages = [];
+
 if (!defined('PHP_VERSION_ID')) {
     $version = explode('.', PHP_VERSION);
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
-if (PHP_VERSION_ID < 70000) {
-    echo '<h1>php 7 and up is required, see if your host can upgrade or get a better host<h1><br><hr><br>';
-    phpinfo();
+if (PHP_VERSION_ID < 70200) {
+    $display_info = true;
+
+    $display_info_messages[] = <<<EOT
+    <div style="text-align: center">
+    <h1 style="color: red;text-transform: uppercase"><mark>PHP 7.2 and up</mark> is required<br>see if your host can upgrade or get a better host<h1>
+    </div>
+EOT;
+}
+
+// better be at least 64 bit before checking version
+if (PHP_INT_SIZE === 4) {
+    $display_info = true;
+    $display_info_messages[] = '<div style="color:red;text-align:center;"><h4 style="text-transform:uppercase">You are running the 32 bit version of PHP, 64 bit is required and should be the standard in this modern age</h4></div>';
+}
+
+if ($display_info) {
+    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">';
+
+    echo implode('', $display_info_messages).'<hr><br>';
+
+    ob_start();
+    phpinfo(INFO_GENERAL | INFO_CONFIGURATION | INFO_MODULES | INFO_ENVIRONMENT | INFO_VARIABLES);
+    $phpinfo = ob_get_contents();
+    ob_end_clean();
+    $phpinfo = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $phpinfo);
+    echo $phpinfo;
+    echo '<style>body{width:90%;max-width:1200px;margin:auto;background:#06111f;color:#e0e0e0}table{display:block;padding:15px;overflow:auto;background-color:rgba(0,0,0,0.1);}</style>';
     die();
 }
+
+unset($display_info, $display_info_messages);
+
 
 // test write perms, doing it this early cause retards
 if (!file_exists(__DIR__.'/data/FILE_WRITE_CHECK_DO_NOT_REMOVE')) {
@@ -97,14 +92,14 @@ if (!function_exists('curl_init') || !extension_loaded('curl')) {
     phpinfo();
     die();
 }
-// another check for retard setups/hosts
-if (PHP_INT_SIZE === 4) {
-    echo '<div style="color:red;text-align:center;"><h1 style="text-transform:uppercase">You are running the 32 bit version of PHP, 64 bit is required and should be the standard in this modern age</h1>';
-    echo '</div>';
-    phpinfo();
-    die();
-}
+
+
+unset($check);
+unset($version);
 
 // everything else
-define('APP_ROOT', __DIR__);
+define('K_Load\\'.'APP_ROOT', __DIR__);
+
+require_once APP_ROOT.'/inc/handlers.php';
+//require_once APP_ROOT.'/inc/error.php';
 require_once APP_ROOT.'/inc/init.php';

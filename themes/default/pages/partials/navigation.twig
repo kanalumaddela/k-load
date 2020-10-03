@@ -8,12 +8,12 @@
     <li>
         <div class="user-view">
             <a class="is-image">
-                <img class="circle" style="border-radius: 3px" src="{{ user.avatarfull }}"
+                <img class="circle" style="border-radius: 3px" src="{{ user.avatarLarge }}"
                      onerror="this.src='{{ assets }}/img/avatar.jpg'">
             </a>
             <br>
             <a href="#name">
-                <span class="white-text name">{{ user.personaname }}</span>
+                <span class="white-text name">{{ user.name }}</span>
             </a>
             <a href="{{ user.profileurl }}" target="_blank">
                 <span class="white-text email">{{ user.steamid2 }} <span class="mdi mdi-open-in-new"></span></span>
@@ -90,6 +90,11 @@
                             {% if can('staff') %}
                                 <li class="{% if (site.url ~ '/dashboard/admin/staff') == site.current %}active{% endif %}">
                                     <a href="{{ site.path }}/dashboard/admin/staff">{{ lang('staff') }}</a>
+                                </li>
+                            {% endif %}
+                            {% if can('themes') %}
+                                <li class="{% if (site.url ~ '/dashboard/admin/themes') == site.current %}active{% endif %}">
+                                    <a href="{{ site.path }}/dashboard/admin/themes">{{ lang('themes') }}</a>
                                 </li>
                             {% endif %}
                         </ul>

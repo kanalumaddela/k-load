@@ -26,12 +26,12 @@
                     <img class="logo" src="{{ assets }}/img/{{ settings.logo }}">
                 {% endif %}
                 <div style="margin-right: 10px">
-                    <p style="margin-bottom: 4px;font-size: 1.35rem;">{{ user.personaname|default(lang('welcome')) }}</p>
+                    <p style="margin-bottom: 4px;font-size: 1.35rem;">{{ user.name|default(lang('welcome')) }}</p>
                     {% if user.steamid2 %}
                         <p style="font-size: .85rem;font-weight: 300;">{{ user.steamid2 }}</p>
                     {% endif %}
                 </div>
-                <img class="avatar" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}"
+                <img class="avatar" src="{{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }}"
                      style="max-width:75px;">
             </div>
             <div class="col xl-3 hide-md">

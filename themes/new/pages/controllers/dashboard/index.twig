@@ -1,0 +1,398 @@
+{% extends 'app.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block bodyCss %}
+    <style>
+        .stat-data {
+            font-size: 2em;
+            font-weight: 300;
+        }
+
+        .stat-title {
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .table td:first-child {
+            font-weight: 500;
+            border-right: 1px solid rgba(255, 255, 255, .15);
+        }
+
+        .table.no-border td {
+            border: none;
+        }
+
+        .table.no-padding td {
+            padding: 0;
+        }
+
+        .table.no-padding-x td {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+
+        .table th {
+            color: #6cbdff;
+        }
+
+        .table td {
+            max-width: 450px;
+            white-space: nowrap;
+            overflow: auto;
+        }
+
+        .header, th.header {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: 5px 10px;
+            margin-left: -.5em;
+            margin-right: -.5em;
+            border-radius: .25em;
+        }
+
+        .card-content {
+            position: relative;
+        }
+
+        .stat-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 1em;
+            font-size: 3em;
+        }
+
+        @media screen and (max-width: 1023px) {
+            .stat {
+                text-align: center;
+            }
+
+            .stat-icon {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 1023px) {
+            #quick-info {
+                order: 1;
+            }
+
+            #quick-settings {
+                order: 2;
+            }
+        }
+
+
+        .columns > .column > .columns {
+            margin-top: unset;
+            margin-left: unset;
+            margin-right: unset;
+        }
+
+        .checkbox:hover, .radio:hover {
+            color: #bdbdbd;
+        }
+
+        .checkbox.is-custom input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox.is-custom:hover {
+            color: inherit;
+        }
+
+        .checkbox.is-custom {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .checkbox.is-custom .switch {
+            position: relative;
+            display: inline-block;
+            height: 26px;
+            width: 48px;
+            border-radius: 20px;
+            background-color: #4f585d;
+            transition: background-color .2s;
+        }
+
+        .checkbox.is-custom .switch:before {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            content: '';
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            transition: .2s;
+        }
+
+        .checkbox.is-custom input[type="checkbox"]:checked + .switch {
+            background-color: #6cbdff;
+        }
+
+        .checkbox.is-custom input[type="checkbox"]:checked + .switch:before {
+            transform: translateX(21px);
+        }
+
+        /*.slider {*/
+        /*    appearance: none;*/
+        /*    width: 100%;*/
+        /*    height: 10px;*/
+        /*    border-radius: 5px;*/
+        /*    background: #6cbdff;*/
+        /*    outline: none;*/
+        /*    opacity: 0.7;*/
+        /*}*/
+        /*.slider::-webkit-slider-runnable-track {*/
+        /*    background-color: red;*/
+        /*}*/
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 6em;padding: 1em;">
+
+        <div class="mb-3">
+            <pre>{{ flash|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+        </div>
+
+        <div class="columns is-flex-tablet">
+            <div class="column is-one-third-tablet">
+                <div class="card stat">
+                    <div class="card-content">
+                        <h1 class="stat-data">100k</h1>
+                        <h3 class="stat-title">Visits</h3>
+                        <i class="fas fa-chart-area stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-one-third-tablet">
+                <div class="card stat">
+                    <div class="card-content">
+                        <h1 class="stat-data">5,541</h1>
+                        <h3 class="stat-title">Users</h3>
+                        <i class="fas fa-users stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-one-third-tablet">
+                <div class="card stat">
+                    <div class="card-content">
+                        <h1 class="stat-data">10</h1>
+                        <h3 class="stat-title">Themes</h3>
+                        <i class="fas fa-paint-brush stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns is-multiline is-mobile">
+            <div id="quick-settings" class="column is-full-tablet is-half-desktop">
+                <div class="card quick-settings">
+                    <div class="card-header-title">
+                        Quick Settings
+                    </div>
+                    <div class="card-content">
+                        <form action="{{ site.current }}" method="post">
+                            {{ csrf }}
+
+                            <div class="columns is-multiline">
+                                <div class="column is-full mb-2">
+                                    <h1 class="header">General</h1>
+                                    <div class="pt-4">
+                                        <div class="field is-horizontal">
+                                            <div class="field-label is-normal">
+                                                <label class="label">Theme</label>
+                                            </div>
+                                            <div class="field-body">
+                                                <div class="select">
+                                                    <select name="theme">
+                                                        {% for theme in themes %}
+                                                            <option value="{{ theme }}"
+                                                                    {% if theme is same as(loading_theme) %}selected{% endif %}>{{ theme }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if can('community_name') %}
+                                            <div class="field is-horizontal">
+                                                <div class="field-label">
+                                                    <label class="label">Community Name</label>
+                                                </div>
+                                                <div class="field-body">
+                                                    <input class="input" type="text" name="community_name"
+                                                           value="{{ settings.community_name }}">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if can('backgrounds') %}
+                                    <div class="column is-full mb-2">
+                                        <h1 class="header">Backgrounds</h1>
+                                        <div class="pt-1 columns is-multiline">
+                                            <div class="column is-half-tablet">
+                                                <div class="field">
+                                                    <div class="field-body">
+                                                        <label class="checkbox is-custom">
+                                                            Enable?
+                                                            <input type="checkbox" value="1" name="backgrounds[enable]"
+                                                                   {% if settings.backgrounds.enable %}checked{% endif %}>
+                                                            <span class="switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column is-half-tablet">
+                                                <div class="field">
+                                                    <div class="field-body">
+                                                        <label class="checkbox is-custom">
+                                                            Randomize?
+                                                            <input type="checkbox" value="1" name="backgrounds[random]"
+                                                                   {% if settings.backgrounds.random %}checked{% endif %}>
+                                                            <span class="switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="column is-half-tablet">
+                                                <div class="field is-horizontal">
+                                                    <div class="field-label is-normal">
+                                                        <label class="label">Duration</label>
+                                                    </div>
+                                                    <div class="field-body">
+                                                        <input class="input" type="number" name="backgrounds[duration]"
+                                                               value="{{ settings.backgrounds.duration }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column is-half-tablet">
+                                                <div class="field is-horizontal">
+                                                    <div class="field-label is-normal">
+                                                        <label class="label">Fade</label>
+                                                    </div>
+                                                    <div class="field-body">
+                                                        <input class="input" type="number" name="backgrounds[fade]"
+                                                               value="{{ settings.backgrounds.fade }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if can('music') %}
+                                    <div class="column is-full">
+                                        <h1 class="header">Music</h1>
+                                        <div class="pt-1 columns is-multiline">
+                                            <div class="column is-half-tablet">
+                                                <div class="field">
+                                                    <div class="field-body">
+                                                        <label class="checkbox is-custom">
+                                                            Enable?
+                                                            <input type="checkbox" value="1" name="music[enable]"
+                                                                   {% if settings.music.random %}checked{% endif %}>
+                                                            <span class="switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column is-half-tablet">
+                                                <div class="field">
+                                                    <div class="field-body">
+                                                        <label class="checkbox is-custom">
+                                                            Randomize?
+                                                            <input type="checkbox" value="1" name="music[random]"
+                                                                   {% if settings.music.random %}checked{% endif %}>
+                                                            <span class="switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="column is-full">
+                                                <div class="field is-horizontal">
+                                                    <div class="field-label" style="text-align: left">
+                                                        <label class="label">Volume</label>
+                                                    </div>
+                                                    <div class="field-body">
+                                                        <input class="slider" type="range" name="music[volume]"
+                                                               style="width: 100%" value="{{ settings.music.volume }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="has-text-centered">
+                                <button class="button">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quick-info" class="column is-full-tablet is-half-desktop">
+                <div class="card">
+                    <div class="card-header-title">Quick Info</div>
+                    <div class="card-content">
+                        {# border: 1px solid;border-color: #ff4f43;background: rgb(242 43 29 / 0.6); #}
+                        <div class="py-2 mb-4 has-text-centered site-border-radius notice notice-danger">
+                            <h1 class="mb-1">Edit/Add this line in your <code>garrysmod/cfg/server.cfg</code></h1>
+                            <code data-copy title="Click to copy">sv_loadingurl "{{ site.url }}
+                                ?steamid=%s&mapname=%m"</code>
+                        </div>
+                        <table class="table is-fullwidth">
+                            <tbody>
+                                <tr>
+                                    <td>Version</td>
+                                    <td>
+                                        2.6.0
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Loading URL</td>
+                                    <td>
+                                        {{ include('@partials/external-link.twig', {link: site.url}) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const updateTextInput = (e) => {
+            let el = e.target || e;
+            let target = document.getElementById(el.getAttribute('data-target'));
+
+            if (target) {
+                target.innerText = el.value;
+            }
+        }
+
+        let inputs = document.querySelectorAll('input.updateText');
+
+        inputs.forEach((item, index) => {
+            updateTextInput(item);
+            item.addEventListener('input', updateTextInput);
+        });
+    </script>
+{% endblock %}

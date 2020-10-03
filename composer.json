@@ -1,13 +1,13 @@
 {
     "config": {
         "platform": {
-            "php": "7.1.26"
+            "php": "7.2.5"
         }
     },
     "repositories": [
         {
-            "type": "git",
-            "url": "https://github.com/kanalumaddela/phroute"
+            "type": "vcs",
+            "url": "https://github.com/kanalumaddela/SimpleCache"
         }
     ],
     "require": {
@@ -15,16 +15,35 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-fileinfo": "*",
-        "ext-mysqli": "*",
         "ext-xml": "*",
         "ext-libxml": "*",
         "ext-simplexml": "*",
-        "doctormckay/steamid": "^1.0",
-        "j0sh0nat0r/simple-cache": "^1.0",
-        "phroute/phroute": "dev-master",
-        "twig/twig": "^2.4",
+        "ext-pdo": "*",
+        "j0sh0nat0r/simple-cache": "dev-master",
+        "twig/twig": "^3.0",
         "kanalumaddela/steam-login": "dev-master",
         "sentry/sdk": "^2.0",
-        "symfony/http-foundation": "^4.2"
+        "symfony/http-foundation": "^4.2",
+        "illuminate/support": "^5.8",
+        "illuminate/database": "^5.8",
+        "xpaw/steamid": "dev-master",
+        "phroute/phroute": "^2.1",
+        "league/container": "^3.3",
+        "opis/closure": "^3.5",
+        "adbario/php-dot-notation": "^2.2",
+        "illuminate/pagination": "^5.8"
+    },
+    "require-dev": {
+        "filp/whoops": "^2.7",
+        "symfony/var-dumper": "^4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "K_Load\\": "inc/classes/K_Load"
+        },
+        "files": [
+            "inc/helpers.php",
+            "inc/init.php"
+        ]
     }
 }

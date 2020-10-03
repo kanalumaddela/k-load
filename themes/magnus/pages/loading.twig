@@ -22,9 +22,9 @@
 
         <!-- user info -->
         <div id="top-bar">
-            <img class="avatar medium circle" src="{{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }}">
+            <img class="avatar medium circle" src="{{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }}">
             <div style="margin-top:4px;line-height:30px;width:calc(100% - 150px);">
-                <p class="name">{{ user.personaname|default('Player') }}</p>
+                <p class="name">{{ user.name|default('Player') }}</p>
                 <p class="messages"></p>
             </div>
         </div>

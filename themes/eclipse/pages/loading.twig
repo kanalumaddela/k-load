@@ -123,8 +123,8 @@
 {% block body %}
     <div id="box" class="pure-center" style="top: 48%;">
         <div class="box-header">
-            <img class="avatar circle small" src="{{ user.avatarmedium|default(assets ~ '/img/avatar.jpg') }}">
-            <span class="connecting-player-name">{{ user.personaname|default(lang('welcome')) }}</span>
+            <img class="avatar circle small" src="{{ user.avatarMedium|default(assets ~ '/img/avatar.jpg') }}">
+            <span class="connecting-player-name">{{ user.name|default(lang('welcome')) }}</span>
             <div class="info">
                 <span class="badge status"
                       style="max-width: 450px;white-space: nowrap;">Retrieving server info...</span>

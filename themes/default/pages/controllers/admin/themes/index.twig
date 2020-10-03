@@ -1,0 +1,74 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ lang('themes') }} | K-Load{% endblock %}
+{% block nav_title %}{{ lang('themes') }}{% endblock %}
+
+{% block css_body %}
+    <style>
+        .collection {
+            border: none;
+        }
+
+        .collection .collection-item {
+            background-color: #3c455f;
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        .themes .collapsible-header > * {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .theme-item > div {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .theme-image {
+            max-width: 300px;
+        }
+
+        .theme-buttons .btn {
+            width: 80px;
+        }
+
+        .btn-container {
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div style="max-width: 100%">
+        {{ dump() }}
+    </div>
+    <div class="row themes" style="margin-top:35px;padding-bottom:15px;">
+        {% for theme in themes %}
+            <div class="col s12 m6 l4 xl3">
+                <div class="card">
+                    <div class="card-image">
+                        <img class="materialboxed" src="{{ theme.preview }}">
+                        <span class="card-title">{{ theme.name|capitalize }}</span>
+                    </div>
+                    <div class="card-action center-align">
+                        <a href="{{ site.path }}/dashboard/admin/themes/edit/{{ theme.name }}" class="btn">Edit</a>
+                        <div class="btn-container">
+                            <form action="{{ site.path }}/dashboard/admin/themes/set-default" method="post">
+                                {{ csrf() }}
+                                <button class="btn btn-danger">Set Default</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('.materialboxed').materialbox();
+        });
+    </script>
+{% endblock %}

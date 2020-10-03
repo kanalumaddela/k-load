@@ -6,42 +6,72 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
 
 namespace K_Load\Controllers;
 
 use Exception;
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
-use K_Load\LoadingTemplate;
-use K_Load\Template;
-use K_Load\User;
-use K_Load\Util;
-use Steam;
-use function array_diff;
+use K_Load\Facades\Cache;
+use K_Load\Facades\DB;
+use K_Load\Helpers\Util;
+use K_Load\Models\Setting;
+use K_Load\Models\User;
+use K_Load\View\LoadingView;
+use kanalumaddela\SteamLogin\SteamLogin;
 use function array_merge;
-use function basename;
-use function is_array;
-use function is_file;
+use function count;
+use function file_exists;
 use function is_null;
-use function json_decode;
-use function json_encode;
-use function method_exists;
-use function scandir;
-use function str_replace;
-use const ALLOW_THEME_OVERRIDE;
-use const APP_ROOT;
-use const ENABLE_CACHE;
-use const ENABLE_REGISTRATION;
-use const IGNORE_PLAYER_CUSTOMIZATIONS;
+use function K_Load\loadingView;
+use const K_Load\APP_ROOT;
+use const K_Load\DEBUG;
+use const K_Load\ENABLE_REGISTRATION;
+use const K_Load\IGNORE_PLAYER_CUSTOMIZATIONS;
 
-class Main
+class Main extends BaseController
 {
     public function index()
     {
-        global $config;
+        $data = static::buildBaseData();
 
+        if (!empty($data['steamid'])) {
+            $data['user'] = Cache::remember('user-'.$data['steamid'], 3600, function () use ($data) {
+                $user = User::select('name', 'settings', DB::raw('IF(`custom_css` = \'\', null, `custom_css`) as `custom_css`'))->where('steamid', $data['steamid'])->first();
+
+                $user = !is_null($user) ? $user->toArray() : [];
+
+                try {
+                    $steamInfo = (array) SteamLogin::userInfo($data['steamid']);
+                } catch (Exception $e) {
+                    $steamInfo = [];
+                }
+
+                $user = array_merge($user, $steamInfo);
+
+                return !empty($user) ? $user : null;
+            });
+        }
+
+        if (((DEBUG && !empty($data['user'])) || (ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS && !empty($data['user']))) && isset($user['settings'])) {
+            $user = $data['user'];
+
+            LoadingView::setTheme($user['settings']['theme']);
+
+            $data['backgrounds'] = array_merge($data['backgrounds'], $user['settings']['backgrounds']);
+            $data['youtube'] = array_merge($data['settings']['youtube'], $user['settings']['youtube']);
+        }
+
+        if (isset($data['user'])) {
+            $data['player'] = &$data['user'];
+        }
+
+        return $this->view('loading', $data);
+    }
+
+    protected function buildBaseData(): array
+    {
         $steamid = $_GET['sid'] ?? $_GET['steamid'] ?? null;
         if ($steamid === '%s') {
             $steamid = null;
@@ -52,118 +82,43 @@ class Main
             $map = null;
         }
 
-        $data = ENABLE_CACHE ? Cache::remember('loading-screen'.(!is_null($steamid) ? '-'.$steamid : ''), 3600, function () use ($steamid, $map) {
-            return self::getData($steamid, $map);
-        }) : self::getData($steamid, $map);
-
-        // override global setings with user specific settings
-        if (isset($data['user']['settings']) && ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS) {
-            $data['user']['settings'] = json_decode($data['user']['settings'], true);
-            if (empty($data['user']['settings']['youtube']['list'])) {
-                unset($data['user']['settings']['youtube']['list']);
-            }
-            $data['settings']['youtube'] = json_encode(array_merge(json_decode($data['settings']['youtube'], true), $data['user']['settings']['youtube']));
-            unset($data['user']['settings']['youtube']['list']);
-
-            $data['settings']['music'] = json_encode(array_merge(json_decode($data['settings']['music'], true), $data['user']['settings']['youtube']));
-            $data['settings']['backgrounds'] = json_encode(array_merge(json_decode($data['settings']['backgrounds'], true), $data['user']['settings']['backgrounds']));
-
-            unset($data['user']['settings']['youtube']);
-            unset($data['user']['settings']['backgrounds']);
-        }
-
-        $theme = $config['loading_theme'] ?? 'default';
-
-        if (!IGNORE_PLAYER_CUSTOMIZATIONS && isset($data['user']['settings']['theme'])) {
-            $theme = $data['user']['settings']['theme'];
-        }
-        if (isset($_GET['theme']) && (ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
-            $theme = $_GET['theme'];
-        }
-
-        if (!Template::isLoadingTheme($theme)) {
-            $theme = $config['loading_theme'] ?? 'default';
-        }
-
-        $data['forcedGamemode'] = $_GET['gamemode'] ?? '';
-
-        LoadingTemplate::init($theme);
-
-        return LoadingTemplate::render('loading.twig', $data);
-    }
-
-    protected static function getData($steamid, $map)
-    {
         $data = [
-            'map'         => $map,
-            'backgrounds' => Util::getBackgrounds(),
-            'settings'    => Util::getSettings(),
-            'css_exists'  => file_exists(APP_ROOT.'/data/users/'.$steamid.'.css'),
+            'map'            => $map,
+            'steamid'        => $steamid,
+            'settings'       => Setting::whereIn('name', static::getLoadingScreenSettings())->get()->pluck('value', 'name'),
+            'backgrounds'    => ['list' => Util::getBackgrounds()],
+            'forcedGamemode' => $_GET['gamemode'] ?? null,
+            'user'           => [],
         ];
 
-        $user = !empty($steamid) ? User::get($steamid) : null;
-        if (empty($user) && !empty($steamid)) {
-            $user = Steam::Convert($steamid);
-        }
 
-        $data['user'] = $user;
-
-        if (empty($data['settings'])) {
-            throw new Exception('Failed to get settings, check the logs in data/logs/mysql');
-        }
-
-        $steamInfo = null;
-
-        if (!empty($steamid)) {
-            $steamInfo = ENABLE_CACHE ? Cache::remember('loading-steam-api-'.$steamid, 3600, function () use ($steamid) {
-                return Steam::User($steamid);
-            }) : Steam::User($steamid);
-        }
-
-        if (is_array($steamInfo)) {
-            $data['user'] = array_merge($data['user'], $steamInfo);
-        }
-
-        // shit addon loading
-        $addonsRoot = APP_ROOT.'/inc/classes/mods/';
-        $addons = array_diff(scandir($addonsRoot), ['.', '..']);
-
-        if (count($addons) > 0) {
-            foreach ($addons as $addon) {
-                if (!is_file($addonsRoot.$addon)) {
-                    continue;
-                }
-
-                $addon_name = basename($addon, '.class.php');
-
-                require_once $addonsRoot.$addon;
-
-                $addon_name_real = str_replace('addon_', '', $addon_name);
-                if (ENABLE_CACHE) {
-                    $data['custom'][$addon_name_real] = Cache::remember('custom-mod-'.$addon_name_real, 120, function () use ($steamid, $map, $addon_name) {
-                        $addon_instance = new $addon_name($steamid, $map);
-
-                        return method_exists($addon_instance, 'data') ? $addon_instance->data() : null;
-                    });
-                } else {
-                    $addon_instance = new $addon_name($steamid, $map);
-                    if (method_exists($addon_instance, 'data')) {
-                        $data['custom'][$addon_name_real] = $addon_instance->data();
-                    }
-                }
-            }
-        }
+        $data['backgrounds'] = array_merge($data['backgrounds'], $data['settings']['backgrounds']);
+        $data['theme'] = file_exists(APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php') ? include_once APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php' : [];
 
         return $data;
     }
 
-    public function logout()
+    protected static function getLoadingScreenSettings(): array
     {
-        Steam::logout();
+        return [
+            'backgrounds',
+            'community_name',
+            'description',
+            'logo',
+            'messages',
+            'music',
+            'rules',
+            'staff',
+            'youtube',
+        ];
     }
 
-    public function installFix()
+    public function view($template, array $data = [])
     {
-        Util::redirect('/dashboard');
+        if (count(static::$dataHooks) > 0) {
+            $data = static::addHookData($data);
+        }
+
+        return loadingView($template, $data);
     }
 }

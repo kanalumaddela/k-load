@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ assets_theme }}/css/neuron.css?{{ cache_buster }}">
     <style>
         .hexagon-inner-2 {
-            background-image: url({{ user.avatarfull|default(assets ~ '/img/avatar.jpg') }});
+            background-image: url({{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }});
         }
 
         body:before {
@@ -36,7 +36,7 @@
         </div>
 
         <div style="margin-bottom: 20px">
-            <h1 id="steam_name">{{ user.personaname|default(lang('welcome')) }}</h1>
+            <h1 id="steam_name">{{ user.name|default(lang('welcome')) }}</h1>
             {% if user.steamid2 %}
                 <h3 id="steamid">{{ user.steamid2 }}</h3>
             {% endif %}

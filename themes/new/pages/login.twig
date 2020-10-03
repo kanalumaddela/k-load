@@ -1,0 +1,125 @@
+{% extends 'base.twig' %}
+
+{% block title %}Login{% endblock %}
+{% block bodyCss %}
+    <style>
+        html {
+            overflow: hidden;
+        }
+
+        .column.login-column {
+            flex: none;
+            width: 35%;
+        }
+
+        .card {
+            /*background-color: #1a3a70;*/
+            background-color: #344047;
+            color: #74C3FF;
+            padding-top: 2em;
+            padding-bottom: 4em;
+        }
+
+        .logo-text {
+            font-size: 4.5em;
+        }
+
+        .button > * {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .button i {
+            font-size: 1.65em;
+            margin-right: .2em;
+        }
+
+        .button.is-info.is-outlined {
+            border-color: #74C3FF;
+            color: #74C3FF;
+        }
+
+        .button.is-info.is-outlined:hover {
+            background-color: #74C3FF;
+            border-color: #74C3FF;
+        }
+
+        .button.fixed-width {
+            width: 140px;
+            height: 50px;
+        }
+
+        .button.steamLogin {
+            margin-right: 1.75em;
+        }
+
+        .button.steamLogin svg {
+            width: 90%;
+        }
+
+        .button.steamLogin:hover svg .cls-1 {
+            fill: #fff;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <section class="hero is-fullheight has-text-centered">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns is-mobile is-centered">
+                    <div class="column login-column">
+                        <div class="card">
+                            <h1 class="logo-text">K-Load</h1>
+                            <br>
+                            <div>
+                                <p style="font-size: 1.5em;font-weight: 300">Login via</p>
+                                <div class="level">
+                                    <div class="level-item has-text-centered">
+
+                                    </div>
+                                </div>
+                                <a href="{{ steam_login_url }}"
+                                   class="button fixed-width is-outlined is-info steamLogin">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 293.46 88.47">
+                                        <defs>
+                                            <style>
+                                                .cls-1 {
+                                                    fill: #74C3FF;
+                                                }
+                                            </style>
+                                        </defs>
+                                        <title>steam-logo-w-icon</title>
+                                        <g id="steamo-logo" data-name="Layer 1">
+                                            <path class="cls-1"
+                                                  d="M44.08,0A44.23,44.23,0,0,0,0,40.69l23.71,9.8a12.49,12.49,0,0,1,7.05-2.18l.69,0L42,33.05v-.22A16.68,16.68,0,1,1,58.68,49.52H58.3l-15,10.73c0,.2,0,.4,0,.6a12.52,12.52,0,0,1-24.8,2.46l-17-7A44.24,44.24,0,1,0,44.08,0Z"/>
+                                            <path class="cls-1"
+                                                  d="M27.72,67.12l-5.43-2.24A9.4,9.4,0,1,0,27.43,52L33,54.35a6.92,6.92,0,1,1-5.32,12.77Z"/>
+                                            <path class="cls-1"
+                                                  d="M69.8,32.83A11.12,11.12,0,1,0,58.68,44,11.13,11.13,0,0,0,69.8,32.83Zm-19.45,0a8.35,8.35,0,1,1,8.35,8.35A8.35,8.35,0,0,1,50.35,32.82Z"/>
+                                            <path class="cls-1"
+                                                  d="M135.56,30.27l-3,5.21a14.8,14.8,0,0,0-8.08-2.56c-3.08,0-5,1.28-5,3.57,0,2.78,3.39,3.43,8.43,5.24,5.42,1.91,8.54,4.17,8.54,9.13,0,6.79-5.34,10.61-13,10.61a23.63,23.63,0,0,1-11.73-3.08l2.16-5.77a20.5,20.5,0,0,0,9.2,2.37c4,0,6-1.5,6-3.71,0-2.52-2.94-3.29-7.68-4.85-5.4-1.81-9.15-4.18-9.15-9.67,0-6.2,5-9.76,12.11-9.76A19,19,0,0,1,135.56,30.27Z"/>
+                                            <path class="cls-1" d="M158.73,33.56V60.9h-7V33.56H141.63v-6h27.2v6Z"/>
+                                            <path class="cls-1"
+                                                  d="M183.55,33.54v7.51H196.9v6H183.55v7.82H199v6H176.57V27.57H199v6Z"/>
+                                            <path class="cls-1"
+                                                  d="M214.62,54.43l-2.21,6.47H205.1l12.49-33.33h7L237.47,60.9H229.9l-2.25-6.47Zm6.44-18.91-4.55,13.35h9.2Z"/>
+                                            <path class="cls-1"
+                                                  d="M273.28,40.45l-9.12,19.48h-3.94l-9-19.3V60.9h-6.68V27.57h6.67l11.2,24.06,10.8-24.06H280V60.9h-6.69Z"/>
+                                            <path class="cls-1"
+                                                  d="M293.46,31.78a4.62,4.62,0,1,1-4.61-4.64A4.5,4.5,0,0,1,293.46,31.78Zm-8.46,0a3.84,3.84,0,1,0,7.68,0,3.84,3.84,0,1,0-7.68,0Zm3.91-2.37c1.2,0,1.6.63,1.6,1.31a1.35,1.35,0,0,1-.82,1.26l1.07,2h-.88l-.9-1.78h-.93V34h-.73V29.41Zm-.86,2.13h.82a.76.76,0,0,0,.84-.75c0-.42-.23-.69-.84-.69h-.82Z"
+                                            />
+                                        </g>
+                                    </svg>
+                                </a>
+                                <button class="button fixed-width is-outlined is-info">
+                                    <i class="fas fa-key"></i>
+                                    Password
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

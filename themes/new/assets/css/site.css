@@ -1,0 +1,107 @@
+@charset "utf-8";
+/*
+ * K-Load v2 (https://demo.maddela.org/k-load/).
+ *
+ * @link      https://www.maddela.org
+ * @link      https://github.com/kanalumaddela/k-load-v2
+ *
+ * @author    kanalumaddela <git@maddela.org>
+ * @copyright Copyright (c) 2018-2020 Maddela
+ * @license   MIT
+ */
+
+/*
+
+bg: #1E2529
+secondary-dark: #171D20
+tertiary-dark: #344047
+
+primary-light: #003367
+primary-light: #027bb5
+
+ */
+
+*::-webkit-scrollbar {
+    height: 5px;
+    width: 5px;
+    background-color: #303b41;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #6cbdff;
+    border-radius: 5px;
+}
+
+html {
+    background-color: #1E2529;
+    overflow: auto;
+}
+
+body {
+    color: #fff;
+}
+
+body:before {
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-attachment: fixed;
+    background-repeat: repeat;
+    /*background-size: 5em;*/
+    background-size: 32em;
+    pointer-events: none;
+}
+
+a {
+    color: #6cbdff;
+}
+
+a:hover {
+    color: #5b96c6;
+}
+
+.menu-list a.is-active {
+    background-color: #003367;
+}
+
+.logo-text {
+    font-family: 'Roboto Condensed', 'Roboto', 'Segoe UI', sans-serif;
+    font-weight: 300;
+    font-size: 2.5em;
+    font-style: italic;
+    text-transform: uppercase;
+    color: #6cbdff;
+}
+
+.secondary-color, .sideNav {
+    background-color: #171D20;
+}
+
+/*border-radius*/
+.site-border-radius, .avatar, .card, .menu-list a, .button, .file-cta, .file-name, .input, .pagination-ellipsis, .pagination-link, .pagination-next, .pagination-previous, .select select, .textarea, .table, code {
+    border-radius: .4em;
+}
+
+/*avatars*/
+.avatar.medium {
+    max-width: 64px;
+}
+
+/* forms/inputs */
+.input, .textarea, .select select {
+    background-color: #4f585d;
+    color: #e8e8e8;
+    border: none;
+}
+
+.input:focus, .textarea:focus, .select select:focus, .is-focused.input, .is-focused.textarea, .select select.is-focused, .input:active, .textarea:active, .select select:active, .is-active.input, .is-active.textarea, .select select.is-active {
+    box-shadow: none;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+    border-color: #6cbdff;
+}

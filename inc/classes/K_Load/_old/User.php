@@ -6,11 +6,11 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
+ * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
 
-namespace K_Load;
+namespace K_Load\_old;
 
 use Database;
 use Exception;
@@ -171,6 +171,10 @@ class User
         $data = Database::conn()->select("SELECT (CURRENT_TIMESTAMP < `expires`) AS `valid` FROM `kload_sessions` WHERE `steamid` = '?' AND `token` = '?'", [$steamid, $token])->limit(1)->execute(false) ?? 0;
 
         $valid = boolval((int) $data);
+
+        if (!$valid && isset(self::$retrievedTokens[$steamid])) {
+            unset(self::$retrievedTokens[$steamid]);
+        }
 
         return $valid;
     }

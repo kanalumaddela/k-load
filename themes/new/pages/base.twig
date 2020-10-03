@@ -1,0 +1,30 @@
+{% block vars %}{% endblock %}
+<!doctype html>
+<html lang="{{ app.lang|default('en') }}">
+<head>
+    <title>{% block title %}{% endblock %} | K-Load</title>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}"/>
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="{{ asset('css/bulma.css') }}">
+    {# <link rel="stylesheet" href="{{ asset('css/fa/5.14.0.css') }}"> #}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
+    <link rel="stylesheet" href="{{ theme_asset('css/site.css', true) }}">
+    {% block headCss %}{% endblock %}
+</head>
+<body>
+<style>
+    body:before {
+        background-image: url({{ asset('img/shapes-repeat-bg-2.png') }});
+        opacity: .5;
+    }
+</style>
+{% apply spaceless %}
+    {% block bodyCss %}{% endblock %}
+    {% block body %}{% endblock %}
+    {% block bodyJs %}{% endblock %}
+{% endapply %}
+</body>
+</html>

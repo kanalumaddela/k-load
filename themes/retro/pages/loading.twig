@@ -1,0 +1,86 @@
+{% extends '@loading/base.twig' %}
+
+{% block title %}Retro | K-Load{% endblock %}
+
+
+{% block body %}
+    <style>
+        body {
+            background-color: #1a0435; /* #22014a */
+        }
+
+        body:before {
+            /*background-image: url("https://ak3.picdn.net/shutterstock/videos/1024082243/thumb/1.jpg");*/
+        }
+
+        #sun {
+            width: 33%;
+            height: 550px;
+            position: absolute;
+            left: 50%;
+            top: 45%;
+            -webkit-transform: translate(-50%, -50%);
+        }
+
+        #sun:before {
+            content: '';
+            position: absolute;
+            background-image: -webkit-linear-gradient(90deg, #ff6669, #ff8d52, #fdc53c);
+            border-radius: 50%;
+            width: 100%;
+            padding-bottom: 100%;
+            box-shadow: 0 0 15px #ff8d52;
+        }
+
+        #retro-grid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            perspective: 145px;
+            perspective: 9rem;
+            overflow: hidden;
+        }
+
+        #retro-grid, #retro-grid:before {
+            box-shadow: 0 0 16px 14px #fff, 0 0 55px 35px #ff28ee;
+        }
+
+        #retro-grid:before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 0;
+        }
+
+        #retro-grid:after {
+            z-index: -1;
+            content: '';
+            position: absolute;
+            top: -300px;
+            top: -77%;
+            left: -50%;
+            width: 200%;
+            height: 190%;
+            background-image: url(/assets/img/repeating-square-pink.svg), -webkit-linear-gradient(90deg, #2b0a5b 25%, #9b2191, #2b0a5b);
+            background-size: 55px;
+            -webkit-transform: rotateX(30deg);
+            background-position-y: 0px, center;
+            -webkit-animation-name: retro-grid;
+            -webkit-animation-duration: .3s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-timing-function: linear;
+        }
+
+        @-webkit-keyframes retro-grid {
+            from {
+                background-position-y: 0, center;
+            }
+            to {
+                background-position-y: 55px, center;
+            }
+        }
+    </style>
+    <div id="sun"></div>
+    <div id="retro-grid"></div>
+{% endblock %}

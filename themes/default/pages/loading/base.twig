@@ -10,21 +10,24 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="{{ assets }}/css/loading.css?{{ cache_buster }}">
     {% block css %}{% endblock %}
-    {% if user.steamid and css_exists %}
-        <link rel="stylesheet" href="{{ site.path }}/data/users/{{ user.steamid }}.css?{{ cache_buster }}">
-    {% endif %}
 </head>
 <body>
+{% if user.custom_css %}
+    <style>{{ user.custom_css }}</style>
+{% endif %}
 {% block body %}{% endblock %}
 <script>
+    {% set defaultListObject = {'list': []} %}
+
     var site = {{ site_json }};
-    var backgrounds = {{ settings.backgrounds|default('{}')|raw }};
-    backgrounds.list = {{ backgrounds|default('{}')|raw }};
-    var youtube = {{ settings.youtube|default('{}')|raw }};
-    var messages = {{ settings.messages|default('{}')|raw }};
-    var rules = {{ settings.rules|default('{}')|raw }};
-    var staff = {{ settings.staff|default('{}')|raw }};
-    var music = {{ settings.music|default('{}')|raw }};
+    var backgrounds = {{ settings.backgrounds|default({'duration':8000,'fade':750,'enable':0,'random':0})|json_encode|raw }};
+    {% if backgrounds.list %}backgrounds.list = {{ backgrounds.list|json_encode|raw }};
+    {% else %}backgrounds.list = {};{% endif %}
+    var youtube = {{ settings.youtube|default(defaultListObject)|json_encode|raw }};
+    var messages = {{ settings.messages|default(defaultListObject)|json_encode|raw }};
+    var rules = {{ settings.rules|default(defaultListObject)|json_encode|raw }};
+    var staff = {{ settings.staff|default(defaultListObject)|json_encode|raw }};
+    var music = {{ settings.music|default({'enable':0,'random':0,'volume':15,'order':[]})|json_encode|raw }};
     var rules_per_page = staff_per_page = 7;
     var rules_fade_delay = staff_fade_delay = 750;
     var forcedGamemode = '{{ forcedGamemode }}';

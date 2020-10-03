@@ -2,12 +2,8 @@
 /assets/img/backgrounds/demo/
 /assets/img/backgrounds/darkrp/
 /assets/img/backgrounds/jailbreak/
-/data/cache/
-/data/logs/
-/data/music/
-/data/users/
-/data/config.php
-/data/constants.php
-/data/FILE_WRITE_CHECK_DO_NOT_REMOVE
+/data/
 /vendor/
 /.idea/
+/inc/classes/K_Load/Routing/_old/
+/inc/classes/K_Load/_old/
