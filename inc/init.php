@@ -41,10 +41,10 @@ if (ob_get_length() > 0) {
     ob_end_flush();
 }
 
-die();
+exit();
 
 /**
- * old code below that is never reached :)
+ * old code below that is never reached :).
  */
 
 /***  E P I C  C O D E  ***/
@@ -96,7 +96,7 @@ if (!Util::installed() && strpos($_SERVER['REQUEST_URI'], '/test/') === false) {
         Util::redirect('/install');
     }
     include __DIR__.'/install.php';
-    die();
+    exit();
 }
 
 // get config if exists
@@ -129,7 +129,7 @@ try {
     if (DEBUG) {
         dump($e);
     }
-    die();
+    exit();
 }
 
 Steam::Key($config['apikeys']['steam']);
@@ -145,12 +145,12 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
         User::session($user);
     } else {
         echo 'Registration is disabled, please talk to the owner.';
-        die();
+        exit();
     }
     if (strpos($_SERVER['REQUEST_URI'], 'api') === false) {
         if (!DEMO_MODE && User::isBanned($_SESSION['steamid'])) {
             echo "You're banned";
-            die();
+            exit();
         }
     }
 
@@ -160,7 +160,6 @@ if (isset($_SESSION['steamid']) && Util::installed()) {
 Lang::init(APP_LANGUAGE);
 
 require_once __DIR__.'/helpers.php';
-
 
 // routing
 $routes = (ENABLE_CACHE ? Cache::remember('routes', 86400, [Routes::class, 'get']) : Routes::get());
@@ -175,7 +174,6 @@ if ($response instanceof Response) {
 } elseif (!empty($response)) {
     echo $response;
 }
-
 
 //try {
 //    $response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));

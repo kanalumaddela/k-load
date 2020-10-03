@@ -192,10 +192,10 @@ class Util
      * Create a directory.
      *
      * @param string
-     *
      * @param bool $includeHtaccess
      *
      * @throws \Exception
+     *
      * @return bool
      */
     public static function mkDir($directory, $includeHtaccess = false)
@@ -272,7 +272,7 @@ class Util
         $valueParams = implode(',', array_fill(0, count($settings), '('.$parameters.')'));
 
         var_dump($valueParams);
-        die();
+        exit();
 
         $inserts = [];
 
@@ -342,7 +342,7 @@ class Util
         }
         echo json_encode($data, ($formatted ? JSON_PRETTY_PRINT : 0));
         if ($header) {
-            die();
+            exit();
         }
     }
 
@@ -352,7 +352,7 @@ class Util
             $url = APP_HOST.APP_PATH.$url;
         }
         header('Location: '.$url, true, 302);
-        die();
+        exit();
     }
 
     public static function startsWith($search, $string)
@@ -410,7 +410,7 @@ class Util
             }
         } else {
             echo 'session not active';
-            die();
+            exit();
         }
     }
 

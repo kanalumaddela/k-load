@@ -9,10 +9,9 @@
  * @copyright Copyright (c) 2018-2020 Maddela
  * @license   MIT
  */
-
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] === 'phpinfo') {
     phpinfo();
-    die();
+    exit();
 }
 
 $extensions = [
@@ -179,7 +178,6 @@ Options -Indexes
     RewriteRule . {$data['app']['path']}index.php [L]
 &#x3C;/IfModule>
 apache;
-
 
 //$data['extensions'] = [];
 
@@ -425,28 +423,28 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
                     <div>
                         <ul class="collection">
 
-                            <?php foreach ($data['extensions'] as $extension): ?>
+                            <?php foreach ($data['extensions'] as $extension) { ?>
                                 <li>
                                     <div class="header">
                                         <div class="extension--<?= $extension['icon'] ?>"></div>
                                         <h3 class="extension-name">
                                             <?= $extension['name'] ?>
-                                            <?php if (!$loaded): ?>
+                                            <?php if (!$loaded) { ?>
                                                 <small>* <?= $extension['required'] ? 'Required' : 'Optional' ?></small>
-                                            <?php endif; ?>
+                                            <?php } ?>
                                             <br>
                                             <small><code><?= $extension['multiple'] ? $extension['multiple'] : $extension['ext'] ?></code></small>
                                         </h3>
                                     </div>
-                                    <?php if ($extension['desc']): ?>
+                                    <?php if ($extension['desc']) { ?>
                                         <div class="body">
                                             <div>
                                                 <?= $extension['desc'] ?>
                                             </div>
                                         </div>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                 </li>
-                            <?php endforeach; ?>
+                            <?php } ?>
                         </ul>
                     </div>
                 </div>
@@ -488,7 +486,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
                                     <td>Writeable?</td>
                                     <td class="<?= $data['writeable'] ? 'pass' : 'fail' ?>"><?= $data['writeable'] ? 'Yes' : 'No (Please look into fixing this)' ?></td>
                                 </tr>
-                                <?php if (!empty($data['web_server']['determined'])): ?>
+                                <?php if (!empty($data['web_server']['determined'])) { ?>
                                     <tr>
                                         <td colspan="2" style="font-weight: normal">
                                             <div style="text-align: center">
@@ -500,7 +498,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
                                             <pre><?= $data['web_server']['setup'][$data['web_server']['determined']]['config'] ?></pre>
                                         </td>
                                     </tr>
-                                <?php endif; ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>

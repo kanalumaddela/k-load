@@ -28,7 +28,7 @@ class DataGenerator extends GroupCountBased
             $regexes[] = $regex.str_repeat('()', $numGroups - $numVariables);
             $routeMap[$numGroups + 1] = [$route->handler, $route->variables, $route->getName()];
 
-            ++$numGroups;
+            $numGroups++;
         }
 
         $regex = '~^(?|'.implode('|', $regexes).')$~';

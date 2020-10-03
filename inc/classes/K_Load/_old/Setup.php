@@ -39,7 +39,7 @@ class Setup
             echo '<h1>A K-Load installation already exists in this database, to force an install, refresh this page and re</h1>';
             echo 'Otherwise go to the dashboard: <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>';
             $_SESSION['force_install'] = 1;
-            die();
+            exit();
         }
 
         if (!file_exists(APP_ROOT.'/data/config.php')) {
@@ -48,7 +48,7 @@ class Setup
             echo '<pre>';
             var_dump($config);
             echo '</pre>';
-            die();
+            exit();
         }
 
         Steam::Key($config['apikeys']['steam']);
@@ -76,7 +76,7 @@ class Setup
         unset($_SESSION);
 
         Util::log('action', 'K-Load has been installed', true);
-        die('K-Load has been installed. Visit <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>');
+        exit('K-Load has been installed. Visit <a href="'.APP_PATH.'/dashboard/admin">'.APP_PATH.'/dashboard/admin</a>');
     }
 
     public static function update()

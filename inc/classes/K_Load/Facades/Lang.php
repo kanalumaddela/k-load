@@ -13,7 +13,7 @@
 namespace K_Load\Facades;
 
 /**
- * Class Lang
+ * Class Lang.
  *
  * @alias \K_Load\Lang
  */

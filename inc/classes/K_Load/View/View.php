@@ -192,7 +192,6 @@ class View
 
         $app = array_merge($site, $app);
 
-
         self::$twig->addGlobal('app', $app);
 
         if (isset($_SESSION['kload']) && Session::has('user')) {
@@ -236,5 +235,4 @@ class View
             static::$twig->addGlobal('steam_login_url', App::get('steamLogin')->getLoginURL());
         }
     }
-
 }

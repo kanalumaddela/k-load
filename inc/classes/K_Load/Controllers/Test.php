@@ -40,6 +40,6 @@ class Test extends BaseController
     {
         echo '<pre>';
         var_dump($_SESSION);
-        die();
+        exit();
     }
 }

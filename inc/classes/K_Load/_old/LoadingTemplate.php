@@ -55,13 +55,13 @@ class LoadingTemplate
         self::$twig->addFunction($function);
 
         // assets
-        $function = new TwigFunction('asset', function ($file) use ($theme) {
+        $function = new TwigFunction('asset', function ($file) {
             return APP_PATH.'/assets/'.ltrim($file, '/');
         });
         self::$twig->addFunction($function);
 
         // lang
-        $function = new TwigFunction('lang', function ($key, $default = null, $raw = false) use ($theme) {
+        $function = new TwigFunction('lang', function ($key, $default = null, $raw = false) {
             return $raw ? new Markup(lang($key, $default), 'utf-8') : lang($key, $default);
         });
         self::$twig->addFunction($function);

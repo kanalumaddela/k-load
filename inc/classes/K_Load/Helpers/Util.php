@@ -50,10 +50,10 @@ class Util
      * Create a directory.
      *
      * @param string
-     *
      * @param bool $includeHtaccess
      *
      * @throws \Exception
+     *
      * @return bool
      */
     public static function mkDir($directory, $includeHtaccess = false)
@@ -78,7 +78,7 @@ class Util
     }
 
     /**
-     * Delete a directory and its contents
+     * Delete a directory and its contents.
      *
      * @param string $folder
      */
@@ -122,10 +122,10 @@ class Util
     }
 
     /**
-     * List a folder's files by default
+     * List a folder's files by default.
      *
-     * @param               $dir
-     * @param bool          $includeFolders
+     * @param      $dir
+     * @param bool $includeFolders
      *
      * @return array
      */
