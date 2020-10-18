@@ -33,7 +33,6 @@ class LoadingView extends View
                 continue;
             }
             if (file_exists($themePath.$theme.'/pages/loading.twig')) {
-
                 if ($withPreviews) {
                     $tmp = array_slice(scandir(APP_ROOT.'/themes/'.$theme), 2);
 
@@ -50,7 +49,6 @@ class LoadingView extends View
                 } else {
                     $themes[] = $theme;
                 }
-
             }
         }
 

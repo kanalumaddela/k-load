@@ -103,7 +103,7 @@ class Config extends DotArray
 
     public function create(array $config)
     {
-        die('todo: '.__CLASS__.'@'.__METHOD__);
+        exit('todo: '.__CLASS__.'@'.__METHOD__);
 
         $template = static::$templateConfig;
 

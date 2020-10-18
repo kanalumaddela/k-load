@@ -39,7 +39,6 @@ class Session extends DotArray
             session_set_cookie_params(60 * 60 * 24 * 14, APP_PATH, APP_DOMAIN, IS_HTTPS, true);
             session_start();
 
-
             if (!isset($_SESSION['kload'])) {
                 $_SESSION['kload'] = [];
             }
@@ -106,7 +105,6 @@ class Session extends DotArray
         } else {
             $this->set('flash.'.$key, $value);
         }
-
     }
 
     /**
@@ -121,7 +119,6 @@ class Session extends DotArray
 
     public function error($message)
     {
-
         if (is_array($message)) {
             foreach ($message as $msg) {
                 $this->error($msg);

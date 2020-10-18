@@ -43,7 +43,7 @@ function is_https()
 }
 
 /**
- * Return defined variables in a file
+ * Return defined variables in a file.
  *
  * @param $file
  *
