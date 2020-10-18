@@ -12,9 +12,9 @@
 
 namespace K_Load;
 
+use K_Load\Http\RedirectResponse;
 use K_Load\View\LoadingView;
 use K_Load\View\View;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use function addcslashes;
 use function array_keys;
@@ -183,7 +183,7 @@ function redirect($url, $status = 302, array $headers = [])
     return new RedirectResponse($url, $status, $headers);
 }
 
-//function flash($content, $type = 'info')
-//{
-//    return
-//}
+function flash($key, $data)
+{
+    \K_Load\Facades\Session::flash($key, $data);
+}

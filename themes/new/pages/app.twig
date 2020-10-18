@@ -7,4 +7,16 @@
 {% block body %}
     {% include 'partials/sideNav.twig' %}
     <main>{% block content %}{% endblock %}</main>
+    {# <div id="toastMessages">
+        <div class="notification is-success">
+            <button class="delete"></button>
+            Your changes have been saved!
+        </div>
+    </div> #}
+{% endblock %}
+
+{% block bodyJs %}
+    <script>
+        const toastMessages = {{ flash.messages|default([])|json_encode|raw }};
+    </script>
 {% endblock %}

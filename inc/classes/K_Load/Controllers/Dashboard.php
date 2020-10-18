@@ -12,23 +12,24 @@
 
 namespace K_Load\Controllers;
 
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
+use K_Load\Exceptions\InvalidToken;
 use K_Load\Facades\Config;
 use K_Load\Facades\DB;
 use K_Load\Facades\Session;
+use K_Load\Helpers\Util;
 use K_Load\Models\Setting;
 use K_Load\Models\User;
 use K_Load\View\LoadingView;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use function array_intersect;
 use function array_keys;
 use function array_merge;
 use function dd;
 use function dump;
 use function get_defined_vars;
-use function is_array;
 use function json_encode;
+use function K_Load\flash;
 use function K_Load\redirect;
+use const K_Load\APP_CURRENT_ROUTE;
 use const K_Load\APP_ROUTE_URL;
 
 class Dashboard extends BaseController
@@ -38,7 +39,8 @@ class Dashboard extends BaseController
     public function index()
     {
         if (!$this->user['admin']) {
-            return redirect(APP_ROUTE_URL.'/settings');
+            die();
+//            return $this->settings();
         }
 
         $settings = [
@@ -55,12 +57,18 @@ class Dashboard extends BaseController
         $themes = LoadingView::getThemes();
         $loading_theme = Config::get('loading_theme');
 
+//        flash('success', 'test message');
+
         return $this->view('index', get_defined_vars());
     }
 
     public function indexPost()
     {
-        $this->validateCsrf();
+        try {
+            $this->validateCsrf();
+        } catch (InvalidToken $e) {
+            return redirect(APP_ROUTE_URL.'/dashboard')->withInputs();
+        }
 
         $post = $this->request->request;
 
@@ -79,6 +87,7 @@ class Dashboard extends BaseController
 
         if ($post->has('community_name') && $this->can('community_name')) {
             Setting::where('name', 'community_name')->update(['value' => $post->get('community_name')]);
+            flash('success', 'Community name has been updated');
         }
 
         if ($post->has('backgrounds') && $this->can('backgrounds')) {
@@ -89,6 +98,7 @@ class Dashboard extends BaseController
             $backgrounds['fade'] = isset($backgrounds['fade']) ? (int) $backgrounds['fade'] : 750;
 
             Setting::where('name', 'backgrounds')->update(['value' => json_encode($backgrounds)]);
+            flash('success', 'Background settings have been saved');
         }
 
         if ($post->has('music') && $this->can('music')) {
@@ -99,42 +109,24 @@ class Dashboard extends BaseController
 
             $music = Setting::where('name', 'music')->first();
 
-            dd($music);
-
             Setting::where('name', 'music')->update(['value' => json_encode(array_merge($music->value, $musicPost))]);
+            flash('success', 'Music settings have been saved');
         }
 
 
-        return new RedirectResponse(APP_ROUTE_URL.'/dashboard');
+        return redirect(APP_ROUTE_URL.'/dashboard');
+    }
+
+    public function settingsRedirect()
+    {
+        return redirect(APP_ROUTE_URL.'/dashboard/my-settings', 301);
     }
 
     public function settings()
     {
-        $post = $this->http->request;
+        dd(LoadingView::getThemes(true));
 
-        if ($post->has('save')) {
-            $updated = User::update($_SESSION['steamid'], $post->all());
-            $alert = $updated ? 'Your settings have been saved' : 'Failed to save, contact the owner to check the data/logs if necessary';
-
-            if ($updated) {
-                Cache::remove('loading-screen-'.$_SESSION['steamid']);
-            }
-
-            Util::flash('alert', $alert);
-            Util::redirect('/dashboard/settings');
-        }
-
-        $data = [
-            'user' => [
-                'css' => User::get($_SESSION['steamid'], 'custom_css'),
-            ],
-        ];
-
-        if (is_array($data['user']['css'])) {
-            $data['user']['css'] = null;
-        }
-
-        return self::view('settings', $data);
+        return $this->view('settings', User::findBySteamid(Session::user()['steamid'])->only('settings', 'custom_css'));
     }
 
     public function users()

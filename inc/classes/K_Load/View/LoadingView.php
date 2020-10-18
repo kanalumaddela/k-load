@@ -12,15 +12,17 @@
 
 namespace K_Load\View;
 
+use Illuminate\Support\Str;
 use K_Load\Facades\Config;
 use function array_slice;
 use function file_exists;
 use function scandir;
 use const K_Load\APP_ROOT;
+use const K_Load\APP_URL;
 
 class LoadingView extends View
 {
-    public static function getThemes(): array
+    public static function getThemes($withPreviews = false): array
     {
         $themePath = APP_ROOT.'/themes/';
         $list = array_slice(scandir(APP_ROOT.'/themes'), 2);
@@ -31,7 +33,24 @@ class LoadingView extends View
                 continue;
             }
             if (file_exists($themePath.$theme.'/pages/loading.twig')) {
-                $themes[] = $theme;
+
+                if ($withPreviews) {
+                    $tmp = array_slice(scandir(APP_ROOT.'/themes/'.$theme), 2);
+
+                    foreach ($tmp as $file) {
+                        if (Str::endsWith($file, ['.jpg', '.jpeg', '.png'])) {
+                            $themes[$theme] = APP_URL.'/themes/'.$theme.'/'.$file;
+
+                            break;
+                        }
+                    }
+
+                    $themes[$theme] = $themes[$theme] ?? null;
+                    unset($tmp);
+                } else {
+                    $themes[] = $theme;
+                }
+
             }
         }
 

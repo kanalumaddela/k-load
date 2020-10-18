@@ -23,7 +23,8 @@ $router->get('/api/groups/{group:c}', [API::class, 'group']);
 $router->group(['before' => 'auth'], function ($router) {
     $router->get('/dashboard', [Dashboard::class, 'index']);
     $router->post('/dashboard', [Dashboard::class, 'indexPost']);
-    $router->any('/dashboard/settings', [Dashboard::class, 'settings']);
+    $router->any('/dashboard/settings', [Dashboard::class, 'settingsRedirect']);
+    $router->any('/dashboard/my-settings', [Dashboard::class, 'settings']);
     $router->any('/dashboard/users', [Dashboard::class, 'users']);
     $router->any('/dashboard/users/{steamid:i}', [Dashboard::class, 'user']);
 
@@ -50,10 +51,10 @@ $router->group(['before' => 'auth'], function ($router) {
 //        $router->post('/dashboard/admin/themes/retrieve-file', [Admin\Themes::class, 'retrieveFile']);
 //    });
 
-    $router->any('/dashboard/session', [Test::class, 'session']);
+//    $router->any('/dashboard/session', [Test::class, 'session']);
 });
 
-$router->any('/test/exception', [Test::class, 'exception']);
-$router->post('/test/mysql', [Test::class, 'mysql']);
-$router->any('/test/steam/{key}?', [Test::class, 'steam']);
-$router->any('/install', [MainOld::class, 'installFix']);
+//$router->any('/test/exception', [Test::class, 'exception']);
+//$router->post('/test/mysql', [Test::class, 'mysql']);
+//$router->any('/test/steam/{key}?', [Test::class, 'steam']);
+//$router->any('/install', [MainOld::class, 'installFix']);

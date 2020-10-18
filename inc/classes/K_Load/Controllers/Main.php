@@ -91,7 +91,6 @@ class Main extends BaseController
             'user'           => [],
         ];
 
-
         $data['backgrounds'] = array_merge($data['backgrounds'], $data['settings']['backgrounds']);
         $data['theme'] = file_exists(APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php') ? include_once APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php' : [];
 

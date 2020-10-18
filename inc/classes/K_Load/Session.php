@@ -92,11 +92,21 @@ class Session extends DotArray
     {
         $this->checkForSession();
 
-//        if (!$this->has('flash')) {
-//            $this->set('flash', ['errors' => []]);
-//        }
+        $toasts = [
+            'success' => '',
+            'error'   => '',
+            'warning' => '',
+            'info'    => '',
+        ];
 
-        $this->set('flash.'.$key, $value);
+        if (isset($toasts[$key])) {
+            $messages = $this->get('flash.messages.'.$key, []);
+            $messages[] = $value;
+            $this->set('flash.messages.'.$key, $messages);
+        } else {
+            $this->set('flash.'.$key, $value);
+        }
+
     }
 
     /**
@@ -111,9 +121,6 @@ class Session extends DotArray
 
     public function error($message)
     {
-//        if (!$this->has('flash.errors')) {
-//            $this->set('flash.errors', []);
-//        }
 
         if (is_array($message)) {
             foreach ($message as $msg) {
@@ -131,20 +138,10 @@ class Session extends DotArray
 
     public function flushFlash()
     {
-        $flash = $this->get('flash');
+        $flash = $this->get('flash', []);
 
-        $this->set('flash', ['errors' => []]);
+        $this->set('flash', []);
 
         return $flash;
-    }
-
-//    public function increment($key, $increment = 1)
-//    {
-//        $this->set($key, $this->get($key) + $increment);
-//    }
-
-    public function getFlashData(): array
-    {
-        return $this->get('flash', []);
     }
 }

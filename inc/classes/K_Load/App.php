@@ -327,7 +327,13 @@ copyright;
                 }
             }
 
-            unset($query, $pdo, $queries, $triggers);
+            $tmpConfig = include APP_ROOT.'/data/config.php';
+            if (is_array($tmpConfig['dashboard_theme'])) {
+                $tmpConfig['dashboard_theme'] = 'new';
+                Config::saveConfig(APP_ROOT.'/data/config.php', $tmpConfig, false);
+            }
+
+            unset($query, $pdo, $queries, $triggers, $tmpConfig);
 
 //            Util::rmDir(APP_ROOT.'/inc/migrations');
         }

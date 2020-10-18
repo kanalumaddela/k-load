@@ -1011,24 +1011,24 @@ function setMusic(gamemode) {
                     audio.addEventListener('canplay', function () {
                         var aud = this;
 
-                        setTimeout(function () {
-                            var audioPromise = aud.play();
-
-                            var tmpSong = music_list[music_counter];
-                            musicName = tmpSong.replace('.ogg', '');
-
-                            if (audioPromise !== undefined) {
-                                audioPromise.then(_ => {
-
-                                    updatePlaying({title: musicName, author: ''});
-
-                                    audioFadeIn();
-                                }).catch(error => {
-                                    updatePlaying({title: 'Failed to play: ' + musicName, author: ''});
-                                });
-                            }
-
-                        }, 250);
+                        // setTimeout(function () {
+                        //     var audioPromise = aud.play();
+                        //
+                        //     var tmpSong = music_list[music_counter];
+                        //     musicName = tmpSong.replace('.ogg', '');
+                        //
+                        //     if (audioPromise !== undefined) {
+                        //         audioPromise.then(_ => {
+                        //
+                        //             updatePlaying({title: musicName, author: ''});
+                        //
+                        //             audioFadeIn();
+                        //         }).catch(error => {
+                        //             updatePlaying({title: 'Failed to play: ' + musicName, author: ''});
+                        //         });
+                        //     }
+                        //
+                        // }, 250);
                     });
 
                     audio.addEventListener('timeupdate', function () {

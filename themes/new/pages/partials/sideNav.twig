@@ -13,9 +13,9 @@
                 General
             </p>
             <ul class="menu-list">
-                <li><a class="is-active"><i class="fas fa-home"></i>Dashboard</a></li>
-                <li><a><i class="fas fa-user-cog"></i>My Settings</a></li>
-                <li><a><i class="fas fa-users"></i>Users</a></li>
+                {{ include('@partials/sideNavLink.twig', {route: 'dashboard', icon: 'home', name: 'dashboard'}) }}
+                {{ include('@partials/sideNavLink.twig', {route: 'dashboard/my-settings', icon: 'user-cog', name: 'my_settings'}) }}
+                {{ include('@partials/sideNavLink.twig', {route: 'dashboard/users', icon: 'users', name: 'users'}) }}
             </ul>
         </div>
         {% if user.admin %}
@@ -24,9 +24,6 @@
                     Administration
                 </p>
                 <ul class="menu-list">
-                    {% if user.super %}
-                        <li><a><i class="fas fa-wrench"></i>Core</a></li>
-                    {% endif %}
                     {# <li> #}
                     {# <a class="is-active">Manage Your Team</a> #}
                     {# <ul> #}
@@ -35,26 +32,29 @@
                     {# <li><a>Add a member</a></li> #}
                     {# </ul> #}
                     {# </li> #}
+                    {% if user.super %}
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/core', icon: 'wrench', name: 'core'}) }}
+                    {% endif %}
                     {% if can('community_name') or can('description') %}
-                        <li><a><i class="fas fa-sliders-h"></i>General</a></li>
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/general', icon: 'sliders-h', name: 'general'}) }}
                     {% endif %}
                     {% if can('backgrounds') %}
-                        <li><a><i class="fas fa-images"></i>Backgrounds</a></li>
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/backgrounds', icon: 'images', name: 'backgrounds'}) }}
                     {% endif %}
                     {% if can('messages') %}
-                        <li><a><i class="fas fa-comment-alt"></i>Messages</a></li>
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/messages', icon: 'comment-alt', name: 'messages'}) }}
                     {% endif %}
                     {% if can('music') %}
-                        <li><a><i class="fas fa-headphones"></i>Music</a></li>
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/music', icon: 'headphones', name: 'music'}) }}
                     {% endif %}
                     {% if can('rules') %}
-                        <li><a><i class="fas fa-list-ol"></i>Rules</a></li>
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/rules', icon: 'list-ol', name: 'rules'}) }}
                     {% endif %}
                     {% if can('staff') %}
-                        <li><a><i class="fas fa-user-tie"></i>Staff</a></li>
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/staff', icon: 'user-tie', name: 'staff'}) }}
                     {% endif %}
                     {% if can('themes') %}
-                        <li><a><i class="fas fa-paint-brush"></i>Themes</a></li>
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/themes', icon: 'paint-brush', name: 'themes'}) }}
                     {% endif %}
                 </ul>
             </div>

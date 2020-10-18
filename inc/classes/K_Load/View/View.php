@@ -31,11 +31,13 @@ use function json_encode;
 use function random_bytes;
 use function scandir;
 use function strpos;
+use function substr;
 use const K_Load\APP_CURRENT_ROUTE;
 use const K_Load\APP_CURRENT_URL;
 use const K_Load\APP_HOST;
 use const K_Load\APP_PATH;
 use const K_Load\APP_ROOT;
+use const K_Load\APP_ROUTE_URL;
 use const K_Load\APP_URL;
 use const K_Load\DEBUG;
 use const K_Load\ENABLE_CACHE;
@@ -164,6 +166,12 @@ class View
         self::$twig->addFunction(new TwigFunction('theme_asset', function ($file) {
             return APP_URL.'/themes/'.static::getTheme().'/assets/'.$file;
         }));
+        self::$twig->addFunction(new TwigFunction('route', function ($route) {
+            return APP_ROUTE_URL.'/'.$route;
+        }));
+        self::$twig->addFunction(new TwigFunction('isActiveRoute', function ($route, $activeClass = 'is-active') {
+            return APP_CURRENT_ROUTE === $route || substr(APP_CURRENT_ROUTE, 1) === $route ? $activeClass : '';
+        }));
     }
 
     public static function buildData(): array
@@ -203,7 +211,9 @@ class View
             self::$twig->addGlobal('csrf_token', $csrf);
             self::$twig->addGlobal('csrf', new Markup('<input type="hidden" value="'.$csrf.'" name="_csrf" />', 'utf-8'));
 
-            self::$twig->addGlobal('flash', Session::flushFlash());
+            $flash = Session::flushFlash();
+            self::$twig->addGlobal('flash', $flash);
+            self::$twig->addGlobal('old', $flash['old'] ?? []);
         }
 
         $globals = [

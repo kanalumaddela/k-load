@@ -91,9 +91,11 @@ class Config extends DotArray
 //            throw new Exception('Config directory: `'.$loc.'` could not be created');
 //        }
 
-        copy($this->location, $this->location.'.'.time().'.old');
+        static::saveConfig($this->location, $this->all());
 
-        file_put_contents($this->location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($this->all()).';');
+//        copy($this->location, $this->location.'.'.time().'.old');
+//
+//        file_put_contents($this->location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($this->all()).';');
         if (!file_exists($this->location)) {
             throw new Exception('Config could not be saved in: '.$this->location);
         }
@@ -116,5 +118,14 @@ class Config extends DotArray
         if (!file_exists(APP_ROOT.'/data/config.php')) {
             throw new Exception('Config could not be saved in: '.APP_ROOT.'/data/config.php');
         }
+    }
+
+    public static function saveConfig(string $location, $data, bool $saveOriginal = true)
+    {
+        if (file_exists($location) && $saveOriginal) {
+            copy($location, $location.'.'.time().'.old');
+        }
+
+        file_put_contents($location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($data).';');
     }
 }

@@ -32,6 +32,7 @@ use function set_error_handler;
 use function str_replace;
 use function unlink;
 use const DIRECTORY_SEPARATOR;
+use const K_Load\APP_PATH;
 use const K_Load\APP_ROOT;
 
 class Util
@@ -113,7 +114,7 @@ class Util
                         continue;
                     }
 
-                    $backgrounds[$item][] = $bgGamemodeUrlPath.'/'.$bg;
+                    $backgrounds[$item][] = APP_PATH.$bgGamemodeUrlPath.'/'.$bg;
                 }
             }
         }
