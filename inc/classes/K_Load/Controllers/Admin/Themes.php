@@ -12,14 +12,12 @@
 
 namespace K_Load\Controllers\Admin;
 
-
 use K_Load\Controllers\AdminController;
 use K_Load\Util;
 
 class Themes extends AdminController
 {
     public static $templateFolder = 'admin/themes';
-
 
     public function index()
     {
@@ -35,5 +33,4 @@ class Themes extends AdminController
 
         return self::view('edit', ['themeFiles' => directoryTree(APP_ROOT.'/themes/default')]);
     }
-
 }

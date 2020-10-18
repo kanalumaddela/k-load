@@ -14,5 +14,4 @@ namespace K_Load;
 
 class Setup
 {
-
 }

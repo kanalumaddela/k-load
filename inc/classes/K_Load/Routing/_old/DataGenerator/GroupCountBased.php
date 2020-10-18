@@ -36,7 +36,7 @@ class GroupCountBased extends RegexBasedAbstract
             $regexes[] = $regex.str_repeat('()', $numGroups - $numVariables);
             $routeMap[$numGroups + 1] = [$route->handler, $route->variables];
 
-            ++$numGroups;
+            $numGroups++;
         }
 
         $regex = '~^(?|'.implode('|', $regexes).')$~';

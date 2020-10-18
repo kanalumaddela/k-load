@@ -13,9 +13,8 @@
 namespace K_Load\Facades;
 
 /**
- * Class Cookie
+ * Class Cookie.
  *
- * @package K_Load\Facades
  * @see     \K_Load\Cookie
  */
 class Cookie extends Facade

@@ -22,7 +22,8 @@ use function is_null;
 use function is_numeric;
 use function is_string;
 use function max;
-use function Opis\Closure\{serialize as opis_serialize, unserialize as opis_unserialize};
+use function Opis\Closure\serialize as opis_serialize;
+use function Opis\Closure\unserialize as opis_unserialize;
 
 class Cache extends \J0sh0nat0r\SimpleCache\Cache
 {

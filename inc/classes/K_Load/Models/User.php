@@ -57,7 +57,7 @@ class User extends BaseModel
      */
     public static function findBySteamid($steamid)
     {
-        return User::where('steamid', $steamid)->first();
+        return self::where('steamid', $steamid)->first();
     }
 
     public static function getCsrf()

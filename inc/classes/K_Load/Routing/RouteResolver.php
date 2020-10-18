@@ -70,7 +70,6 @@ class RouteResolver
         $i = 0;
 
         foreach ($reflection->getParameters() as $reflectionParameter) {
-
             if (isset($routeVals[$i])) {
                 $args[$i] = $routeVals[$i];
             }
@@ -81,7 +80,7 @@ class RouteResolver
                      * @var Model $model
                      */
                     $class = $class->getName();
-                    $model = new $class;
+                    $model = new $class();
 
                     $args[$i] = $model;
 

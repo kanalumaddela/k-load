@@ -36,6 +36,7 @@ class KDriver implements IDriver
      * @param int    $time
      *
      * @throws \J0sh0nat0r\SimpleCache\Exceptions\InvalidKeyException
+     *
      * @return bool
      */
     public function put($key, $value, $time)
@@ -61,6 +62,7 @@ class KDriver implements IDriver
      * @param string $key
      *
      * @throws \J0sh0nat0r\SimpleCache\Exceptions\InvalidKeyException
+     *
      * @return bool|bool[]
      */
     public function has($key)
@@ -72,6 +74,7 @@ class KDriver implements IDriver
      * @param string $key
      *
      * @throws \J0sh0nat0r\SimpleCache\Exceptions\InvalidKeyException
+     *
      * @return array|callable|mixed|string|null
      */
     public function get($key)
@@ -83,6 +86,7 @@ class KDriver implements IDriver
      * @param string $key
      *
      * @throws \J0sh0nat0r\SimpleCache\Exceptions\InvalidKeyException
+     *
      * @return bool|void
      */
     public function remove($key)

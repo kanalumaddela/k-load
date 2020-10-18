@@ -77,14 +77,14 @@ class BaseController
     protected function validateCsrf()
     {
         if (empty($userCsrf = $this->request->get('_csrf'))) {
-            throw new InvalidToken;
+            throw new InvalidToken();
         }
 
         $csrf = $this->session['csrf'];
         $csrf = $csrf[APP_CURRENT_ROUTE];
 
         if (time() >= $csrf['expires'] || !hash_equals($csrf['token'], $userCsrf)) {
-            throw new InvalidToken;
+            throw new InvalidToken();
         }
     }
 

@@ -15,14 +15,14 @@ function kload_error_handler(int $errno, string $errstr, string $errfile, int $e
 
     var_dump(__FUNCTION__);
     var_dump(get_defined_vars());
-    die();
+    exit();
 }
 
 function kload_exception_handler(Throwable $e)
 {
     var_dump(__FUNCTION__);
     var_dump($e);
-    die();
+    exit();
 }
 
 set_error_handler('kload_error_handler');
@@ -180,7 +180,7 @@ function kload_error_page()
                         <td><?= isset($errorData['exception']) ? $errorData['exception']->getMessage() : 'no message' ?></td>
                     </tr>
                     <?php if (DEBUG) {
-                        ?>
+        ?>
                         <tr>
                             <td><h4>Trace:</h4></td>
                             <td style=" max-width: 0; overflow: auto; ">
@@ -189,8 +189,8 @@ function kload_error_page()
                             </td>
                         </tr>
                         <?php
-                    } else {
-                        ?>
+    } else {
+        ?>
                         <tr>
                             <td><h4>Notice:</h4></td>
                             <td>If you'd like to attempt to resolve the issue yourself, add/change <code>DEBUG</code> to
@@ -199,7 +199,7 @@ function kload_error_page()
                             </td>
                         </tr>
                         <?php
-                    } ?>
+    } ?>
                 </tbody>
             </table>
         </div>

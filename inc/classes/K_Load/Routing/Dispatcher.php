@@ -27,7 +27,6 @@ use function preg_match;
 
 class Dispatcher
 {
-
     public $matchedRoute;
 
     private $staticRouteMap;
@@ -51,7 +50,7 @@ class Dispatcher
 
         $this->filters = $data->getFilters();
 
-        $this->handlerResolver = new RouteResolver;
+        $this->handlerResolver = new RouteResolver();
     }
 
     /**
@@ -62,6 +61,7 @@ class Dispatcher
      *
      * @throws \Phroute\Phroute\Exception\HttpMethodNotAllowedException
      * @throws \Phroute\Phroute\Exception\HttpRouteNotFoundException
+     *
      * @return mixed|null
      */
     public function dispatch($httpMethod, $uri)
@@ -88,6 +88,7 @@ class Dispatcher
      * @param $uri
      *
      * @throws \Phroute\Phroute\Exception\HttpRouteNotFoundException|\Phroute\Phroute\Exception\HttpMethodNotAllowedException
+     *
      * @return mixed
      */
     protected function dispatchRoute($httpMethod, $uri)
@@ -106,6 +107,7 @@ class Dispatcher
      * @param $uri
      *
      * @throws \Phroute\Phroute\Exception\HttpMethodNotAllowedException
+     *
      * @return mixed
      */
     protected function dispatchStaticRoute($httpMethod, $uri)
@@ -126,6 +128,7 @@ class Dispatcher
      * @param $httpMethod
      *
      * @throws \Phroute\Phroute\Exception\HttpMethodNotAllowedException
+     *
      * @return mixed|string
      */
     protected function checkFallbacks($routes, $httpMethod)
@@ -155,6 +158,7 @@ class Dispatcher
      *
      * @throws \Phroute\Phroute\Exception\HttpMethodNotAllowedException
      * @throws \Phroute\Phroute\Exception\HttpRouteNotFoundException
+     *
      * @return mixed
      */
     protected function dispatchVariableRoute($httpMethod, $uri)
@@ -166,7 +170,7 @@ class Dispatcher
 
             $count = count($matches);
 
-            while (!isset($data['routeMap'][$count++])) ;
+            while (!isset($data['routeMap'][$count++]));
 
             $routes = $data['routeMap'][$count - 1];
 

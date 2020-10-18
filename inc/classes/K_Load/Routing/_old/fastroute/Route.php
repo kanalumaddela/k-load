@@ -32,7 +32,6 @@ class Route extends \FastRoute\Route
     public static function __callStatic($name, $arguments)
     {
         if (method_exists($name, static::$routeCollector)) {
-
         }
         // TODO: Implement __callStatic() method.
     }

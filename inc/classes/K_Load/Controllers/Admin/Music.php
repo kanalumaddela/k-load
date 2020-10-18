@@ -242,7 +242,7 @@ class Music extends AdminController
     public function deleteMusic()
     {
         if (!User::can('music')) {
-            die();
+            exit();
         }
 
         $filename = isset($_POST['file']) ? $_POST['file'] : null;

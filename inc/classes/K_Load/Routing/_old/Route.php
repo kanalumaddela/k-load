@@ -57,7 +57,6 @@ class Route
             }
         }
 
-
         return $this;
     }
 }

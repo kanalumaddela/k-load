@@ -151,7 +151,7 @@ class User
                     header('Content-Type: application/json');
                     echo json_encode(['success' => false, 'data' => ['message' => 'CSRF token failed, try again', 'csrf' => $token]]);
                 }
-                die();
+                exit();
             }
 
             Util::flash('alerts', ['message' => 'CSRF token failed, try again', 'css' => 'red']);
@@ -282,7 +282,7 @@ class User
                     header('Content-Type: application/json');
                     echo json_encode(['success' => false, 'data' => ['message' => 'Permission `'.$perm.'` not given.']]);
                 }
-                die();
+                exit();
             }
 
             Util::flash('alerts', 'You do not have the `'.$perm.'` permissions');

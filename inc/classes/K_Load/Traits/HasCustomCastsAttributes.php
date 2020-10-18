@@ -39,7 +39,7 @@ trait HasCustomCastsAttributes
 
             if (class_exists($type)) {
                 if (!isset(static::$castsAttributeClassCache[$type])) {
-                    static::$castsAttributeClassCache[$type] = new $type;
+                    static::$castsAttributeClassCache[$type] = new $type();
                 }
 
                 $newValue = static::$castsAttributeClassCache[$type]->get(get_class($this), $key, $value, $this->getAttributes());

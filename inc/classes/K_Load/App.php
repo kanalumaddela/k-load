@@ -113,18 +113,18 @@ copyright;
             }
 
             var_dump('do install shit here');
-            die();
+            exit();
         }
 
         static::bootContainer();
         static::runConversion();
 
         if (stripos(APP_CURRENT_ROUTE, '/dashboard') !== false) {
-            static::$container->share(Session::class, ($session = new Session))->addTags('Session', 'session');
+            static::$container->share(Session::class, ($session = new Session()))->addTags('Session', 'session');
             static::$container->share(SteamLogin::class, ($steamLogin = new SteamLogin([
                 'debug'   => DEBUG,
                 'return'  => APP_CURRENT_URL,
-//                'method'  => \K_Load\Facades\Config::has('apikeys.steam'),
+                //                'method'  => \K_Load\Facades\Config::has('apikeys.steam'),
                 'session' => [
                     'enable' => false,
                 ],
@@ -145,9 +145,8 @@ copyright;
                 $session->regenerate();
 
                 header('Location: '.$_GET['openid_return_to'] ?? APP_ROUTE_URL.'/dashboard', true, 302);
-                die();
+                exit();
             }
-
 
             $steamid = $session->get('user.steamid', $session->get('steamlogin.steamid'));
 //            $steamid = '76561198152390718';
@@ -185,7 +184,7 @@ copyright;
 
                     if (!empty($user->name)) {
                         dd('test');
-                        die();
+                        exit();
 
                         $user->name = $player->name;
                         $user->save();
@@ -261,7 +260,7 @@ copyright;
 
     public static function bootContainer()
     {
-        $container = (new Container(new DefinitionAggregate))->defaultToShared(true);
+        $container = (new Container(new DefinitionAggregate()))->defaultToShared(true);
 
         $container->share(Request::class, ($request = Request::createFromGlobals()))->addTags('Request', 'request');
         $container->share(Cache::class, ($cache = new Cache(KDriver::class)))->addTags('Cache', 'cache');
@@ -303,7 +302,7 @@ copyright;
 
         $container->share(Capsule::class, $capsule)->addTags('DB', 'db', 'database');
 
-        $container->delegate(new ReflectionContainer);
+        $container->delegate(new ReflectionContainer());
 
         static::$container = $container;
     }
@@ -316,7 +315,6 @@ copyright;
             $triggers = $pdo->query('SHOW TRIGGERS like \'kload_sessions\'')->fetchAll(PDO::FETCH_ASSOC);
 
             if (count($triggers) > 0) {
-
                 $queries = [
                     'drop trigger if exists csrf_fix_insert',
                     'drop trigger if exists csrf_fix_update',
@@ -388,7 +386,6 @@ copyright;
                 $response = (new Response($e->getMessage()))->setStatusCode($e->getStatusCode());
             }
         }
-
 
         if (!$response instanceof Response) {
             if (is_array($response) || $response instanceof Model) {
