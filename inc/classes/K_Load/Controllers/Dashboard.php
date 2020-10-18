@@ -29,7 +29,6 @@ use function get_defined_vars;
 use function json_encode;
 use function K_Load\flash;
 use function K_Load\redirect;
-use const K_Load\APP_CURRENT_ROUTE;
 use const K_Load\APP_ROUTE_URL;
 
 class Dashboard extends BaseController
@@ -39,7 +38,7 @@ class Dashboard extends BaseController
     public function index()
     {
         if (!$this->user['admin']) {
-            die();
+            exit();
 //            return $this->settings();
         }
 
@@ -112,7 +111,6 @@ class Dashboard extends BaseController
             Setting::where('name', 'music')->update(['value' => json_encode(array_merge($music->value, $musicPost))]);
             flash('success', 'Music settings have been saved');
         }
-
 
         return redirect(APP_ROUTE_URL.'/dashboard');
     }
