@@ -181,7 +181,6 @@ class View
 
             $route = vsprintf($route, $parameters);
 
-
             return APP_ROUTE_URL.'/'.$route;
         }));
         self::$twig->addFunction(new TwigFunction('isActiveRoute', function ($route, $activeClass = 'is-active') {
