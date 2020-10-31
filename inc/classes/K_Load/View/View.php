@@ -31,8 +31,11 @@ use function is_int;
 use function json_encode;
 use function random_bytes;
 use function scandir;
+use function str_replace;
 use function strpos;
 use function substr;
+use function substr_count;
+use function vsprintf;
 use const K_Load\APP_CURRENT_ROUTE;
 use const K_Load\APP_CURRENT_URL;
 use const K_Load\APP_HOST;
@@ -171,6 +174,13 @@ class View
             if (isset($parameters[0]) && is_array($parameters[0])) {
                 $parameters = $parameters[0];
             }
+
+            if (substr_count($route, '?') > 0) {
+                $route = str_replace('?', '%s', $route);
+            }
+
+            $route = vsprintf($route, $parameters);
+
 
             return APP_ROUTE_URL.'/'.$route;
         }));

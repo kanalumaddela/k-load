@@ -10,12 +10,15 @@
         }
 
         .user-card:hover {
-            background-color: #1d72aa;
+            /*background-color: #1d72aa;*/
+            background-color: #293237;
+            border-color: #1d72aa;
         }
 
         .user-card:active {
-            background-color: #293237;
-            border-color: #1d72aa;
+            color: #fff;
+            background-color: #1d72aa;
+            /*background-color: #293237;*/
         }
 
         .avatar-only {
@@ -30,7 +33,7 @@
         <div class="columns is-multiline">
             {% for user in users %}
                 <div class="column is-one-quarter-desktop is-one-third-tablet">
-                    <a href="{{ route('users', user.id) }}">
+                    <a href="{{ route('dashboard/users/?', user.id) }}">
                         <div class="card user-card">
                             <div class="card-content">
                                 <div class="is-flex is-align-items-center">

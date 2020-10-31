@@ -105,3 +105,13 @@ a:hover {
 .select:not(.is-multiple):not(.is-loading)::after {
     border-color: #6cbdff;
 }
+
+/* pagination */
+.pagination-link, .pagination-next, .pagination-previous {
+    border-color: transparent;
+}
+
+.pagination-link {
+    color: #b1b1b1;
+    background-color: #303b41;
+}
