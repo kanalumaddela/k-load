@@ -13,8 +13,8 @@
 namespace K_Load\Controllers;
 
 use K_Load\Exceptions\InvalidToken;
+use K_Load\Facades\Cache;
 use K_Load\Facades\Config;
-use K_Load\Facades\DB;
 use K_Load\Facades\Session;
 use K_Load\Helpers\Util;
 use K_Load\Models\Setting;
@@ -23,12 +23,11 @@ use K_Load\View\LoadingView;
 use function array_intersect;
 use function array_keys;
 use function array_merge;
-use function dd;
-use function dump;
 use function get_defined_vars;
 use function json_encode;
 use function K_Load\flash;
 use function K_Load\redirect;
+use function md5;
 use const K_Load\APP_CURRENT_ROUTE;
 use const K_Load\APP_ROUTE_URL;
 
@@ -124,21 +123,30 @@ class Dashboard extends BaseController
 
     public function settings()
     {
-        dd(LoadingView::getThemes(true));
+        $data = [
+            'themes' => LoadingView::getThemes(true),
+        ];
 
-        return $this->view('settings', User::findBySteamid(Session::user()['steamid'])->only('settings', 'custom_css'));
+        return $this->view('settings', array_merge($data, User::findBySteamid(Session::user()['steamid'])->only('settings', 'custom_css')));
     }
 
     public function users()
     {
+        $users = User::paginate(28);
+
+        $steamids = $users->pluck('steamid')->implode(',');
+
         $data = [
-            'users' => User::paginate(25),
+            'users'         => $users,
+            'usersPageList' => Util::paginateFix($users),
+            'steamInfo'     => Cache::remember('steaminfo-users-'.md5($steamids), 3600, function () use ($steamids) {
+                return empty($data = Util::getPlayersInfo($steamids, true)) ? null : $data;
+            }),
         ];
 
-        dump($data);
-        dd(DB::connection()->getQueryLog());
+//        dd($users->hasMorePages());
 
-        return self::view('users', $data);
+        return $this->view('users', $data);
     }
 
     public function user($steamid)

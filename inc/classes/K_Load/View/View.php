@@ -26,6 +26,7 @@ use function array_slice;
 use function bin2hex;
 use function file_exists;
 use function ini_get;
+use function is_array;
 use function is_int;
 use function json_encode;
 use function random_bytes;
@@ -166,7 +167,11 @@ class View
         self::$twig->addFunction(new TwigFunction('theme_asset', function ($file) {
             return APP_URL.'/themes/'.static::getTheme().'/assets/'.$file;
         }));
-        self::$twig->addFunction(new TwigFunction('route', function ($route) {
+        self::$twig->addFunction(new TwigFunction('route', function ($route, ...$parameters) {
+            if (isset($parameters[0]) && is_array($parameters[0])) {
+                $parameters = $parameters[0];
+            }
+
             return APP_ROUTE_URL.'/'.$route;
         }));
         self::$twig->addFunction(new TwigFunction('isActiveRoute', function ($route, $activeClass = 'is-active') {

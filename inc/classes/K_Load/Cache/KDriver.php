@@ -79,7 +79,8 @@ class KDriver implements IDriver
      */
     public function get($key)
     {
-        return ENABLE_CACHE ? $this->getDriver('file')->get($key) : $this->getDriver('array')->get($key);
+
+        return ENABLE_CACHE ? $this->getDriver('array')->get($key, $this->getDriver('file')->get($key)) : $this->getDriver('array')->get($key);
     }
 
     /**

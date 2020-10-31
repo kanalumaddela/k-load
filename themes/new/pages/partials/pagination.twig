@@ -1,0 +1,35 @@
+<nav class="pagination" role="navigation" aria-label="pagination">
+    {% if attribute(paginator, 'onFirstPage') %}
+        <a class="pagination-previous" disabled="">Previous</a>
+    {% else %}
+        <a class="pagination-previous" href="{{ attribute(paginator, 'previousPageUrl') }}">Previous</a>
+    {% endif %}
+
+    {% if attribute(paginator, 'hasMorePages') %}
+        <a class="pagination-next" href="{{ attribute(paginator, 'nextPageUrl') }}">Next</a>
+    {% else %}
+        <a class="pagination-next" disabled="">Next</a>
+    {% endif %}
+
+    <ul class="pagination-list">
+        {% for section in pageList %}
+            {% if section is iterable %}
+                {% for page, url in section %}
+                    {% if page == attribute(paginator, 'currentPage') %}
+                        <li>
+                            <a class="pagination-link is-current" aria-label="Page {{ page }}"
+                               aria-current="page">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a class="pagination-link" href="{{ url }}"
+                               aria-label="Go to page {{ page }}">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <li><span class="pagination-ellipsis">&hellip;</span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>

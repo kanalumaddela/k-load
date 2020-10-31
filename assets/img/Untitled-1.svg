@@ -1,0 +1,20 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 203.84 196.57">
+    <defs>
+        <style>.cls-1{fill:#231f20;}.cls-2{fill:none;stroke:#231f20;stroke-miterlimit:10;stroke-width:5px;}</style>
+    </defs>
+    <title>Untitled-1</title>
+    <path class="cls-1" d="M166.73,89.09v35h-35v-35h35m5-5h-45v45h45v-45Z" transform="translate(-27 -16.56)"/>
+    <path class="cls-1"
+          d="M62.33,39.31,87.08,64.06,62.33,88.8,37.58,64.06,62.33,39.31m0-7.07L30.51,64.06,62.33,95.88,94.15,64.06,62.33,32.24Z"
+          transform="translate(-27 -16.56)"/>
+    <path class="cls-1" d="M55.92,126.68l20.25,35.08H35.66l20.26-35.08m0-10L27,166.76H84.83L55.92,116.68Z"
+          transform="translate(-27 -16.56)"/>
+    <path class="cls-1" d="M147,168.05l-20.25,35.08-20.26-35.08H147m8.66-5H97.81l28.92,50.08,28.91-50.08Z"
+          transform="translate(-27 -16.56)"/>
+    <path class="cls-1" d="M151.69,21.56a20,20,0,1,1-20,20,20,20,0,0,1,20-20m0-5a25,25,0,1,0,25,25,25,25,0,0,0-25-25Z"
+          transform="translate(-27 -16.56)"/>
+    <line class="cls-2" x1="175.45" y1="133.28" x2="175.45" y2="183.28"/>
+    <line class="cls-2" x1="200.45" y1="158.28" x2="150.45" y2="158.28"/>
+    <line class="cls-2" x1="202.07" y1="39.88" x2="166.71" y2="75.24"/>
+    <line class="cls-2" x1="202.07" y1="75.24" x2="166.71" y2="39.88"/>
+</svg>

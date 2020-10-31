@@ -15,7 +15,6 @@ namespace K_Load\Models;
 use K_Load\Facades\Config;
 use K_Load\Facades\Session;
 use function in_array;
-use function strtolower;
 
 class User extends BaseModel
 {
@@ -70,10 +69,10 @@ class User extends BaseModel
         $query->leftJoin('sessions', 'users.steamid', '=', 'sessions.steamid');
     }
 
-    public function getSteamid2Attribute($value)
-    {
-        return strtolower($value);
-    }
+//    public function getSteamid2Attribute($value)
+//    {
+//        return strtolower($value);
+//    }
 
     public function can($perm)
     {

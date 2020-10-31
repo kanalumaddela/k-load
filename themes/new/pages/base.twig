@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token }}"/>
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="{{ asset('css/bulma.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    {# <link rel="stylesheet" href="{{ asset('css/bulma.css') }}"> #}
     {# <link rel="stylesheet" href="{{ asset('css/fa/5.14.0.css') }}"> #}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
     <link rel="stylesheet" href="{{ theme_asset('css/site.css', true) }}">
@@ -26,5 +27,6 @@
     {% block body %}{% endblock %}
     {% block bodyJs %}{% endblock %}
 {% endapply %}
+<script src="{{ theme_asset('js/app.js') }}"></script>
 </body>
 </html>

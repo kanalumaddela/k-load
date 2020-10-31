@@ -15,6 +15,7 @@ namespace K_Load;
 use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\Paginator;
 use K_Load\Cache\Cache;
 use K_Load\Cache\KDriver;
 use K_Load\Container\DefinitionAggregate;
@@ -305,6 +306,14 @@ copyright;
         $container->delegate(new ReflectionContainer());
 
         static::$container = $container;
+
+        Paginator::currentPageResolver(function () use ($request) {
+            return $request->query->get('page', 1);
+        });
+
+        Paginator::currentPathResolver(function () {
+            return APP_CURRENT_ROUTE;
+        });
     }
 
     private static function runConversion()
