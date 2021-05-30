@@ -1,7 +1,10 @@
 {
+    "name": "kanalumaddela/k-load-v2",
+    "description": "A loading screen for Garry's Mod",
+    "type": "project",
     "config": {
         "platform": {
-            "php": "7.2.5"
+            "php": "7.4.14"
         }
     },
     "repositories": [
@@ -20,18 +23,18 @@
         "ext-simplexml": "*",
         "ext-pdo": "*",
         "j0sh0nat0r/simple-cache": "dev-master",
-        "twig/twig": "^3.0",
+        "twig/twig": "^3.3",
         "kanalumaddela/steam-login": "dev-master",
-        "sentry/sdk": "^2.0",
-        "symfony/http-foundation": "^4.2",
-        "illuminate/support": "^5.8",
-        "illuminate/database": "^5.8",
+        "sentry/sdk": "^3.1",
+        "symfony/http-foundation": "^5.2",
+        "illuminate/support": "^8.41",
+        "illuminate/database": "^8.41",
         "xpaw/steamid": "dev-master",
         "phroute/phroute": "^2.1",
         "league/container": "^3.3",
-        "opis/closure": "^3.5",
+        "opis/closure": "^3.6",
         "adbario/php-dot-notation": "^2.2",
-        "illuminate/pagination": "^5.8"
+        "illuminate/pagination": "^8.41"
     },
     "require-dev": {
         "filp/whoops": "^2.7",
@@ -39,10 +42,11 @@
     },
     "autoload": {
         "psr-4": {
-            "K_Load\\": "inc/classes/K_Load"
+            "KLoad\\": "inc/classes/KLoad"
         },
         "files": [
             "inc/helpers.php",
+            "inc/error.php",
             "inc/init.php"
         ]
     }

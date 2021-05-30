@@ -4,6 +4,10 @@
 
 {% block bodyCss %}
     <style>
+        [data-copy] {
+            cursor: pointer;
+        }
+
         .stat-data {
             font-size: 2em;
             font-weight: 300;
@@ -143,24 +147,24 @@
 
         #toastMessages {
             position: fixed;
-            top: 5%;
+            top: 3%;
             right: 1%;
             max-width: 30%;
+        }
+
+        #toastMessages .notification {
+            opacity: 0;
+            transition: opacity .3s ease;
+        }
+
+        .notification:not(:last-child) {
+            margin-bottom: 1rem;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container px-4 py-6" style="margin-top: 3em;">
-
-        <div class="mb-3">
-            <pre>{{ flash|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
-            {% if old %}
-                <hr>
-                <pre>{{ old|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
-            {% endif %}
-        </div>
-
+    <div class="container px-4 py-6">
         <div class="columns is-flex-tablet">
             <div class="column is-one-third-tablet">
                 <div class="card stat">
@@ -300,7 +304,7 @@
                                                         <label class="checkbox is-custom">
                                                             Enable?
                                                             <input type="checkbox" value="1" name="music[enable]"
-                                                                   {% if old.music.random|default(settings.music.random) %}checked{% endif %}>
+                                                                   {% if old.music.enable|default(settings.music.enable) %}checked{% endif %}>
                                                             <span class="switch"></span>
                                                         </label>
                                                     </div>
@@ -352,18 +356,19 @@
                         {# border: 1px solid;border-color: #ff4f43;background: rgb(242 43 29 / 0.6); #}
                         <div class="py-2 mb-4 has-text-centered site-border-radius notice notice-danger">
                             <h1 class="mb-1">Edit/Add this line in your <code>garrysmod/cfg/server.cfg</code></h1>
-                            <code data-copy title="Click to copy">sv_loadingurl "{{ site.url }}
-                                ?steamid=%s&mapname=%m"</code>
+                            <code data-copy title="Click to copy">
+                                {{ 'sv_loadingurl "' ~ site.url ~ '?steamid=%s&mapname=%m"' }}
+                            </code>
                         </div>
                         <table class="table is-fullwidth">
                             <tbody>
-                                <tr>
-                                    <td>Version</td>
-                                    <td>
-                                        2.6.0
-                                    </td>
-                                </tr>
-                                <tr>
+                            <tr>
+                                <td>Version</td>
+                                <td>
+                                    2.6.0
+                                </td>
+                            </tr>
+                            <tr>
                                     <td>Loading URL</td>
                                     <td>
                                         {{ include('@partials/external-link.twig', {link: site.url}) }}

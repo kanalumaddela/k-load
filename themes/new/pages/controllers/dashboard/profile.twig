@@ -1,0 +1,37 @@
+{% extends 'app.twig' %}
+
+{% block title %}[{{ player.id }}] {{ steamInfo['player-' ~ player.steamid].personaname|default(player.name) }}{% endblock %}
+
+{% block bodyCss %}
+    <style>
+        .user-profile-bg {
+            padding: 4em 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .user-profile-name {
+            background-color: rgba(0, 0, 0, .5)
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="user-profile-bg level"
+         style="background-image: linear-gradient(0deg, rgba(0,0,0,.35), transparent), url('{{ site.route ~ '/dashboard/user/background/' ~ player.steamid }}')">
+        <div class="container px-4">
+            <div class="level-left">
+                <img class="avatar" src="{{ steamInfo['player-' ~ player.steamid].avatarfull }}">
+                <div class="user-profile-name ml-4 p-2 site-border-radius">
+                    <h1 class="title">{{ steamInfo['player-' ~ player.steamid].personaname|default(player.name) }}</h1>
+                    <p class="subtitle">{{ user.steamid2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5 px-4">
+        <div class="columns">
+
+        </div>
+    </div>
+{% endblock %}

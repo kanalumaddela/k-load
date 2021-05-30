@@ -1,20 +1,20 @@
 <?php
-/**
+/*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
  * @link      https://www.maddela.org
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2020 Maddela
+ * @copyright Copyright (c) 2018-2021 kanalumaddela
  * @license   MIT
  */
 
-namespace K_Load;
+namespace KLoad;
 
-use K_Load\Http\RedirectResponse;
-use K_Load\View\LoadingView;
-use K_Load\View\View;
+use KLoad\Http\RedirectResponse;
+use KLoad\View\LoadingView;
+use KLoad\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use function addcslashes;
 use function array_keys;
@@ -30,7 +30,10 @@ use function is_dir;
 use function ksort;
 use function range;
 use function scandir;
+use function Sentry\init;
 use function var_export;
+
+init(['dsn' => 'https://0bdc6629de78435f807c56358e3cdbae@o259687.ingest.sentry.io/1455550']);
 
 /**
  * Is the current request https?
@@ -56,17 +59,19 @@ function get_vars($file)
     return get_defined_vars();
 }
 
-function var_export_fixed($var, $indent = '')
+// stackoverflow gang
+// short array syntax instead of array()
+function var_export_fixed($var, $indent = ''): ?string
 {
     switch (gettype($var)) {
         case 'string':
-            return '\''.addcslashes($var, "\\\$\"\r\n\t\v\f").'\'';
+            return '\'' . addcslashes($var, "\\\$\"\r\n\t\v\f") . '\'';
         case 'array':
             $indexed = array_keys($var) === range(0, count($var) - 1);
             $r = [];
             foreach ($var as $key => $value) {
                 $r[] = "$indent    "
-                    .($indexed ? '' : var_export_fixed($key).' => ')
+                    . ($indexed ? '' : var_export_fixed($key) . ' => ')
                     .var_export_fixed($value, "$indent    ");
             }
 
@@ -81,11 +86,11 @@ function var_export_fixed($var, $indent = '')
 /**
  * @param       $template
  * @param array $data
- * @param int   $httpCode
+ * @param int $httpCode
  *
- * @return \Symfony\Component\HttpFoundation\Response
+ * @return Response
  */
-function view($template, array $data = [], $httpCode = 200)
+function view($template, array $data = [], $httpCode = 200): Response
 {
     $response = new Response(View::render($template, $data));
     $response->setCharset('UTF-8');
@@ -173,7 +178,7 @@ function checkThemeQuery()
 
 function displayLoginPageIfGuest()
 {
-    if (!\K_Load\Facades\Session::user()) {
+    if (!\KLoad\Facades\Session::user()) {
         return view('login');
     }
 }
@@ -185,5 +190,5 @@ function redirect($url, $status = 302, array $headers = [])
 
 function flash($key, $data)
 {
-    \K_Load\Facades\Session::flash($key, $data);
+    \KLoad\Facades\Session::flash($key, $data);
 }

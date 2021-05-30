@@ -63,13 +63,13 @@
 
         function progressCallback(decimal, percentage, roundedPercentage) {
             if (roundedPercentage <= 98) {
-                roundedPercentage = roundedPercentage + ((100 - roundedPercentage) * 0.025);
+                roundedPercentage = imageClip + ((100 - roundedPercentage) * 0.025);
             }
 
             var polygonHeight = polygonElem.offsetHeight;
             var imageClip = polygonHeight - (roundedPercentage / 100 * polygonHeight);
 
-            polygonElem.setAttribute("style", "clip: rect(" + imageClip + "px " + polygonHeight + "px " + polygonHeight + "px 0);");
+            // polygonElem.setAttribute("style", "clip: rect(" + imageClip + "px " + polygonHeight + "px " + polygonHeight + "px 0);");
         }
     </script>
 {% endblock %}

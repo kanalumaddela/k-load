@@ -1,12 +1,12 @@
 <?php
-/**
+/*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
  * @link      https://www.maddela.org
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2020 Maddela
+ * @copyright Copyright (c) 2018-2021 kanalumaddela
  * @license   MIT
  */
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] === 'phpinfo') {
@@ -60,7 +60,7 @@ $extensions = [
 
 function is_https()
 {
-    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' : false);
+    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 }
 
 function checkFailed()
@@ -102,6 +102,9 @@ foreach ($extensions as $extension) {
 
 // write check
 $tmp_file = __DIR__.'/kload-tmp-write-check.txt';
+if (file_exists($tmp_file)) {
+    die('K-Load | Cannot perform write check. File already exists');
+}
 touch($tmp_file);
 $data['writeable'] = file_exists($tmp_file);
 if (!$data['writeable']) {
@@ -225,6 +228,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
     }
 
     code, pre {
+        font-family: monospace;
         padding: 2px 5px;
         color: #ff88a9;
         background-color: #1b2b58;

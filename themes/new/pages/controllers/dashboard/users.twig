@@ -27,13 +27,13 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div class="container px-4 py-6" style="margin-top: 3em;">
+    <div class="container px-4 py-6">
         {% include '@partials/pagination.twig' with {'paginator': users, 'pageList': usersPageList} %}
 
         <div class="columns is-multiline">
             {% for user in users %}
                 <div class="column is-one-quarter-desktop is-one-third-tablet">
-                    <a href="{{ route('dashboard/users/?', user.id) }}">
+                    <a href="{{ route('dashboard/user/?', user.id) }}">
                         <div class="card user-card">
                             <div class="card-content">
                                 <div class="is-flex is-align-items-center">

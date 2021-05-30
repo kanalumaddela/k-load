@@ -22,11 +22,13 @@
         opacity: .5;
     }
 </style>
-{% apply spaceless %}
-    {% block bodyCss %}{% endblock %}
-    {% block body %}{% endblock %}
-    {% block bodyJs %}{% endblock %}
-{% endapply %}
+{% block bodyCss %}{% endblock %}
+{% block body %}{% endblock %}
+<input id="copyBox" class="is-hidden">
+{% block bodyJs %}{% endblock %}
+<script>
+    const toastMessages = {{ flash.messages|default([])|json_encode|raw }};
+</script>
 <script src="{{ theme_asset('js/app.js') }}"></script>
 </body>
 </html>
