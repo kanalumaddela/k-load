@@ -33,9 +33,7 @@ function kload_error_page($errorData = [])
         if (!empty($code)) {
             $errorData['sentry_id'] = $code;
         }
-    }
-
-    ?>
+    } ?>
     <!doctype html>
     <html lang="en">
     <head>

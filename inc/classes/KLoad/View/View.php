@@ -67,8 +67,8 @@ class View
 
     public static function getThemes(): array
     {
-        $themePath = APP_ROOT . '/themes/';
-        $list = array_slice(scandir(APP_ROOT . '/themes'), 2);
+        $themePath = APP_ROOT.'/themes/';
+        $list = array_slice(scandir(APP_ROOT.'/themes'), 2);
         $themes = [];
 
         foreach ($list as $theme) {
@@ -203,11 +203,11 @@ class View
     public static function setupBaseData()
     {
         $site = [
-            'host' => APP_HOST,
-            'path' => APP_PATH,
-            'url' => APP_URL,
+            'host'    => APP_HOST,
+            'path'    => APP_PATH,
+            'url'     => APP_URL,
             'current' => APP_CURRENT_URL,
-            'route' => APP_ROUTE_URL,
+            'route'   => APP_ROUTE_URL,
         ];
 
         self::$twig->addGlobal('site', $site);

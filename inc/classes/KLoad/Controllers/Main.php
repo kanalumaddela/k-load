@@ -34,7 +34,7 @@ class Main extends BaseController
 {
     public function error()
     {
-        require_once __DIR__ . '/../../../error.php';
+        require_once __DIR__.'/../../../error.php';
 
         kload_error_page();
     }
@@ -44,7 +44,7 @@ class Main extends BaseController
         $data = static::buildBaseData();
 
         if (!empty($data['steamid'])) {
-            $data['user'] = Cache::remember('user-' . $data['steamid'], 3600, function () use ($data) {
+            $data['user'] = Cache::remember('user-'.$data['steamid'], 3600, function () use ($data) {
                 $user = User::select('name', 'settings', DB::raw('IF(`custom_css` = \'\', null, `custom_css`) as `custom_css`'))->where('steamid', $data['steamid'])->first();
 
                 $user = !is_null($user) ? $user->toArray() : [];

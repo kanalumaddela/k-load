@@ -15,6 +15,6 @@
 //}
 declare(strict_types=1);
 
-define('KLoad\\' . 'APP_START', microtime(true));
+define('KLoad\\'.'APP_START', microtime(true));
 
 require_once __DIR__.'/vendor/autoload.php';

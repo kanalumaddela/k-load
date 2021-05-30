@@ -97,22 +97,22 @@ class Config extends DotArray
 //
 //        file_put_contents($this->location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($this->all()).';');
         if (!file_exists($this->location)) {
-            throw new Exception('Config could not be saved in: ' . $this->location);
+            throw new Exception('Config could not be saved in: '.$this->location);
         }
     }
 
     public static function saveConfig(string $location, $data, bool $saveOriginal = true)
     {
         if (file_exists($location) && $saveOriginal) {
-            copy($location, $location . '.' . time() . '.old');
+            copy($location, $location.'.'.time().'.old');
         }
 
-        file_put_contents($location, "<?php\n" . App::getCopyright() . "\n\nreturn " . var_export_fixed($data) . ';');
+        file_put_contents($location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($data).';');
     }
 
     public function create(array $config)
     {
-        exit('todo: ' . __CLASS__ . '@' . __METHOD__);
+        exit('todo: '.__CLASS__.'@'.__METHOD__);
 
         $template = static::$templateConfig;
 

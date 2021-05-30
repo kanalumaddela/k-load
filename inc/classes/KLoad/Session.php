@@ -33,7 +33,7 @@ class Session extends DotArray
     public function __construct($items = [], array $options = [])
     {
         if ($this->isActive()) {
-            throw new RuntimeException('Session already started: ' . json_encode($_SESSION));
+            throw new RuntimeException('Session already started: '.json_encode($_SESSION));
         } else {
             session_name('K-Load');
             ini_set('session.gc_maxlifetime', 60 * 60 * 24 * 14);
@@ -94,18 +94,18 @@ class Session extends DotArray
 
         $toasts = [
             'success' => '',
-            'error' => '',
+            'error'   => '',
             'warning' => '',
-            'info' => '',
-            'danger' => '',
+            'info'    => '',
+            'danger'  => '',
         ];
 
         if (isset($toasts[$key])) {
-            $messages = $this->get('flash.messages.' . $key, []);
+            $messages = $this->get('flash.messages.'.$key, []);
             $messages[] = $value;
-            $this->set('flash.messages.' . $key, $messages);
+            $this->set('flash.messages.'.$key, $messages);
         } else {
-            $this->set('flash.' . $key, $value);
+            $this->set('flash.'.$key, $value);
         }
     }
 

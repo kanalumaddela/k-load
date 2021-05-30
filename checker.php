@@ -103,7 +103,7 @@ foreach ($extensions as $extension) {
 // write check
 $tmp_file = __DIR__.'/kload-tmp-write-check.txt';
 if (file_exists($tmp_file)) {
-    die('K-Load | Cannot perform write check. File already exists');
+    exit('K-Load | Cannot perform write check. File already exists');
 }
 touch($tmp_file);
 $data['writeable'] = file_exists($tmp_file);

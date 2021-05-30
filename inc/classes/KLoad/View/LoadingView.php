@@ -24,8 +24,8 @@ class LoadingView extends View
 {
     public static function getThemes($withPreviews = false): array
     {
-        $themePath = APP_ROOT . '/themes/';
-        $list = array_slice(scandir(APP_ROOT . '/themes'), 2);
+        $themePath = APP_ROOT.'/themes/';
+        $list = array_slice(scandir(APP_ROOT.'/themes'), 2);
         $themes = [];
 
         foreach ($list as $theme) {

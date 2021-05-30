@@ -60,10 +60,10 @@ class Dispatcher
      * @param $httpMethod
      * @param $uri
      *
-     * @return mixed|null
      * @throws HttpRouteNotFoundException
-     *
      * @throws HttpMethodNotAllowedException
+     *
+     * @return mixed|null
      */
     public function dispatch($httpMethod, $uri)
     {
@@ -88,9 +88,9 @@ class Dispatcher
      * @param $httpMethod
      * @param $uri
      *
-     * @return mixed
      * @throws HttpRouteNotFoundException|HttpMethodNotAllowedException
      *
+     * @return mixed
      */
     protected function dispatchRoute($httpMethod, $uri)
     {
@@ -107,9 +107,9 @@ class Dispatcher
      * @param $httpMethod
      * @param $uri
      *
-     * @return mixed
      * @throws HttpMethodNotAllowedException
      *
+     * @return mixed
      */
     protected function dispatchStaticRoute($httpMethod, $uri)
     {
@@ -128,9 +128,9 @@ class Dispatcher
      * @param $routes
      * @param $httpMethod
      *
-     * @return mixed|string
      * @throws HttpMethodNotAllowedException
      *
+     * @return mixed|string
      */
     protected function checkFallbacks($routes, $httpMethod)
     {
@@ -157,10 +157,10 @@ class Dispatcher
      * @param $httpMethod
      * @param $uri
      *
-     * @return mixed
      * @throws HttpRouteNotFoundException
-     *
      * @throws HttpMethodNotAllowedException
+     *
+     * @return mixed
      */
     protected function dispatchVariableRoute($httpMethod, $uri)
     {
@@ -194,7 +194,7 @@ class Dispatcher
 //            return redirect('/');
 //        }
 
-        throw new HttpRouteNotFoundException('Route ' . $uri . ' does not exist');
+        throw new HttpRouteNotFoundException('Route '.$uri.' does not exist');
     }
 
     /**
@@ -210,11 +210,11 @@ class Dispatcher
         $afterFilter = [];
 
         if (isset($filters[Route::BEFORE])) {
-            $beforeFilter = array_intersect_key($this->filters, array_flip((array)$filters[Route::BEFORE]));
+            $beforeFilter = array_intersect_key($this->filters, array_flip((array) $filters[Route::BEFORE]));
         }
 
         if (isset($filters[Route::AFTER])) {
-            $afterFilter = array_intersect_key($this->filters, array_flip((array)$filters[Route::AFTER]));
+            $afterFilter = array_intersect_key($this->filters, array_flip((array) $filters[Route::AFTER]));
         }
 
         return [$beforeFilter, $afterFilter];

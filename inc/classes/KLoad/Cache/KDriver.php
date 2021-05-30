@@ -27,18 +27,18 @@ class KDriver implements IDriver
     {
         $this->drivers['array'] = new \J0sh0nat0r\SimpleCache\Cache(ArrayDriver::class);
         $this->drivers['file'] = new \J0sh0nat0r\SimpleCache\Cache(File::class, [
-            'dir' => APP_ROOT . '/data/cache',
+            'dir' => APP_ROOT.'/data/cache',
         ]);
     }
 
     /**
      * @param string $key
-     * @param mixed $value
-     * @param int $time
+     * @param mixed  $value
+     * @param int    $time
      *
-     * @return bool
      * @throws InvalidKeyException
      *
+     * @return bool
      */
     public function put($key, $value, $time)
     {

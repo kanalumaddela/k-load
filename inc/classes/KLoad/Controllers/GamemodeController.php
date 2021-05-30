@@ -20,7 +20,7 @@ use function strtolower;
 class GamemodeController extends BaseController
 {
     protected static $gamemodes = [
-        'cinema' => 'Cinema',
+        'cinema'        => 'Cinema',
         'demo'          => 'Demo Rules (if you want to test rules without applying them to any actual gamemode)',
         'darkrp'        => 'DarkRP',
         'deathrun'      => 'Deathrun',
