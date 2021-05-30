@@ -70,9 +70,9 @@ class Util
      * @param string
      * @param bool $includeHtaccess
      *
-     * @return bool
      * @throws Exception
      *
+     * @return bool
      */
     public static function mkDir(string $directory, bool $includeHtaccess = false): bool
     {
@@ -84,7 +84,7 @@ class Util
             $doesntExist = !mkdir($directory, 0774, true);
             restore_error_handler();
             if ($doesntExist) {
-                throw new Exception('No permissions to create directory `' . $directory . '`');
+                throw new Exception('No permissions to create directory `'.$directory.'`');
             }
         }
 

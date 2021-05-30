@@ -65,13 +65,13 @@ function var_export_fixed($var, $indent = ''): ?string
 {
     switch (gettype($var)) {
         case 'string':
-            return '\'' . addcslashes($var, "\\\$\"\r\n\t\v\f") . '\'';
+            return '\''.addcslashes($var, "\\\$\"\r\n\t\v\f").'\'';
         case 'array':
             $indexed = array_keys($var) === range(0, count($var) - 1);
             $r = [];
             foreach ($var as $key => $value) {
                 $r[] = "$indent    "
-                    . ($indexed ? '' : var_export_fixed($key) . ' => ')
+                    .($indexed ? '' : var_export_fixed($key).' => ')
                     .var_export_fixed($value, "$indent    ");
             }
 
@@ -86,7 +86,7 @@ function var_export_fixed($var, $indent = ''): ?string
 /**
  * @param       $template
  * @param array $data
- * @param int $httpCode
+ * @param int   $httpCode
  *
  * @return Response
  */

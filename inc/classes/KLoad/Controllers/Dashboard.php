@@ -65,8 +65,9 @@ class Dashboard extends BaseController
     }
 
     /**
-     * @return RedirectResponse
      * @throws InvalidToken
+     *
+     * @return RedirectResponse
      */
     public function indexPost(): RedirectResponse
     {
@@ -80,7 +81,7 @@ class Dashboard extends BaseController
             if (LoadingView::themeExists($theme) && $theme !== Config::get('loading_theme')) {
                 Config::set('loading_theme', $theme);
                 Config::save();
-                flash('success', 'Theme has been changed to `' . $theme . '`');
+                flash('success', 'Theme has been changed to `'.$theme.'`');
             }
 
             if (!LoadingView::themeExists($theme)) {
@@ -111,7 +112,6 @@ class Dashboard extends BaseController
             $musicPost['volume'] = isset($musicPost['volume']) ? (int) $musicPost['volume'] : 15;
 
             $music = Setting::where('name', 'music')->first();
-
 
             Setting::where('name', 'music')->update(['value' => json_encode(array_merge($music->value, $musicPost))]);
             flash('success', 'Music settings have been saved');
@@ -157,7 +157,7 @@ class Dashboard extends BaseController
 
         $steamid = $player->steamid;
 
-        $steamInfo = Cache::remember('steaminfo-user-' . $steamid, 3600, function () use ($steamid) {
+        $steamInfo = Cache::remember('steaminfo-user-'.$steamid, 3600, function () use ($steamid) {
             return empty($data = Util::getPlayersInfo($steamid, true)) ? null : $data;
         });
 
@@ -166,16 +166,16 @@ class Dashboard extends BaseController
 
     public function getUserBackground($steamid)
     {
-        $url = Cache::remember('steam-bg-' . $steamid, 3600, function () use ($steamid) {
+        $url = Cache::remember('steam-bg-'.$steamid, 3600, function () use ($steamid) {
             $regex = "/no_header *?profile_page *?has_profile_background *?.*\n\t *?style=\"background-image: *?url\( *?\n?'(https?:\/\/.*.jpg)/m";
-            $steamProfile = file_get_contents('https://steamcommunity.com/profiles/' . $steamid);
+            $steamProfile = file_get_contents('https://steamcommunity.com/profiles/'.$steamid);
 
             preg_match($regex, $steamProfile, $matches);
 
             return $matches[1] ?? 'https://community.cloudflare.steamstatic.com/public/images/profile/2020/bg_dots.png';
         });
 
-        header('Location: ' . $url, true, 302);
+        header('Location: '.$url, true, 302);
         exit();
     }
 }

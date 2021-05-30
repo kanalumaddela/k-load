@@ -105,7 +105,7 @@ copyright;
 
         if (!static::isInstalled()) {
             if (APP_CURRENT_ROUTE !== '/install') {
-                header('Location: ' . $_SERVER['SCRIPT_NAME'] . '?/install', true, 302);
+                header('Location: '.$_SERVER['SCRIPT_NAME'].'?/install', true, 302);
             }
 
             var_dump('do install shit here');
@@ -113,7 +113,7 @@ copyright;
         }
 
         if (APP_CURRENT_ROUTE === '/install') {
-            echo 'K-Load has already been installed, please visit <a href="' . APP_ROUTE_URL . '/dashboard">' . APP_ROUTE_URL . '/dashboard</a>';
+            echo 'K-Load has already been installed, please visit <a href="'.APP_ROUTE_URL.'/dashboard">'.APP_ROUTE_URL.'/dashboard</a>';
             exit();
         }
 
@@ -123,7 +123,7 @@ copyright;
         if (stripos(APP_CURRENT_ROUTE, '/dashboard') !== false) {
             static::$container->share(Session::class, ($session = new Session()))->addTags('Session', 'session');
             static::$container->share(SteamLogin::class, ($steamLogin = new SteamLogin([
-                'debug' => DEBUG,
+                'debug'  => DEBUG,
                 'return' => APP_CURRENT_URL,
                 //                'method'  => \K_Load\Facades\Config::has('apikeys.steam'),
                 'session' => [
@@ -165,13 +165,13 @@ copyright;
                 // {"theme":"default","backgrounds":{"enable":1,"duration":5000,"fade":750,"random":0},"youtube":{"volume":15,"enable":0,"random":0,"list":[]}}
 
                 $user = new User([
-                    'steamid' => $player->steamid,
+                    'steamid'  => $player->steamid,
                     'steamid2' => $player->steamid2,
                     'steamid3' => $player->steamid3,
-                    'admin' => User::isSuper($player->steamid),
-                    'perms' => [],
+                    'admin'    => User::isSuper($player->steamid),
+                    'perms'    => [],
                     'settings' => [
-                        'theme' => static::get('config')->get('loading_theme', 'default'),
+                        'theme'       => static::get('config')->get('loading_theme', 'default'),
                         'backgrounds' => $settings[0]['value'],
                         'youtube'     => $youtube,
                     ],
@@ -188,9 +188,9 @@ copyright;
                     }
 
                     $avatars = [
-                        'large' => $player->avatarLarge,
+                        'large'  => $player->avatarLarge,
                         'medium' => $player->avatarMedium,
-                        'small' => $player->avatarSmall,
+                        'small'  => $player->avatarSmall,
                     ];
                 }
 
@@ -236,28 +236,28 @@ copyright;
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
             kload_error_page([
-                'type' => 'error',
-                'code' => $errno,
-                'file' => $errfile,
+                'type'    => 'error',
+                'code'    => $errno,
+                'file'    => $errfile,
                 'line_no' => $errline,
                 'message' => $errstr,
-                'raw' => func_get_args(),
+                'raw'     => func_get_args(),
             ]);
 
-            die();
+            exit();
         }, E_ALL);
 
         set_exception_handler(function (Exception $exception) {
             kload_error_page([
-                'type' => 'exception',
-                'code' => $exception->getCode(),
-                'file' => $exception->getFile(),
+                'type'    => 'exception',
+                'code'    => $exception->getCode(),
+                'file'    => $exception->getFile(),
                 'line_no' => $exception->getLine(),
                 'message' => $exception->getMessage(),
-                'raw' => $exception,
+                'raw'     => $exception,
             ]);
 
-            die();
+            exit();
         });
     }
 
@@ -266,11 +266,11 @@ copyright;
      */
     private static function setupDirectories()
     {
-        Util::mkDir(APP_ROOT . '/assets/img/backgrounds/global');
-        Util::mkDir(APP_ROOT . '/assets/img/logos');
-        Util::mkDir(APP_ROOT . '/data/logs', true);
-        Util::mkDir(APP_ROOT . '/data/music');
-        Util::mkDir(APP_ROOT . '/data/users');
+        Util::mkDir(APP_ROOT.'/assets/img/backgrounds/global');
+        Util::mkDir(APP_ROOT.'/assets/img/logos');
+        Util::mkDir(APP_ROOT.'/data/logs', true);
+        Util::mkDir(APP_ROOT.'/data/music');
+        Util::mkDir(APP_ROOT.'/data/users');
     }
 
     private static function determineCurrentRoute()
@@ -387,7 +387,7 @@ copyright;
 
             unset($query, $pdo, $queries, $triggers, $tmpConfig);
 
-            Util::rmDir(APP_ROOT . '/inc/migrations');
+            Util::rmDir(APP_ROOT.'/inc/migrations');
         }
     }
 
@@ -485,8 +485,8 @@ copyright;
 
         $device = Device::create([
             'device_id' => $device_id,
-            'token' => $token,
-            'expires' => date('Y-m-d H:i:s', time() + (60 * 60 * 24)),
+            'token'     => $token,
+            'expires'   => date('Y-m-d H:i:s', time() + (60 * 60 * 24)),
         ]);
 
         \KLoad\Facades\Cookie::set('device_id', $device_id);

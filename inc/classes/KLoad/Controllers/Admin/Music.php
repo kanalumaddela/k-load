@@ -26,9 +26,9 @@ class Music extends AdminController
     public static $templateFolder = 'admin/music';
 
     /**
-     * @return Response
      * @throws Exception
      *
+     * @return Response
      */
     public function index()
     {

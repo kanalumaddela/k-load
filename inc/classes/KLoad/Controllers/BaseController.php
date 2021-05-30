@@ -85,7 +85,7 @@ class BaseController
         $csrf = $csrf[APP_CURRENT_ROUTE];
 
         if (time() >= $csrf['expires'] || !hash_equals($csrf['token'], $userCsrf)) {
-            throw new InvalidToken;
+            throw new InvalidToken();
         }
     }
 

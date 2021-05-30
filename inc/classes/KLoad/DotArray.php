@@ -16,5 +16,4 @@ use Adbar\Dot;
 
 class DotArray extends Dot
 {
-
 }

@@ -17,7 +17,7 @@ use function is_null;
 
 class Request extends \Symfony\Component\HttpFoundation\Request
 {
-    public static function createFromGlobals(): Request
+    public static function createFromGlobals(): self
     {
         $json_post = json_decode(file_get_contents('php://input'), true);
 

@@ -19,8 +19,8 @@ use Whoops\Run;
 use function microtime;
 use function print_r;
 
-$whoops = new Run;
-$whoops->pushHandler(new PrettyPageHandler);
+$whoops = new Run();
+$whoops->pushHandler(new PrettyPageHandler());
 $whoops->register();
 
 App::setRoot(dirname(__DIR__));
@@ -37,17 +37,16 @@ if (DEBUG && !$res instanceof JsonResponse) {
         dd($data);
     }
 
-    echo "\n" . '<!--' . "\n\n";
+    echo "\n".'<!--'."\n\n";
 
-    echo 'Script Time: ' . (microtime(true) - APP_START) . 's';
+    echo 'Script Time: '.(microtime(true) - APP_START).'s';
 
     echo "\n\n\nDB Query Log:\n\n";
 
     print_r(DB::connection()->getQueryLog());
 
-    echo "\n" . '-->';
+    echo "\n".'-->';
 }
-
 
 if (ob_get_length() > 0) {
     ob_end_flush();
