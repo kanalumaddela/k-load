@@ -12,12 +12,10 @@
 
 namespace KLoad\Plugins;
 
-
 use KLoad\Hooks\DataHook;
 
 class DarkRP extends DataHook
 {
-
     public function getData(): array
     {
         // TODO: Implement getData() method.

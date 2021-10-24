@@ -23,7 +23,6 @@ use function file_exists;
 use function KLoad\loadingView;
 use const KLoad\ALLOW_THEME_OVERRIDE;
 use const KLoad\APP_ROOT;
-use const KLoad\DEBUG;
 use const KLoad\ENABLE_REGISTRATION;
 use const KLoad\IGNORE_PLAYER_CUSTOMIZATIONS;
 
@@ -31,7 +30,6 @@ class Main extends BaseController
 {
     public function index()
     {
-
         $data = static::buildBaseData();
 
         dump($data);
@@ -85,15 +83,15 @@ class Main extends BaseController
         }
 
         $data = [
-            'map' => $map,
-            'steamid' => $steamid,
-            'settings' => Setting::whereIn('name', static::getLoadingScreenSettings())->get()->pluck('value', 'name')->toArray(),
+            'map'            => $map,
+            'steamid'        => $steamid,
+            'settings'       => Setting::whereIn('name', static::getLoadingScreenSettings())->get()->pluck('value', 'name')->toArray(),
             'forcedGamemode' => $_GET['gamemode'] ?? null,
-            'user' => [],
+            'user'           => [],
         ];
 
         $data['settings']['backgrounds'] = array_merge(['list' => Util::getBackgrounds()], $data['settings']['backgrounds']);
-        $data['theme'] = file_exists(APP_ROOT . '/themes/' . LoadingView::getTheme() . '/config.php') ? include APP_ROOT . '/themes/' . LoadingView::getTheme() . '/config.php' : [];
+        $data['theme'] = file_exists(APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php') ? include APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php' : [];
 
         return $data;
     }
