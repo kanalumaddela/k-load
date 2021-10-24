@@ -323,7 +323,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
     }
 
     .collection .header .extension-name {
-        padding-left: 1em;
+        padding-left: 1rem;
         width: 100%;
         text-transform: unset;
         border-bottom: 1px solid transparent;
@@ -335,9 +335,9 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
     }
 
     .collection .header div[class*="extension--"] {
-        padding: 0.5em 1em;
+        padding: 0.5em 1rem;
         max-width: 26px;
-        font-size: 2em;
+        font-size: 2rem;
     }
 
     .extension--enabled, .pass {

@@ -235,9 +235,17 @@ class Util
         $fixed = [];
 
         foreach ($data as $player) {
-            $fixed['player-'.$player['steamid']] = $player;
+            $fixed['player-' . $player['steamid']] = $player;
         }
 
         return $fixed;
+    }
+
+    public static function YouTubeID($url)
+    {
+        $url = urldecode(rawurldecode($url));
+        preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
+
+        return $match[1] ?? null;
     }
 }

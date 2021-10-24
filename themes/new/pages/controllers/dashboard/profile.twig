@@ -1,9 +1,19 @@
 {% extends 'app.twig' %}
 
-{% block title %}[{{ player.id }}] {{ steamInfo['player-' ~ player.steamid].personaname|default(player.name) }}{% endblock %}
+{% block title %}{{ steamInfo['player-' ~ player.steamid].personaname|default(player.name) }}{% endblock %}
 
 {% block bodyCss %}
     <style>
+        .header {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: 5px 10px;
+            margin-left: -.5rem;
+            margin-right: -.5rem;
+            border-radius: .25rem;
+        }
+
         .user-profile-bg {
             padding: 4em 0;
             background-size: cover;
@@ -13,25 +23,193 @@
         .user-profile-name {
             background-color: rgba(0, 0, 0, .5)
         }
+
+        input[readonly], input[readonly] + .switch, .checkbox {
+            cursor: default;
+        }
     </style>
 {% endblock %}
 {% block content %}
     <div class="user-profile-bg level"
-         style="background-image: linear-gradient(0deg, rgba(0,0,0,.35), transparent), url('{{ site.route ~ '/dashboard/user/background/' ~ player.steamid }}')">
+         style="background-image: linear-gradient(0deg, rgba(0,0,0,.65), rgba(0,0,0,.45), transparent), url('{{ site.route ~ '/dashboard/user/background/' ~ player.steamid }}')">
         <div class="container px-4">
             <div class="level-left">
                 <img class="avatar" src="{{ steamInfo['player-' ~ player.steamid].avatarfull }}">
-                <div class="user-profile-name ml-4 p-2 site-border-radius">
-                    <h1 class="title">{{ steamInfo['player-' ~ player.steamid].personaname|default(player.name) }}</h1>
-                    <p class="subtitle">{{ user.steamid2 }}</p>
+                <div class="ml-4">
+                    <div class="mb-2 p-2 user-profile-name site-border-radius" style="width: fit-content">
+                        <h1 class="title">{{ steamInfo['player-' ~ player.steamid].personaname|default(player.name) }}</h1>
+                        <p class="subtitle">{{ user.steamid2 }}</p>
+                    </div>
+                    <div class="mb-2">
+                        <a class="button is-info">
+                            <i class="fas fa-pencil-alt mr-2"></i>
+                            Edit User
+                        </a>
+                        <a class="button is-success">
+                            <i class="fas fa-sliders-h mr-2"></i>
+                            Copy Settings
+                        </a>
+                        <a class="button is-danger">
+                            <i class="fas fa-ban mr-2"></i>
+                            Ban User
+                        </a>
+                        <a class="button is-danger">
+                            <i class="fas fa-trash mr-2"></i>
+                            Delete User
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container mt-5 px-4">
-        <div class="columns">
+        <div class="columns is-multiline">
+            <div class="column">
+                <div class="card">
+                    <div class="card-header-title">
+                        <i class="fas fa-images title-icon"></i>
+                        Backgrounds
+                    </div>
+                    <div class="card-content">
+                        <div class="pt-1 columns is-multiline">
+                            <div class="column is-half-tablet">
+                                <div class="field">
+                                    <div class="field-body">
+                                        <label class="checkbox is-custom">
+                                            Enable?
+                                            <input disabled type="checkbox" value="1" name="backgrounds[enable]"
+                                                   {% if player.settings.backgrounds.enable %}checked{% endif %}>
+                                            <span class="switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-half-tablet">
+                                <div class="field">
+                                    <div class="field-body">
+                                        <label class="checkbox is-custom">
+                                            Randomize?
+                                            <input disabled type="checkbox" value="1" name="backgrounds[random]"
+                                                   {% if player.settings.backgrounds.random %}checked{% endif %}>
+                                            <span class="switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="column is-half-tablet">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Duration</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <input readonly class="input" type="number" name="backgrounds[duration]"
+                                               value="{{ player.settings.backgrounds.duration }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-half-tablet">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Fade</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <input readonly class="input" type="number" name="backgrounds[fade]"
+                                               value="{{ player.settings.backgrounds.fade }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column is-full">
+                                <h1 class="header"><i class="fab fa-css3 title-icon"></i> Custom CSS</h1>
+
+                                {% if player.custom_cs %}
+                                    <textarea readonly style="resize: none" class="textarea mt-3 is-fullwidth"
+                                              name="custom_css">{{ player.custom_css }}</textarea>
+                                {% else %}
+                                    <p class="py-2 has-text-centered">No CSS</p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-header-title">
+                        <i class="fas fa-headphones title-icon"></i>
+                        Music
+                    </div>
+                    <div class="card-content">
+                        <div class="pt-1 columns is-multiline">
+                            <div class="column is-full">
+                                <div class="field">
+                                    <div class="field-body">
+                                        <label class="checkbox is-custom">
+                                            Enable?
+                                            <input disabled type="checkbox" value="1" name="youtube[enable]"
+                                                   {% if player.settings.youtube.enable %}checked{% endif %}>
+                                            <span class="switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-full">
+                                <div class="field">
+                                    <div class="field-body">
+                                        <label class="checkbox is-custom">
+                                            Randomize?
+                                            <input disabled type="checkbox" value="1" name="youtube[random]"
+                                                   {% if player.settings.youtube.random %}checked{% endif %}>
+                                            <span class="switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-full">
+                                <div class="field">
+                                    <div class="field-body">
+                                        <label class="checkbox is-custom">
+                                            Display Videos?
+                                            <input disabled type="checkbox" value="1" name="youtube[display_videos]"
+                                                   {% if player.settings.youtube.display_videos %}checked{% endif %}>
+                                            <span class="switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column is-full">
+                                <div class="field is-horizontal">
+                                    <div class="field-label" style="text-align: left">
+                                        <label class="label">Volume ({{ player.settings.youtube.volume }})</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <input disabled class="slider" type="range" name="youtube[volume]"
+                                               style="width: 100%"
+                                               value="{{ player.settings.youtube.volume }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-full">
+                                <h1 class="header mb-2"><i class="fab fa-youtube title-icon"></i> YouTube Videos</h1>
+
+                                <div id="youtube-list">
+                                    {% for yt_id in player.settings.youtube.list %}
+                                        <input readonly class="input my-1" type="text"
+                                               placeholder="Enter a youtube link"
+                                               value="https://www.youtube.com/watch?v={{ yt_id }}">
+                                    {% else %}
+                                        <p class="py-2 has-text-centered">No videos</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

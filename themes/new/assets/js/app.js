@@ -23,7 +23,6 @@ const elem = (tag, attrs, ...children) => {
             parent.setAttribute(key, attrs[key]);
         }
     });
-    // Object.keys(attrs).forEach(key => elem[key] = attrs[key]); <-- original
 
     children.forEach(child => {
         if (typeof child === "string") {
@@ -33,13 +32,6 @@ const elem = (tag, attrs, ...children) => {
     });
     return parent;
 };
-
-// `<div id="toastMessages">
-//     <div class="notification is-success">
-//         <button class="delete" onclick="this.parentElement.remove()"></button>
-//             Your changes have been saved!
-//     </div>
-// </div>`
 
 let toastsContainer = document.getElementById('toastMessages');
 
@@ -103,3 +95,21 @@ copyElems.forEach(item => {
         }
     });
 });
+
+function addElem(parent, child) {
+    if (typeof child === 'function') {
+        child = child();
+    } else {
+        child.cloneNode(true);
+    }
+
+    document.getElementById(parent).appendChild(child);
+}
+
+function deleteElem(el) {
+    let parent = el.closest('.child');
+
+    if (parent) {
+        parent.remove();
+    }
+}

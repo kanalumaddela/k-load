@@ -9,7 +9,7 @@
         }
 
         .stat-data {
-            font-size: 2em;
+            font-size: 2rem;
             font-weight: 300;
         }
 
@@ -52,9 +52,9 @@
             text-transform: uppercase;
             font-weight: 500;
             padding: 5px 10px;
-            margin-left: -.5em;
-            margin-right: -.5em;
-            border-radius: .25em;
+            margin-left: -.5rem;
+            margin-right: -.5rem;
+            border-radius: .25rem;
         }
 
         .card-content {
@@ -65,8 +65,8 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            right: 1em;
-            font-size: 3em;
+            right: 1rem;
+            font-size: 3rem;
         }
 
         @media screen and (max-width: 1023px) {
@@ -144,22 +144,6 @@
         .checkbox.is-custom input[type="checkbox"]:checked + .switch:before {
             transform: translateX(21px);
         }
-
-        #toastMessages {
-            position: fixed;
-            top: 3%;
-            right: 1%;
-            max-width: 30%;
-        }
-
-        #toastMessages .notification {
-            opacity: 0;
-            transition: opacity .3s ease;
-        }
-
-        .notification:not(:last-child) {
-            margin-bottom: 1rem;
-        }
     </style>
 {% endblock %}
 
@@ -178,7 +162,7 @@
             <div class="column is-one-third-tablet">
                 <div class="card stat">
                     <div class="card-content">
-                        <h1 class="stat-data">5,541</h1>
+                        <h1 class="stat-data">{{ userCount }}</h1>
                         <h3 class="stat-title">Users</h3>
                         <i class="fas fa-users stat-icon"></i>
                     </div>
@@ -187,7 +171,7 @@
             <div class="column is-one-third-tablet">
                 <div class="card stat">
                     <div class="card-content">
-                        <h1 class="stat-data">10</h1>
+                        <h1 class="stat-data">{{ themes|length }}</h1>
                         <h3 class="stat-title">Themes</h3>
                         <i class="fas fa-paint-brush stat-icon"></i>
                     </div>
@@ -324,6 +308,19 @@
                                             </div>
 
                                             <div class="column is-full">
+                                                <div class="field">
+                                                    <div class="field-body">
+                                                        <label class="checkbox is-custom">
+                                                            Respect Player's Volume?
+                                                            <input type="checkbox" value="1"
+                                                                   name="music[use_player_volume]">
+                                                            <span class="switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="column is-full">
                                                 <div class="field is-horizontal">
                                                     <div class="field-label" style="text-align: left">
                                                         <label class="label">Volume</label>
@@ -355,7 +352,8 @@
                     <div class="card-content">
                         {# border: 1px solid;border-color: #ff4f43;background: rgb(242 43 29 / 0.6); #}
                         <div class="py-2 mb-4 has-text-centered site-border-radius notice notice-danger">
-                            <h1 class="mb-1">Edit/Add this line in your <code>garrysmod/cfg/server.cfg</code></h1>
+                            <h1 class="mb-1">Click to copy and edit/add this line in your
+                                <code>garrysmod/cfg/server.cfg</code></h1>
                             <code data-copy title="Click to copy">
                                 {{ 'sv_loadingurl "' ~ site.url ~ '?steamid=%s&mapname=%m"' }}
                             </code>

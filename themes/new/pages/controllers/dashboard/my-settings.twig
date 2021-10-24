@@ -9,64 +9,15 @@
             text-transform: uppercase;
             font-weight: 500;
             padding: 5px 10px;
-            margin-left: -.5em;
-            margin-right: -.5em;
-            border-radius: .25em;
+            margin-left: -.5rem;
+            margin-right: -.5rem;
+            border-radius: .25rem;
         }
 
         .columns > .column > .columns {
             margin-top: unset;
             margin-left: unset;
             margin-right: unset;
-        }
-
-        .checkbox:hover, .radio:hover {
-            color: #bdbdbd;
-        }
-
-        .checkbox.is-custom input[type="checkbox"] {
-            display: none;
-        }
-
-        .checkbox.is-custom:hover {
-            color: inherit;
-        }
-
-        .checkbox.is-custom {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .checkbox.is-custom .switch {
-            position: relative;
-            display: inline-block;
-            height: 26px;
-            width: 48px;
-            border-radius: 20px;
-            background-color: #4f585d;
-            transition: background-color .2s;
-        }
-
-        .checkbox.is-custom .switch:before {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            content: '';
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #fff;
-            transition: .2s;
-        }
-
-        .checkbox.is-custom input[type="checkbox"]:checked + .switch {
-            background-color: #6cbdff;
-        }
-
-        .checkbox.is-custom input[type="checkbox"]:checked + .switch:before {
-            transform: translateX(21px);
         }
 
         .theme-selection > div {
@@ -86,7 +37,7 @@
         }
 
         .theme-preview {
-            border-radius: .4em;
+            border-radius: .4rem;
         }
 
         .image-modal {
@@ -105,7 +56,7 @@
             position: absolute;
             width: 50px;
             height: 50px;
-            font-size: 2em;
+            font-size: 2rem;
             background: rgba(255, 255, 255, 0.1);
             right: 25px;
             top: 25px;
@@ -125,8 +76,8 @@
             border-radius: 0;
         }
 
-        .title-icon {
-            margin-right: .5em;
+        .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder {
+            color: rgba(255, 255, 255, 0.5);
         }
     </style>
 {% endblock %}
@@ -232,46 +183,10 @@
                                 </div>
 
                                 <div class="column is-full">
-                                    <h1 class="header"><i class="fas fa-headphones title-icon"></i> Music</h1>
-                                    <div class="pt-1 columns is-multiline">
-                                        <div class="column is-half-tablet">
-                                            <div class="field">
-                                                <div class="field-body">
-                                                    <label class="checkbox is-custom">
-                                                        Enable?
-                                                        <input type="checkbox" value="1" name="music[enable]"
-                                                               {% if old.youtube.random|default(settings.youtube.random) %}checked{% endif %}>
-                                                        <span class="switch"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="column is-half-tablet">
-                                            <div class="field">
-                                                <div class="field-body">
-                                                    <label class="checkbox is-custom">
-                                                        Randomize?
-                                                        <input type="checkbox" value="1" name="music[random]"
-                                                               {% if old.youtube.random|default(settings.youtube.random) %}checked{% endif %}>
-                                                        <span class="switch"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <h1 class="header"><i class="fab fa-css3 title-icon"></i> Custom CSS</h1>
 
-                                        <div class="column is-full">
-                                            <div class="field is-horizontal">
-                                                <div class="field-label" style="text-align: left">
-                                                    <label class="label">Volume</label>
-                                                </div>
-                                                <div class="field-body">
-                                                    <input class="slider" type="range" name="music[volume]"
-                                                           style="width: 100%"
-                                                           value="{{ old.youtube.volume|default(settings.youtube.volume) }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <textarea class="textarea mt-3 is-fullwidth"
+                                              name="custom_css">{{ old.custom_css|default(custom_css) }}</textarea>
 
                                 </div>
                             </div>
@@ -283,11 +198,86 @@
                     </div>
                 </div>
 
-                <div id="my-settings-custom-css" class="column is-half-desktop">
+                <div class="column is-half-desktop">
                     <div class="card">
-                        <div class="card-header-title"><i class="fab fa-css3 title-icon"></i> Custom CSS</div>
+                        <div class="card-header-title"><i class="fas fa-headphones title-icon"></i> Music</div>
                         <div class="card-content">
-                            <textarea class="textarea" style="width: 100%"></textarea>
+                            <div class="pt-1 columns is-multiline">
+                                <div class="column is-full">
+                                    <div class="field">
+                                        <div class="field-body">
+                                            <label class="checkbox is-custom">
+                                                Enable?
+                                                <input type="checkbox" value="1" name="youtube[enable]"
+                                                       {% if old.youtube.enable|default(settings.youtube.enable) %}checked{% endif %}>
+                                                <span class="switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column is-full">
+                                    <div class="field">
+                                        <div class="field-body">
+                                            <label class="checkbox is-custom">
+                                                Randomize?
+                                                <input type="checkbox" value="1" name="youtube[random]"
+                                                       {% if old.youtube.random|default(settings.youtube.random) %}checked{% endif %}>
+                                                <span class="switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column is-full">
+                                    <div class="field">
+                                        <div class="field-body">
+                                            <label class="checkbox is-custom">
+                                                Display Videos?
+                                                <input type="checkbox" value="1" name="youtube[display_videos]"
+                                                       {% if old.youtube.display_videos|default(settings.youtube.display_videos) %}checked{% endif %}>
+                                                <span class="switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="column is-full">
+                                    <div class="field is-horizontal">
+                                        <div class="field-label" style="text-align: left">
+                                            <label class="label">Volume</label>
+                                        </div>
+                                        <div class="field-body">
+                                            <input class="slider" type="range" name="youtube[volume]"
+                                                   style="width: 100%"
+                                                   value="{{ old.youtube.volume|default(settings.youtube.volume) }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column is-full">
+                                    <h1 class="header"><i class="fab fa-youtube title-icon"></i> YouTube Videos</h1>
+
+                                    <div id="youtube-list">
+                                        {% for yt_id in old.youtube.list|default(settings.youtube.list) %}
+                                            <div class="field has-addons mt-3 child">
+                                                <div class="control is-flex-grow-1">
+                                                    <input class="input" type="text" placeholder="Enter a youtube link"
+                                                           name="youtube[list][]"
+                                                           value="https://www.youtube.com/watch?v={{ yt_id }}">
+                                                </div>
+                                                <div class="control">
+                                                    <a class="button is-danger" onclick="deleteElem(this)">
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mt-2">
+                                        <button class="button is-info add-elem" type="button"
+                                                onclick="addElem('youtube-list', youtubeInput)">Add Video
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="pt-4 has-text-centered">
                                 <button class="button">Save</button>
@@ -300,8 +290,28 @@
     </div>
 {% endblock %}
 {% block bodyJs %}
-    {{ parent() }}
     <script>
+        const youtubeInput = function () {
+            return elem('div', {classList: 'field has-addons mt-3 child'},
+                elem('div', {classList: 'control is-flex-grow-1'},
+                    elem('input', {
+                        classList: 'input',
+                        type: 'text',
+                        name: 'youtube[list][]',
+                        placeholder: 'Enter a youtube link'
+                    })
+                ),
+                elem('div', {classList: 'control'},
+                    elem('a', {
+                        classList: 'button is-danger delete-elem', innerText: 'Delete', onclick: function (ev) {
+                            deleteElem(ev.target);
+                        }
+                    })
+                ),
+            )
+        }
+
+
         let mouseTimeout, mouseDown = false;
         const createImageModal = el => {
             let src = el.src;

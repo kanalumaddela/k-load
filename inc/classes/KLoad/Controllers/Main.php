@@ -12,19 +12,16 @@
 
 namespace KLoad\Controllers;
 
-use Exception;
-use kanalumaddela\SteamLogin\SteamLogin;
-use KLoad\Facades\Cache;
-use KLoad\Facades\DB;
 use KLoad\Helpers\Util;
 use KLoad\Models\Setting;
 use KLoad\Models\User;
 use KLoad\View\LoadingView;
+use KLoad\View\View;
 use function array_merge;
 use function count;
 use function file_exists;
-use function is_null;
 use function KLoad\loadingView;
+use const KLoad\ALLOW_THEME_OVERRIDE;
 use const KLoad\APP_ROOT;
 use const KLoad\DEBUG;
 use const KLoad\ENABLE_REGISTRATION;
@@ -32,49 +29,47 @@ use const KLoad\IGNORE_PLAYER_CUSTOMIZATIONS;
 
 class Main extends BaseController
 {
-    public function error()
-    {
-        require_once __DIR__.'/../../../error.php';
-
-        kload_error_page();
-    }
-
     public function index()
     {
+
         $data = static::buildBaseData();
 
-        if (!empty($data['steamid'])) {
-            $data['user'] = Cache::remember('user-'.$data['steamid'], 3600, function () use ($data) {
-                $user = User::select('name', 'settings', DB::raw('IF(`custom_css` = \'\', null, `custom_css`) as `custom_css`'))->where('steamid', $data['steamid'])->first();
+        dump($data);
 
-                $user = !is_null($user) ? $user->toArray() : [];
+        $theme = LoadingView::getTheme();
 
-                try {
-                    $steamInfo = (array) SteamLogin::userInfo($data['steamid']);
-                } catch (Exception $e) {
-                    $steamInfo = [];
+        if (ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS && !empty($data['steamid'])) {
+            $player = User::select('name', 'steamid', 'steamid2', 'steamid3', 'admin', 'settings', 'banned', 'registered')->where('steamid', $data['steamid'])->first();
+
+            if ($player) {
+                $player = $player->toArray();
+
+                $data['user'] = $player;
+                $data['settings'] = array_merge($data['settings'], $player['settings']);
+                unset($data['settings']['theme']);
+
+                if (!IGNORE_PLAYER_CUSTOMIZATIONS) {
+                    $theme = $player['settings']['theme'];
                 }
-
-                $user = array_merge($user, $steamInfo);
-
-                return !empty($user) ? $user : null;
-            });
+            }
         }
 
-        if (((DEBUG && !empty($data['user'])) || (ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS && !empty($data['user']))) && isset($user['settings'])) {
-            $user = $data['user'];
+        dd($data['user']);
 
-            LoadingView::setTheme($user['settings']['theme']);
-
-            $data['backgrounds'] = array_merge($data['backgrounds'], $user['settings']['backgrounds']);
-            $data['youtube'] = array_merge($data['settings']['youtube'], $user['settings']['youtube']);
+        if (!empty($_GET['theme']) && ALLOW_THEME_OVERRIDE) {
+            $theme = $_GET['theme'];
         }
 
-        if (isset($data['user'])) {
-            $data['player'] = &$data['user'];
-        }
+        dd($data);
 
-        return $this->view('loading', $data);
+//        dd($theme);
+
+        View::setTheme('new');
+//        LoadingView::setTheme($theme);
+
+        return \KLoad\view('loading', ['data' => json_encode($data)]);
+
+//        return $this->view('loading', $data);
     }
 
     protected function buildBaseData(): array
@@ -90,16 +85,15 @@ class Main extends BaseController
         }
 
         $data = [
-            'map'            => $map,
-            'steamid'        => $steamid,
-            'settings'       => Setting::whereIn('name', static::getLoadingScreenSettings())->get()->pluck('value', 'name'),
-            'backgrounds'    => ['list' => Util::getBackgrounds()],
+            'map' => $map,
+            'steamid' => $steamid,
+            'settings' => Setting::whereIn('name', static::getLoadingScreenSettings())->get()->pluck('value', 'name')->toArray(),
             'forcedGamemode' => $_GET['gamemode'] ?? null,
-            'user'           => [],
+            'user' => [],
         ];
 
-        $data['backgrounds'] = array_merge($data['backgrounds'], $data['settings']['backgrounds']);
-        $data['theme'] = file_exists(APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php') ? include_once APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php' : [];
+        $data['settings']['backgrounds'] = array_merge(['list' => Util::getBackgrounds()], $data['settings']['backgrounds']);
+        $data['theme'] = file_exists(APP_ROOT . '/themes/' . LoadingView::getTheme() . '/config.php') ? include APP_ROOT . '/themes/' . LoadingView::getTheme() . '/config.php' : [];
 
         return $data;
     }

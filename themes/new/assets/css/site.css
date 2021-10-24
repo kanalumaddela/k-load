@@ -51,7 +51,7 @@ body:before {
     background-attachment: fixed;
     background-repeat: repeat;
     /*background-size: 5em;*/
-    background-size: 32em;
+    background-size: 32rem;
     pointer-events: none;
 }
 
@@ -64,13 +64,13 @@ a:hover {
 }
 
 .menu-list a.is-active {
-    background-color: #1d72aa;
+    background-color: #277fd2;
 }
 
 .logo-text {
     font-family: 'Roboto Condensed', 'Roboto', 'Segoe UI', sans-serif;
     font-weight: 300;
-    font-size: 2.5em;
+    font-size: 2.5rem;
     font-style: italic;
     text-transform: uppercase;
     color: #6cbdff;
@@ -82,7 +82,7 @@ a:hover {
 
 /*border-radius*/
 .site-border-radius, .avatar, .card, .menu-list a, .button, .file-cta, .file-name, .input, .pagination-ellipsis, .pagination-link, .pagination-next, .pagination-previous, .select select, .textarea, .table, code {
-    border-radius: .4em;
+    border-radius: .4rem;
 }
 
 /*avatars*/
@@ -109,12 +109,88 @@ a:hover {
     border-color: #6cbdff;
 }
 
+.checkbox:hover, .radio:hover {
+    color: #bdbdbd;
+}
+
+.checkbox.is-custom input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox.is-custom:hover {
+    color: inherit;
+}
+
+.checkbox.is-custom {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.checkbox.is-custom .switch {
+    position: relative;
+    display: inline-block;
+    height: 26px;
+    width: 48px;
+    border-radius: 20px;
+    background-color: #4f585d;
+    transition: background-color .2s;
+}
+
+.checkbox.is-custom .switch:before {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: .2s;
+}
+
+.checkbox.is-custom input[type="checkbox"]:checked + .switch {
+    background-color: #6cbdff;
+}
+
+.checkbox.is-custom input[type="checkbox"]:checked + .switch:before {
+    transform: translateX(21px);
+}
+
 /* pagination */
 .pagination-link, .pagination-next, .pagination-previous {
     border-color: transparent;
 }
 
-.pagination-link {
+.pagination-link, .pagination-next, .pagination-previous:not([disabled]) {
     color: #b1b1b1;
     background-color: #303b41;
+}
+
+.pagination-link:hover, .pagination-next:hover, .pagination-previous:hover {
+    border-color: #3273dc;
+    color: #3273dc;
+}
+
+
+/* flash messages */
+#toastMessages {
+    position: fixed;
+    top: 3%;
+    right: 1%;
+    max-width: 30%;
+}
+
+#toastMessages .notification {
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.notification:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.title-icon {
+    margin-right: .5rem;
 }

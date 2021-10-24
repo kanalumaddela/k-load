@@ -10,25 +10,51 @@
         }
 
         .user-card:hover {
-            /*background-color: #1d72aa;*/
             background-color: #293237;
-            border-color: #1d72aa;
+            border-color: #277fd2;
         }
 
         .user-card:active {
             color: #fff;
-            background-color: #1d72aa;
-            /*background-color: #293237;*/
+            background-color: #277fd2;
         }
 
         .avatar-only {
             font-size: 0;
         }
+
+        .user-card .username {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .column {
+            padding: .5rem;
+        }
+
+        .sub-text {
+            color: #a9a9a9;
+        }
     </style>
 {% endblock %}
 {% block content %}
     <div class="container px-4 py-6">
-        {% include '@partials/pagination.twig' with {'paginator': users, 'pageList': usersPageList} %}
+        <div class="mb-5">
+            <form action="{{ site.current }}" method="get">
+                <label>Search for a user</label>
+                <div class="field has-addons">
+                    <div class="control is-flex-grow-1">
+                        <input class="input" type="text" name="search" autocomplete="off" value="{{ query }}">
+                    </div>
+                    <div class="control">
+                        <button class="button is-info">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
         <div class="columns is-multiline">
             {% for user in users %}
@@ -43,11 +69,14 @@
                                     </div>
                                     <div class="pl-4" style="width: 75%">
                                         {% if steamInfo['player-' ~ user.steamid].personaname %}
-                                            <p>{{ steamInfo['player-' ~ user.steamid].personaname }}</p>
+                                            <p class="is-size-5 username">{{ steamInfo['player-' ~ user.steamid].personaname }}</p>
+                                            {% if steamInfo['player-' ~ user.steamid].personaname != user.name %}
+                                                <p class="is-size-7 sub-text">({{ user.name|default('Unknown') }})</p>
+                                            {% endif %}
                                         {% else %}
-                                            <p>{{ user.name|default('Unknown') }}</p>
+                                            <p class="is-size-7 sub-text">{{ user.name|default('Unknown') }}</p>
                                         {% endif %}
-                                        <p>{{ user.steamid2 }}</p>
+                                        <p class="is-size-7 sub-text">{{ user.steamid2 }}</p>
                                     </div>
                                 </div>
                             </div>

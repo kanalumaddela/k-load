@@ -14,7 +14,9 @@ namespace KLoad\Hooks;
 
 abstract class DataHook implements DataHookInterface
 {
-    protected $data = [];
+
+
+    protected array $data = [];
 
     public function __construct(array $data = [])
     {

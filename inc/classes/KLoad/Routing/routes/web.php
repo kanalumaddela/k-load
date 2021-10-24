@@ -23,7 +23,6 @@ $router->filter('super', 'isSuperUser');
 $router->filter('csrf', 'checkForCsrf');
 
 $router->any('/', [Main::class, 'index'], ['before' => 'themeCheck']);
-$router->any('/error', [Main::class, 'error']);
 $router->any('/dashboard/logout', [Main::class, 'logout']);
 
 $router->get('/api/player/{steamid:i}/{info}?', [API::class, 'player']);
@@ -34,10 +33,11 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/dashboard', [Dashboard::class, 'index']);
     $router->post('/dashboard', [Dashboard::class, 'indexPost']);
     $router->any('/dashboard/settings', [Dashboard::class, 'settingsRedirect']);
-    $router->any('/dashboard/my-settings', [Dashboard::class, 'mySettings']);
+    $router->get('/dashboard/my-settings', [Dashboard::class, 'mySettings']);
+    $router->post('/dashboard/my-settings', [Dashboard::class, 'mySettingsPost']);
     $router->get('/dashboard/users', [Dashboard::class, 'users']);
-    $router->get('/dashboard/users/{steamid:i}', [Dashboard::class, 'user']);
-    $router->get('/dashboard/user/{id:i}', [Dashboard::class, 'user']);
+    $router->get('/dashboard/users/{steamid:i}', [Dashboard::class, 'userOldRoute']);
+    $router->get('/dashboard/user/{id:i}', [Dashboard::class, 'profile']);
     $router->get('/dashboard/user/background/{steamid:i}', [Dashboard::class, 'getUserBackground']);
 
 //    $router->group(['before' => 'admin'], function ($router) {
