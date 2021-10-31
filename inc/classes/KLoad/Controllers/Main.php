@@ -34,8 +34,6 @@ class Main extends BaseController
 
         $data = static::buildBaseData();
 
-        dump($data);
-
         $theme = LoadingView::getTheme();
 
         if (ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS && !empty($data['steamid'])) {
@@ -54,22 +52,15 @@ class Main extends BaseController
             }
         }
 
-        dd($data['user']);
-
         if (!empty($_GET['theme']) && ALLOW_THEME_OVERRIDE) {
             $theme = $_GET['theme'];
         }
-
-        dd($data);
-
-//        dd($theme);
 
         View::setTheme('new');
 //        LoadingView::setTheme($theme);
 
         return \KLoad\view('loading', ['data' => json_encode($data)]);
 
-//        return $this->view('loading', $data);
     }
 
     protected function buildBaseData(): array

@@ -23,7 +23,7 @@ abstract class DataHook implements DataHookInterface
         $this->setData($data);
     }
 
-    public function setData(array $data = [])
+    public function setData(array $data = []): DataHook
     {
         $this->data = $data;
 
