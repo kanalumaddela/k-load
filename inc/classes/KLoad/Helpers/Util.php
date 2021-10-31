@@ -235,7 +235,7 @@ class Util
         $fixed = [];
 
         foreach ($data as $player) {
-            $fixed['player-' . $player['steamid']] = $player;
+            $fixed['player-'.$player['steamid']] = $player;
         }
 
         return $fixed;
