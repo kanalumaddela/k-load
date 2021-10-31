@@ -58,7 +58,6 @@ class Main extends BaseController
 //        LoadingView::setTheme($theme);
 
         return \KLoad\view('loading', ['data' => json_encode($data)]);
-
     }
 
     protected function buildBaseData(): array
