@@ -53,7 +53,7 @@ class User extends BaseModel
      *
      * @return User
      */
-    public static function findBySteamid($steamid): User
+    public static function findBySteamid($steamid): self
     {
         return self::where('steamid', $steamid)->first();
     }
