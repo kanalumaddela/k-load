@@ -43,7 +43,7 @@ class User extends BaseModel
         'perms'    => 'array',
     ];
 
-    public static function isSuper($steamid)
+    public static function isSuper($steamid): bool
     {
         return in_array($steamid, Config::get('admins', []));
     }
@@ -53,13 +53,13 @@ class User extends BaseModel
      *
      * @return User
      */
-    public static function findBySteamid($steamid)
+    public static function findBySteamid($steamid): User
     {
         return self::where('steamid', $steamid)->first();
     }
 
     public function can($perm)
     {
-        return in_array($perm, $this->perms);
+        return in_array($perm, $this->perms, true);
     }
 }

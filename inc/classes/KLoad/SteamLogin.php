@@ -16,7 +16,7 @@ class SteamLogin extends \kanalumaddela\SteamLogin\SteamLogin
 {
 //    protected static $instance;
 
-    protected static $forceInvalid = false;
+    protected static bool $forceInvalid = false;
 
     public static function validRequest()
     {

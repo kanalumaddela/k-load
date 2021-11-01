@@ -54,7 +54,7 @@ use const KLoad\APP_ROOT;
 
 class Util
 {
-    public static function token()
+    public static function token(): string
     {
         return self::hash();
     }
@@ -100,9 +100,9 @@ class Util
      *
      * @param string $folder
      */
-    public static function rmDir($folder)
+    public static function rmDir($folder): void
     {
-        $content = glob($folder.'/*');
+        $content = glob($folder . '/*');
 
         foreach ($content as $location) {
             is_dir($location) ? self::rmdir($location) : unlink($location);
@@ -111,14 +111,14 @@ class Util
         rmdir($folder);
     }
 
-    public static function getBackgrounds()
+    public static function getBackgrounds(): array
     {
         $backgrounds = [];
         $backgroundUrlPath = '/assets/img/backgrounds';
-        $backgroundRoot = APP_ROOT.$backgroundUrlPath;
+        $backgroundRoot = APP_ROOT . $backgroundUrlPath;
 
         foreach (scandir($backgroundRoot) as $item) {
-            if ($item === '.' || $item === '..' || !is_dir($backgroundRoot.'/'.$item)) {
+            if ($item === '.' || $item === '..' || !is_dir($backgroundRoot . '/' . $item)) {
                 continue;
             }
 
@@ -147,12 +147,12 @@ class Util
      *
      * @return array
      */
-    public static function listDir($dir, bool $includeFolders = false)
+    public static function listDir($dir, bool $includeFolders = false): array
     {
         $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
 
         if (static::isLinux() && !Str::startsWith($dir, '/')) {
-            $dir = APP_ROOT.DIRECTORY_SEPARATOR.$dir;
+            $dir = APP_ROOT . DIRECTORY_SEPARATOR . $dir;
         }
 
         $items = array_slice(scandir($dir), 2);
@@ -168,7 +168,7 @@ class Util
         return $filtered;
     }
 
-    public static function isLinux()
+    public static function isLinux(): bool
     {
         return DIRECTORY_SEPARATOR === '/';
     }
