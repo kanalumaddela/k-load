@@ -13,7 +13,6 @@
 namespace KLoad\Controllers;
 
 use KLoad\Util;
-use function array_flip;
 use function sprintf;
 use function strtolower;
 
@@ -57,7 +56,6 @@ class GamemodeController extends BaseController
         // DarkRP
         // PropHunt
 
-        $flipped = array_flip(self::$gamemodes);
         $lower = strtolower($gamemode);
         // darkrp
         // prophunt

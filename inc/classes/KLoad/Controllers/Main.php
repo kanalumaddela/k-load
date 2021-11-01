@@ -30,7 +30,7 @@ class Main extends BaseController
 {
     public function index()
     {
-        $data = static::buildBaseData();
+        $data = $this->buildBaseData();
 
         $theme = LoadingView::getTheme();
 
@@ -50,12 +50,11 @@ class Main extends BaseController
             }
         }
 
-        if (!empty($_GET['theme']) && ALLOW_THEME_OVERRIDE) {
-            $theme = $_GET['theme'];
-        }
+//        if (!empty($_GET['theme']) && ALLOW_THEME_OVERRIDE) {
+//            $theme = $_GET['theme'];
+//        }
 
         View::setTheme('new');
-//        LoadingView::setTheme($theme);
 
         return \KLoad\view('loading', ['data' => json_encode($data)]);
     }

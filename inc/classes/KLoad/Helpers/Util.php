@@ -88,8 +88,8 @@ class Util
             }
         }
 
-        if (file_exists($directory) && $includeHtaccess && !file_exists($directory.'/.htaccess')) {
-            file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
+        if ($includeHtaccess && file_exists($directory) && !file_exists($directory . '/.htaccess')) {
+            file_put_contents($directory . '/.htaccess', "options -indexes\ndeny from all");
         }
 
         return !$doesntExist;
