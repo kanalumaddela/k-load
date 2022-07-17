@@ -101,7 +101,7 @@ class Util
      */
     public static function rmDir($folder): void
     {
-        $content = glob($folder . '/*');
+        $content = glob($folder.'/*');
 
         foreach ($content as $location) {
             is_dir($location) ? self::rmdir($location) : unlink($location);
@@ -114,10 +114,10 @@ class Util
     {
         $backgrounds = [];
         $backgroundUrlPath = '/assets/img/backgrounds';
-        $backgroundRoot = APP_ROOT . $backgroundUrlPath;
+        $backgroundRoot = APP_ROOT.$backgroundUrlPath;
 
         foreach (scandir($backgroundRoot) as $item) {
-            if ($item === '.' || $item === '..' || !is_dir($backgroundRoot . '/' . $item)) {
+            if ($item === '.' || $item === '..' || !is_dir($backgroundRoot.'/'.$item)) {
                 continue;
             }
 
@@ -151,7 +151,7 @@ class Util
         $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
 
         if (static::isLinux() && !Str::startsWith($dir, '/')) {
-            $dir = APP_ROOT . DIRECTORY_SEPARATOR . $dir;
+            $dir = APP_ROOT.DIRECTORY_SEPARATOR.$dir;
         }
 
         $items = array_slice(scandir($dir), 2);

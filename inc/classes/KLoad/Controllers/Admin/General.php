@@ -20,7 +20,7 @@ class General extends AdminController
 
     public function boot()
     {
-        static::$templateFolder = parent::$templateFolder . '/' . static::$templateFolder;
+        static::$templateFolder = parent::$templateFolder.'/'.static::$templateFolder;
     }
 
     public function index()
@@ -35,6 +35,5 @@ class General extends AdminController
 
     public function general()
     {
-
     }
 }
