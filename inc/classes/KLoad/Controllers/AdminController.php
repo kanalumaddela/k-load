@@ -14,21 +14,21 @@ namespace KLoad\Controllers;
 
 class AdminController extends BaseController
 {
-    public static $templateFolder = 'admin';
+    protected static string $templateFolder = 'controllers/admin';
 
-    protected static $gamemodes = [
-        'cinema'        => 'Cinema',
-        'demo'          => 'Demo Rules (if you want to test rules without applying them to any actual gamemode)',
-        'darkrp'        => 'DarkRP',
-        'deathrun'      => 'Deathrun',
-        'jailbreak'     => 'Jailbreak',
-        'melonbomber'   => 'Melon Bomber',
-        'militaryrp'    => 'MilitaryRP',
-        'murder'        => 'Murder',
-        'morbus'        => 'Morbus',
-        'policerp'      => 'PoliceRP',
-        'prophunt'      => 'Prophunt',
-        'sandbox'       => 'Sandbox',
+    protected static array $gamemodes = [
+        'cinema' => 'Cinema',
+        'demo' => 'Demo Mode',
+        'darkrp' => 'DarkRP',
+        'deathrun' => 'Deathrun',
+        'jailbreak' => 'Jailbreak',
+        'melonbomber' => 'Melon Bomber',
+        'militaryrp' => 'MilitaryRP',
+        'murder' => 'Murder',
+        'morbus' => 'Morbus',
+        'policerp' => 'PoliceRP',
+        'prophunt' => 'Prophunt',
+        'sandbox' => 'Sandbox',
         'santosrp'      => 'SantosRP',
         'schoolrp'      => 'SchoolRP',
         'starwarsrp'    => 'SWRP',

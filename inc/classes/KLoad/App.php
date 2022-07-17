@@ -432,6 +432,7 @@ copyright;
     {
         try {
             $response = Router::dispatch(!empty($route) ? $route : APP_CURRENT_ROUTE);
+
         } catch (Exception $e) {
             $response = (new Response($e->getMessage()))->setStatusCode(500);
 
@@ -453,6 +454,7 @@ copyright;
                     $response->setStatusCode($e->getStatusCode());
                 }
             }
+
         }
 
         if (!$response instanceof Response) {

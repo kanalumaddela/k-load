@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -6,18 +8,6 @@
  *
  * @author    kanalumaddela <git@maddela.org>
  * @copyright Copyright (c) 2018-2021 kanalumaddela
- * @license   MIT
- */
-
-@charset "UTF-8";
-/*
- * K-Load v2 (https://demo.maddela.org/k-load/).
- *
- * @link      https://www.maddela.org
- * @link      https://github.com/kanalumaddela/k-load-v2
- *
- * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
  * @license   MIT
  */
 
@@ -38,7 +28,8 @@ html, body {
 
 body {
     font-family: sans-serif;
-    background-color: #000;
+    /*color: #fff;*/
+    /*background-color: #000;*/
 }
 
 body:before {
@@ -62,7 +53,7 @@ body, .no-margin {
     padding: 0 !important;
 }
 
-.transition {
+.linear-transition {
     -webkit-transition: all 0.3s linear;
 }
 
@@ -109,7 +100,7 @@ body, .no-margin {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAEAQMAAACTPww9AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAGUExURQAAAAAAAKVnuc8AAAABdFJOUwBA5thmAAAAEElEQVQI12NoYHBgUGAQAAAFOADxk53MZwAAAABJRU5ErkJggg==');
 }
 
-.plz-hide {
+.plz-hide, .hide {
     display: none;
 }
 
@@ -171,7 +162,7 @@ body, .no-margin {
     -webkit-animation-delay: .75s;
 }
 
-.fade-in.delay.long {
+.fade-in.long.delay {
     -webkit-animation-delay: 2s;
 }
 
@@ -225,45 +216,5 @@ body, .no-margin {
 .loading-bar {
     max-width: 100%;
     height: 5px;
-    background-color: #fff;
     -webkit-transition: all 0.3s linear;
-}
-
-#youtube_player {
-    display: none;
-    position: fixed;
-    left: -9999px;
-}
-
-#video_background, .video_background, .video-background, #k-load-backgrounds {
-    z-index: -9999;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    overflow: hidden;
-}
-.k-load-background {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%,-50%);
-    /*width: 100%;*/
-    opacity: 0;
-    -webkit-transition: opacity .75s ease-out;
-}
-.k-load-background.active, .k-load-rule-block.active, .k-load-staff-block.active {
-    opacity: 1;
-}
-.k-load-rule-block, .k-load-staff-block {
-    display: none;
-    opacity: 0;
-    -webkit-transition: opacity .5s ease;
-}
-.messages {
-    opacity: 0;
-    -webkit-transition-property: opacity;
 }

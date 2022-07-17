@@ -4,8 +4,9 @@
     </div>
     <div class="userInfo has-text-centered">
         <img class="avatar medium" src="{{ user.avatarMedium|default(asset('img/avatar.jpg')) }}">
+{#        <a href="{{ user.profileUrl|default('https://steamcommunity.com/profiles/' ~ user.steamid) }}" target="_blank" rel="nofollow"></a> #}
         <h1 class="name">{{ user.name|default(user.steamid) }}</h1>
-        {{ include('@partials/external-link.twig', {link: user.profileUrl, text: user.steamid2, classes: ['steamid2']}) }}
+        {{ include('@partials/external-link.twig', {link: user.profileUrl|default('https://steamcommunity.com/profiles/' ~ user.steamid), text: user.steamid2, classes: ['steamid2']}) }}
     </div>
     <div>
         <div class="menu-section">

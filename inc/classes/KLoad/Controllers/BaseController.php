@@ -27,9 +27,9 @@ class BaseController
 {
     protected $user;
 
-    protected static $templateFolder = '';
+    protected static string $templateFolder = '';
 
-    protected static $dataHooks = [];
+    protected static array $dataHooks = [];
 
     /**
      * @var \Symfony\Component\HttpFoundation\Request
@@ -75,7 +75,7 @@ class BaseController
         return true;
     }
 
-    protected function validateCsrf()
+    protected function validateCsrf(): void
     {
         if (empty($userCsrf = $this->request->get('_csrf'))) {
             throw new InvalidToken();
@@ -89,7 +89,12 @@ class BaseController
         }
     }
 
-    protected static function addHookData(array $data)
+    protected static function getDataHooks(): array
+    {
+        return empty(static::$dataHooks) ? static::$dataHooks : [];
+    }
+
+    protected static function addHookData(array $data): array
     {
         $hookData = [];
 

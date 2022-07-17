@@ -39,7 +39,7 @@ use const KLoad\APP_ROUTE_URL;
 
 class Dashboard extends BaseController
 {
-    protected static $templateFolder = 'controllers/dashboard';
+    protected static string $templateFolder = 'controllers/dashboard';
 
     public function index()
     {

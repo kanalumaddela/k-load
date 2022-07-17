@@ -12,6 +12,7 @@
 
 namespace KLoad;
 
+use HttpResponse;
 use KLoad\Http\RedirectResponse;
 use KLoad\View\LoadingView;
 use KLoad\View\View;
@@ -100,9 +101,9 @@ function view($template, array $data = [], $httpCode = 200): Response
     return $response;
 }
 
-function loadingView($template, array $data = [])
+function loadingView(array $data = [])
 {
-    $response = new Response(LoadingView::render($template, $data));
+    $response = new Response(LoadingView::render('loading', $data));
     $response->setCharset('UTF-8');
     $response->headers->set('Content-Type', 'text/html');
     $response->setStatusCode(200);
@@ -169,18 +170,21 @@ function db()
     return $capsule::connection();
 }
 
-function checkThemeQuery()
-{
-    if (isset($_GET['theme']) && (ALLOW_THEME_OVERRIDE || IGNORE_PLAYER_CUSTOMIZATIONS)) {
-        LoadingView::setTheme($_GET['theme']);
-    }
-}
-
 function displayLoginPageIfGuest()
 {
     if (!\KLoad\Facades\Session::user()) {
         return view('login');
     }
+}
+
+function isAdminUser()
+{
+//    throw new HttpException(403);
+
+    if (\KLoad\Facades\Session::user()['admin'] !== true) {
+        return new HttpResponse(403);
+    }
+
 }
 
 function redirect($url, $status = 302, array $headers = [])

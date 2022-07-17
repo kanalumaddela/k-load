@@ -23,7 +23,7 @@ class HttpException extends Exception
             '%s not found',
         ],
         403 => [
-            'You are not aut',
+            'You are not authorized to access this page.',
         ],
     ];
 

@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" type="text/css" href="{{ assets }}/css/loading.css">
+    {% block css %}{% endblock %}
+</head>
+<body>
+{% if user.custom_css %}
+    <style>{{ user.custom_css }}</style>
+{% endif %}
+{% block body %}{% endblock %}
+<script>
+    var loadingData = {{ data|raw }};
+    var site = {{ site_json }};
+    var backgrounds = loadingData.settings.backgrounds;
+    var youtube = loadingData.settings.youtube;
+    var music = loadingData.settings.music;
+    var messages = loadingData.settings.messages;
+    var rules = loadingData.settings.rules;
+    var staff = loadingData.settings.staff;
+    var rules_per_page = staff_per_page = 7; // todo: remove
+    var rules_fade_delay = staff_fade_delay = 750; // todo: remove
+    var forcedGamemode = '{{ forcedGamemode }}';
+</script>
+<script src="{{ assets }}/js/loading/kload.js?{{ cache_buster }}"></script>
+{% block js %}{% endblock %}
+<script>
+    KLoad.init();
+
+    /**
+     * {@link https://stackoverflow.com/a/1349426}
+     *
+     * @param length
+     * @returns {string}
+     */
+    const str_random_v2 = function (length) {
+        var text = "";
+        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        if (!length) {
+            length = 12;
+        }
+
+        for (var i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    };
+
+    /**
+     * Start up demo mode.
+     */
+    function demoMode() {
+        KLoad.data.demoMode = true;
+
+        SetFilesNeeded(Math.floor(Math.random() * 150) + 75);
+        // SetFilesNeeded(Math.floor(Math.random() * 100) + 50);
+        GameDetails('Demo Server', window.location.href, 'demo_map_name', 24, '76561198152390718', 'demo', Math.floor(Math.random() * 100) + 1, 'en');
+
+        demoInterval = setInterval(function () {
+            if (KLoad.data.files.downloaded >= KLoad.data.files.needed) {
+                KLoad.data.files.downloaded = 0;
+            }
+
+            DownloadingFile('example/folder/file-' + str_random_v2() + '.ext');
+        }, 125);
+    }
+
+    /**
+     * If we're not in game, demo the loading screen.
+     */
+    if (!KLoad.isGmod) {
+        demoMode();
+    }
+</script>
+</body>
+</html>

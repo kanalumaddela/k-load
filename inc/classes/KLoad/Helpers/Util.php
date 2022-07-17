@@ -46,7 +46,6 @@ use function sprintf;
 use function str_replace;
 use function unlink;
 use const CURLOPT_RETURNTRANSFER;
-use const CURLOPT_SSL_VERIFYPEER;
 use const CURLOPT_TIMEOUT;
 use const DIRECTORY_SEPARATOR;
 use const KLoad\APP_PATH;
@@ -211,7 +210,7 @@ class Util
 
         $url = sprintf(SteamLogin::STEAM_API, Config::get('apikeys.steam'), $steamids);
         $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_TIMEOUT, 5);
         $data = curl_exec($curl);

@@ -10,19 +10,19 @@
  * @license   MIT
  */
 
+use KLoad\Controllers\Admin;
 use KLoad\Controllers\API;
 use KLoad\Controllers\Dashboard;
 use KLoad\Controllers\Main;
 use Phroute\Phroute\RouteCollector;
 
 /** @var RouteCollector $router */
-$router->filter('themeCheck', '\KLoad\checkThemeQuery');
 $router->filter('auth', '\KLoad\displayLoginPageIfGuest');
-$router->filter('admin', 'isAdminUser');
+$router->filter('admin', '\KLoad\isAdminUser');
 $router->filter('super', 'isSuperUser');
 $router->filter('csrf', 'checkForCsrf');
 
-$router->any('/', [Main::class, 'index'], ['before' => 'themeCheck']);
+$router->any('/', [Main::class, 'index']);
 $router->any('/dashboard/logout', [Main::class, 'logout']);
 
 $router->get('/api/player/{steamid:i}/{info}?', [API::class, 'player']);
@@ -40,10 +40,10 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/dashboard/user/{id:i}', [Dashboard::class, 'profile']);
     $router->get('/dashboard/user/background/{steamid:i}', [Dashboard::class, 'getUserBackground']);
 
-//    $router->group(['before' => 'admin'], function ($router) {
-//        $router->any('/dashboard/admin', [Admin\General::class, 'index']);
-//        $router->any('/dashboard/admin/core', [Admin\General::class, 'core']);
-//        $router->any('/dashboard/admin/general', [Admin\General::class, 'general']);
+    $router->group(['before' => 'admin'], function ($router) {
+        $router->any('/dashboard/admin', [Admin\General::class, 'index']);
+        $router->any('/dashboard/admin/core', [Admin\General::class, 'core']);
+        $router->any('/dashboard/admin/general', [Admin\General::class, 'general']);
 //        $router->post('/dashboard/admin/general/logo', [Admin\General::class, 'logo']);
 //        $router->post('/dashboard/admin/general/logo-upload', [Admin\General::class, 'logoUpload']);
 //        $router->post('/dashboard/admin/general/logo-delete', [Admin\General::class, 'logoDelete']);
@@ -61,7 +61,7 @@ $router->group(['before' => 'auth'], function ($router) {
 //        $router->get('/dashboard/admin/themes', [Admin\Themes::class, 'index']);
 //        $router->any('/dashboard/admin/themes/edit/{theme:c}', [Admin\Themes::class, 'edit']);
 //        $router->post('/dashboard/admin/themes/retrieve-file', [Admin\Themes::class, 'retrieveFile']);
-//    });
+    });
 
 //    $router->any('/dashboard/session', [Test::class, 'session']);
 });

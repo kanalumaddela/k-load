@@ -64,8 +64,8 @@ class LoadingView extends View
     {
         $theme = static::getTheme();
 
-        static::$twigLoader->addPath(APP_ROOT.'/themes/'.$theme.'/pages');
-        static::$twigLoader->addPath(APP_ROOT.'/themes/default/pages/loading', 'loading');
+        static::$twigLoader->addPath(APP_ROOT . '/themes/' . $theme . '/pages');
+        static::$twigLoader->addPath(APP_ROOT . '/themes/base', 'base');
     }
 
     public static function getTheme(): string
@@ -75,6 +75,11 @@ class LoadingView extends View
         }
 
         return static::$theme;
+    }
+
+    public static function getThemeConfig(): array
+    {
+        return file_exists(APP_ROOT . '/themes/' . static::getTheme() . '/config.php') ? include APP_ROOT . '/themes/' . static::getTheme() . '/config.php' : [];
     }
 }
 // 008f68
