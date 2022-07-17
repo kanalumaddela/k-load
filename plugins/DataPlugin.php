@@ -26,6 +26,5 @@ abstract class DataPlugin
 
     public function getData(): array
     {
-
     }
 }

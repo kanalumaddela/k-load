@@ -184,7 +184,6 @@ function isAdminUser()
     if (\KLoad\Facades\Session::user()['admin'] !== true) {
         return new HttpResponse(403);
     }
-
 }
 
 function redirect($url, $status = 302, array $headers = [])
