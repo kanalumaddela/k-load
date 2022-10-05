@@ -157,10 +157,10 @@ class Session extends DotArray
             $token = Util::hash(32);
 
             $csrf[$route] = [
-                'token' => $token,
-                'expires' => time() + 3600,
+                'token'     => $token,
+                'expires'   => time() + 3600,
                 'last_used' => null,
-                'uses' => 0,
+                'uses'      => 0,
             ];
 
             $this->set('csrf', $csrf);

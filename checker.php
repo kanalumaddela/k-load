@@ -74,7 +74,7 @@ function checkFailed()
 
 $data = [
     'extensions' => [],
-    'passes' => true,
+    'passes'     => true,
 ];
 
 if (PHP_VERSION_ID < 80000) {
@@ -82,7 +82,7 @@ if (PHP_VERSION_ID < 80000) {
 }
 
 $data['app'] = [
-    'url' => (is_https() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . parse_url(str_replace(basename(__FILE__), '', $_SERVER['REQUEST_URI']), PHP_URL_PATH),
+    'url'  => (is_https() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].parse_url(str_replace(basename(__FILE__), '', $_SERVER['REQUEST_URI']), PHP_URL_PATH),
     'path' => parse_url(str_replace(basename(__FILE__), '', $_SERVER['REQUEST_URI']), PHP_URL_PATH),
 ];
 

@@ -36,10 +36,10 @@ class User extends BaseModel
     ];
 
     protected $casts = [
-        'steamid' => 'string',
-        'admin' => 'boolean',
+        'steamid'  => 'string',
+        'admin'    => 'boolean',
         'settings' => 'array',
-        'perms' => 'array',
+        'perms'    => 'array',
     ];
 
     public static function isSuper($steamid): bool

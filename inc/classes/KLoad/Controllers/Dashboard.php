@@ -33,7 +33,6 @@ use function KLoad\flash;
 use function KLoad\redirect;
 use function md5;
 use function preg_match;
-use const KLoad\APP_ROOT;
 use const KLoad\APP_ROUTE_URL;
 
 class Dashboard extends BaseController

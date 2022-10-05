@@ -34,7 +34,7 @@ class General extends AdminController
 
     public function boot(): void
     {
-        static::$templateFolder = parent::$templateFolder . '/' . static::$templateFolder;
+        static::$templateFolder = parent::$templateFolder.'/'.static::$templateFolder;
     }
 
     public function index(): Response
@@ -71,16 +71,16 @@ class General extends AdminController
 
         $key = $post['steam_api_key'];
 
-        $valid = ($error = self::testSteamApiKey($key . '0')) === true;
+        $valid = ($error = self::testSteamApiKey($key.'0')) === true;
 
         flash($valid ? 'success' : 'danger', $valid ? 'Config has been updated!' : $error);
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
     }
 
     private static function testSteamApiKey($key): bool|string
     {
-        $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=' . $key . '&steamids=76561198152390718';
+        $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='.$key.'&steamids=76561198152390718';
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -98,7 +98,7 @@ class General extends AdminController
             $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
             unset($data);
         } catch (Exception $e) {
-            return 'Validate Failed:' . $e->getMessage();
+            return 'Validate Failed:'.$e->getMessage();
         }
 
         return true;
@@ -108,11 +108,10 @@ class General extends AdminController
     {
         flash('success', 'Default theme has been updated!');
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
     }
 
     public function general()
     {
-
     }
 }

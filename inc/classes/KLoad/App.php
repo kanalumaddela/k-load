@@ -184,7 +184,7 @@ copyright;
             // we have a user
             if ($user) {
                 if (!$session->has('user.avatar')) {
-                    $player = App::get('steamLogin')->getUserInfo($user->steamid);
+                    $player = self::get('steamLogin')->getUserInfo($user->steamid);
 
                     if (!empty($user->name)) {
                         $user->name = $player->name;
