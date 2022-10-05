@@ -209,7 +209,7 @@ class Util
             $steamids = implode(',', $steamids);
         }
 
-        $url = sprintf(SteamLogin::STEAM_API . '&steamids=%s', Config::get('apikeys.steam'), $steamids);
+        $url = sprintf(SteamLogin::STEAM_API.'&steamids=%s', Config::get('apikeys.steam'), $steamids);
         $curl = curl_init($url);
 //        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -240,7 +240,7 @@ class Util
         $fixed = [];
 
         foreach ($data as $player) {
-            $fixed['player-' . $player['steamid']] = $player;
+            $fixed['player-'.$player['steamid']] = $player;
         }
 
         return $fixed;
