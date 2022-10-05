@@ -43,6 +43,8 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->group(['before' => 'admin'], function ($router) {
         $router->any('/dashboard/admin', [Admin\General::class, 'index']);
         $router->any('/dashboard/admin/core', [Admin\General::class, 'core']);
+        $router->post('/dashboard/admin/core/config-update', [Admin\General::class, 'configUpdate']);
+        $router->post('/dashboard/admin/core/theme-update', [Admin\General::class, 'themeUpdate']);
         $router->any('/dashboard/admin/general', [Admin\General::class, 'general']);
 //        $router->post('/dashboard/admin/general/logo', [Admin\General::class, 'logo']);
 //        $router->post('/dashboard/admin/general/logo-upload', [Admin\General::class, 'logoUpload']);

@@ -22,7 +22,6 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Models\User;
 use KLoad\View\LoadingView;
-use MatthiasMullie\Minify\CSS;
 use function array_intersect;
 use function array_keys;
 use function array_merge;
@@ -134,7 +133,7 @@ class Dashboard extends BaseController
             'themes' => LoadingView::getThemes(true),
         ];
 
-        return $this->view('my-settings', array_merge($data, User::findBySteamid(Session::user()['steamid'])->only('settings', 'custom_css')));
+        return $this->view('my-settings', array_merge($data, User::findBySteamid(Session::user()['steamid'])->only('settings')));
     }
 
     public function mySettingsPost()
@@ -165,21 +164,6 @@ class Dashboard extends BaseController
 
         $post = array_merge($settings, $post);
         $update = [];
-
-        if (isset($post['custom_css'])) {
-            $post['custom_css'] = trim($post['custom_css']);
-        }
-
-        $post['custom_css'] = !empty($post['custom_css']) ? $post['custom_css'] : null;
-
-        if ($post['custom_css']) {
-            $update['custom_css'] = $post['custom_css'];
-
-            $minify = new CSS();
-            $minify->add($post['custom_css']);
-
-            $minify->minify(APP_ROOT.'/data/users/'.$this->user['steamid'].'.css');
-        }
 
         unset($post['custom_css']);
 

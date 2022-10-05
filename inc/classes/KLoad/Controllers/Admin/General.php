@@ -12,28 +12,107 @@
 
 namespace KLoad\Controllers\Admin;
 
+use Exception;
 use KLoad\Controllers\AdminController;
+use KLoad\Facades\Config;
+use KLoad\Http\RedirectResponse;
+use KLoad\View\LoadingView;
+use Symfony\Component\HttpFoundation\Response;
+use function curl_close;
+use function curl_exec;
+use function curl_setopt;
+use function json_decode;
+use function KLoad\flash;
+use function KLoad\redirect;
+use function str_contains;
+use const JSON_THROW_ON_ERROR;
+use const KLoad\APP_ROUTE_URL;
 
 class General extends AdminController
 {
     protected static string $templateFolder = 'general';
 
-    public function boot()
+    public function boot(): void
     {
-        static::$templateFolder = parent::$templateFolder.'/'.static::$templateFolder;
+        static::$templateFolder = parent::$templateFolder . '/' . static::$templateFolder;
     }
 
-    public function index()
+    public function index(): Response
     {
-        return $this->view('index');
+        $pages = [
+            ['icon' => 'fas fa-wrench', 'title' => 'core', 'description' => 'core_desc', 'route' => 'dashboard/admin/core'],
+            ['icon' => 'fas fa-sliders-h', 'title' => 'general', 'description' => 'general_desc', 'route' => 'dashboard/admin/general'],
+            ['icon' => 'fas fa-images', 'title' => 'backgrounds', 'description' => 'backgrounds_desc', 'route' => 'dashboard/admin/backgrounds'],
+            ['icon' => 'fas fa-comment-alt', 'title' => 'messages', 'description' => 'messages_desc', 'route' => 'dashboard/admin/messages'],
+            ['icon' => 'fas fa-headphones', 'title' => 'music', 'description' => 'music_desc', 'route' => 'dashboard/admin/music'],
+            ['icon' => 'fas fa-list-ol', 'title' => 'rules', 'description' => 'rules_desc', 'route' => 'dashboard/admin/rules'],
+            ['icon' => 'fas fa-user-tie', 'title' => 'staff', 'description' => 'staff_desc', 'route' => 'dashboard/admin/staff'],
+            ['icon' => 'fas fa-paint-brush', 'title' => 'themes', 'description' => 'themes_desc', 'route' => 'dashboard/admin/themes'],
+        ];
+
+        return $this->view('index', ['pages' => $pages]);
     }
 
-    public function core()
+    public function core(): Response
     {
-        return 'test';
+        $themes = LoadingView::getThemes(true);
+        $steamApiKey = Config::get('apikeys.steam');
+
+//        dd($themes);
+
+        return $this->view('core', get_defined_vars());
+    }
+
+    public function configUpdate(): RedirectResponse
+    {
+        $this->validateCsrf();
+
+        $post = $this->request->request->all();
+
+        $key = $post['steam_api_key'];
+
+        $valid = ($error = self::testSteamApiKey($key . '0')) === true;
+
+        flash($valid ? 'success' : 'danger', $valid ? 'Config has been updated!' : $error);
+
+        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
+    }
+
+    private static function testSteamApiKey($key): bool|string
+    {
+        $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=' . $key . '&steamids=76561198152390718';
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 1);
+        $data = curl_exec($curl);
+//        $err = curl_error($curl);
+//        $errno = curl_errno($curl);
+        curl_close($curl);
+
+        if (str_contains($data, 'Please verify your')) {
+            return 'API key invalid, please make sure it is entered correctly.';
+        }
+
+        try {
+            $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+            unset($data);
+        } catch (Exception $e) {
+            return 'Validate Failed:' . $e->getMessage();
+        }
+
+        return true;
+    }
+
+    public function themeUpdate(): RedirectResponse
+    {
+        flash('success', 'Default theme has been updated!');
+
+        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
     }
 
     public function general()
     {
+
     }
 }

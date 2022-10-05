@@ -2,11 +2,59 @@
 
 {% block title %}Admin{% endblock %}
 
+{% block bodyCss %}
+    <style>
+        .title {
+            color: #fff;
+        }
+
+        .page-icon {
+            color: #6cbdff;
+        }
+
+        .card {
+            border: 2px solid transparent;
+            transition: all .2s ease;
+        }
+
+        .card:hover {
+            background-color: #293237;
+            border-color: #277fd2;
+        }
+
+        .card:active {
+            color: #fff;
+            background-color: #277fd2;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-    <div class="container hero is-fullheight is-danger">
+    <div class="container hero is-fullheight">
         <div class="hero-body">
-            <p>test</p>
+            <div class="columns is-multiline">
+                {% for page in pages %}
+                    <div class="column is-one-quarter-desktop is-one-third-tablet">
+                        <a href="{{ route(page.route) }}">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="columns is-vcentered py-3">
+                                        <div class="media-left p-3">
+                                            <h1 class="page-icon is-size-3">
+                                                <i class="{{ page.icon }}"></i>
+                                            </h1>
+                                        </div>
+                                        <div class="media-content">
+                                            <p class="title is-4">{{ lang(page.title) }}</p>
+                                            <p class="subtitle is-6">{{ lang(page.description) }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -71,6 +71,9 @@ function defineConstant($name, $value)
 
 class App
 {
+    public static string $version = '2.6.0';
+    public static int $versionId = 260;
+
     /**
      * @var Container
      */
@@ -137,7 +140,7 @@ copyright;
                 'secure' => IS_HTTPS,
             ])))->addTags('Cookie', 'cookie');
 
-            static::createCsrf();
+            $session->generateCsrf();
 
             if (SteamLogin::validRequest()) {
                 $player = $steamLogin->getPlayer();
@@ -181,7 +184,7 @@ copyright;
             // we have a user
             if ($user) {
                 if (!$session->has('user.avatar')) {
-                    $player = SteamLogin::userInfo($user->steamid);
+                    $player = App::get('steamLogin')->getUserInfo($user->steamid);
 
                     if (!empty($user->name)) {
                         $user->name = $player->name;
@@ -388,22 +391,6 @@ copyright;
             unset($query, $pdo, $queries, $triggers, $tmpConfig);
 
             Util::rmDir(APP_ROOT.'/inc/migrations');
-        }
-    }
-
-    protected static function createCsrf()
-    {
-        $csrf = \KLoad\Facades\Session::get('csrf', []);
-
-        if (!isset($csrf[APP_CURRENT_ROUTE]) || $csrf[APP_CURRENT_ROUTE]['expires'] <= time()) {
-            $csrf[APP_CURRENT_ROUTE] = [
-                'token'     => Util::hash(32),
-                'expires'   => time() + 3600,
-                'last_used' => null,
-                'uses'      => 0,
-            ];
-
-            \KLoad\Facades\Session::set('csrf', $csrf);
         }
     }
 

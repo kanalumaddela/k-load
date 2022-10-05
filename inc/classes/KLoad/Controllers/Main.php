@@ -39,7 +39,7 @@ class Main extends BaseController
         $theme = LoadingView::getTheme();
 
         if (ENABLE_REGISTRATION && !IGNORE_PLAYER_CUSTOMIZATIONS && !empty($data['steamid'])) {
-            $player = User::select('name', 'steamid', 'steamid2', 'steamid3', 'admin', 'settings', 'banned', 'registered')->where('steamid', $data['steamid'])->first();
+            $player = User::select('name', 'steamid', 'steamid2', 'steamid3', 'admin', 'settings', 'registered')->where('steamid', $data['steamid'])->first();
 
             if ($player) {
                 $player = $player->toArray();

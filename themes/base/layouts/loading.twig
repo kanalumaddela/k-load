@@ -12,9 +12,6 @@
     {% block css %}{% endblock %}
 </head>
 <body>
-{% if user.custom_css %}
-    <style>{{ user.custom_css }}</style>
-{% endif %}
 {% block body %}{% endblock %}
 <script>
     var loadingData = {{ data|raw }};

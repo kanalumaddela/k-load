@@ -154,7 +154,7 @@
                 <div class="card stat">
                     <div class="card-content">
                         <h1 class="stat-data">100k</h1>
-                        <h3 class="stat-title">Visits</h3>
+                        <h3 class="stat-title">{{ lang('visits') }}</h3>
                         <i class="fas fa-chart-area stat-icon"></i>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                 <div class="card stat">
                     <div class="card-content">
                         <h1 class="stat-data">{{ userCount }}</h1>
-                        <h3 class="stat-title">Users</h3>
+                        <h3 class="stat-title">{{ lang('users') }}</h3>
                         <i class="fas fa-users stat-icon"></i>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                 <div class="card stat">
                     <div class="card-content">
                         <h1 class="stat-data">{{ themes|length }}</h1>
-                        <h3 class="stat-title">Themes</h3>
+                        <h3 class="stat-title">{{ lang('themes') }}</h3>
                         <i class="fas fa-paint-brush stat-icon"></i>
                     </div>
                 </div>
@@ -183,19 +183,23 @@
             <div id="quick-settings" class="column is-full-tablet is-half-desktop">
                 <div class="card quick-settings">
                     <div class="card-header-title">
-                        Quick Settings
+                        {{ lang('quick_settings') }}
                     </div>
                     <div class="card-content">
+                        <div class="py-2 mb-4 has-text-centered site-border-radius notice notice-warning">
+                            <h1 class="mb-1">{{ lang('quick_settings_notice') }}</h1>
+                        </div>
+
                         <form action="{{ site.current }}" method="post">
                             {{ csrf }}
 
                             <div class="columns is-multiline">
                                 <div class="column is-full mb-2">
-                                    <h1 class="header">General</h1>
+                                    <h1 class="header">{{ lang('general') }}</h1>
                                     <div class="pt-4">
                                         <div class="field is-horizontal">
                                             <div class="field-label is-normal">
-                                                <label class="label">Theme</label>
+                                                <label class="label">{{ lang('theme') }}</label>
                                             </div>
                                             <div class="field-body">
                                                 <div class="select">
@@ -212,7 +216,7 @@
                                         {% if can('community_name') %}
                                             <div class="field is-horizontal">
                                                 <div class="field-label">
-                                                    <label class="label">Community Name</label>
+                                                    <label class="label">{{ lang('community_name') }}</label>
                                                 </div>
                                                 <div class="field-body">
                                                     <input class="input" type="text" name="community_name"
@@ -225,7 +229,7 @@
 
                                 {% if can('backgrounds') %}
                                     <div class="column is-full mb-2">
-                                        <h1 class="header">Backgrounds</h1>
+                                        <h1 class="header">{{ lang('backgrounds') }}</h1>
                                         <div class="pt-1 columns is-multiline">
                                             <div class="column is-half-tablet">
                                                 <div class="field">
@@ -255,7 +259,7 @@
                                             <div class="column is-half-tablet">
                                                 <div class="field is-horizontal">
                                                     <div class="field-label is-normal">
-                                                        <label class="label">Duration</label>
+                                                        <label class="label">{{ lang('duration') }}</label>
                                                     </div>
                                                     <div class="field-body">
                                                         <input class="input" type="number" name="backgrounds[duration]"
@@ -266,7 +270,7 @@
                                             <div class="column is-half-tablet">
                                                 <div class="field is-horizontal">
                                                     <div class="field-label is-normal">
-                                                        <label class="label">Fade</label>
+                                                        <label class="label">{{ lang('fade') }}</label>
                                                     </div>
                                                     <div class="field-body">
                                                         <input class="input" type="number" name="backgrounds[fade]"
@@ -280,7 +284,7 @@
 
                                 {% if can('music') %}
                                     <div class="column is-full">
-                                        <h1 class="header">Music</h1>
+                                        <h1 class="header">{{ lang('music') }}</h1>
                                         <div class="pt-1 columns is-multiline">
                                             <div class="column is-half-tablet">
                                                 <div class="field">
@@ -323,7 +327,7 @@
                                             <div class="column is-full">
                                                 <div class="field is-horizontal">
                                                     <div class="field-label" style="text-align: left">
-                                                        <label class="label">Volume</label>
+                                                        <label class="label">{{ lang('volume') }}</label>
                                                     </div>
                                                     <div class="field-body">
                                                         <input class="slider" type="range" name="music[volume]"
@@ -339,7 +343,7 @@
                             </div>
 
                             <div class="has-text-centered">
-                                <button class="button">Save</button>
+                                <button class="button">{{ lang('save') }}</button>
                             </div>
                         </form>
                     </div>
@@ -348,11 +352,11 @@
 
             <div id="quick-info" class="column is-full-tablet is-half-desktop">
                 <div class="card">
-                    <div class="card-header-title">Quick Info</div>
+                    <div class="card-header-title">{{ lang('quick_info') }}</div>
                     <div class="card-content">
                         {# border: 1px solid;border-color: #ff4f43;background: rgb(242 43 29 / 0.6); #}
                         <div class="py-2 mb-4 has-text-centered site-border-radius notice notice-danger">
-                            <h1 class="mb-1">Click to copy and edit/add this line in your
+                            <h1 class="mb-1">{{ lang('quick_info_copy_notice') }}
                                 <code>garrysmod/cfg/server.cfg</code></h1>
                             <code data-copy title="Click to copy">
                                 {{ 'sv_loadingurl "' ~ site.url ~ '?steamid=%s&mapname=%m"' }}
@@ -361,17 +365,17 @@
                         <table class="table is-fullwidth">
                             <tbody>
                             <tr>
-                                <td>Version</td>
+                                <td>{{ lang('version') }}</td>
                                 <td>
-                                    2.6.0
+                                    {{ app.version }}
                                 </td>
                             </tr>
                             <tr>
-                                    <td>Loading URL</td>
-                                    <td>
-                                        {{ include('@partials/external-link.twig', {link: site.url}) }}
-                                    </td>
-                                </tr>
+                                <td>{{ lang('loading_url') }}</td>
+                                <td>
+                                    {{ include('@partials/external-link.twig', {link: site.url}) }}
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

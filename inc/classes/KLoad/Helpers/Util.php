@@ -18,6 +18,7 @@ use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Str;
 use kanalumaddela\SteamLogin\SteamLogin;
 use KLoad\Facades\Config;
+use stdClass;
 use function array_filter;
 use function array_slice;
 use function bin2hex;
@@ -202,13 +203,13 @@ class Util
         ]);
     }
 
-    public static function getPlayersInfo($steamids, $useSteamidKeys = false)
+    public static function getPlayersInfo($steamids, $useSteamidKeys = false, $json = true)
     {
         if (is_array($steamids)) {
             $steamids = implode(',', $steamids);
         }
 
-        $url = sprintf(SteamLogin::STEAM_API, Config::get('apikeys.steam'), $steamids);
+        $url = sprintf(SteamLogin::STEAM_API . '&steamids=%s', Config::get('apikeys.steam'), $steamids);
         $curl = curl_init($url);
 //        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -216,17 +217,22 @@ class Util
         $data = curl_exec($curl);
         curl_close($curl);
 
-        $data = json_decode($data, true);
+        $data = json_decode($data, $json);
 
         if (is_null($data)) {
             $data = [];
         }
 
-        if (isset($data['response']['players'])) {
-            $data = $data['response']['players'];
-        }
+        $data = is_array($data) && isset($data['response']['players']) ? $data['response']['players'] : $data->response->players;
 
         return $useSteamidKeys ? static::fixSteamInfo($data) : $data;
+    }
+
+    public static function getPlayerInfo($steamid, $json = true)
+    {
+        $data = static::getPlayersInfo($steamid, false, $json);
+
+        return $data[0] ?? ($json ? [] : new stdClass());
     }
 
     public static function fixSteamInfo(array $data): array
@@ -234,7 +240,7 @@ class Util
         $fixed = [];
 
         foreach ($data as $player) {
-            $fixed['player-'.$player['steamid']] = $player;
+            $fixed['player-' . $player['steamid']] = $player;
         }
 
         return $fixed;

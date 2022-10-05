@@ -18,7 +18,7 @@ function kload_error_page($errorData = [])
 {
     $debug = defined('KLoad\DEBUG') && constant('\KLoad\DEBUG');
 
-    if (!defined('KLoad\DEV') || defined('KLoad\DEV') && !constant('\KLoad\DEV')) {
+    if (!defined('KLoad\DEV') || (defined('KLoad\DEV') && !constant('\KLoad\DEV'))) {
         switch ($errorData['type']) {
             case 'exception':
                 captureException($errorData['raw']);

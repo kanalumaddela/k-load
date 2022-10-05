@@ -13,6 +13,7 @@
 namespace KLoad;
 
 use Exception;
+use KLoad\Helpers\Util;
 use RuntimeException;
 use function dd;
 use function dump;
@@ -142,5 +143,31 @@ class Session extends DotArray
         $this->set('flash', []);
 
         return $flash;
+    }
+
+    public function generateCsrf($route = null)
+    {
+        if (empty($route)) {
+            $route = APP_CURRENT_ROUTE;
+        }
+
+        $csrf = $this->get('csrf', []);
+
+        if (!isset($csrf[$route]) || $csrf[$route]['expires'] <= time()) {
+            $token = Util::hash(32);
+
+            $csrf[$route] = [
+                'token' => $token,
+                'expires' => time() + 3600,
+                'last_used' => null,
+                'uses' => 0,
+            ];
+
+            $this->set('csrf', $csrf);
+        } else {
+            $token = $csrf[$route]['token'];
+        }
+
+        return $token;
     }
 }

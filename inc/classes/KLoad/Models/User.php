@@ -29,7 +29,6 @@ class User extends BaseModel
         'admin',
         'perms',
         'settings',
-        'banned',
     ];
 
     protected $dates = [
@@ -37,15 +36,15 @@ class User extends BaseModel
     ];
 
     protected $casts = [
-        'admin'    => 'boolean',
-        'banned'   => 'boolean',
+        'steamid' => 'string',
+        'admin' => 'boolean',
         'settings' => 'array',
-        'perms'    => 'array',
+        'perms' => 'array',
     ];
 
     public static function isSuper($steamid): bool
     {
-        return in_array($steamid, Config::get('admins', []));
+        return in_array($steamid, Config::get('admins', []), true);
     }
 
     /**

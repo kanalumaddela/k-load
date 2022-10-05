@@ -11,7 +11,7 @@
     <div>
         <div class="menu-section">
             <p class="menu-label">
-                General
+                {{ lang('general') }}
             </p>
             <ul class="menu-list">
                 {{ include('@partials/sideNavLink.twig', {route: 'dashboard', icon: 'home', name: 'dashboard'}) }}
@@ -21,18 +21,12 @@
         </div>
         {% if user.admin %}
             <div class="menu-section">
-                <p class="menu-label">
-                    Administration
-                </p>
+                <a href="{{ route('dashboard/admin') }}">
+                    <p class="menu-label" style="margin-bottom: 1em">
+                        {{ lang('administration') }}
+                    </p>
+                </a>
                 <ul class="menu-list">
-                    {# <li> #}
-                    {# <a class="is-active">Manage Your Team</a> #}
-                    {# <ul> #}
-                    {# <li><a>Members</a></li> #}
-                    {# <li><a>Plugins</a></li> #}
-                    {# <li><a>Add a member</a></li> #}
-                    {# </ul> #}
-                    {# </li> #}
                     {% if user.super %}
                         {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/core', icon: 'wrench', name: 'core'}) }}
                     {% endif %}
@@ -61,15 +55,7 @@
             </div>
         {% endif %}
     </div>
-    {# <p class="menu-label"> #}
-    {# Transactions #}
-    {# </p> #}
-    {# <ul class="menu-list"> #}
-    {# <li><a>Payments</a></li> #}
-    {# <li><a>Transfers</a></li> #}
-    {# <li><a>Balance</a></li> #}
-    {# </ul> #}
-    <ul class="menu-list" style="margin-top: auto 0">
+    <ul class="menu-list" style="margin: auto 0">
         <li>
             <form>
 

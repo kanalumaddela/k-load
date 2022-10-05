@@ -144,6 +144,11 @@ main {
     background-color: rgba(242, 43, 29, 0.6);
 }
 
+.notice.notice-warning {
+    border-color: #ffc107;
+    background-color: #bb7712;
+}
+
 
 code {
     color: #5df146;

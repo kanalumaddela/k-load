@@ -1,0 +1,100 @@
+{% extends 'app.twig' %}
+
+{% block title %}Core{% endblock %}
+
+{% block content %}
+    <div class="container px-4 py-6">
+        <div class="columns is-multiline is-mobile">
+            <div class="column is-half-desktop">
+                <div class="card">
+                    <div class="card-header-title">{{ lang('config') }}</div>
+                    <div class="card-content">
+                        <form action="{{ app.current }}/config-update" method="post">
+                            {{ csrf(app.current_route ~ '/config-update') }}
+                            <div class="mb-4">
+                                <div class="field is-horizontal">
+                                    <div class="field-label">
+                                        <label class="label">{{ lang('steam_api_key') }}</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <input class="input" type="text" name="steam_api_key" value="{{ steamApiKey }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="has-text-centered">
+                                <button class="button" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-half-desktop">
+                <div class="card">
+                    <div class="card-header-title">{{ lang('quick_info') }}</div>
+                    <div class="card-content">
+                        <div class="py-2 mb-4 has-text-centered site-border-radius notice notice-danger">
+                            <h1 class="mb-1">{{ lang('quick_info_copy_notice') }}
+                                <code>garrysmod/cfg/server.cfg</code></h1>
+                            <code data-copy title="Click to copy">
+                                {{ 'sv_loadingurl "' ~ site.url ~ '?steamid=%s&mapname=%m"' }}
+                            </code>
+                        </div>
+                        <table class="table is-fullwidth">
+                            <tbody>
+                            <tr>
+                                <td>{{ lang('version') }}</td>
+                                <td>
+                                    {{ app.version }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ lang('loading_url') }}</td>
+                                <td>
+                                    {{ include('@partials/external-link.twig', {link: site.url}) }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <form action="{{ app.current }}/theme-update" method="post">
+                {{ csrf }}
+                <div class="column is-full">
+                    <div class="card">
+                        <div class="card-header-title"><i class="fas fa-paint-brush title-icon"></i>Default Theme</div>
+                        <div class="card-content">
+                            <div class="columns">
+                                <div class="column">
+                                    <small>Click and hold an image to enlarge the preview</small>
+                                </div>
+                            </div>
+                            <div id="theme-list" class="columns is-multiline">
+                                {% for theme,preview in themes %}
+                                    <div class="column theme-selection is-half-mobile is-one-third-tablet is-one-fifth-desktop has-text-centered"
+                                         title="Click and hold to enlarge image">
+                                        <label for="theme_radio_{{ theme }}">
+                                            <img class="theme-preview"
+                                                 src="{{ preview|default(asset('img/theme.jpg')) }}">
+                                        </label>
+                                        <div>
+                                            <input id="theme_radio_{{ theme }}" type="radio" value="{{ theme }}"
+                                                   name="theme"
+                                                   {% if theme is same as(settings.theme) %}checked{% endif %}>
+                                            <span class="ml-1">{{ theme|capitalize }}</span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="has-text-centered">
+                                <button class="button">{{ lang('save') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

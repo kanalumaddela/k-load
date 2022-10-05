@@ -50,10 +50,6 @@
                             Copy Settings
                         </a>
                         <a class="button is-danger">
-                            <i class="fas fa-ban mr-2"></i>
-                            Ban User
-                        </a>
-                        <a class="button is-danger">
                             <i class="fas fa-trash mr-2"></i>
                             Delete User
                         </a>
@@ -120,18 +116,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="column is-full">
-                                <h1 class="header"><i class="fab fa-css3 title-icon"></i> Custom CSS</h1>
-
-                                {% if player.custom_cs %}
-                                    <textarea readonly style="resize: none" class="textarea mt-3 is-fullwidth"
-                                              name="custom_css">{{ player.custom_css }}</textarea>
-                                {% else %}
-                                    <p class="py-2 has-text-centered">No CSS</p>
-                                {% endif %}
-
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,7 +168,8 @@
                             <div class="column is-full">
                                 <div class="field is-horizontal">
                                     <div class="field-label" style="text-align: left">
-                                        <label class="label">Volume ({{ player.settings.youtube.volume }})</label>
+                                        <label class="label">{{ lang('volume') }} ({{ player.settings.youtube.volume }}
+                                            )</label>
                                     </div>
                                     <div class="field-body">
                                         <input disabled class="slider" type="range" name="youtube[volume]"

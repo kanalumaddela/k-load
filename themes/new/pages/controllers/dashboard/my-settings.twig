@@ -87,7 +87,6 @@
         <form action="{{ site.current }}" method="post">
             {{ csrf }}
             <div class="columns is-multiline is-mobile">
-
                 <div id="my-settings-theme-selection" class="column is-full">
                     <div class="card">
                         <div class="card-header-title"><i class="fas fa-paint-brush title-icon"></i>Default Theme</div>
@@ -116,7 +115,7 @@
                             </div>
 
                             <div class="has-text-centered">
-                                <button class="button">Save</button>
+                                <button class="button">{{ lang('save') }}</button>
                             </div>
                         </div>
                     </div>
@@ -181,18 +180,10 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="column is-full">
-                                    <h1 class="header"><i class="fab fa-css3 title-icon"></i> Custom CSS</h1>
-
-                                    <textarea class="textarea mt-3 is-fullwidth"
-                                              name="custom_css">{{ old.custom_css|default(custom_css) }}</textarea>
-
-                                </div>
                             </div>
 
                             <div class="has-text-centered">
-                                <button class="button">Save</button>
+                                <button class="button">{{ lang('save') }}</button>
                             </div>
                         </div>
                     </div>
@@ -243,7 +234,7 @@
                                 <div class="column is-full">
                                     <div class="field is-horizontal">
                                         <div class="field-label" style="text-align: left">
-                                            <label class="label">Volume</label>
+                                            <label class="label">{{ lang('volume') }}</label>
                                         </div>
                                         <div class="field-body">
                                             <input class="slider" type="range" name="youtube[volume]"
@@ -280,7 +271,7 @@
                             </div>
 
                             <div class="pt-4 has-text-centered">
-                                <button class="button">Save</button>
+                                <button class="button">{{ lang('save') }}</button>
                             </div>
                         </div>
                     </div>

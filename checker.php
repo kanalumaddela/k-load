@@ -74,11 +74,15 @@ function checkFailed()
 
 $data = [
     'extensions' => [],
-    'passes'     => true,
+    'passes' => true,
 ];
 
+if (PHP_VERSION_ID < 80000) {
+    checkFailed();
+}
+
 $data['app'] = [
-    'url'  => (is_https() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].parse_url(str_replace(basename(__FILE__), '', $_SERVER['REQUEST_URI']), PHP_URL_PATH),
+    'url' => (is_https() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . parse_url(str_replace(basename(__FILE__), '', $_SERVER['REQUEST_URI']), PHP_URL_PATH),
     'path' => parse_url(str_replace(basename(__FILE__), '', $_SERVER['REQUEST_URI']), PHP_URL_PATH),
 ];
 
@@ -206,7 +210,26 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         padding-top: 25px;
         font-family: 'Segoe UI', sans-serif;
         color: #fff;
-        background-color: #0e1938;
+        background-color: #1E2529;
+    }
+
+    body:before {
+        z-index: -1;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        content: '';
+        background-attachment: fixed;
+        background-repeat: repeat;
+        background-size: 32rem;
+        pointer-events: none;
+    }
+
+    body:before {
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAgAElEQVR4nO3daXPbOLqAUcj7krXT3R/m//+2qVudpLM78X6LMy+nFccLQYEUCZ5TpcosiU3Tkh6RIIHV7e1tggHspJSepZROU0qrQl/+335RVG4/pfQmXj9d3KSU3qeULgfcLc22/J5S2sv4Nx9TSmcDbhP36PqkgVzNG83nlNLblNK5vQdPmmLM2+/zLqV0lfFvXqWUTgbcJu4h6AztKt503me+IcCSTDXm699P1CdO0BlLc5T+V0rpU7w5AP819Zivf19RnzBBZ2zfIuzf7HmYTczXv7+oT5Sgsw03caT+l/F1Fmx3ZjFf344+UT8ccJsWLwk6W9aOr/9tfJ0Fus44UzWVmLdyo/4jpXQx/GYtm6AzBT/iavjmqnj3UbIkX+LxmKnFvNVG/antal7fH7y2hyfoTEXzYv8ap+Hdv8qSPBb1qca89dT2ifmIBJ2puY5JKd46RceC3Bf1qce89dB2ivnIBJ2puozTeR8i8lC79ajPJeatu9sr5ltg6lfmYBXTyD411gg1eBZ3f8wl5ut21l6r4jIyQQeACjjlDgAVEHQAqICgA0AFBB0AKiDoAFABQQeACgg6AFRA0AGgAoIOABUQdACogKADQAUEHQAqIOgAUAFBB4AKCDoAVEDQAaACgg4AFRB0AKiAoANABQQdACog6ABQAUEHgAoIOgBUQNABoAKCDgAVEHQAqICgA0AFBB0AKiDoAFABQQeACgg6AFRA0AGgAoIOABUQdACogKADQAUEHQAqIOgAUAFBB4AKCDoAVEDQAaACYwZ9lVI69qQBgPL2RtqnTcx/Sykdxvf84ncJAOWMcYS+HvPG83gAAIUMHfS7MW+JOgAUNGTQH4p5S9QBoJChgv5UzFuiDgAFDBH0rjFviToAbKh00HNj3hJ1ANhAyaD3jXlL1AGgp1JB3zTmLVEHgB5KBL1UzFuiDgCZNg166Zi3RB0AMmwS9KFi3hJ1AOiob9CHjnlL1AGggz5B3yTmFz3+jagDwBNyg75JzD+mlN6llM56/FtRB4BH5AR905if3fOfczRBf+GXCQC/6hr0UjF/7H/r4pmoA8CvugS9dMy7/H+PEXUAuOOpoA8V85y/cx9RB4A1jwV96Jj3+bvrRB0Awt4DO2KTmH9IKX3P/Dcf48+TzH/3LP78nPnvAKAq9wW9ifmblNJBjx+0T8xbog4APd095b6tmLecfgeAHtaDvu2Yt0QdADK1QZ9KzFuiDgAZdiYY85aoA0BHOxONeUvUAeBpq50Jx7wl6gDwsP+cae+zfOqYMW+JOgD86n/D5rlB30bMW6IOAP/46Rq4nKBvM+atJurfevw7UQegJr9c0N416FOIeeuTqAOwYPfendYl6FOKeUvUAViiB281fyroU4x5S9QBWJJH5415LOhTjnlL1AFYgicngXso6HOIeUvUAahZpxld7wv6nGLeEnUAatR5eva766HPMeatT/Hnaea/exY77FOHvwut3ZTSfryGduPRro3QPG7jcROPq3hcppSu7UWgg6y1VtaDPueYt/pGvf37os5DmhfWUUrpMF5cdz8M52iCfr72uLHXgTuyF05r35RqiHlL1CmpCfhJxHxV6Ovuxtc8iaP4H/H6++E3B/RdBXV1e3t7XFHM173sEfUUY/GiTvO6eL7hkXiu5pT813g93i7+NwDL1HtJ8yboNe8xUSfXUTxvdre455pT8p8r/aANPKx3zJsz7bUHPYk6He3Fc+VwQjvsPJ6DVxPYFmBYG8W8OQBYQtCTqPOE07h9sdQYeUnNC/RLnIoH6tTcIfPbJjFPCzjlvk7UuasJ+Os4zT515/HCdUU81KVIzNPCgp5EnTW7cXprzIveNtWcev/bKXioRt+Y38Zy4j9dZ7O0oCdRJyL+ZssXvvXVHKG/jwlqgPkqGvO00KCn2Il9TrN+NpY5e03Mf++4dPBTmrheRFyv4ur0dna4dta43fie+/HCLfV9RR3m7U3Pi3AfnOp8iUE/jKDnXgB1GW+ixjDnazdivsmR+XV8Mv7eM6j78WHyZMPtaJ6H75x+h9naj6jnfsi/jtf+L1NILy3oYr5cO/Hi2e+5By7i7EzJ2dwOY/KaPhfDpIj5O89LmK2iUV9S0MV82foOs4wxycsmk9lcxAsbmKdiUV9K0MV82fouk3sW41VjvEhWcbT+rMe//RIPYJ6KRH0JQT+Ke43FfJn2Y9w85/f/4FWkI2ier696vLDfxdE6ME8bR73EFbdTJua8yvz9txebbWse9R8PXfDyhNyfE5iWvt3538W+OzO9F7cLMeck8yK4Nubbvh3sqkfU93rOrwBMx0ZR3ylwG88UiTmrzHHzm4nNwnYd25PzXHxW6D53YHt6R32n0L25UyLmpDg6z4nbxwmOQV/GXM1d7cTPDcxbrx61b3i1RF3MSfH7z7la/Fvh+8tLOs+8gv2ZsXSoQnaX1o9g5h51Mad1lPE8vor7zKfsS8a4vqN0qEdWn+6ekpxr1MWcdTkXh411n/mmchYGEnSoR+dO3TfGOLeoiznrdjOmUj2PxxxcZNxKtz+zZWGBx3Xq1UMXDc0l6mLOXTnTu85tdrWclf6OB9wOYHxPduuxq4CnHnUx5z5dg341w5nVLjO2uc+yjMC0Pdqvp27rmWrUxZz7rDJOt5/NdA923e4DV7tDlR7sWJf7dNuoT2VMTsx5yF7G82JbU7tuKuf2ur7LsgLTdm/Puk68sRuTxm876mLOY7pO83rVY670qbjJuIWt79rvwPT90rWcmbS2HXUx5yldn5tzubL9IV2335XuULef+pY77/O2oi7mdNH1ebntxVc21XX7a114CfjH/zq303NVlzGjLuZ01fUD6lxPt7e6LiAj6LAM/+ndzgZLtY0RdTEnx1KC3vV5beU1WI7LnQ3XXx0y6mJOrq7PlTlM9fqYrs9tt63BgrSf4KcW9b4xvxDzRVtK0Ltuv6CP59QZEbZt/Qk4lahvEvO/xZwO5h46oZ6eZkGcPzMXBoKi7n6i3HbUxZxNLOXItev2ez2Mq3k/fRlhN/Uuo7vvFNG2oi7mbGopF4t1vXrda2I79uK98DdzATCmh97Yxo66mFNC16vX5/4m23X7vS62q3lf+yOl9MIwCWN47EhlrKiLOaV0vT977lOidn1tzf32vBo072vP4jT8ydJ3BsN66tTj0FEXc0rqGvS5L1rSdXy26/5geM174qs4YrdoDoPoMpY4VNSPxZzCco7Q5zqOvso4wzD3KW5rtB+rV742kx+ldX1TKx314/i0KuaUdJlxpfvRTPf8Ucbr5mLgbaG/4zgN/9z4OqXkHKWUirqYM5TbjIjNdTyz63ZfeK1M3iqC/me8L8JGck87bhr1Z06zM7CuS4sezPDiuL2M8XNH5/OxG++Lb6xhzyb6jCNuEvUXPb6fmJPjR8bffTazPZuzvTn7gWk4jIvmXplGlj76PmmaqL8bIbLmZifXVcbFYMczOiLayzgte+0IfdbaaWSfGV8nxyafAq8Gjnob87kvpMH4zjK+48uZ/H5eZry5fxt4WxjeTpzR/GPGF3Aysk1P6wwVdTFnE2cZz8mDGSyocZIxdn6b+YGGaduLKWSHXKqaSpQYpykddTFnU7lRezHhU+97mWcRcj7MMB+HcRr+pfF1HlLqiVEq6mJOKV8zV1/7bYITfezEduWs8/514G1iu04t08pDSn7S2zTqYk5JN5lxa2+tnMrRz06P06zfzN8+eSVm77NMK/cq/ebVN+pizhC+Zs5nvhfTcm77SH2nxz3JTci/DLhNlPExbsMtMc++ZVr5yRBHI7lRF3OG0jynPmV+7Tbq2xpT348rm3O//yevodlo5gh4m1L6XOh31i7TahrZhRvq9GLXqIs5QzvvcRvXbkR97IlnTnueITgzkczstNc7/FXoroT1aWQt07pQQ44XPhV1MWcsn3uMXa7i6vcxjtbbU6c595q3rnqchWA6ruM0/NtCkwG1y7T+bpnW5Vnd3g7e0/YU5vqHBzFnbLtxWrLvh9jvMUZdco3xvTgLcNzzVOlNfGi27vn2dR0mefvEh8vj+CBZ6jqO7/GB1sWSCzBG0NOdqIs527Jf4Er283iT/NHzjo5VjHnmTBZzn9t4HZnidRpKBT3Fc+RZwalf29P7ObdyMkNjBT1F1JtPnh88qdiiw8x7ux9zEY/LOEq+ief2TXz9nXjsxeMgHpt+79t4HRk3n46SQW+1C1qVWlr1Oo7Wvxf6ekzMmEGHqSgZ9bGJ+TQNEfTWQVxfUepajvOe15UwcaYQZInOZ7qK303cwyzmy3IRHwQ+FnrOWqa1Un6ZLNVFwSuLx9AuWXzuGbtYZ3GbW6mxcMu0VkbQWbLrOFKf+vznZ65mJ9zE6fK3hc7UrC/TahrZmTOGDv91GOOUU5pC8zruMXeKffqGHEN/TOnn7Xk853x4nCFBh3+sYra2bU+h6Taj+dlW0Fvt87bUWdf2+Wcp3hkRdPjVTrxBno48LHUb09R6I52fbQc9xXP1ecGlVW9iMqXcqZPZEkGHh63iwqGTgad/vYx7g8+EfLamEPTWXpyGLzUmfhnj9i7InDhBh272YoKPw3jj3vSU/EW8Qf5wP3AVphT01lFc8FZqfP1HhN34+kQJOuRbxWQfe2uP3fjf2xni2lnjbuPitqv48zJi7oVXlykGPQ1wXYjrOyZM0AE2N9Wgt3Yj6qWWVr2O8fUSS79SiPvQAerXLtP6zjKt9RJ0gOW4iKh/KLSk6kFE/XXBJV/paUqTaAAwjnYJ4FLLtB7HRXjG17fIETrAMt3GOPhfhZZUXcU4/Z8Rd0Ym6ADLdh2n4N8XumBvN5YnfjPw/A3cIegApJgXYYhlWl9qzTiMoQOw7mxtfP20wPj6aYyxf41pZI2vD8SnJgDuWl+mtcSUr5ZpHYGgA/CQqxhbf19oyte9GFt/4wxxeYIOwFPO42r4UiuvtePrpWauW7zkExIAHQy1NKupYwsSdAAe0y7uUuqM7reIuaWCCxN0AO5zGLeclepEc9r+k+VXhyPoAKzbiyvSS832dhVXzP+wl4cl6ACktalbS9x7nuKUunvPRyToAJxEzEutmHYWR+XGyUck6ADLdRDj5KXmXL+IcfISc8KTSdABlmc3xsmPC/3k13FEXmLVNnoSdIDlWBVcAz3F2Lg10CdC0AGW4TiOykuNk3+Po/Jrz59pEHSAuu3HOPlBoZ/yMsbJLzxvpkXQAeq0G1eul5ov/dp0rdMm6AB1Wa1N11pqnLydrtU4+YQJOkA9jmKcvNR7+48YJzdd6wwIOsD87cU4+WGhn+QqxsnPPTfmQ9AB5muoZU1LrXvOiAQdYJ4sa8pPBB1gXixryr0EHWAeLGvKowQdYNpKL2t6uzZO7ja0igg6wHQNsazpF9O11knQAabHsqZkE3SA6bCsKb0JOsD2WdaUjQk6wHZZ1pQiBB1gOyxrSlGCDjAuy5oyCEEHGM9JnGIvMV2rZU35iaADjKfUIiqWNeUXgg4wH5Y15UGCDjB9ljXlSYIOMG2WNaUTQQeYJsuakkXQAabFsqb0IugA02BZUzYi6ADbZ1lTNiboANtjWVOKEXSA8VnWlOIEHWA8ljVlMIIOMA7LmjIoQQcYlmVNGYWgAwzjJo7ILWvKKAQdoKx2WdOvpmtlTIIOUI5lTdkaQQfYXDtdq2VN2ZrV7a07JwBg7nb8BgFg/gQdACog6ABQAUEHgAq4yn2Zfk8pHTzykzf3zv7f0ncSwJw4QgeACgg6AFRA0AGgAoIOABUQdACogKADQAUEHQAqIOgAUAFBB4AKCDoAVEDQAaACgg4AFRB0AKiAoANABQQdACog6ABQAUEHgAoIOgBUQNABoAKCDgAVEHQAqICgA0AFBB0AKiDoAFABQQeACgg6AFRA0AGgAoIOABUQdACogKADQAUEHQAqIOgAUAFBB4AKrG5vb/0ex/PHRD5ENduweuLvXI+0LY85Syl9mcB2AEzenl/RqHZndFZkdwLb4AwSQEfeMAGgAoIOABUQdACogKADQAUEHQAqIOgAUAG3rY3rqsP932PY67AdlxPYzincCw8wCyaWWabfU0oHj/zkNyml/1v6TgKYE6fcAaACgg4AFRB0AKiAoANABQQdACog6ABQAUEHgAoIOgBUQNABoAKCDgAVEHQAqICgA0AFBB0AKiDoAFABQQeACgg6AFRA0AGgAoIOABUQdACogKADQAUEHQAqIOgAUAFBB4AKCDoAVEDQAaACgg4AFRB0AKiAoANABQQdACog6ABQgT2/RGDNv+yMn3xKKX2b0PbAgxyhA0AFHKEv01cf5gDqIujL9GPpOwCgNo7SAKACgg4AFRB0AKiAoANABQQdACog6ABQAbetAX38e+Z77WVK6XQC2wHFOEIHgAoIOgBUQNABoAKCDgAVEHQAqICgA0AFBB0AKiDoAFABQQeACgg6AFTA1K8AsF2r6PFeHGiv1v68TSndrP15FY/bu1ss6AAwribWh/E46NniJuoXKaXzeNw0X+QkpfQjyg8AlNdE/Ciae1Dgq7dH9Cfx3y+a//IqDt3PUkpfU0rXfpEAUMRuSulZhHc14C49aA/zV7GU4GmE/YuwA0BvTcifrx1BD+6+8/bNNz+OqH+7b+AdALhXe4D8fOAj8l88NBDfbMSLiPuHlNKl3xsAPGo/pfR6WxecP3UferNRv8enDQDgfqfRy63dPdblGzdH6y/jqryPTsEDwP+s4uLy423vkpxPEscxyP9e1AHgP2e5fyt0G9rGck8NHMQphffuWwdgwZqYv4lx8xLWZ4G7XpsZrp0xbvfObHK/6HOufz8+kThSB2CJVtHBTWN+ERO7nWdefL4fs8wdrZ8d6Dt4fxBX8v3d898DwFy93uA0ezuR27c4Gu/jMh5fo+PNBXkne/FF+1zFfhS3tn32lARgIV5E//r4FnO8lByybj4UfGq+7l78h7O4Si/39MGztVMGAFCzo+hersu4S2zIOV1u2oH15pu8i08PuV5ZVx2Ayu1E73J9i74OPkHbeohv42j9Y4+v8aLwdgHAlLzscfD6Mbo6ygXk923cWVzslrMBpZaDA4CpOcicOOY2Ono25s/x0KeNHz2O1F8W2B4AmJrcU+0ft3Ft2WOnD77H1Xhd7U9h6jsAKOg48xbvL9HP0T01HvAlbnjv6rlnEQAVyenaeeaBcFFdBvg/ZNwztxez1wDA3B1mHJ3fRC+3pkvQbzI/cZx4CgNQgZyelZ4wJlvXS/Bzpqg7inluAWCuVhkzwl31nMelqJx76roepa9cHAfAzB1nHJxubdx8XU7Qv8eSbl0YRwdgzrp27HpbV7XflTvrTdeb5AUdgDnr2rFRJ495TG7Qu34K2dlgaVYA2Ka9jD5O4ug89Qj6VcZp900XfgeAbejar+sN1jQvrs8qaRcd/54jdADmqGvQcyZeG5ygA8DPdjvuj8GXRM3RJ+hdTy8IOgBz1LVfkzndnnoGvesYusllAJijrv3q2sNR9Al616ntBB2AOeraxq1O9XpXn6DfDvi1AWDbuh6Qdu3hKPpEd5Y/KAB01LVfkzoTPWTQAaBmk+phnyvRZzm2ABT1Zua70104POamY+tmH/Su9+cJOtTLeg3UrGu/9uY+U1zXGXQmdX8eAHQ0y/lW+gT9oOPfE3QA5qhrvyZ1pio36CtBB6ByXft1MKVx9Nyg52x81znfAWBKuvYr5yB3cLlBP+749y5dFAfATN1kHKV37eLgcoK+k7Hhjs4BmLOuS6MeT2Vm1JyNOM043f6j5/YAwBR07dgq+rh1XYO+k7HB11Nb9B0AMp1nrKZ2OoWj9K730L3I2NjvG2wPsF3v7f+fuFtn2ZqePeuwB3aikx+3ube6BL25gu8k42uebbA9wHY5uwb/OOsY9BSdPNvmNWRPHXU3///rjK/3wydaACpxlXlN2Ottnnp/6hu/zpi7vfFlw+0BgCnJ6dpu5kFwUY8F/VXmtHbf4/5zAKjFZea1YYfRz9E9FPRXmePmzWLwnz19AajQ5+hcVyfbiPrdoDf30/2WGfMUP2zXy/sBYE6uexy0nkRPR5vrfT3ozbKof6SUjjK/RnNF37fC2wUAU/KtxxXsR9HVrsuOb2R1e3u7isvyn/X4JNHMd/vW0TkAC7Abgc69kr05Xf81Hjmn7rM0Qf9zg0Xa37tvFYAFaS56e9Pzx72KqJeer6U5GD9ugv6vnl/gk1PtACxQM9Xryw1+7Ovo5/cNz3DvxuIwzfbs9g36F/ecA7Bgz+OxqYs4033RYenxnRiPP4gzBT+txd7nVPtXMQdg4b7Eqe6uU8M+5OBOmG/icRt/7sT32Xlq7D436J8j6ACwdJ8jui8K7ocnw/2QrkFvPil8sM45APzka4yDvxrznvP7dAn6ZcTcoisA8Kt26vPXY91zfp+nDuubTx7vxBwAHnUVvdzasPRDR+gXsVC7kANAN+26JmdxCv5gzP12N+gX8enCWDkA9NMerR/FVfCjhH0vPlGcx03uZn0DgDJ+xOMwJn85HPLCuWZimZ0nbmQHADa3EzO7HRc+am/Orn9vgu53BADjWq3N+La39njK1dqjnWHuPyEXdACYhtXazHDtf25njbtd+8/3EnQAqECv6eUAgGkRdACogKADQAUEHQAqIOgAUAFBB4AKCDoAVEDQAaACgg4AFRB0AKiAoANABQQdACog6ABQAUEHgAoIOgBUQNABoAKCDgAVEHQAqICgA0AFBB0AKiDoAFABQQeACgg6AFRA0AGgAoIOABUQdACogKADQAUEHQAqIOgAUAFBB4AKCDoAVEDQAaACgg4AFRB0AKiAoDMHhyml3/2mAB62Z98wYc3z80VK6SildOMXBfAwQWeKmjNHz1JKpymlld8QwNMEnak5iaNyw0EAGQSdqTiMkO/7jQDkE3S2bTel9DLGyQHoSdDZllWMkz8zTg6wOUFnG5px8udxdA5AAYLOmA5inPzAXgcoS9AZw26E/NjeBhiGoDMk4+QAIxF0hnIcR+XGyQFGIOiUth+3oRknBxiRoFPKbly5fmKPAoxP0NnUKuZcf26cHGB7BJ1NHMU4uecRwJZ5I6aP/Qj5ob0HMA2CTo6dOLV+WmivNWucf4mL6J7idD7AIwSdLtpx8mcFlzX9FjG/EXSAzQk6TzmM4JZ6rpynlD6llK7seYByBJ2H7EXIS42TNwH/nFL6YY8DlCfo3LWzNl1rCc0p9a9xiv3W3gYYhqCzrr2fvNQ4+VmMk1/bywDDEnTSQOPkzen1S3sXYByCvmx7cT/5UaG9cB0h/770HQswNkFfptXa/eQlbge7jXHyr8bJAbZD0JfnJGJealnT73FUbpwcYIsEfTkOYpx8v9BPfBEhv1j6jgWYAkGv326Mkx8X+kmNkwNMkKDXa7V2P7lxcoDKCXqdjuOo3Dg5zM/uzF9rc9/+2RL0uhxEyA8K/VSXEfLzpe9YGMlpvIY/zHSa5KYpb+I94+MEtmdRBL0Ou3Hl+kmhn+Y6Zng7W/qOhRGdrq08+HqGUW968nvMNHkSQ30fJrBdiyHo8zbEOHm7rKlxchjP6Z1lhFczi/p6zFvthbiiPhJBn6/S4+Q/4vS6ZU1hXHdj3ppL1O+LeUvURyTo87MfIS+5rOkn4+SwFQ/FvDX1qD8W85aoj0TQ52MnQl5qnPwmTq1/W8LOgwk6eSLmralGvUvMW8cxjOdCuQEJ+vSt4lP8s4LLmrbj5Dc17ziYuPO4ALXLsNnUop4T8xQxNxnVwAR92o7iqLzksqafjJPDJDQxfxdhnFPU+8T8b8N6wxP0adqLU3HGyaFuc4u6mE+YoE/LztqypiXcxFSt39yGBpM1l6iL+cQJ+nScRsyNk8PyTD3qfWL+3mqM4xL07TuM0+slx8k/x7StwHxMNepiPhOCvj17ccHbUaEtuIqQz3H+Z+C/phZ1MZ+RUqd36a69n/yPQjG/jZC/FXOoQhv1riuWtVEvdXDQEvOZEfTxnRacez3FWLmL3qAubdS73mJaOupiPkOCPr7mQrW/Cl75+SyO9kvd4gZMw3VEMjfqxx3+7mPEfKYEfTuu4gWQ82J9TLsG8RvXRUBV+kT91QZRF/MZE/TtOo+x78+Fbi9rjtL/jKvm/W6hDmNFXcxnzpv+9t3G5C9/FVwo5TTCXmqCGmC7hj79LuYVEPTpuInpWd8WGl/fiSP1P42vQxVyo546Rn1fzOsg6NNzGS+WvzNuW3lMO77+m/F1mL3SUd+P9wcxr4CgT9ePOA3/pdAtaUdxNfyLgrfMAeMrFXUxr4ygT9vt2m1uZwW2dBW3uTWn4U9q3nFQuU2jLuYVWt3emo9kRg7iCPug0CZfxrj9tl+k/+r49/498HbA3Oz2uF31c3ywF/PKCPo8HUfYu8z13MX3eJGXGLPvQ9Chvz5R70rMZ8Qp93n6Xnh8/ThOwz83vg6z0+f0exdiPjOCPl/r4+vfC/wUqwj6nwWmjgTGVTrqYj5Dgj5/17F04vtCa6DvxsUzv8eFM8A8lIq6mM+UoNejnUb2Y6FpZA/iNrdXBcfqgWFtGnUxnzFBr89ZnIb/Wmh8/SROw5dc8hUYTt+oi/nMCXqdbuKq9bcxQc2mVnFV/R8F11sGhrPT4/195WzcvAl63a5iCtmSy7T+FrfIGF+HacqdNGZdifXU2RJBX4bzOA3/qeAyrX9YphUmZ5OYt0R9pizWsSzf4ha354WWVj2NF/7XeADbUyLmrdfxZ4lbYhmJo6vlaZdp/avgMq0vLNMKW1Uy5i1H6jMj6Mt1tbZMa6nx9TcDTkEJ3G+ImLdEfUYEnR9xNfznwuPrLzy/YHC5Mb/p8SFe1GfCGy4p7j/9OtAyrSXG6oFf9Y35j0LrqTMxgs66m5hp7m3B8fWXccRufB3K6RvzdtKYZvKZd6JeF0HnPpfxCf5DoSVV2zef30xcARvbNObr/7uoV6GMoOIAAADFSURBVETQeUzpZVqPLNMKGykV8/X/X9QrIeg8ZchlWk/sfeisdMzX/56oV2B1e1viwIsFOYgr2A8K/cgXGV/r355oLNRQMV+3E8sm59x2+sHkM9PhCJ1cF/Fp/mOh8fVSHwygVmPEPG1wpO5M20QIOn2dFR5fB37VJ+abLIHaJ+qvRH0aBJ1NrI+vl1imFfhH35hfbrgPRX2mBJ0SrteWad30zQTYXszXv56oz4ygU9J5TEpTaplWWKJtx3z964r6XKSU/h8Bz7Jxnr+aZQAAAABJRU5ErkJggg==");
+        opacity: .5;
     }
 
     a, a:visited {
@@ -222,7 +245,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
     }
 
     h1, h2, h3, h4, h5, h6 {
-        /*margin: 0;*/
+        margin: 0;
         font-weight: 300;
         text-transform: uppercase;
     }
@@ -231,7 +254,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         font-family: monospace;
         padding: 2px 5px;
         color: #ff88a9;
-        background-color: #1b2b58;
+        background-color: rgba(0, 0, 0, .15);
     }
 
     table {
@@ -297,14 +320,14 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
     .card {
         margin-bottom: 25px;
         padding: 1px;
-        background: #243975;
+        background: #303b41;
     }
 
     .card-title {
         margin: 0;
         padding: .67em 0;
         text-align: center;
-        background: #3757b5;
+        background: #277fd2;
     }
 
     .collection {
@@ -326,7 +349,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         padding-left: 1rem;
         width: 100%;
         text-transform: unset;
-        border-bottom: 1px solid transparent;
+        /*border-bottom: 1px solid transparent;*/
         transition: .2s border-bottom-color ease-out;
     }
 
@@ -335,13 +358,13 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
     }
 
     .collection .header div[class*="extension--"] {
-        padding: 0.5em 1rem;
+        padding: 0.4rem 0.5em;
         max-width: 26px;
         font-size: 2rem;
     }
 
     .extension--enabled, .pass {
-        background-color: #5cbf43 !important;
+        background-color: #4bb14f !important;
     }
 
     .extension--disabled, .fail {
@@ -364,16 +387,6 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         content: "\26A0";
     }
 
-    .collection .body {
-        max-height: 0;
-        transition: .3s max-height ease-out;
-        overflow: hidden;
-    }
-
-    .collection .body div {
-        padding: 15px 25px;
-    }
-
     .collection li {
         transition: .25s background-color ease-out, .25s border-bottom-color ease-out;
     }
@@ -383,17 +396,15 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         border-bottom-color: transparent;
     }
 
-    /*.header .extension-name*/
     .collection li:not(:last-child) {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .collection li:hover .header .extension-name {
-        border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .collection li:hover .body {
-        max-height: 100px;
+    .extension-desc {
+        font-size: .8rem;
+        opacity: .8;
+        padding-left: 1rem;
+        margin-top: .25rem;
     }
 </style>
 
@@ -415,7 +426,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         <div class="pure-u-1">
             <div>
                 <div class="<?= $data['passes'] ? 'pass' : 'fail' ?>"
-                     style="margin-bottom: 20px;padding: 1px;text-align: center;">
+                     style="margin-bottom: 1rem;padding: .75rem 0;text-align: center;">
                     <h1><?= $data['passes'] ? 'You can run K-Load' : 'You cannot run K-Load, please review the issues below' ?></h1>
                 </div>
             </div>
@@ -423,7 +434,7 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         <div class="pure-u-1 pure-u-lg-1-3">
             <div>
                 <div class="card">
-                    <h1 class="card-title"><span style="position:relative;top:-6px;">&#x1F9F0;</span> Extensions</h1>
+                    <h1 class="card-title"><span style="position:relative;top:-6px;">🧰</span> Extensions</h1>
                     <div>
                         <ul class="collection">
 
@@ -431,22 +442,21 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
                                 <li>
                                     <div class="header">
                                         <div class="extension--<?= $extension['icon'] ?>"></div>
-                                        <h3 class="extension-name">
-                                            <?= $extension['name'] ?>
-                                            <?php if (!$loaded) { ?>
-                                                <small>* <?= $extension['required'] ? 'Required' : 'Optional' ?></small>
+                                        <div>
+                                            <h3 class="extension-name">
+                                                <?= $extension['name'] ?>
+                                                <?php if (!$loaded) { ?>
+                                                    <small>* <?= $extension['required'] ? 'Required' : 'Optional' ?></small>
+                                                <?php } ?>
+                                                <small><code><?= $extension['multiple'] ? $extension['multiple'] : $extension['ext'] ?></code></small>
+                                            </h3>
+                                            <?php if ($extension['desc']) { ?>
+                                                <div class="extension-desc">
+                                                    <?= $extension['desc'] ?>
+                                                </div>
                                             <?php } ?>
-                                            <br>
-                                            <small><code><?= $extension['multiple'] ? $extension['multiple'] : $extension['ext'] ?></code></small>
-                                        </h3>
-                                    </div>
-                                    <?php if ($extension['desc']) { ?>
-                                        <div class="body">
-                                            <div>
-                                                <?= $extension['desc'] ?>
-                                            </div>
                                         </div>
-                                    <?php } ?>
+                                    </div>
                                 </li>
                             <?php } ?>
                         </ul>
@@ -457,31 +467,32 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         <div class="pure-u-1 pure-u-lg-1-3">
             <div>
                 <div class="card">
-                    <h1 class="card-title"><span>&#x1F5A5;</span> Server Info</h1>
+                    <h1 class="card-title"><span>🖥️</span> Server Info</h1>
                     <div>
                         <table class="pure-table pure-table-bordered">
                             <tbody>
-                                <tr>
-                                    <td>Web Server</td>
-                                    <td><?= $data['web_server']['env'] ?></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        PHP Version
-                                        <br>
-                                        (7.2.5+)
-                                    </td>
-                                    <td><?= phpversion() ?> <a href="./<?= basename(__FILE__) ?>?phpinfo"
-                                                               target="_blank">phpinfo()</a></td>
-                                </tr>
-                                <tr>
-                                    <td>URL</td>
-                                    <td><a href="<?= $data['app']['url'] ?>"><?= $data['app']['url'] ?></a></td>
-                                </tr>
-                                <tr>
-                                    <td>Path</td>
-                                    <td><?= $data['app']['path'] ?></td>
-                                </tr>
+                            <tr>
+                                <td>Web Server</td>
+                                <td><?= $data['web_server']['env'] ?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    PHP Version
+                                    <br>
+                                    (8.0+)
+                                </td>
+                                <td class="<?= PHP_VERSION_ID < 80000 ? 'fail' : '' ?>"><?= phpversion() ?> <a
+                                            href="./<?= basename(__FILE__) ?>?phpinfo"
+                                            target="_blank">phpinfo()</a></td>
+                            </tr>
+                            <tr>
+                                <td>URL</td>
+                                <td><a href="<?= $data['app']['url'] ?>"><?= $data['app']['url'] ?></a></td>
+                            </tr>
+                            <tr>
+                                <td>Path</td>
+                                <td><?= $data['app']['path'] ?></td>
+                            </tr>
                                 <tr>
                                     <td>Directory</td>
                                     <td><code><?= __DIR__ ?></code></td>
@@ -512,13 +523,13 @@ define('LOGO', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/
         <div class="pure-u-1 pure-u-lg-1-3">
             <div>
                 <div class="card upload-limits">
-                    <h1 class="card-title"><span>&#x1F4C1;</span> Upload Limits</h1>
+                    <h1 class="card-title"><span>📁</span> Upload Limits</h1>
                     <div>
                         <table class="pure-table pure-table-bordered">
                             <tbody>
-                                <tr>
-                                    <td>Post Upload Size</td>
-                                    <td><?= $data['upload']['post_max_size'] ?></td>
+                            <tr>
+                                <td>Post Upload Size</td>
+                                <td><?= $data['upload']['post_max_size'] ?></td>
                                 </tr>
                                 <tr>
                                     <td>Max File Size</td>

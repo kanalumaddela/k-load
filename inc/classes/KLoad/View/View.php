@@ -186,10 +186,19 @@ class View
 
             $route = vsprintf($route, $parameters);
 
-            return APP_ROUTE_URL.'/'.$route;
+            return APP_ROUTE_URL . '/' . $route;
         }));
         self::$twig->addFunction(new TwigFunction('isActiveRoute', function ($route, $activeClass = 'is-active') {
             return APP_CURRENT_ROUTE === $route || substr(APP_CURRENT_ROUTE, 1) === $route ? $activeClass : '';
+        }));
+        self::$twig->addFunction(new TwigFunction('csrf', function ($route = null) {
+            if (empty($route)) {
+                $route = APP_CURRENT_ROUTE;
+            }
+
+            $csrf = Session::generateCsrf($route);
+
+            return new Markup('<input type="hidden" value="' . $csrf . '" name="_csrf" />', 'utf-8');
         }));
     }
 
@@ -203,19 +212,22 @@ class View
     public static function setupBaseData()
     {
         $site = [
-            'host'    => APP_HOST,
-            'path'    => APP_PATH,
-            'url'     => APP_URL,
+            'host' => APP_HOST,
+            'path' => APP_PATH,
+            'url' => APP_URL,
             'current' => APP_CURRENT_URL,
-            'route'   => APP_ROUTE_URL,
+            'route' => APP_ROUTE_URL,
+            'current_route' => APP_CURRENT_ROUTE,
         ];
 
         self::$twig->addGlobal('site', $site);
 
         $app = [
-            'debug'     => DEBUG,
-            'lang'      => Lang::getCurrentLang(),
+            'debug' => DEBUG,
+            'lang' => Lang::getCurrentLang(),
             'demo_mode' => Config::get('demo_mode', false),
+            'version' => App::$version,
+            'version_id' => App::$versionId,
         ];
 
         $app = array_merge($site, $app);
@@ -249,12 +261,12 @@ class View
         static::setupCustomBaseData();
     }
 
-    public static function setupCustomBaseData()
+    public static function setupCustomBaseData(): void
     {
         $globals = [
-            'post_max_size'       => ini_get('post_max_size'),
+            'post_max_size' => ini_get('post_max_size'),
             'upload_max_filesize' => ini_get('upload_max_filesize'),
-            'max_file_uploads'    => ini_get('max_file_uploads'),
+            'max_file_uploads' => ini_get('max_file_uploads'),
         ];
 
         foreach ($globals as $key => $global) {

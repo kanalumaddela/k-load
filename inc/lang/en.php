@@ -95,8 +95,6 @@ return [
     // users page
     'users_page'                   => 'Users - Page %s',
     'users_search_placeholder'     => 'Enter any type of steamid or a name',
-    'ban'                          => 'Ban',
-    'unban'                        => 'Unban',
     'search'                       => 'Search',
     'player'                       => 'Player',
 
@@ -104,7 +102,6 @@ return [
     'name'                         => 'Name',
     'loading_screen'               => 'Loading Screen',
     'registered'                   => 'Registered',
-    'ban_user'                     => 'Ban User',
     'copy_user_settings'           => 'Copy User\'s Settings',
 
     // admin core
@@ -125,7 +122,6 @@ return [
     'cache_data'                   => 'Data Cache',
     'cache_template'               => 'Template Cache',
     'recompile_css'                => 'Recompile CSS',
-    'unban_all'                    => 'Unban  All',
     'reset_perms'                  => 'Reset Perms',
 
     // admin general

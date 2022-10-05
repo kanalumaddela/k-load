@@ -89,9 +89,10 @@ copyElems.forEach(item => {
             copy.select();
             copy.setSelectionRange(0, 99999);
 
-            document.execCommand("copy");
-
-            createToast('Copied!');
+            // document.execCommand("copy");
+            navigator.clipboard.writeText(copy.value).then(_ => {
+                createToast('Copied!');
+            });
         }
     });
 });

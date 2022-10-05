@@ -1,6 +1,6 @@
 <li>
     <a class="{{ isActiveRoute(route) }}" href="{{ route(route) }}">
         <i class="fas fa-{{ icon|default('circle') }}"></i>
-        {{ name|default(route) }}
+        {{ lang(name) }}
     </a>
 </li>
