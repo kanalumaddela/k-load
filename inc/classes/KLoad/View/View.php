@@ -18,6 +18,7 @@ use KLoad\Facades\Config;
 use KLoad\Facades\Lang;
 use KLoad\Facades\Session;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
 use Twig\TwigFunction;
@@ -93,16 +94,22 @@ class View
         static::$twigLoader = new FilesystemLoader();
         static::setDefaultPaths();
 
+//        dd(DEBUG);
+
         static::$twig = new Environment(static::$twigLoader, [
             'debug' => DEBUG,
-            'cache' => ENABLE_CACHE ? APP_ROOT.'/data/templates' : false,
+            'cache' => ENABLE_CACHE ? APP_ROOT . '/data/templates' : false,
         ]);
+
+        if (DEBUG) {
+            static::$twig->addExtension(new DebugExtension());
+        }
 
         static::addFunctions();
 
         $data = array_merge($data, static::buildData());
 
-        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template.'.twig', $data);
+        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template . '.twig', $data);
     }
 
     public static function setDefaultPaths()

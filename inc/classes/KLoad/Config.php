@@ -22,14 +22,14 @@ use function time;
 
 class Config extends DotArray
 {
-    private static $templateConfig = [
+    private static array $templateConfig = [
         'dashboard_theme' => 'default',
-        'loading_theme'   => 'default',
-        'apikeys'         => [
+        'loading_theme' => 'default',
+        'apikeys' => [
             'steam' => '',
         ],
-        'admins'          => [],
-        'mysql'           => [
+        'admins' => [],
+        'mysql' => [
             'host' => 'localhost',
             'port' => '3306',
             'user' => 'root',
@@ -104,7 +104,7 @@ class Config extends DotArray
     public static function saveConfig(string $location, $data, bool $saveOriginal = true)
     {
         if (file_exists($location) && $saveOriginal) {
-            copy($location, $location.'.'.time().'.old');
+            copy($location, $location . '.' . time() . '.old.php');
         }
 
         file_put_contents($location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($data).';');

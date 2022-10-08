@@ -22,10 +22,12 @@ use const KLoad\APP_URL;
 
 class LoadingView extends View
 {
+    protected static $theme;
+
     public static function getThemes($withPreviews = false): array
     {
-        $themePath = APP_ROOT.'/themes/';
-        $list = array_slice(scandir(APP_ROOT.'/themes'), 2);
+        $themePath = APP_ROOT . '/themes/';
+        $list = array_slice(scandir(APP_ROOT . '/themes'), 2);
         $themes = [];
 
         foreach ($list as $theme) {
@@ -62,24 +64,29 @@ class LoadingView extends View
 
     public static function setDefaultPaths()
     {
-        $theme = static::getTheme();
+        $theme = self::getTheme();
 
-        static::$twigLoader->addPath(APP_ROOT.'/themes/'.$theme.'/pages');
-        static::$twigLoader->addPath(APP_ROOT.'/themes/base', 'base');
+        self::$twigLoader->addPath(APP_ROOT . '/themes/' . $theme . '/pages');
+        self::$twigLoader->addPath(APP_ROOT . '/themes/base', 'base');
     }
 
     public static function getTheme(): string
     {
-        if (empty(static::$theme)) {
-            static::setTheme(Config::get('loading_theme', 'default'));
+        if (empty(self::$theme)) {
+            self::setTheme(Config::get('loading_theme', 'default'));
         }
 
-        return static::$theme;
+        return self::$theme;
+    }
+
+    public static function setTheme(string $theme)
+    {
+        self::$theme = $theme;
     }
 
     public static function getThemeConfig(): array
     {
-        return file_exists(APP_ROOT.'/themes/'.static::getTheme().'/config.php') ? include APP_ROOT.'/themes/'.static::getTheme().'/config.php' : [];
+        return file_exists(APP_ROOT . '/themes/' . self::getTheme() . '/config.php') ? include APP_ROOT . '/themes/' . self::getTheme() . '/config.php' : [];
     }
 }
 // 008f68

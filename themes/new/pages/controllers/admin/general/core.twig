@@ -60,7 +60,7 @@
                 </div>
             </div>
             <form action="{{ app.current }}/theme-update" method="post">
-                {{ csrf }}
+                {{ csrf(app.current_route ~ '/theme-update') }}
                 <div class="column is-full">
                     <div class="card">
                         <div class="card-header-title"><i class="fas fa-paint-brush title-icon"></i>Default Theme</div>
@@ -81,7 +81,7 @@
                                         <div>
                                             <input id="theme_radio_{{ theme }}" type="radio" value="{{ theme }}"
                                                    name="theme"
-                                                   {% if theme is same as(settings.theme) %}checked{% endif %}>
+                                                   {% if theme is same as(currentTheme) %}checked{% endif %}>
                                             <span class="ml-1">{{ theme|capitalize }}</span>
                                         </div>
                                     </div>

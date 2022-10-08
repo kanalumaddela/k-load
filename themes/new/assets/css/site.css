@@ -63,6 +63,10 @@ a:hover {
     color: #5b96c6;
 }
 
+[data-copy] {
+    cursor: pointer;
+}
+
 .menu-list a.is-active {
     background-color: #277fd2;
 }

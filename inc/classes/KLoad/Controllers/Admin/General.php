@@ -16,6 +16,7 @@ use Exception;
 use KLoad\Controllers\AdminController;
 use KLoad\Facades\Config;
 use KLoad\Http\RedirectResponse;
+use KLoad\Models\Setting;
 use KLoad\View\LoadingView;
 use Symfony\Component\HttpFoundation\Response;
 use function curl_close;
@@ -32,9 +33,13 @@ class General extends AdminController
 {
     protected static string $templateFolder = 'general';
 
+    protected \KLoad\Config $coreConfig;
+
     public function boot(): void
     {
-        static::$templateFolder = parent::$templateFolder.'/'.static::$templateFolder;
+        static::$templateFolder = parent::$templateFolder . '/' . static::$templateFolder;
+
+        $this->coreConfig = \KLoad\App::get('config');
     }
 
     public function index(): Response
@@ -57,8 +62,7 @@ class General extends AdminController
     {
         $themes = LoadingView::getThemes(true);
         $steamApiKey = Config::get('apikeys.steam');
-
-//        dd($themes);
+        $currentTheme = LoadingView::getTheme();
 
         return $this->view('core', get_defined_vars());
     }
@@ -71,11 +75,16 @@ class General extends AdminController
 
         $key = $post['steam_api_key'];
 
-        $valid = ($error = self::testSteamApiKey($key.'0')) === true;
+        $valid = ($error = self::testSteamApiKey($key)) === true;
+
+        if ($valid) {
+            $this->coreConfig->set('apikeys.steam', $key);
+            $this->coreConfig->save();
+        }
 
         flash($valid ? 'success' : 'danger', $valid ? 'Config has been updated!' : $error);
 
-        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
+        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
     }
 
     private static function testSteamApiKey($key): bool|string
@@ -106,12 +115,24 @@ class General extends AdminController
 
     public function themeUpdate(): RedirectResponse
     {
-        flash('success', 'Default theme has been updated!');
+        $this->validateCsrf();
 
-        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
+        $post = $this->request->request->all();
+
+        if (LoadingView::themeExists($post['theme'])) {
+            $this->coreConfig->set('loading_theme', $post['theme']);
+            $this->coreConfig->save();
+
+            flash('success', 'Default theme has been updated!');
+        }
+
+        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
     }
 
     public function general()
     {
+        $settings = Setting::whereIn('name', ['community_name', 'description', 'logo', 'fake'])->get()->pluck('value', 'name');
+
+        dd($settings);
     }
 }
