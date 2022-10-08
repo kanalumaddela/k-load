@@ -37,7 +37,7 @@ class General extends AdminController
 
     public function boot(): void
     {
-        static::$templateFolder = parent::$templateFolder . '/' . static::$templateFolder;
+        static::$templateFolder = parent::$templateFolder.'/'.static::$templateFolder;
 
         $this->coreConfig = \KLoad\App::get('config');
     }
@@ -84,7 +84,7 @@ class General extends AdminController
 
         flash($valid ? 'success' : 'danger', $valid ? 'Config has been updated!' : $error);
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
     }
 
     private static function testSteamApiKey($key): bool|string
@@ -126,7 +126,7 @@ class General extends AdminController
             flash('success', 'Default theme has been updated!');
         }
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
     }
 
     public function general()

@@ -297,8 +297,8 @@ copyright;
         $current_route = rtrim(str_replace(APP_PATH, '', $current_route), '/');
 
         defineConstant('app_current_route', $current_route);
-        defineConstant('app_route_url', $route_query_string ? APP_URL . '/index.php?' : APP_URL);
-        defineConstant('app_current_url', APP_ROUTE_URL . APP_CURRENT_ROUTE);
+        defineConstant('app_route_url', $route_query_string ? APP_URL.'/index.php?' : APP_URL);
+        defineConstant('app_current_url', APP_ROUTE_URL.APP_CURRENT_ROUTE);
     }
 
     public static function isInstalled()
