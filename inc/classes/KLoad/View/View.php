@@ -98,7 +98,7 @@ class View
 
         static::$twig = new Environment(static::$twigLoader, [
             'debug' => DEBUG,
-            'cache' => ENABLE_CACHE ? APP_ROOT . '/data/templates' : false,
+            'cache' => ENABLE_CACHE ? APP_ROOT.'/data/templates' : false,
         ]);
 
         if (DEBUG) {
@@ -109,7 +109,7 @@ class View
 
         $data = array_merge($data, static::buildData());
 
-        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template . '.twig', $data);
+        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template.'.twig', $data);
     }
 
     public static function setDefaultPaths()
