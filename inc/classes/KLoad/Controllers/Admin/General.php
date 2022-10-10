@@ -13,6 +13,7 @@
 namespace KLoad\Controllers\Admin;
 
 use Exception;
+use KLoad\App;
 use KLoad\Controllers\AdminController;
 use KLoad\Facades\Config;
 use KLoad\Http\RedirectResponse;
@@ -39,7 +40,7 @@ class General extends AdminController
     {
         static::$templateFolder = parent::$templateFolder.'/'.static::$templateFolder;
 
-        $this->coreConfig = \KLoad\App::get('config');
+        $this->coreConfig = App::get('config');
     }
 
     public function index(): Response
@@ -133,6 +134,6 @@ class General extends AdminController
     {
         $settings = Setting::whereIn('name', ['community_name', 'description', 'logo', 'fake'])->get()->pluck('value', 'name');
 
-        dd($settings);
+        return $this->view('general', get_defined_vars());
     }
 }
