@@ -198,3 +198,14 @@ a:hover {
 .title-icon {
     margin-right: .5rem;
 }
+
+/* form headers */
+.header, th.header {
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 5px 10px;
+    margin-left: -.5rem;
+    margin-right: -.5rem;
+    border-radius: .25rem;
+}
