@@ -36,6 +36,18 @@
         .sub-text {
             color: #a9a9a9;
         }
+
+        img.avatar.medium:before {
+            content: '';
+            position: absolute;
+            background-image: url({{ asset('img/avatar.jpg') }});
+            width: 64px;
+            height: 64px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-size: contain;
+            border-radius: 0.4rem;
+        }
     </style>
 {% endblock %}
 {% block content %}

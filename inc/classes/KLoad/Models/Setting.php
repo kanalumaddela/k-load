@@ -12,6 +12,7 @@
 
 namespace KLoad\Models;
 
+use JsonException;
 use function json_decode;
 
 class Setting extends BaseModel
@@ -35,9 +36,14 @@ class Setting extends BaseModel
     {
         $original = $value;
 
-        $val = json_decode($original, true);
+        try {
+            $val = json_decode($original, true, 512, JSON_THROW_ON_ERROR);
 
-        if (empty($val)) {
+            if (empty($val)) {
+                $val = $original;
+            }
+
+        } catch (JsonException) {
             $val = $original;
         }
 

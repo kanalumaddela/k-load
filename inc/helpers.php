@@ -87,11 +87,11 @@ function var_export_fixed($var, $indent = ''): ?string
 /**
  * @param       $template
  * @param array $data
- * @param int   $httpCode
+ * @param int $httpCode
  *
  * @return Response
  */
-function view($template, array $data = [], $httpCode = 200): Response
+function view($template, array $data = [], int $httpCode = 200): Response
 {
     $response = new Response(View::render($template, $data));
     $response->setCharset('UTF-8');
@@ -113,8 +113,9 @@ function loadingView(array $data = [])
 
 /**
  * @return string
+ * @see  Lang::get
  */
-function lang()
+function lang(): string
 {
     return call_user_func_array([Lang::class, 'get'], func_get_args());
 }
@@ -133,7 +134,7 @@ function loggedIn()
     return $loggedIn;
 }
 
-function directoryTree($dir)
+function directoryTree($dir): array
 {
     $arr = [];
     $name = basename($dir);
@@ -186,12 +187,12 @@ function isAdminUser()
     }
 }
 
-function redirect($url, $status = 302, array $headers = [])
+function redirect($url, $status = 302, array $headers = []): RedirectResponse
 {
     return new RedirectResponse($url, $status, $headers);
 }
 
-function flash($key, $data)
+function flash($key, $data): void
 {
     \KLoad\Facades\Session::flash($key, $data);
 }

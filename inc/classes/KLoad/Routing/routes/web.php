@@ -14,6 +14,7 @@ use KLoad\Controllers\Admin;
 use KLoad\Controllers\API;
 use KLoad\Controllers\Dashboard;
 use KLoad\Controllers\Main;
+use KLoad\Controllers\Test;
 use Phroute\Phroute\RouteCollector;
 
 /** @var RouteCollector $router */
@@ -42,16 +43,18 @@ $router->group(['before' => 'auth'], function ($router) {
 
     $router->group(['before' => 'admin'], function ($router) {
         $router->any('/dashboard/admin', [Admin\General::class, 'index']);
-        $router->any('/dashboard/admin/core', [Admin\General::class, 'core']);
-        $router->post('/dashboard/admin/core/config-update', [Admin\General::class, 'configUpdate']);
-        $router->post('/dashboard/admin/core/theme-update', [Admin\General::class, 'themeUpdate']);
-        $router->any('/dashboard/admin/general', [Admin\General::class, 'general']);
-//        $router->post('/dashboard/admin/general/logo', [Admin\General::class, 'logo']);
-//        $router->post('/dashboard/admin/general/logo-upload', [Admin\General::class, 'logoUpload']);
+        $router->any('/dashboard/admin/core', [Admin\Core::class, 'core']);
+        $router->post('/dashboard/admin/core/config-update', [Admin\Core::class, 'configUpdate']);
+        $router->post('/dashboard/admin/core/theme-update', [Admin\Core::class, 'themeUpdate']);
+        $router->get('/dashboard/admin/general', [Admin\General::class, 'general']);
+        $router->post('/dashboard/admin/general', [Admin\General::class, 'generalPost']);
+        $router->post('/dashboard/admin/general/logo', [Admin\General::class, 'logo']);
+        $router->post('/dashboard/admin/general/logo-upload', [Admin\General::class, 'logoUpload']);
 //        $router->post('/dashboard/admin/general/logo-delete', [Admin\General::class, 'logoDelete']);
 //        $router->any('/dashboard/admin/backgrounds', [Admin\Backgrounds::class, 'index']);
 //        $router->any('/dashboard/admin/backgrounds/upload', [Admin\Backgrounds::class, 'backgroundsUpload']);
-//        $router->any('/dashboard/admin/messages', [Admin\Messages::class, 'index']);
+        $router->get('/dashboard/admin/messages', [Admin\Messages::class, 'index']);
+        $router->post('/dashboard/admin/messages', [Admin\Messages::class, 'indexPost']);
 //        $router->any('/dashboard/admin/rules', [Admin\Rules::class, 'index']);
 //        $router->any('/dashboard/admin/staff', [Admin\Staff::class, 'index']);
 //
@@ -68,6 +71,7 @@ $router->group(['before' => 'auth'], function ($router) {
 //    $router->any('/dashboard/session', [Test::class, 'session']);
 });
 
+$router->any('/test/constants', [Test::class, 'constants']);
 //$router->any('/test/exception', [Test::class, 'exception']);
 //$router->post('/test/mysql', [Test::class, 'mysql']);
 //$router->any('/test/steam/{key}?', [Test::class, 'steam']);

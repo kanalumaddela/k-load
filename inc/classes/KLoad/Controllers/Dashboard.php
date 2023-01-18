@@ -13,15 +13,18 @@
 namespace KLoad\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
+use JetBrains\PhpStorm\NoReturn;
 use KLoad\Exceptions\InvalidToken;
 use KLoad\Facades\Cache;
 use KLoad\Facades\Config;
+use KLoad\Facades\Lang;
 use KLoad\Facades\Session;
 use KLoad\Helpers\Util;
 use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Models\User;
 use KLoad\View\LoadingView;
+use Symfony\Component\HttpFoundation\Response;
 use function array_intersect;
 use function array_keys;
 use function array_merge;
@@ -73,25 +76,25 @@ class Dashboard extends BaseController
     {
         $this->validateCsrf();
 
-        $post = $this->request->request;
+        $post = $this->getPost();
 
-        if ($post->has('theme') && $this->user['super']) {
+        if ($this->user['super'] && $post->has('theme')) {
             $theme = $post->get('theme');
 
             if (LoadingView::themeExists($theme) && $theme !== Config::get('loading_theme')) {
                 Config::set('loading_theme', $theme);
                 Config::save();
-                flash('success', 'Theme has been changed to `'.$theme.'`');
+                flash('success', 'Theme has been changed to `' . $theme . '`');
             }
 
             if (!LoadingView::themeExists($theme)) {
-                Session::error('Theme: '.$theme.' does not exist');
+                Session::error('Theme: ' . $theme . ' does not exist');
             }
         }
 
         if ($post->has('community_name') && $this->can('community_name')) {
             Setting::where('name', 'community_name')->update(['value' => $post->get('community_name')]);
-            flash('success', 'Community name has been updated');
+            flash('success', Lang::get('community_name_updated', 'Community name has been updated'));
         }
 
         if ($post->has('backgrounds') && $this->can('backgrounds')) {
@@ -102,7 +105,7 @@ class Dashboard extends BaseController
             $backgrounds['fade'] = isset($backgrounds['fade']) ? (int) $backgrounds['fade'] : 750;
 
             Setting::where('name', 'backgrounds')->update(['value' => json_encode($backgrounds)]);
-            flash('success', 'Background settings have been saved');
+            flash('success', Lang::get('background_settings_updated', 'Background settings have been saved'));
         }
 
         if ($post->has('music') && $this->can('music')) {
@@ -115,7 +118,7 @@ class Dashboard extends BaseController
             $music = Setting::where('name', 'music')->first();
 
             Setting::where('name', 'music')->update(['value' => json_encode(array_merge($music->value, $musicPost))]);
-            flash('success', 'Music settings have been saved');
+            flash('success', Lang::get('music_settings_updated', 'Music settings have been saved'));
         }
 
         return redirect(APP_ROUTE_URL.'/dashboard');
@@ -142,7 +145,7 @@ class Dashboard extends BaseController
 
         unset($settings['music'], $settings['youtube']['source'], $settings['youtube']['order'], $settings['youtube']['list']);
 
-        $post = $this->request->request->all();
+        $post = $this->getPost()->all();
         unset($post['_csrf']);
 
         if (!isset($post['theme'])) {
@@ -170,7 +173,7 @@ class Dashboard extends BaseController
 
         User::where('steamid', $this->user['steamid'])->update($update);
 
-        flash('success', 'Your settings have been saved!');
+        flash('success', Lang::get('your_settings_saved', 'Your settings have been saved!'));
 
         return redirect(APP_ROUTE_URL.'/dashboard/my-settings');
     }
@@ -197,7 +200,7 @@ class Dashboard extends BaseController
         $data = [
             'users'         => $users,
             'usersPageList' => Util::paginateFix($users),
-            'steamInfo'     => Cache::remember('steaminfo-users-'.md5($steamids), 3600, function () use ($steamids) {
+            'steamInfo' => Cache::remember('steaminfo-users-' . md5($steamids), 3600, static function () use ($steamids) {
                 return empty($data = Util::getPlayersInfo($steamids, true)) ? null : $data;
             }),
             'query' => $query ?? null,
@@ -212,31 +215,31 @@ class Dashboard extends BaseController
 
         $steamid = $player->steamid;
 
-        $steamInfo = Cache::remember('steaminfo-user-'.$steamid, 3600, function () use ($steamid) {
+        $steamInfo = Cache::remember('steaminfo-user-' . $steamid, 3600, static function () use ($steamid) {
             return empty($data = Util::getPlayersInfo($steamid, true)) ? null : $data;
         });
 
         return $this->view('profile', get_defined_vars());
     }
 
-    public function userOldRoute($steamid)
+    public function userOldRoute($steamid): Response
     {
         $player = User::findBySteamid($steamid);
 
         $steamid = $player->steamid;
 
-        $steamInfo = Cache::remember('steaminfo-user-'.$steamid, 3600, function () use ($steamid) {
+        $steamInfo = Cache::remember('steaminfo-user-' . $steamid, 3600, function () use ($steamid) {
             return empty($data = Util::getPlayersInfo($steamid, true)) ? null : $data;
         });
 
         return $this->view('profile', get_defined_vars());
     }
 
-    public function getUserBackground($steamid)
+    #[NoReturn] public function getUserBackground($steamid): void
     {
-        $url = Cache::remember('steam-bg-'.$steamid, 3600, function () use ($steamid) {
+        $url = Cache::remember('steam-bg-' . $steamid, 3600, function () use ($steamid) {
             $regex = "/no_header *?profile_page *?has_profile_background *?.*\n\t *?style=\"background-image: *?url\( *?\n?'(https?:\/\/.*.jpg)/m";
-            $steamProfile = file_get_contents('https://steamcommunity.com/profiles/'.$steamid);
+            $steamProfile = file_get_contents('https://steamcommunity.com/profiles/' . $steamid);
 
             preg_match($regex, $steamProfile, $matches);
 

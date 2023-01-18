@@ -16,6 +16,9 @@ use KLoad\App;
 use KLoad\Exceptions\InvalidToken;
 use KLoad\Request;
 use KLoad\Session;
+use Symfony\Component\HttpFoundation\FileBag;
+use Symfony\Component\HttpFoundation\InputBag;
+use Symfony\Component\HttpFoundation\Response;
 use function array_merge;
 use function count;
 use function hash_equals;
@@ -25,21 +28,21 @@ use const KLoad\APP_CURRENT_ROUTE;
 
 class BaseController
 {
-    protected $user;
+    protected mixed $user;
 
     protected static string $templateFolder = '';
 
     protected static array $dataHooks = [];
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var Request
      */
-    protected $request;
+    protected Request $request;
 
     /**
      * @var Session
      */
-    protected $session;
+    protected Session $session;
 
     public function __construct(Request $request)
     {
@@ -52,17 +55,22 @@ class BaseController
         }
     }
 
-    public function boot()
+    public function boot(): void
     {
     }
 
-    public function view($template, array $data = [])
+    public function view($template, array $data = []): Response
     {
         if (count(static::$dataHooks) > 0) {
             $data = static::addHookData($data);
         }
 
-        return view((static::$templateFolder !== '' ? static::$templateFolder.'/' : '').$template, $data);
+        return view($this->getTemplateFolder() . $template, $data);
+    }
+
+    public function getTemplateFolder(): string
+    {
+        return (static::$templateFolder !== '' ? static::$templateFolder . '/' : '');
     }
 
     public function getRequest(): Request
@@ -70,9 +78,27 @@ class BaseController
         return $this->request;
     }
 
-    public function can($perm)
+    public function getPost(): InputBag
+    {
+        return $this->request->request;
+    }
+
+    public function getPostFiles(): FileBag
+    {
+        return $this->request->files;
+    }
+
+    protected function can(string ...$perms): bool
     {
         return true;
+    }
+
+    protected function authorize(string ...$perms): void
+    {
+        if ($this->user['super']) {
+            return;
+        }
+//        throw new NotAuthorized();
     }
 
     protected function validateCsrf(): void

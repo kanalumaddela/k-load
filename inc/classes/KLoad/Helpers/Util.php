@@ -13,7 +13,7 @@
 namespace KLoad\Helpers;
 
 use Exception;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Str;
 use kanalumaddela\SteamLogin\SteamLogin;

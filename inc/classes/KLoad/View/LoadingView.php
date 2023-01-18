@@ -62,12 +62,12 @@ class LoadingView extends View
         return parent::themeExists($theme) && file_exists(APP_ROOT.'/themes/'.$theme.'/pages/loading.twig');
     }
 
-    public static function setDefaultPaths()
+    public static function setDefaultPaths(): void
     {
         $theme = self::getTheme();
 
-        self::$twigLoader->addPath(APP_ROOT.'/themes/'.$theme.'/pages');
-        self::$twigLoader->addPath(APP_ROOT.'/themes/base', 'base');
+        self::$twigLoader->addPath(APP_ROOT . '/themes/' . $theme . '/pages');
+        self::$twigLoader->addPath(APP_ROOT . '/themes/base', 'base');
     }
 
     public static function getTheme(): string
@@ -79,7 +79,7 @@ class LoadingView extends View
         return self::$theme;
     }
 
-    public static function setTheme(string $theme)
+    public static function setTheme(string $theme): void
     {
         self::$theme = $theme;
     }

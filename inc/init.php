@@ -45,11 +45,13 @@ if (DEBUG && !$res instanceof JsonResponse) {
 
     print_r(DB::connection()->getQueryLog());
 
-    echo "\n".'-->';
+    echo "\n" . '-->';
 }
 
 if (ob_get_length() > 0) {
     ob_end_flush();
 }
+
+\KLoad\Facades\Lang::closeFile();
 
 exit();

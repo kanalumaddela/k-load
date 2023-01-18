@@ -16,10 +16,8 @@ use Throwable;
 
 class NotAuthorized extends HttpException
 {
-    public function __construct(int $statusCode, string $message = '', Throwable $previous = null, array $headers = [], ?int $code = 0)
+    public function __construct(int $statusCode = 401, string $message = '', Throwable $previous = null, array $headers = [], ?int $code = 0)
     {
-        $statusCode = 401;
-
         parent::__construct($statusCode, $message, $previous, $headers, $code);
     }
 }

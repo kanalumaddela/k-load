@@ -13,13 +13,13 @@
 namespace KLoad;
 
 use Exception;
+use JetBrains\PhpStorm\NoReturn;
 use KLoad\Helpers\Util;
 use RuntimeException;
 use function dd;
 use function dump;
 use function is_array;
 use function is_string;
-use function json_encode;
 use function session_destroy;
 use function session_name;
 use function session_regenerate_id;
@@ -29,41 +29,41 @@ use const PHP_SESSION_ACTIVE;
 
 class Session extends DotArray
 {
-    protected static $prefix = 'kload';
+    protected static string $prefix = 'kload';
 
-    public function __construct($items = [], array $options = [])
+    public function __construct()
     {
         if ($this->isActive()) {
-            throw new RuntimeException('Session already started: '.json_encode($_SESSION));
-        } else {
-            session_name('K-Load');
-            ini_set('session.gc_maxlifetime', 60 * 60 * 24 * 14);
-            session_set_cookie_params(60 * 60 * 24 * 14, APP_PATH, APP_DOMAIN, IS_HTTPS, true);
-            session_start();
-
-            if (!isset($_SESSION['kload'])) {
-                $_SESSION['kload'] = [];
-            }
-
-            $items = &$_SESSION['kload'];
+            throw new RuntimeException('Session already started');
         }
+
+        session_name('K-Load');
+        ini_set('session.gc_maxlifetime', 60 * 60 * 24 * 14);
+        session_set_cookie_params(60 * 60 * 24 * 14, APP_PATH, APP_DOMAIN, IS_HTTPS, true);
+        session_start();
+
+        if (!isset($_SESSION['kload'])) {
+            $_SESSION['kload'] = [];
+        }
+
+        $items = &$_SESSION['kload'];
 
         parent::__construct($items);
 
         $this->items = &$items;
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
         return session_status() === PHP_SESSION_ACTIVE;
     }
 
-    public function dump()
+    public function dump(): void
     {
         dump($_SESSION);
     }
 
-    public function dd()
+    #[NoReturn] public function dd(): void
     {
         dd($_SESSION);
     }
@@ -73,12 +73,12 @@ class Session extends DotArray
         return $this->get('user', []);
     }
 
-    public function destroy()
+    public function destroy(): void
     {
         session_destroy();
     }
 
-    public function regenerate()
+    public function regenerate(): void
     {
         session_regenerate_id();
     }
@@ -89,16 +89,16 @@ class Session extends DotArray
      *
      * @throws Exception
      */
-    public function flash(string $key, $value = null)
+    public function flash(string $key, $value = null): void
     {
         $this->checkForSession();
 
         $toasts = [
             'success' => '',
-            'error'   => '',
+            'error' => '',
             'warning' => '',
-            'info'    => '',
-            'danger'  => '',
+            'info' => '',
+            'danger' => '',
         ];
 
         if (isset($toasts[$key])) {
@@ -113,14 +113,14 @@ class Session extends DotArray
     /**
      * @throws Exception
      */
-    public function checkForSession()
+    public function checkForSession(): void
     {
         if (!$this->isActive()) {
-            throw new Exception('No active session found');
+            throw new RuntimeException('No active session found');
         }
     }
 
-    public function error($message)
+    public function error($message): void
     {
         if (is_array($message)) {
             foreach ($message as $msg) {

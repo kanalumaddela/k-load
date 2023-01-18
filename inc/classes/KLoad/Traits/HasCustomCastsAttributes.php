@@ -18,9 +18,9 @@ use function get_class;
 
 trait HasCustomCastsAttributes
 {
-    protected static $castsAttributeClassCache = [];
+    protected static array $castsAttributeClassCache = [];
 
-    protected $castsAttributeCache = [];
+    protected array $castsAttributeCache = [];
 
     use HasAttributes {
         HasAttributes::castAttribute as parentCastAttribute;

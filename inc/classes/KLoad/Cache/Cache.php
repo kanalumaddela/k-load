@@ -13,8 +13,6 @@
 namespace KLoad\Cache;
 
 use InvalidArgumentException;
-use function call_user_func;
-use function intval;
 use function is_array;
 use function is_callable;
 use function is_int;
@@ -42,8 +40,8 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
             $values = $key;
 
             $successes = [];
-            foreach ($values as $key => $value) {
-                $successes[$key] = $this->store($key, $value, $time);
+            foreach ($values as $k => $v) {
+                $successes[$k] = $this->store($k, $v, $time);
             }
 
             return $successes;
@@ -53,7 +51,7 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
             throw new InvalidArgumentException('Time must be numeric');
         }
 
-        $success = $this->driver->put($key, opis_serialize($value), intval($time));
+        $success = $this->driver->put($key, opis_serialize($value), (int)$time);
 
         if ($success && $this->remember_values) {
             $this->loaded[$key] = $value;
@@ -70,8 +68,8 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
             $keys = $key;
 
             $results = [];
-            foreach ($keys as $key) {
-                $results[$key] = $this->get($key, $default);
+            foreach ($keys as $k) {
+                $results[$k] = $this->get($k, $default);
             }
 
             return $results;
@@ -85,7 +83,7 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
 
         if (is_null($result)) {
             if (is_callable($default) && !is_string($default)) {
-                return call_user_func($default, $key);
+                return $default($key);
             }
 
             return $default;

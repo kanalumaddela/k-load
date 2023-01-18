@@ -12,12 +12,16 @@
 
 namespace KLoad\View;
 
+use Exception;
 use InvalidArgumentException;
 use KLoad\App;
 use KLoad\Facades\Config;
 use KLoad\Facades\Lang;
 use KLoad\Facades\Session;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
@@ -86,10 +90,15 @@ class View
 
     public static function themeExists(string $theme): bool
     {
-        return file_exists(APP_ROOT.'/themes/'.$theme);
+        return file_exists(APP_ROOT . '/themes/' . $theme);
     }
 
-    public static function render($template, array $data = [], $includeGlobalData = true)
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
+    public static function render($template, array $data = [], $includeGlobalData = true): string
     {
         static::$twigLoader = new FilesystemLoader();
         static::setDefaultPaths();
@@ -98,7 +107,7 @@ class View
 
         static::$twig = new Environment(static::$twigLoader, [
             'debug' => DEBUG,
-            'cache' => ENABLE_CACHE ? APP_ROOT.'/data/templates' : false,
+            'cache' => ENABLE_CACHE ? APP_ROOT . '/data/templates' : false,
         ]);
 
         if (DEBUG) {
@@ -109,20 +118,23 @@ class View
 
         $data = array_merge($data, static::buildData());
 
-        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template.'.twig', $data);
+        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template . '.twig', $data);
     }
 
-    public static function setDefaultPaths()
+    /**
+     * @throws LoaderError
+     */
+    public static function setDefaultPaths(): void
     {
         $theme = static::getTheme();
 
         $requiredFiles = [
-            APP_ROOT.'/themes/'.$theme.'/pages',
-            'controllers' => APP_ROOT.'/themes/'.$theme.'/pages/controllers',
+            APP_ROOT . '/themes/' . $theme . '/pages',
+            'controllers' => APP_ROOT . '/themes/' . $theme . '/pages/controllers',
         ];
 
         $optionalFiles = [
-            'partials' => APP_ROOT.'/themes/'.$theme.'/pages/partials',
+            'partials' => APP_ROOT . '/themes/' . $theme . '/pages/partials',
         ];
 
         if (!file_exists(APP_ROOT.'/themes/'.$theme.'/pages')) {
@@ -149,12 +161,12 @@ class View
         return static::$theme;
     }
 
-    public static function setTheme(string $theme)
+    public static function setTheme(string $theme): void
     {
         static::$theme = $theme;
     }
 
-    public static function addFunctions()
+    public static function addFunctions(): void
     {
         self::$twig->addFunction(new TwigFunction('lang', [Lang::class, 'get']));
         self::$twig->addFunction(new TwigFunction('can', function (...$perms) {
@@ -205,10 +217,13 @@ class View
 
             $csrf = Session::generateCsrf($route);
 
-            return new Markup('<input type="hidden" value="'.$csrf.'" name="_csrf" />', 'utf-8');
+            return new Markup('<input type="hidden" value="' . $csrf . '" name="_csrf" />', 'utf-8');
         }));
     }
 
+    /**
+     * @throws Exception
+     */
     public static function buildData(): array
     {
         static::setupBaseData();
@@ -216,14 +231,17 @@ class View
         return [];
     }
 
-    public static function setupBaseData()
+    /**
+     * @throws Exception
+     */
+    public static function setupBaseData(): void
     {
         $site = [
-            'host'          => APP_HOST,
-            'path'          => APP_PATH,
-            'url'           => APP_URL,
-            'current'       => APP_CURRENT_URL,
-            'route'         => APP_ROUTE_URL,
+            'host' => APP_HOST,
+            'path' => APP_PATH,
+            'url' => APP_URL,
+            'current' => APP_CURRENT_URL,
+            'route' => APP_ROUTE_URL,
             'current_route' => APP_CURRENT_ROUTE,
         ];
 
@@ -255,9 +273,9 @@ class View
         }
 
         $globals = [
-            'assets'       => APP_PATH.'/assets',
-            'assets_theme' => APP_PATH.'/themes/'.static::getTheme().'/assets',
-            'site_json'    => new Markup(json_encode($site), 'utf-8'),
+            'assets' => APP_PATH . '/assets',
+            'assets_theme' => APP_PATH . '/themes/' . static::getTheme() . '/assets',
+            'site_json' => new Markup(json_encode($site, JSON_THROW_ON_ERROR), 'utf-8'),
             'cache_buster' => bin2hex(random_bytes(4)),
         ];
 

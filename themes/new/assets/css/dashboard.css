@@ -96,7 +96,8 @@ main {
 }
 
 .header, th.header, .card-header-title {
-    background-color: rgba(0, 0, 0, .15);
+    /*background-color: rgba(0, 0, 0, .25);*/
+    background-color: #252b30;
 }
 
 .card-header-title {
@@ -117,6 +118,11 @@ main {
 .button {
     border: none;
 }
+
+/*.button.is-primary {*/
+/*    background-color: #6cbdff;*/
+/*    color: #000;*/
+/*}*/
 
 /* tables */
 .table {
