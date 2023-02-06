@@ -25,13 +25,13 @@ VALUES ('description', '');
 INSERT INTO `k-load`.kload_settings (name, value)
 VALUES ('logo', '');
 INSERT INTO `k-load`.kload_settings (name, value)
-VALUES ('messages', '{"random":1,"duration":5000,"fade":250,"list":[]}');
+VALUES ('messages', '{"enable":1,"random":0,"duration":5000,"fade":250,"list":[]}');
 INSERT INTO `k-load`.kload_settings (name, value)
 VALUES ('music', '{"enable":1,"random":1,"volume":15,"source":"files","order":[]}');
 INSERT INTO `k-load`.kload_settings (name, value)
-VALUES ('rules', '{"duration":2000,"list":[]}');
+VALUES ('rules', '{"enable":1,"duration":2000,"numbering_type":"1","list":[]}');
 INSERT INTO `k-load`.kload_settings (name, value)
-VALUES ('staff', '{"duration":400,"list":[]}');
+VALUES ('staff', '{"list":[]}');
 INSERT INTO `k-load`.kload_settings (name, value)
 VALUES ('version', '2.6.0');
 INSERT INTO `k-load`.kload_settings (name, value)

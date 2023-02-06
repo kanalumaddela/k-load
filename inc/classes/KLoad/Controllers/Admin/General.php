@@ -31,8 +31,6 @@ use const KLoad\APP_ROUTE_URL;
 
 class General extends AdminController
 {
-    protected static string $templateFolder = 'general';
-
     public function general(): Response
     {
         $this->authorize('general');

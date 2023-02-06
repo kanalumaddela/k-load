@@ -1,7 +1,5 @@
 {% extends 'app.twig' %}
 
-{% block title %}Users{% endblock %}
-
 {% block bodyCss %}
     <style>
         .user-card {
@@ -53,7 +51,7 @@
 {% block content %}
     <div class="container px-4 py-6">
         <div class="mb-5">
-            <form action="{{ site.current }}" method="get">
+            <form action="{{ app.current }}" method="get">
                 <label>Search for a user</label>
                 <div class="field has-addons">
                     <div class="control is-flex-grow-1">

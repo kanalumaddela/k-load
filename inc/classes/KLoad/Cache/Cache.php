@@ -25,7 +25,7 @@ use function Opis\Closure\unserialize as opis_unserialize;
 
 class Cache extends \J0sh0nat0r\SimpleCache\Cache
 {
-    public function store($key, $value = null, $time = null)
+    public function store($key, $value = null, $time = null): array|bool
     {
         $this->validateKey($key);
 

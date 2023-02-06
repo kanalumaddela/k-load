@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Str;
+use JsonException;
 use kanalumaddela\SteamLogin\SteamLogin;
 use KLoad\Facades\Config;
 use stdClass;
@@ -209,7 +210,7 @@ class Util
             $steamids = implode(',', $steamids);
         }
 
-        $url = sprintf(SteamLogin::STEAM_API.'&steamids=%s', Config::get('apikeys.steam'), $steamids);
+        $url = sprintf(SteamLogin::STEAM_API . '&steamids=%s', Config::get('apikeys.steam'), $steamids);
         $curl = curl_init($url);
 //        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -217,9 +218,13 @@ class Util
         $data = curl_exec($curl);
         curl_close($curl);
 
-        $data = json_decode($data, $json);
+        try {
+            $data = json_decode($data, $json, 512, JSON_THROW_ON_ERROR);
 
-        if (is_null($data)) {
+            if (is_null($data)) {
+                $data = [];
+            }
+        } catch (JsonException $e) {
             $data = [];
         }
 

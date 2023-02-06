@@ -1,7 +1,5 @@
 {% extends 'app.twig' %}
 
-{% block title %}General{% endblock %}
-
 {% block bodyCss %}
     <style>
         #drop_zone {
@@ -16,10 +14,6 @@
 
         .horizontal-separator {
             margin: .75rem 0;
-            width: 100%;
-            border-width: 1px;
-            border-style: solid;
-            border-color: #4f585d;
         }
 
         #logo-preview {
@@ -79,8 +73,6 @@
                                                         {{ csrf(app.current_route ~ '/logo') }}
 
                                                         <div class="has-text-centered">
-                                                            {#                                                            <h1>Logo Preview</h1> #}
-
                                                             <div id="logo-preview">
                                                                 <img class="my-3"
                                                                      src="{% if settings.logo %}{{ asset('img/logos/' ~ settings.logo) }}{% endif %}"
@@ -143,7 +135,9 @@
                                                     </div>
 
                                                     <div class="mt-1 has-text-centered">
-                                                        <button class="button">{{ lang('upload') }}</button>
+                                                        <button class="button is-outlined is-info-button"><i
+                                                                    class="fas fa-upload mr-2"></i>{{ lang('upload') }}
+                                                        </button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -155,7 +149,7 @@
                                 <hr class="horizontal-separator">
                             </div>
                             <div class="column is-full mb-2">
-                                <form action="{{ site.current }}" method="post">
+                                <form action="{{ app.current }}" method="post">
                                     {{ csrf }}
                                     <div>
                                         {% if can('community_name') %}
@@ -181,7 +175,8 @@
                                     </div>
 
                                     <div class="mt-3 has-text-centered">
-                                        <button class="button">{{ lang('save') }}</button>
+                                        <button class="button is-outlined is-save-button"><i
+                                                    class="fas fa-save mr-2"></i>{{ lang('save') }}</button>
                                     </div>
                                 </form>
                             </div>

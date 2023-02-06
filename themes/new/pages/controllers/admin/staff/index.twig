@@ -1,0 +1,342 @@
+{% extends 'app.twig' %}
+
+{% set dragula = true %}
+
+{% block bodyCss %}
+    <style>
+        .child {
+            padding-top: .35rem;
+            padding-bottom: .35rem;
+        }
+
+        .gamemode-children .child:not(:last-child) {
+            /*margin-bottom: 1.25rem;*/
+            /*border-bottom: 1px solid rgba(0,0,0,.55);*/
+            border-bottom: 1px solid rgba(255, 255, 255, .35);
+        }
+
+        .field.has-addons .control .button {
+            background-color: transparent;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container px-4 py-6">
+        <form action="{{ app.current }}" method="post">
+            {{ csrf }}
+
+            <div class="floating-form-controls has-text-right">
+                <div class="card is-bordered mb-3">
+                    <div class="card-content is-flex is-flex-direction-column">
+                        <button class="button is-info add-elem" type="button"
+                                onclick="addElem('#staff-list', staffGamemode)">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            {{ lang('add_gamemode') }}
+                        </button>
+                        <button class="button is-success add-elem" type="submit">
+                            <i class="fas fa-save mr-2"></i>
+                            {{ lang('save') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <header class="card-header">
+                    <p class="card-header-title is-size-3">{{ lang('staff') }}</p>
+                </header>
+            </div>
+
+            <div id="staff-list" class="columns is-desktop is-multiline">
+                {% for gamemode, staff in old.staff.list|default(settings.staff.list) %}
+                    <div class="column is-half-desktop parent">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="field is-align-items-center is-horizontal is-justify-content-center">
+                                    <div class="pr-4">
+                                        <label class="label">{{ lang('gamemode') }}</label>
+                                    </div>
+                                    <div>
+                                        <div class="control">
+                                            <input class="input gamemode" type="text"
+                                                   value="{{ gamemode|default('demo') }}"
+                                                   placeholder="gamemode"
+                                                   oninput="fixGamemodeInputs(this, 'staff')"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="horizontal-separator my-4">
+
+                                <div class="columns is-mobile is-marginless">
+                                    <h1 class="column is-half-mobile is-half-tablet is-4-desktop is-5-widescreen py-0 px-1">
+                                        SteamID</h1>
+                                    <h1 class="column is-half-mobile is-half-tablet is-5-desktop py-0 px-1">Rank</h1>
+                                    <div class="column is-1 is-hidden-mobile"></div>
+                                </div>
+
+                                <div class="gamemode-children">
+                                    {% if old.staff %}
+                                        {% for steamid in old.staff.list|merge(['']) %}
+                                            <div class="child columns is-mobile is-multiline is-marginless mx-0 is-vcentered">
+                                                <div class="column is-half-mobile is-half-tablet is-4-desktop is-5-widescreen px-1">
+                                                    <input class="input steamid" type="text"
+                                                           name="staff[list][{{ gamemode }}][steamids][]"
+                                                           value="{{ steamid }}"
+                                                           placeholder="{{ lang('steamid') }}"
+                                                           oninput="addNewInput(this)">
+                                                </div>
+                                                <div class="column is-half-mobile is-half-tablet is-5-desktop px-1">
+                                                    <input class="input rank" type="text"
+                                                           name="staff[list][{{ gamemode }}][ranks][]"
+                                                           value="{{ old.staff.list[gamemode]['ranks'][loop.index0] }}"
+                                                           placeholder="{{ lang('rank') }}"
+                                                           oninput="addNewInput(this)">
+                                                </div>
+                                                <div class="column is-full-tablet is-3-desktop is-2-widescreen p-0">
+                                                    <div class="field has-addons is-justify-content-center">
+                                                        <div class="control">
+                                                            <button class="button sort-handle" type="button">
+                                                                <i class="fas fa-bars is-size-5"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="control">
+                                                            <button class="button" type="button"
+                                                                    onclick="deleteElem(this, '.child', true)">
+                                                                <i class="fas fa-times is-size-4"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for member in staff|merge(['']) %}
+                                            <div class="child columns is-mobile is-multiline is-marginless mx-0 is-vcentered">
+                                                <div class="column is-half-mobile is-half-tablet is-4-desktop is-5-widescreen px-1">
+                                                    <input class="input steamid" type="text"
+                                                           name="staff[list][{{ gamemode }}][steamids][]"
+                                                           value="{{ member.steamid }}"
+                                                           placeholder="{{ lang('steamid') }}"
+                                                           oninput="addNewInput(this)">
+                                                </div>
+                                                <div class="column is-half-mobile is-half-tablet is-5-desktop px-1">
+                                                    <input class="input rank" type="text"
+                                                           name="staff[list][{{ gamemode }}][ranks][]"
+                                                           value="{{ member.rank }}"
+                                                           placeholder="{{ lang('rank') }}"
+                                                           oninput="addNewInput(this)">
+                                                </div>
+                                                <div class="column is-full-tablet is-3-desktop is-2-widescreen p-0">
+                                                    <div class="field has-addons is-justify-content-center">
+                                                        <div class="control">
+                                                            <button class="button sort-handle" type="button">
+                                                                <i class="fas fa-bars is-size-5"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="control">
+                                                            <button class="button" type="button"
+                                                                    onclick="deleteElem(this, '.child', true)">
+                                                                <i class="fas fa-times is-size-4"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <div class="mt-2 has-text-centered">
+                                    <button class="button is-outlined is-delete-button" type="button"
+                                            onclick="deleteElem(this, '.parent', true)">
+                                        <i class="fas fa-trash mr-2"></i>
+                                        <span>{{ lang('delete') }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bodyJs %}
+    <script>
+        drake.on('drop', (el, container, source) => {
+            console.log('fix inputs after drop')
+            updateStaffInputs(getParent(container), 'staff')
+        })
+
+        function deleteElem(el, selector, requireConfirmation) {
+            selector = typeof selector === 'undefined' ? '.child' : selector
+            requireConfirmation = typeof requireConfirmation === 'undefined' ? false : requireConfirmation
+
+            let parent = el.closest(selector);
+
+            if (parent) {
+                if (parent.matches('.child.columns') && hasEmptyInputs(parent)) {
+                    return;
+                }
+
+                if (requireConfirmation) {
+                    if (window.confirm('Are you sure you want to delete this?')) {
+                        parent.remove();
+                    }
+                } else {
+                    parent.remove();
+                }
+            }
+        }
+
+        const fixGamemodeInputs = debounce((el, type) => {
+            const gamemode = el.value
+
+            updateStaffInputs(getParent(el), type, gamemode)
+        }, 200)
+
+        const updateStaffInputs = (parent, type, gamemode) => {
+            if (typeof gamemode === 'undefined') {
+                gamemode = determineGamemode(parent);
+            }
+
+            parent.querySelectorAll('input.steamid').forEach(child => {
+                child.name = `${type}[list][${gamemode}][steamids][]`
+            })
+            parent.querySelectorAll('input.rank').forEach(child => {
+                child.name = `${type}[list][${gamemode}][ranks][]`
+            })
+        }
+
+        const hasEmptyInputs = (el) => {
+            const bothInputs = el.querySelectorAll('input');
+
+            let bothInputsEmpty = 0;
+
+            bothInputs.forEach(input => {
+                if (input.value.length === 0) {
+                    bothInputsEmpty++;
+                }
+            })
+
+            return bothInputsEmpty === 2;
+        }
+
+        const addNewInput = debounce((el) => {
+            const parent = el.closest('.child')
+            const sibling = parent.nextElementSibling;
+
+            let bothInputsEmpty = hasEmptyInputs(parent)
+
+            if (bothInputsEmpty && sibling && !sibling.querySelector('input.steamid').value.length) {
+                sibling.remove()
+            } else if (!bothInputsEmpty && sibling == null) {
+                addElem(el.closest('.gamemode-children'), staffInput(el))
+            }
+        }, 150);
+
+        const staffInput = (el) => {
+            const gamemode = typeof el !== 'undefined' ? determineGamemode(getParent(el)) : 'gamemode';
+
+            return elem('div', {classList: 'child columns is-mobile is-multiline is-marginless mx-0 is-vcentered'},
+                elem('div', {classList: 'column is-half-mobile is-half-tablet is-4-desktop is-5-widescreen px-1'},
+                    elem('input', {
+                        classList: 'input steamid',
+                        type: 'text',
+                        name: `staff[list][${gamemode}][steamids][]`,
+                        onInput: 'addNewInput(this)',
+                        placeholder: '{{ lang('steamid') }}'
+                    })
+                ),
+
+                elem('div', {classList: 'column is-half-mobile is-half-tablet is-5-desktop px-1'},
+                    elem('input', {
+                        classList: 'input rank',
+                        type: 'text',
+                        name: `staff[list][${gamemode}][ranks][]`,
+                        onInput: 'addNewInput(this)',
+                        placeholder: '{{ lang('rank') }}'
+                    })
+                ),
+
+                elem('div', {classList: 'column is-full-tablet is-3-desktop is-2-widescreen p-0'},
+                    elem('div', {classList: 'field has-addons is-justify-content-center'},
+                        elem('div', {classList: 'control'},
+                            elem('button', {classList: 'button sort-handle', type: 'button'},
+                                elem('i', {classList: 'fas fa-bars is-size-5'})
+                            )
+                        ),
+                        elem('div', {classList: 'control'},
+                            elem('button', {
+                                    classList: 'button',
+                                    type: 'button',
+                                    onClick: 'deleteElem(this, \'.child\', true)'
+                                },
+                                elem('i', {classList: 'fas fa-times is-size-4'})
+                            )
+                        ),
+                    )
+                )
+            )
+        }
+
+        const staffGamemode = () => {
+            const staffChildren = elem('div', {classList: 'gamemode-children'}, staffInput())
+
+            drake.containers.push(staffChildren)
+
+            return elem('div', {classList: 'column is-half-desktop parent'},
+                elem('div', {classList: 'card'},
+                    elem('div', {classList: 'card-content'},
+                        elem('div', {classList: 'field is-align-items-center is-horizontal is-justify-content-center'},
+                            elem('div', {classList: 'pr-4'},
+                                elem('label', {classList: 'label', innerText: '{{ lang('gamemode') }}'})
+                            ),
+                            elem('div', {},
+                                elem('div', {classList: 'control'},
+                                    elem('input', {
+                                        classList: 'input gamemode',
+                                        type: 'text',
+                                        value: 'gamemode',
+                                        placeholder: 'gamemode',
+                                        onInput: 'fixGamemodeInputs(this, \'staff\')'
+                                    })
+                                )
+                            )
+                        ),
+
+                        elem('hr', {classList: 'horizontal-separator my-4'}),
+
+                        elem('div', {classList: 'columns is-mobile is-marginless'},
+                            elem('h1', {
+                                classList: 'column is-half-mobile is-half-tablet is-4-desktop is-5-widescreen py-0 px-1',
+                                innerText: '{{ lang('steamid') }}'
+                            }),
+                            elem('h1', {
+                                classList: 'column is-half-mobile is-half-tablet is-5-desktop py-0 px-1',
+                                innerText: '{{ lang('rank') }}'
+                            }),
+                            elem('div', {classList: 'column is-1 is-hidden-mobile'}),
+                        ),
+
+                        staffChildren,
+
+                        elem('div', {classList: 'mt-2 has-text-centered'},
+                            elem('button', {
+                                    classList: 'button is-outlined is-delete-button',
+                                    type: 'button',
+                                    onClick: 'deleteElem(this, \'.parent\', true)'
+                                },
+                                elem('i', {classList: 'fas fa-trash mr-2'}),
+                                elem('span', {innerText: '{{ lang('delete') }}'})
+                            ),
+                        )
+                    )
+                )
+            )
+        }
+    </script>
+{% endblock %}

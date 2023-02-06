@@ -1,7 +1,5 @@
 {% extends 'app.twig' %}
 
-{% block title %}My Settings{% endblock %}
-
 {% block bodyCss %}
     <style>
         .columns > .column > .columns {
@@ -9,72 +7,12 @@
             margin-left: unset;
             margin-right: unset;
         }
-
-        .theme-selection > div {
-            display: inline-block;
-        }
-
-        .theme-selection > div > * {
-            vertical-align: middle;
-        }
-
-        .theme-preview {
-            cursor: pointer;
-        }
-
-        .theme-preview:active {
-            cursor: zoom-in;
-        }
-
-        .theme-preview {
-            border-radius: .4rem;
-        }
-
-        .image-modal {
-            z-index: 9999;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, .7);
-        }
-
-        .image-modal:before {
-            content: 'X';
-            display: block;
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            font-size: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            right: 25px;
-            top: 25px;
-            line-height: 45px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 100px;
-        }
-
-        .image-modal > img {
-            position: relative;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 85%;
-            max-height: 95%;
-            border-radius: 0;
-        }
-
-        .input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
     </style>
 {% endblock %}
 
 {% block content %}
     <div class="container px-4 py-6">
-        <form action="{{ site.current }}" method="post">
+        <form action="{{ app.current }}" method="post">
             {{ csrf }}
             <div class="columns is-multiline is-mobile">
                 <div id="my-settings-theme-selection" class="column is-full">
@@ -91,7 +29,7 @@
                                     <div class="column theme-selection is-half-mobile is-one-third-tablet is-one-fifth-desktop has-text-centered"
                                          title="Click and hold to enlarge image">
                                         <label for="theme_radio_{{ theme }}">
-                                            <img class="theme-preview"
+                                            <img class="theme-preview site-border-radius"
                                                  src="{{ preview|default(asset('img/theme.jpg')) }}">
                                         </label>
                                         <div>
@@ -105,7 +43,10 @@
                             </div>
 
                             <div class="has-text-centered">
-                                <button class="button">{{ lang('save') }}</button>
+                                <button class="button is-outlined is-save-button">
+                                    <i class="fas fa-save mr-2"></i>
+                                    {{ lang('save') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -173,7 +114,10 @@
                             </div>
 
                             <div class="has-text-centered">
-                                <button class="button">{{ lang('save') }}</button>
+                                <button class="button is-outlined is-save-button">
+                                    <i class="fas fa-save mr-2"></i>
+                                    {{ lang('save') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -237,31 +181,31 @@
                                     <h1 class="header"><i class="fab fa-youtube title-icon"></i> YouTube Videos</h1>
 
                                     <div id="youtube-list">
-                                        {% for yt_id in old.youtube.list|default(settings.youtube.list) %}
+                                        {% for yt_id in old.youtube.list|default(settings.youtube.list)|merge(['']) %}
                                             <div class="field has-addons mt-3 child">
                                                 <div class="control is-flex-grow-1">
-                                                    <input class="input" type="text" placeholder="Enter a youtube link"
+                                                    <input class="input" type="text"
+                                                           placeholder="{{ lang('enter_youtube_link') }}"
                                                            name="youtube[list][]"
-                                                           value="https://www.youtube.com/watch?v={{ yt_id }}">
+                                                           value="{% if yt_id is not empty %}https://www.youtube.com/watch?v={{ yt_id }}{% endif %}"
+                                                           oninput="addNewInput(this)">
                                                 </div>
                                                 <div class="control">
-                                                    <a class="button is-danger" onclick="deleteElem(this)">
-                                                        Delete
-                                                    </a>
+                                                    <button class="button" onclick="deleteElem(this, '.child', true)">
+                                                        <i class="fas fa-times is-size-4"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         {% endfor %}
-                                    </div>
-                                    <div class="mt-2">
-                                        <button class="button is-info add-elem" type="button"
-                                                onclick="addElem('youtube-list', youtubeInput)">Add Video
-                                        </button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="pt-4 has-text-centered">
-                                <button class="button">{{ lang('save') }}</button>
+                                <button class="button is-outlined is-save-button">
+                                    <i class="fas fa-save mr-2"></i>
+                                    {{ lang('save') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -272,6 +216,17 @@
 {% endblock %}
 {% block bodyJs %}
     <script>
+        const addNewInput = debounce((el) => {
+            const parent = el.closest('.field.has-addons.child')
+            const sibling = parent.nextElementSibling;
+
+            if (el.value.length && sibling == null) {
+                addElem(el.closest('#youtube-list'), youtubeInput(el))
+            } else if (el.value.length === 0 && sibling && !sibling.querySelector('input').value.length) {
+                sibling.remove();
+            }
+        }, 125)
+
         const youtubeInput = function () {
             return elem('div', {classList: 'field has-addons mt-3 child'},
                 elem('div', {classList: 'control is-flex-grow-1'},
@@ -279,49 +234,20 @@
                         classList: 'input',
                         type: 'text',
                         name: 'youtube[list][]',
-                        placeholder: 'Enter a youtube link'
+                        placeholder: '{{ lang('enter_youtube_link') }}',
+                        onInput: 'addNewInput(this)'
                     })
                 ),
                 elem('div', {classList: 'control'},
-                    elem('a', {
-                        classList: 'button is-danger delete-elem', innerText: 'Delete', onclick: function (ev) {
-                            deleteElem(ev.target);
-                        }
-                    })
+                    elem('button', {
+                            classList: 'button delete-elem',
+                            type: 'button',
+                            onClick: 'deleteElem(this, \'.child\', true)',
+                        },
+                        elem('i', {classList: 'fas fa-times is-size-4'}),
+                    )
                 ),
             )
         }
-
-
-        let mouseTimeout, mouseDown = false;
-        const createImageModal = el => {
-            let src = el.src;
-            let modal = elem('div', {className: 'image-modal'},
-                elem('img', {src: src})
-            );
-
-            modal.addEventListener('click', ev => {
-                modal.remove();
-            }, true);
-
-            document.body.append(modal);
-        };
-
-        const themePreviews = document.querySelectorAll('img.theme-preview');
-        themePreviews.forEach(el => {
-            el.addEventListener('mousedown', _ => {
-                mouseDown = true;
-                mouseTimeout = setTimeout(_ => {
-                    if (mouseDown) {
-                        createImageModal(el);
-                    }
-                }, 250);
-            });
-
-            el.addEventListener('mouseup', _ => {
-                clearTimeout(mouseTimeout);
-                mouseDown = false;
-            })
-        })
     </script>
 {% endblock %}

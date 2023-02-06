@@ -51,7 +51,6 @@ use function str_replace;
 use function stripos;
 use function strpos;
 use function strtoupper;
-use function substr;
 use function time;
 use function trigger_error;
 use function var_dump;
@@ -101,7 +100,7 @@ copyright;
     {
         Constants::init();
 
-        static::setupHandlers();
+//        static::setupHandlers();
         static::setupDirectories();
 
         static::determineCurrentRoute();
@@ -233,18 +232,23 @@ copyright;
 
     private static function setupHandlers()
     {
-        if (DEV) {
-            return;
-        }
+//        if (DEV) {
+//            return;
+//        }
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
+
+            echo '<pre>';
+            print_r(debug_backtrace());
+            die();
+
             kload_error_page([
-                'type'    => 'error',
-                'code'    => $errno,
-                'file'    => $errfile,
+                'type' => 'error',
+                'code' => $errno,
+                'file' => $errfile,
                 'line_no' => $errline,
                 'message' => $errstr,
-                'raw'     => func_get_args(),
+                'raw' => func_get_args(),
             ]);
 
             exit();
@@ -267,25 +271,25 @@ copyright;
     /**
      * @throws Exception
      */
-    private static function setupDirectories()
+    private static function setupDirectories(): void
     {
-        Util::mkDir(APP_ROOT.'/assets/img/backgrounds/global');
-        Util::mkDir(APP_ROOT.'/assets/img/logos');
-        Util::mkDir(APP_ROOT.'/data/logs', true);
-        Util::mkDir(APP_ROOT.'/data/music');
-        Util::mkDir(APP_ROOT.'/data/users');
+        Util::mkDir(APP_ROOT . '/assets/img/backgrounds/global');
+        Util::mkDir(APP_ROOT . '/assets/img/logos');
+        Util::mkDir(APP_ROOT . '/data/logs', true);
+        Util::mkDir(APP_ROOT . '/data/music');
+        Util::mkDir(APP_ROOT . '/data/users');
     }
 
-    private static function determineCurrentRoute()
+    private static function determineCurrentRoute(): void
     {
-        $current_route = !empty($route) ? $route : '/';
+        $current_route = '/';
         $route_query_string = false;
 
         if (isset($_SERVER['PATH_INFO'])) {
             $current_route = $_SERVER['PATH_INFO'];
         } else {
             // check query string
-            if (isset($_SERVER['QUERY_STRING']) && substr($_SERVER['QUERY_STRING'], 0, 1) === '/') { // && preg_match('/(\/[\w]*)+/', $_SERVER['QUERY_STRING'], $query_matches, PREG_UNMATCHED_AS_NULL) === 1
+            if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'][0] === '/') { // && preg_match('/(\/[\w]*)+/', $_SERVER['QUERY_STRING'], $query_matches, PREG_UNMATCHED_AS_NULL) === 1
                 $current_route = key($_GET);
                 $route_query_string = true;
             } elseif (strpos(($parse_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)), '/index.php') === false) { // isset($_SERVER['QUERY_STRING']) && substr($_SERVER['QUERY_STRING'], 0, 1) !== '/' &&
@@ -301,19 +305,19 @@ copyright;
         defineConstant('app_current_url', APP_ROUTE_URL.APP_CURRENT_ROUTE);
     }
 
-    public static function isInstalled()
+    public static function isInstalled(): bool
     {
 //        return false;
-        return file_exists(APP_ROOT.'/data/config.php');
+        return file_exists(APP_ROOT . '/data/config.php');
     }
 
-    public static function bootContainer()
+    public static function bootContainer(): void
     {
         $container = (new Container(new DefinitionAggregate()))->defaultToShared(true);
 
         $container->share(Request::class, ($request = Request::createFromGlobals()))->addTags('Request', 'request');
         $container->share(Cache::class, ($cache = new Cache(KDriver::class)))->addTags('Cache', 'cache');
-        $container->share(Config::class, $config = new Config(APP_ROOT.'/data/config.php'))->addTags('Config', 'config');
+        $container->share(Config::class, $config = new Config(APP_ROOT . '/data/config.php'))->addTags('Config', 'config');
         $container->share(Lang::class, ($lang = new Lang(APP_LANGUAGE)))->addTags('Lang', 'lang');
 
         $capsule = new Capsule();
@@ -340,9 +344,7 @@ copyright;
                 $capsule->addConnection($db, $name);
             }
 
-            unset($dbs);
-            unset($name);
-            unset($db);
+            unset($dbs, $name);
         }
 
         if (DEBUG) {
@@ -355,18 +357,18 @@ copyright;
 
         static::$container = $container;
 
-        Paginator::currentPageResolver(function () use ($request) {
+        Paginator::currentPageResolver(static function () use ($request) {
             return $request->query->get('page', 1);
         });
 
-        Paginator::currentPathResolver(function () {
+        Paginator::currentPathResolver(static function () {
             return APP_CURRENT_ROUTE;
         });
     }
 
-    private static function runConversion()
+    private static function runConversion(): void
     {
-        if (file_exists(APP_ROOT.'/inc/migrations')) {
+        if (file_exists(APP_ROOT . '/inc/migrations')) {
             $pdo = DB::connection()->getPdo();
 
             $triggers = $pdo->query('SHOW TRIGGERS like \'kload_sessions\'')->fetchAll(PDO::FETCH_ASSOC);
@@ -401,10 +403,10 @@ copyright;
         return is_array($r) ? $r[0] : $r;
     }
 
-    public static function setRoot(string $dir)
+    public static function setRoot(string $dir): void
     {
         if (!file_exists($dir)) {
-            trigger_error('Cannot set root directory as `'.$dir.'`. Does not exist.', E_USER_ERROR);
+            trigger_error('Cannot set root directory as `' . $dir . '`. Does not exist.', E_USER_ERROR);
         }
 
         defineConstant('app_root', $dir);

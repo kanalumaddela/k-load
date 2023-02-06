@@ -14,6 +14,13 @@ if (csrf) {
     csrf = csrf.content;
 }
 
+/**
+ *
+ * @param tag
+ * @param attrs
+ * @param children
+ * @returns {*}
+ */
 const elem = (tag, attrs, ...children) => {
     let parent = document.createElement(tag);
     Object.keys(attrs).forEach(function (key) {
@@ -31,6 +38,21 @@ const elem = (tag, attrs, ...children) => {
         parent.appendChild(child);
     });
     return parent;
+};
+
+const debounce = function (func, wait, immediate) {
+    let timeout;
+    return function () {
+        const context = this, args = arguments;
+        const later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
 };
 
 let toastsContainer = document.getElementById('toastMessages');
@@ -71,6 +93,10 @@ function dismissToast() {
     }, 300);
 }
 
+function determineToastDuration() {
+
+}
+
 
 if (Object.keys(toastMessages).length) {
     for (const [type, messages] of Object.entries(toastMessages)) {
@@ -104,13 +130,95 @@ function addElem(parent, child) {
         child.cloneNode(true);
     }
 
-    document.getElementById(parent).appendChild(child);
-}
-
-function deleteElem(el) {
-    let parent = el.closest('.child');
-
-    if (parent) {
-        parent.remove();
+    if (typeof parent !== 'string') {
+        parent.appendChild(child)
+    } else {
+        document.querySelector(parent).appendChild(child);
     }
 }
+
+function deleteElem(el, selector, requireConfirmation) {
+    selector = typeof selector === 'undefined' ? '.child' : selector
+    requireConfirmation = typeof requireConfirmation === 'undefined' ? false : requireConfirmation
+
+    let parent = el.closest(selector);
+
+    if (parent) {
+
+        if (requireConfirmation) {
+            if (window.confirm('Are you sure you want to delete this?')) {
+                parent.remove();
+            }
+        } else {
+            parent.remove();
+        }
+    }
+}
+
+let elemCache = {};
+
+function querySelectorCache(selector) {
+    return elemCache.hasOwnProperty(selector) ? elemCache[selector] : document.querySelector(selector);
+}
+
+function querySelectorAllCache(selector) {
+    return elemCache.hasOwnProperty(selector) ? elemCache[selector] : document.querySelectorAll(selector);
+}
+
+const getParent = (el) => {
+    return el.closest('.parent');
+}
+
+const getChildParent = (el, parent, child) => {
+    return el.closest(parent).querySelector(child)
+}
+
+const determineGamemode = parent => {
+    return parent.querySelector('input.gamemode').value;
+}
+
+const checkIfEmptyOrMissingEmptyRow = (el, childToAdd, childSelector) => {
+    if (!el.hasChildNodes()) {
+        addElem(el, childToAdd)
+        return;
+    }
+
+    childSelector = typeof childSelector === 'undefined' ? 'input' : childSelector;
+
+    const children = el.querySelectorAll(childSelector);
+
+    if (children[children.length - 1].value.length) {
+        addElem(el, childToAdd)
+    }
+}
+
+let mouseTimeout, mouseDown = false;
+const createImageModal = el => {
+    let src = el.src;
+    let modal = elem('div', {className: 'image-modal'},
+        elem('img', {src: src})
+    );
+
+    modal.addEventListener('click', ev => {
+        modal.remove();
+    }, true);
+
+    document.body.append(modal);
+};
+
+const themePreviews = document.querySelectorAll('img.theme-preview, .image-preview-modal');
+themePreviews.forEach(el => {
+    el.addEventListener('mousedown', _ => {
+        mouseDown = true;
+        mouseTimeout = setTimeout(_ => {
+            if (mouseDown) {
+                createImageModal(el);
+            }
+        }, 225);
+    });
+
+    el.addEventListener('mouseup', _ => {
+        clearTimeout(mouseTimeout);
+        mouseDown = false;
+    })
+})

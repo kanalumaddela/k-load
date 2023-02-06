@@ -17,7 +17,7 @@ use ReflectionException;
 
 class Definition extends \League\Container\Definition\Definition
 {
-    public function addTags(...$tags)
+    public function addTags(...$tags): static
     {
         foreach ($tags as $tag) {
             $this->addTag($tag);
@@ -29,7 +29,7 @@ class Definition extends \League\Container\Definition\Definition
     /**
      * @throws ReflectionException
      */
-    public function autoTag()
+    public function autoTag(): static
     {
         $reflection = new ReflectionClass($this->concrete);
         $this->addTag($reflection->getShortName());

@@ -16,11 +16,8 @@ use Throwable;
 
 class InvalidToken extends HttpException
 {
-    public function __construct(int $statusCode = 500, string $message = '', Throwable $previous = null, array $headers = [], ?int $code = 0)
+    public function __construct(int $statusCode = 401, string $message = 'CSRF token invalid/not given', Throwable $previous = null, array $headers = [], ?int $code = 0)
     {
-        $statusCode = 401;
-        $message = 'CSRF token invalid/not given';
-
         parent::__construct($statusCode, $message, $previous, $headers, $code);
     }
 }

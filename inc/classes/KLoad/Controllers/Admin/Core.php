@@ -58,6 +58,7 @@ class Core extends AdminController
             }
         }
 
+        $this->setTitle('admin');
 
         return $this->view('index', ['pages' => $filtered]);
     }

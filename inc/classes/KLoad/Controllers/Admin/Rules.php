@@ -21,23 +21,31 @@ use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
 use function KLoad\redirect;
 
-class Messages extends AdminController
+class Rules extends AdminController
 {
     use UpdateSettings;
 
     protected static array $defaultData = [
         'enable' => false,
-        'random' => false,
-        'duration' => 5000,
-        'fade' => 750,
+        'numbering_type' => 1, // 1|a|A|i|I
         'list' => [],
+    ];
+
+    private static array $numbering_types = [
+        '0' => '',
+        '1' => '',
+        'a' => '',
+        'A' => '',
+        'i' => '',
+        'I' => '',
     ];
 
     public function index(): Response
     {
-        $this->authorize('messages');
+        $this->authorize('rules');
 
-        $settings = Setting::where('name', 'messages')->pluck('value', 'name');
+        $settings = Setting::where('name', 'rules')->pluck('value', 'name');
+        $numbering_types = array_keys(static::$numbering_types);
 
         return $this->view('index', get_defined_vars());
     }
@@ -48,33 +56,33 @@ class Messages extends AdminController
     public function indexPost(): RedirectResponse
     {
         $this->validateCsrf();
-        $this->authorize('messages');
+        $this->authorize('rules');
 
-        $messages = static::$defaultData;
-        $post = $this->getPost()->get('messages');
+        $rules = static::$defaultData;
+        $post = $this->getPost()->get('rules');
 
-        $messages['enable'] = (bool)($post['enable'] ?? true);
-        $messages['random'] = (bool)($post['random'] ?? false);
-        $messages['duration'] = (int)($post['duration'] ?? 5000);
-        $messages['fade'] = (int)($post['fade'] ?? 750);
+        $rules['enable'] = (bool)($post['enable'] ?? true);
+        $rules['numbering_type'] = $post['numbering_type'] ?? 1;
 
+        if (!isset(static::$numbering_types[$rules['numbering_type']])) {
+            $rules['numbering_type'] = 1;
+        }
 
         if (isset($post['list'])) {
-            foreach ($post['list'] as $gamemode => $messageList) {
-                $messages['list'][strtolower($gamemode)] = array_filter($messageList);
+            foreach ($post['list'] as $gamemode => $ruleList) {
+                $rules['list'][strtolower($gamemode)] = array_filter($ruleList);
             }
         }
 
         $redirect = redirect(static::getRoute());
 
         try {
-            $this->updateSetting('messages', $messages);
+            $this->updateSetting('rules', $rules);
 
             return $redirect;
         } catch (Exception) {
             return $redirect->withInputs();
         }
     }
-
 
 }

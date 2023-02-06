@@ -114,9 +114,67 @@ main {
     color: #fff;
 }
 
+.has-background-transparent {
+    background-color: transparent;
+}
+
+
 /* buttons */
 .button {
     border: none;
+}
+
+.button.is-danger {
+    background-color: #c1334f !important;
+}
+
+.field.has-addons .control .button, .gu-mirror.field.has-addons .control .button {
+    background-color: #4f585d;
+}
+
+.control .button {
+    color: gray;
+    transition: .2s ease color;
+}
+
+.control > .button:hover {
+    color: #fff;
+}
+
+.button.is-outlined {
+    background-color: transparent;
+    border: 1px solid;
+}
+
+.button.is-outlined:hover {
+    color: #fff;
+}
+
+.button.is-delete-button {
+    color: #f3385d;
+    border-color: #f3385d;
+}
+
+.button.is-delete-button:hover {
+    background-color: #f3385d;
+}
+
+.button.is-save-button {
+    color: #48c774;
+    border-color: #48c774;
+}
+
+.button.is-save-button:hover {
+    background-color: #48c774;
+}
+
+.button.is-info-button {
+    color: #3298dc;
+    border-color: #3298dc;
+}
+
+.button.is-info-button:hover {
+    background-color: #3298dc;
 }
 
 /*.button.is-primary {*/
@@ -137,6 +195,18 @@ main {
 /* forms */
 .label {
     font-weight: 400;
+}
+
+.input::-webkit-input-placeholder, .select select::-webkit-input-placeholder, .textarea::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.gamemode-children {
+    min-height: 1.5rem;
+}
+
+.gamemode-children .field.has-addons .control:not(:last-child) {
+    margin-right: unset;
 }
 
 
@@ -167,4 +237,72 @@ code {
 
 .subtitle {
     color: #c7c7c7;
+}
+
+.horizontal-separator {
+    /*margin: .75rem 0;*/
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7a8085;
+}
+
+/* image preview */
+.theme-preview {
+    cursor: pointer;
+}
+
+.theme-preview:active {
+    cursor: zoom-in;
+}
+
+.image-modal {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.image-modal:before {
+    content: 'X';
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    right: 25px;
+    top: 25px;
+    line-height: 45px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 100px;
+}
+
+.image-modal > img {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 85%;
+    max-height: 95%;
+    border-radius: 0;
+}
+
+.floating-form-controls {
+    z-index: 1;
+    position: fixed;
+    bottom: 2%;
+    right: 1%;
+}
+
+.floating-form-controls .card {
+    border: 1px solid rgba(255, 255, 255, .2);
+}
+
+.floating-form-controls button:not(:last-child) {
+    margin-bottom: 0.65rem;
 }

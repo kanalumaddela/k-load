@@ -42,13 +42,10 @@ class Dashboard extends BaseController
 {
     protected static string $templateFolder = 'controllers/dashboard';
 
-    public function index()
-    {
-        if (!$this->user['admin']) {
-            exit();
-//            return $this->settings();
-        }
+    protected static string $title = 'dashboard';
 
+    public function index(): Response
+    {
         $settings = [
             'backgrounds',
             'community_name',
@@ -68,9 +65,9 @@ class Dashboard extends BaseController
     }
 
     /**
+     * @return RedirectResponse
      * @throws InvalidToken
      *
-     * @return RedirectResponse
      */
     public function indexPost(): RedirectResponse
     {
@@ -99,10 +96,10 @@ class Dashboard extends BaseController
 
         if ($post->has('backgrounds') && $this->can('backgrounds')) {
             $backgrounds = $post->get('backgrounds');
-            $backgrounds['enable'] = isset($backgrounds['enable']) ? (int) $backgrounds['enable'] : 0;
-            $backgrounds['random'] = isset($backgrounds['random']) ? (int) $backgrounds['random'] : 0;
-            $backgrounds['duration'] = isset($backgrounds['duration']) ? (int) $backgrounds['duration'] : 5000;
-            $backgrounds['fade'] = isset($backgrounds['fade']) ? (int) $backgrounds['fade'] : 750;
+            $backgrounds['enable'] = isset($backgrounds['enable']) ? (int)$backgrounds['enable'] : 0;
+            $backgrounds['random'] = isset($backgrounds['random']) ? (int)$backgrounds['random'] : 0;
+            $backgrounds['duration'] = isset($backgrounds['duration']) ? (int)$backgrounds['duration'] : 5000;
+            $backgrounds['fade'] = isset($backgrounds['fade']) ? (int)$backgrounds['fade'] : 750;
 
             Setting::where('name', 'backgrounds')->update(['value' => json_encode($backgrounds)]);
             flash('success', Lang::get('background_settings_updated', 'Background settings have been saved'));
@@ -110,10 +107,10 @@ class Dashboard extends BaseController
 
         if ($post->has('music') && $this->can('music')) {
             $musicPost = $post->get('music');
-            $musicPost['enable'] = isset($musicPost['enable']) ? (int) $musicPost['enable'] : 0;
-            $musicPost['random'] = isset($musicPost['random']) ? (int) $musicPost['random'] : 0;
-            $musicPost['volume'] = isset($musicPost['volume']) ? (int) $musicPost['volume'] : 15;
-            $musicPost['use_player_volume'] = isset($musicPost['use_player_volume']) ? (int) $musicPost['use_player_volume'] : false;
+            $musicPost['enable'] = isset($musicPost['enable']) ? (int)$musicPost['enable'] : 0;
+            $musicPost['random'] = isset($musicPost['random']) ? (int)$musicPost['random'] : 0;
+            $musicPost['volume'] = isset($musicPost['volume']) ? (int)$musicPost['volume'] : 15;
+            $musicPost['use_player_volume'] = isset($musicPost['use_player_volume']) ? (int)$musicPost['use_player_volume'] : false;
 
             $music = Setting::where('name', 'music')->first();
 
@@ -121,15 +118,15 @@ class Dashboard extends BaseController
             flash('success', Lang::get('music_settings_updated', 'Music settings have been saved'));
         }
 
-        return redirect(APP_ROUTE_URL.'/dashboard');
+        return redirect(APP_ROUTE_URL . '/dashboard');
     }
 
-    public function settingsRedirect()
+    public function settingsRedirect(): RedirectResponse
     {
-        return redirect(APP_ROUTE_URL.'/dashboard/my-settings', 301);
+        return redirect(APP_ROUTE_URL . '/dashboard/my-settings', 301);
     }
 
-    public function mySettings()
+    public function mySettings(): Response
     {
         $data = [
             'themes' => LoadingView::getThemes(true),
@@ -138,7 +135,7 @@ class Dashboard extends BaseController
         return $this->view('my-settings', array_merge($data, User::findBySteamid(Session::user()['steamid'])->only('settings')));
     }
 
-    public function mySettingsPost()
+    public function mySettingsPost(): RedirectResponse
     {
         $settings = Setting::whereIn('name', ['backgrounds', 'music', 'youtube'])->get()->pluck('value', 'name')->toArray();
         $settings['youtube'] = array_merge($settings['youtube'], $settings['music']);
@@ -152,13 +149,13 @@ class Dashboard extends BaseController
             $post['theme'] = LoadingView::getTheme();
         }
 
-        $post['backgrounds']['enable'] = !isset($post['backgrounds']['enable']) ? 0 : (int) $post['backgrounds']['enable'];
-        $post['backgrounds']['random'] = !isset($post['backgrounds']['random']) ? 0 : (int) $post['backgrounds']['random'];
-        $post['backgrounds']['duration'] = (int) $post['backgrounds']['duration'];
-        $post['backgrounds']['fade'] = (int) $post['backgrounds']['fade'];
-        $post['youtube']['enable'] = !isset($post['youtube']['enable']) ? 0 : (int) $post['youtube']['enable'];
-        $post['youtube']['random'] = !isset($post['youtube']['random']) ? 0 : (int) $post['youtube']['random'];
-        $post['youtube']['display_videos'] = !isset($post['youtube']['display_videos']) ? 0 : (int) $post['youtube']['display_videos'];
+        $post['backgrounds']['enable'] = !isset($post['backgrounds']['enable']) ? 0 : (int)$post['backgrounds']['enable'];
+        $post['backgrounds']['random'] = !isset($post['backgrounds']['random']) ? 0 : (int)$post['backgrounds']['random'];
+        $post['backgrounds']['duration'] = (int)$post['backgrounds']['duration'];
+        $post['backgrounds']['fade'] = (int)$post['backgrounds']['fade'];
+        $post['youtube']['enable'] = !isset($post['youtube']['enable']) ? 0 : (int)$post['youtube']['enable'];
+        $post['youtube']['random'] = !isset($post['youtube']['random']) ? 0 : (int)$post['youtube']['random'];
+        $post['youtube']['display_videos'] = !isset($post['youtube']['display_videos']) ? 0 : (int)$post['youtube']['display_videos'];
 
         $post['youtube']['list'] = array_filter(array_map(function ($val) {
             return Util::YouTubeID($val);
@@ -175,10 +172,10 @@ class Dashboard extends BaseController
 
         flash('success', Lang::get('your_settings_saved', 'Your settings have been saved!'));
 
-        return redirect(APP_ROUTE_URL.'/dashboard/my-settings');
+        return redirect(APP_ROUTE_URL . '/dashboard/my-settings');
     }
 
-    public function users()
+    public function users(): Response
     {
         /**
          * @var Builder $users
@@ -187,7 +184,7 @@ class Dashboard extends BaseController
 
         if ($this->request->get('search')) {
             $query = $this->request->get('search');
-            $users->where('name', 'like', '%'.$query.'%')
+            $users->where('name', 'like', '%' . $query . '%')
                 ->orWhere('steamid', '=', $query)
                 ->orWhere('steamid2', '=', $query)
                 ->orWhere('steamid3', '=', $query);
@@ -198,7 +195,7 @@ class Dashboard extends BaseController
         $steamids = $users->pluck('steamid')->implode(',');
 
         $data = [
-            'users'         => $users,
+            'users' => $users,
             'usersPageList' => Util::paginateFix($users),
             'steamInfo' => Cache::remember('steaminfo-users-' . md5($steamids), 3600, static function () use ($steamids) {
                 return empty($data = Util::getPlayersInfo($steamids, true)) ? null : $data;
@@ -209,7 +206,7 @@ class Dashboard extends BaseController
         return $this->view('users', $data);
     }
 
-    public function profile(int $id)
+    public function profile(int $id): Response
     {
         $player = User::findOrFail($id);
 
@@ -228,7 +225,7 @@ class Dashboard extends BaseController
 
         $steamid = $player->steamid;
 
-        $steamInfo = Cache::remember('steaminfo-user-' . $steamid, 3600, function () use ($steamid) {
+        $steamInfo = Cache::remember('steaminfo-user-' . $steamid, 3600, static function () use ($steamid) {
             return empty($data = Util::getPlayersInfo($steamid, true)) ? null : $data;
         });
 
@@ -237,7 +234,7 @@ class Dashboard extends BaseController
 
     #[NoReturn] public function getUserBackground($steamid): void
     {
-        $url = Cache::remember('steam-bg-' . $steamid, 3600, function () use ($steamid) {
+        $url = Cache::remember('steam-bg-' . $steamid, 3600, static function () use ($steamid) {
             $regex = "/no_header *?profile_page *?has_profile_background *?.*\n\t *?style=\"background-image: *?url\( *?\n?'(https?:\/\/.*.jpg)/m";
             $steamProfile = file_get_contents('https://steamcommunity.com/profiles/' . $steamid);
 
@@ -246,7 +243,7 @@ class Dashboard extends BaseController
             return $matches[1] ?? 'https://community.cloudflare.steamstatic.com/public/images/profile/2020/bg_dots.png';
         });
 
-        header('Location: '.$url, true, 302);
+        header('Location: ' . $url, true, 302);
         exit();
     }
 }

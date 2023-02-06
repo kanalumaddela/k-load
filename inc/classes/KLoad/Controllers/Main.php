@@ -20,7 +20,6 @@ use KLoad\View\LoadingView;
 use function array_merge;
 use function file_exists;
 use function KLoad\loadingView;
-use const KLoad\ALLOW_THEME_OVERRIDE;
 use const KLoad\APP_ROOT;
 use const KLoad\ENABLE_REGISTRATION;
 use const KLoad\IGNORE_PLAYER_CUSTOMIZATIONS;

@@ -26,9 +26,8 @@ $router->filter('csrf', 'checkForCsrf');
 $router->any('/', [Main::class, 'index']);
 $router->any('/dashboard/logout', [Main::class, 'logout']);
 
-$router->get('/api/player/{steamid:i}/{info}?', [API::class, 'player']);
-$router->get('/api/players/{steamids}', [API::class, 'players']);
-$router->get('/api/groups/{group:c}', [API::class, 'group']);
+$router->get('/api/user/{steamid:i}/{info}?', [API::class, 'userInfo']);
+$router->get('/api/avatar/{steamid:i}', [API::class, 'avatar']);
 
 $router->group(['before' => 'auth'], function ($router) {
     $router->get('/dashboard', [Dashboard::class, 'index']);
@@ -42,7 +41,7 @@ $router->group(['before' => 'auth'], function ($router) {
     $router->get('/dashboard/user/background/{steamid:i}', [Dashboard::class, 'getUserBackground']);
 
     $router->group(['before' => 'admin'], function ($router) {
-        $router->any('/dashboard/admin', [Admin\General::class, 'index']);
+        $router->any('/dashboard/admin', [Admin\Core::class, 'index']);
         $router->any('/dashboard/admin/core', [Admin\Core::class, 'core']);
         $router->post('/dashboard/admin/core/config-update', [Admin\Core::class, 'configUpdate']);
         $router->post('/dashboard/admin/core/theme-update', [Admin\Core::class, 'themeUpdate']);
@@ -50,15 +49,21 @@ $router->group(['before' => 'auth'], function ($router) {
         $router->post('/dashboard/admin/general', [Admin\General::class, 'generalPost']);
         $router->post('/dashboard/admin/general/logo', [Admin\General::class, 'logo']);
         $router->post('/dashboard/admin/general/logo-upload', [Admin\General::class, 'logoUpload']);
-//        $router->post('/dashboard/admin/general/logo-delete', [Admin\General::class, 'logoDelete']);
-//        $router->any('/dashboard/admin/backgrounds', [Admin\Backgrounds::class, 'index']);
+        $router->get('/dashboard/admin/backgrounds', [Admin\Backgrounds::class, 'index']);
 //        $router->any('/dashboard/admin/backgrounds/upload', [Admin\Backgrounds::class, 'backgroundsUpload']);
         $router->get('/dashboard/admin/messages', [Admin\Messages::class, 'index']);
         $router->post('/dashboard/admin/messages', [Admin\Messages::class, 'indexPost']);
-//        $router->any('/dashboard/admin/rules', [Admin\Rules::class, 'index']);
-//        $router->any('/dashboard/admin/staff', [Admin\Staff::class, 'index']);
+        $router->get('/dashboard/admin/rules', [Admin\Rules::class, 'index']);
+        $router->post('/dashboard/admin/rules', [Admin\Rules::class, 'indexPost']);
+        $router->get('/dashboard/admin/staff', [Admin\Staff::class, 'index']);
+        $router->post('/dashboard/admin/staff', [Admin\Staff::class, 'indexPost']);
+
+        $router->get('/dashboard/admin/media', [Admin\Media::class, 'index']);
+        $router->delete('/dashboard/admin/media', [Admin\Media::class, 'delete']);
+        $router->post('/dashboard/admin/media/upload', [Admin\Media::class, 'upload']);
 //
-//        $router->any('/dashboard/admin/music', [Admin\Music::class, 'index']);
+        $router->get('/dashboard/admin/music', [Admin\Music::class, 'index']);
+//        $router->post('/dashboard/admin/music', [Admin\Music::class, 'indexPost']);
 //        $router->post('/dashboard/admin/music/upload', [Admin\Music::class, 'musicUpload']);
 //        $router->post('/dashboard/admin/music/delete', [Admin\Music::class, 'deleteMusic']);
 //        $router->post('/dashboard/admin/music/save-order', [Admin\Music::class, 'saveMusicOrder']);

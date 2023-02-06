@@ -12,8 +12,6 @@
 
 namespace KLoad\Controllers;
 
-use KLoad\Util;
-use function sprintf;
 use function strtolower;
 
 class GamemodeController extends BaseController
@@ -61,7 +59,7 @@ class GamemodeController extends BaseController
         // prophunt
 
         if (isset(self::$gamemodes[$lower]) && $lower !== $gamemode) {
-            Util::flash('alerts', sprintf('`%s` given, proper value fixed and made `%s`', $gamemode, $lower));
+            // todo:
         }
 
         return $lower;

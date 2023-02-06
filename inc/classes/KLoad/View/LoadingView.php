@@ -22,7 +22,7 @@ use const KLoad\APP_URL;
 
 class LoadingView extends View
 {
-    protected static $theme;
+    protected static string $theme;
 
     public static function getThemes($withPreviews = false): array
     {

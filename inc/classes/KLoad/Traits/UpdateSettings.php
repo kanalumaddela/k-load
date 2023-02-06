@@ -13,23 +13,33 @@
 namespace KLoad\Traits;
 
 use Illuminate\Database\QueryException;
+use KLoad\Facades\Lang;
 use KLoad\Facades\Session;
 use KLoad\Models\Setting;
 use function KLoad\flash;
-use function KLoad\lang;
 
-class HasSettings
+trait UpdateSettings
 {
-    public function updateSetting($name, $value, $flash = true)
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @param bool $flash
+     * @return void
+     */
+    public function updateSetting(string $name, mixed $value, bool $flash = true): void
     {
         try {
             Setting::where('name', $name)->update(['value' => $value]);
+
             if ($flash) {
-                flash('success', lang());
+                flash('success', Lang::get($name . '_updated'));
             }
         } catch (QueryException $e) {
-            // redirect(APP_CURRENT_URL)->withError($e->getMessage())->withInputs();
-            Session::error($e->getMessage());
+            if ($flash) {
+                Session::error($e->getMessage());
+            }
+
+            throw $e;
         }
     }
 }

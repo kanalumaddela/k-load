@@ -6,96 +6,33 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2023 kanalumaddela
  * @license   MIT
  */
 
 namespace KLoad\Controllers;
 
-use J0sh0nat0r\SimpleCache\StaticFacade as Cache;
-use KLoad\User;
-use KLoad\Util;
-use Steam;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use function count;
-use function is_null;
-use function md5;
-use function simplexml_load_string;
-use function strpos;
-use const ENABLE_CACHE;
-use const JSON_PRETTY_PRINT;
+use KLoad\Facades\Cache;
+use KLoad\Helpers\Util;
+use KLoad\Http\RedirectResponse;
+use function KLoad\redirect;
+use const KLoad\APP_URL;
 
 class API extends BaseController
 {
-    public static function player($steamid, $info = null)
+    public function userInfo($steamid, string $info = null)
     {
-        if (isset($_SESSION['steamid'])) {
-            $session_steamid = $_SESSION['steamid'];
-            unset($_SESSION['steamid']);
-        }
+        $data = Cache::remember('api-steaminfo-user-' . $steamid, 3600, static function () use ($steamid) {
+            return empty($data = Util::getPlayerInfo($steamid)) ? null : $data;
+        });
 
-        $data = (ENABLE_CACHE ? Cache::remember('api-player-'.$steamid, 120, function () use ($steamid) {
-            $data = User::get($steamid) + (Steam::User($steamid) ?? []);
-
-            return $data;
-        }) : User::get($steamid) + (Steam::User($steamid) ?? []));
-
-        if (isset($session_steamid)) {
-            $_SESSION['steamid'] = $session_steamid;
-        }
-
-        $data['success'] = count($data) > 0;
-        Util::to_top($data, 'success');
-        if (isset($data[$info])) {
-            $data = $data[$info];
-            if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] == 'raw' && (strpos($info, 'avatar') !== false || strpos($info, 'profileurl') !== false)) {
-                Util::redirect($data);
-            }
-        }
-
-        $encoding = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-        if (isset($_GET['formatted'])) {
-            $encoding = $encoding | JSON_PRETTY_PRINT;
-        }
-
-        return (new JsonResponse($data))->setEncodingOptions($encoding);
+        return !empty($info) ? ($data[$info] ?? null) : $data;
     }
 
-    public static function players($steamids)
+    public function avatar($steamid): RedirectResponse
     {
-        $hash = md5($steamids);
+        $info = $this->userInfo($steamid, 'avatarfull');
 
-        $data = [
-            'success' => false,
-        ];
-
-        if (ENABLE_CACHE) {
-            $data['data'] = Cache::remember('steam-api-players-'.$hash, 3600, function () use ($steamids) {
-                return Steam::Users($steamids);
-            });
-        } else {
-            $data['data'] = Steam::Users($steamids);
-        }
-
-        $data['success'] = !is_null($data['data']);
-
-        return new JsonResponse($data);
-    }
-
-    public static function group($name)
-    {
-        $data = (ENABLE_CACHE ? Cache::remember('api-group-'.$name, 60, function () use ($name) {
-            return Steam::Group($name)->asXML();
-        }) : Steam::Group($name)->asXML());
-
-        $data = simplexml_load_string($data);
-        $data->success = isset($data);
-
-        $encoding = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-        if (isset($_GET['formatted'])) {
-            $encoding = $encoding | JSON_PRETTY_PRINT;
-        }
-
-        return (new JsonResponse($data))->setEncodingOptions($encoding);
+        return redirect(!empty($info) ? $info : APP_URL . '/assets/img/avatar.jpg');
     }
 }

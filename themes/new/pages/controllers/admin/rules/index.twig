@@ -1,0 +1,285 @@
+{% extends 'app.twig' %}
+
+{% set dragula = true %}
+
+{% block content %}
+    <div class="container px-4 py-6">
+        <form action="{{ app.current }}" method="post">
+            {{ csrf }}
+
+            <div class="floating-form-controls has-text-right">
+                <div class="card is-bordered mb-3">
+                    <div class="card-content is-flex is-flex-direction-column">
+                        <button class="button is-info add-elem" type="button"
+                                onclick="addElem('#rule-list', ruleGamemode)">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            {{ lang('add_gamemode') }}
+                        </button>
+                        <button class="button is-success add-elem" type="submit">
+                            <i class="fas fa-save mr-2"></i>
+                            {{ lang('save') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div class="column is-half-desktop">
+                    <div class="card">
+                        <div class="card-header-title">
+                            <i class="fas fa-list-ol title-icon"></i>
+                            {{ lang('rule_settings') }}
+                        </div>
+                        <div class="card-content">
+                            <div class="pt-1 columns is-multiline">
+                                <div class="column is-half-desktop">
+                                    <div class="field">
+                                        <div class="field-body">
+                                            <label class="checkbox is-custom">
+                                                {{ lang('enable_question') }}
+                                                <input type="checkbox" value="1" name="rules[enable]"
+                                                       {% if old.rules.enable|default(settings.rules.enable) %}checked{% endif %}>
+                                                <span class="switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="column is-half-desktop">
+                                    <div class="field is-horizontal">
+                                        <div class="field-label is-normal">
+                                            <label class="label">
+                                                {{ lang('duration') }}
+                                            </label>
+                                        </div>
+                                        <div class="field-body">
+                                            <div class="field">
+                                                <div class="control">
+                                                    <input class="input" type="number" name="rules[duration]"
+                                                           value="{{ old.rules.duration|default(settings.rules.duration) }}">
+                                                </div>
+                                                <p class="help">{{ lang('rule_duration_info') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="column is-full">
+                                    <div class="field is-horizontal">
+                                        <div class="field-label is-normal">
+                                            <label class="label">{{ lang('numbering_type') }}</label>
+                                        </div>
+                                        <div class="field-body">
+                                            <div class="field">
+                                                <div class="control">
+                                                    <div class="select">
+                                                        <select name="rules[numbering_type]">
+                                                            {% for type in numbering_types %}
+                                                                <option value="{{ type }}"
+                                                                        {% if type == settings.rules.numbering_type %}selected{% endif %}>
+                                                                    {{ lang('rule_type_' ~ type) }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <p class="help">Type of numbering when displaying rules</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-half-desktop">
+                    <div class="card">
+                        <div class="card-header-title">
+                            <i class="fas fa-question title-icon"></i>{{ lang('gamemode_help') }}
+                        </div>
+                        <div class="card-content">
+                            <p>example gamemodes here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pb-6">
+                <div id="rule-list" class="columns is-multiline">
+                    {% for gamemode, rules in old.rules.list|default(settings.rules.list) %}
+                        <div class="column is-half-desktop parent">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="field is-horizontal">
+                                        <div class="field-label is-normal">
+                                            <label class="label">{{ lang('gamemode') }}</label>
+                                        </div>
+                                        <div class="field-body">
+                                            <input class="input gamemode" type="text"
+                                                   value="{{ gamemode|default('demo') }}" placeholder="gamemode"
+                                                   oninput="fixGamemodeInputs(this, 'rules')">
+                                        </div>
+                                    </div>
+                                    <hr class="horizontal-separator my-4">
+                                    <div>
+                                        <h1 class="mb-2">
+                                            {{ lang('rules') }}
+                                        </h1>
+                                    </div>
+                                    <div id="{{ gamemode|default('demo') }}-rule-list" class="gamemode-children">
+                                        {% for rule in rules|merge(['']) %}
+                                            <div class="field has-addons child">
+                                                <div class="control is-flex-grow-1">
+                                                    <input class="input rule" type="text"
+                                                           placeholder="{{ lang('add_rule') }}"
+                                                           name="rules[list][{{ gamemode|default('demo') }}][]"
+                                                           value="{{ rule }}" oninput="addNewInput(this)">
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button sort-handle"
+                                                            type="button">
+                                                        <i class="fas fa-bars is-size-5"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button" type="button"
+                                                            onclick="deleteElem(this, '.child', true)">
+                                                        <i class="fas fa-times is-size-4"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mt-4 has-text-centered">
+                                        <button class="button is-outlined is-delete-button" type="button"
+                                                onclick="deleteElem(this, '.parent', true)">
+                                            <i class="fas fa-trash mr-2"></i>
+                                            <span>{{ lang('delete') }}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bodyJs %}
+    <script>
+        drake.on('out', (el, container, source) => {
+            updateInputNames(getParent(container), 'rules')
+        })
+
+        drake.on('drop', (el, target, source, sibling) => {
+            checkIfEmptyOrMissingEmptyRow(source, ruleInput(source))
+        })
+
+        const fixGamemodeInputs = debounce((el, type) => {
+            const gamemode = el.value
+            const parent = el.closest('.parent')
+
+            updateInputNames(parent, type, gamemode)
+        }, 200)
+
+        const updateInputNames = (parent, type, gamemode) => {
+            if (typeof gamemode === 'undefined') {
+                gamemode = determineGamemode(parent);
+            }
+
+            const children = parent.querySelectorAll('.gamemode-children input')
+
+            children.forEach(child => {
+                child.name = type + '[list][' + gamemode + '][]'
+            })
+        }
+
+        const addNewInput = debounce((el) => {
+            const parent = el.closest('.field.has-addons.child')
+            const sibling = parent.nextElementSibling;
+
+            if (el.value.length && sibling == null) {
+                addElem(el.closest('.gamemode-children'), ruleInput(el))
+            } else if (el.value.length === 0 && sibling && !sibling.querySelector('input').value.length) {
+                sibling.remove();
+            }
+        }, 125)
+
+        const ruleGamemode = function () {
+            const gamemodeChildren = elem('div', {classList: 'gamemode-children'}, ruleInput())
+
+            drake.containers.push(gamemodeChildren)
+
+            return elem('div', {classList: 'column is-half-desktop'},
+                elem('div', {classList: 'card'},
+                    elem('div', {classList: 'card-content parent'},
+                        elem('div', {classList: 'field is-horizontal'},
+                            elem('div', {classList: 'field-label is-normal'},
+                                elem('label', {classList: 'label', innerText: '{{ lang('gamemode') }}'})
+                            ),
+                            elem('div', {classList: 'field-body'},
+                                elem('input', {
+                                    classList: 'input gamemode',
+                                    type: 'text',
+                                    value: 'gamemode',
+                                    placeholder: 'gamemode',
+                                    onInput: 'fixGamemodeInputs(this, \'rules\')'
+                                })
+                            )
+                        ),
+                        elem('hr', {classList: 'horizontal-separator my-4'}),
+                        elem('div', {},
+                            elem('h1', {innerText: '{{ lang('rules') }}'})
+                        ),
+                        gamemodeChildren,
+                        elem('div', {classList: 'mt-4 has-text-centered'},
+                            elem('button', {
+                                    classList: 'button is-outlined is-delete-button',
+                                    type: 'button',
+                                    onClick: 'deleteElem(this, \'.parent\', true)'
+                                },
+                                elem('i', {classList: 'fas fa-trash mr-2'}),
+                                elem('span', {innerText: '{{ lang('delete') }}'})
+                            ),
+                        )
+                    )
+                )
+            )
+        }
+
+        const ruleInput = (el) => {
+            const gamemode = typeof el !== 'undefined' ? determineGamemode(getParent(el)) : 'gamemode';
+
+            return elem('div', {classList: 'field has-addons child'},
+                elem('div', {classList: 'control is-flex-grow-1'},
+                    elem('input', {
+                        classList: 'input',
+                        type: 'text',
+                        name: 'rules[list][' + gamemode + '][]',
+                        placeholder: '{{ lang('add_rule') }}',
+                        onInput: 'addNewInput(this)'
+                    })
+                ),
+
+                elem('div', {classList: 'control'},
+                    elem('button', {
+                            classList: 'button delete-elem',
+                            type: 'button',
+                            onClick: 'deleteElem(this, \'.child\', true)',
+                        },
+                        elem('i', {classList: 'fas fa-times is-size-4'}),
+                    )
+                ),
+
+                elem('div', {classList: 'control'},
+                    elem('button', {classList: 'button sort-handle', type: 'button'},
+                        elem('i', {classList: 'fas fa-bars is-size-5'})
+                    )
+                ),
+            )
+        }
+    </script>
+{% endblock %}

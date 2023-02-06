@@ -3,8 +3,8 @@
         <h1 class="logo-text" style="margin-top: .25em">K-Load</h1>
     </div>
     <div class="userInfo has-text-centered">
-        <img class="avatar medium" src="{{ user.avatarMedium|default(asset('img/avatar.jpg')) }}">
-{#        <a href="{{ user.profileUrl|default('https://steamcommunity.com/profiles/' ~ user.steamid) }}" target="_blank" rel="nofollow"></a> #}
+        <img class="avatar medium" src="{{ user.avatars.medium|default(asset('img/avatar.jpg')) }}">
+        {#        <a href="{{ user.profileUrl|default('https://steamcommunity.com/profiles/' ~ user.steamid) }}" target="_blank" rel="nofollow"></a> #}
         <h1 class="name">{{ user.name|default(user.steamid) }}</h1>
         {{ include('@partials/external-link.twig', {link: user.profileUrl|default('https://steamcommunity.com/profiles/' ~ user.steamid), text: user.steamid2, classes: ['steamid2']}) }}
     </div>
@@ -16,7 +16,7 @@
             <ul class="menu-list">
                 {{ include('@partials/sideNavLink.twig', {route: 'dashboard', icon: 'home', name: 'dashboard'}) }}
                 {{ include('@partials/sideNavLink.twig', {route: 'dashboard/my-settings', icon: 'user-cog', name: 'my_settings'}) }}
-                {{ include('@partials/sideNavLink.twig', {route: 'dashboard/users', icon: 'users', name: 'users'}) }}
+                {{ include('@partials/sideNavLink.twig', {route: 'dashboard/users', icon: 'users', name: 'users', altActiveRoutes: ['dashboard/user']}) }}
             </ul>
         </div>
         {% if user.admin %}
@@ -50,6 +50,9 @@
                     {% endif %}
                     {% if can('themes') %}
                         {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/themes', icon: 'paint-brush', name: 'themes'}) }}
+                    {% endif %}
+                    {% if can('media') %}
+                        {{ include('@partials/sideNavLink.twig', {route: 'dashboard/admin/media', icon: 'photo-video', name: 'media'}) }}
                     {% endif %}
                 </ul>
             </div>

@@ -14,8 +14,10 @@ namespace KLoad\Controllers;
 
 use KLoad\App;
 use KLoad\Exceptions\InvalidToken;
+use KLoad\Facades\Lang;
 use KLoad\Request;
 use KLoad\Session;
+use KLoad\View\View;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,12 +27,17 @@ use function hash_equals;
 use function KLoad\view;
 use function time;
 use const KLoad\APP_CURRENT_ROUTE;
+use const KLoad\APP_ROUTE_URL;
 
 class BaseController
 {
     protected mixed $user;
 
+    protected static string $title = '';
+
     protected static string $templateFolder = '';
+
+    protected static string $route = '';
 
     protected static array $dataHooks = [];
 
@@ -53,10 +60,32 @@ class BaseController
             $this->session = App::get('session');
             $this->user = $this->session->user();
         }
+
+        View::addGlobal('title', !empty(static::$title) ? static::$title . ' | K-Load' : 'K-Load');
     }
 
     public function boot(): void
     {
+        $this->setTitle(static::$title);
+    }
+
+    public function setTitle(string $title, bool $useLang = true): void
+    {
+        if ($useLang) {
+            $title = Lang::get($title);
+        }
+
+        static::$title = $title;
+
+        View::addGlobal('title', !empty(static::$title) ? static::$title . ' | K-Load' : 'K-Load');
+    }
+
+    /**
+     * @return string
+     */
+    public static function getRoute(): string
+    {
+        return APP_ROUTE_URL . '/' . self::$route;
     }
 
     public function view($template, array $data = []): Response

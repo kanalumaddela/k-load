@@ -1,7 +1,5 @@
 {% extends 'app.twig' %}
 
-{% block title %}Core{% endblock %}
-
 {% block content %}
     <div class="container px-4 py-6">
         <div class="columns is-multiline is-mobile">
@@ -12,18 +10,21 @@
                         <form action="{{ app.current }}/config-update" method="post">
                             {{ csrf(app.current_route ~ '/config-update') }}
                             <div class="mb-4">
-                                <div class="field is-horizontal">
-                                    <div class="field-label">
-                                        <label class="label">{{ lang('steam_api_key') }}</label>
-                                    </div>
-                                    <div class="field-body">
+                                <div class="field">
+                                    <label class="label">{{ lang('steam_api_key') }}</label>
+                                    <div class="control">
                                         <input class="input" type="text" name="steam_api_key" value="{{ steamApiKey }}">
                                     </div>
+                                    <p class="help">
+                                        <a class="external-link" target="_blank" rel="nofollow"
+                                           href="https://steamcommunity.com/dev/apikey">https://steamcommunity.com/dev/apikey</a>
+                                    </p>
                                 </div>
                             </div>
 
                             <div class="has-text-centered">
-                                <button class="button" type="submit">Save</button>
+                                <button class="button is-outlined is-save-button" type="submit"><i
+                                            class="fas fa-save mr-2"></i>{{ lang('save') }}</button>
                             </div>
                         </form>
                     </div>
@@ -37,7 +38,7 @@
                             <h1 class="mb-1">{{ lang('quick_info_copy_notice') }}
                                 <code>garrysmod/cfg/server.cfg</code></h1>
                             <code data-copy title="Click to copy">
-                                {{ 'sv_loadingurl "' ~ site.url ~ '?steamid=%s&mapname=%m"' }}
+                                {{ 'sv_loadingurl "' ~ app.url ~ '?steamid=%s&mapname=%m"' }}
                             </code>
                         </div>
                         <table class="table is-fullwidth">
@@ -51,7 +52,7 @@
                             <tr>
                                 <td>{{ lang('loading_url') }}</td>
                                 <td>
-                                    {{ include('@partials/external-link.twig', {link: site.url}) }}
+                                    {{ include('@partials/external-link.twig', {link: app.url}) }}
                                 </td>
                             </tr>
                             </tbody>
@@ -75,7 +76,7 @@
                                     <div class="column theme-selection is-half-mobile is-one-third-tablet is-one-fifth-desktop has-text-centered"
                                          title="Click and hold to enlarge image">
                                         <label for="theme_radio_{{ theme }}">
-                                            <img class="theme-preview"
+                                            <img class="theme-preview site-border-radius"
                                                  src="{{ preview|default(asset('img/theme.jpg')) }}">
                                         </label>
                                         <div>
@@ -89,7 +90,8 @@
                             </div>
 
                             <div class="has-text-centered">
-                                <button class="button">{{ lang('save') }}</button>
+                                <button class="button is-outlined is-save-button"><i
+                                            class="fas fa-save mr-2"></i>{{ lang('save') }}</button>
                             </div>
                         </div>
                     </div>
