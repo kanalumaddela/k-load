@@ -63,10 +63,11 @@ class Session extends DotArray
         dump($_SESSION);
     }
 
-    #[NoReturn] public function dd(): void
-    {
-        dd($_SESSION);
-    }
+    #[NoReturn]
+ public function dd(): void
+ {
+     dd($_SESSION);
+ }
 
     public function user()
     {
@@ -95,10 +96,10 @@ class Session extends DotArray
 
         $toasts = [
             'success' => '',
-            'error' => '',
+            'error'   => '',
             'warning' => '',
-            'info' => '',
-            'danger' => '',
+            'info'    => '',
+            'danger'  => '',
         ];
 
         if (isset($toasts[$key])) {

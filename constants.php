@@ -1,4 +1,5 @@
 <?php
+
 define('KLoad\APP_START', 1673720593.588485);
 define('KLoad\APP_ROOT', 'D:\\_stuff\\projects\\kanalumaddela\\k-load-v2');
 define('KLoad\IS_FORWARDED', false);

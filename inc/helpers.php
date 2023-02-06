@@ -87,7 +87,7 @@ function var_export_fixed($var, $indent = ''): ?string
 /**
  * @param       $template
  * @param array $data
- * @param int $httpCode
+ * @param int   $httpCode
  *
  * @return Response
  */
@@ -113,6 +113,7 @@ function loadingView(array $data = [])
 
 /**
  * @return string
+ *
  * @see  Lang::get
  */
 function lang(): string

@@ -42,7 +42,6 @@ class Setting extends BaseModel
             if (empty($val)) {
                 $val = $original;
             }
-
         } catch (JsonException) {
             $val = $original;
         }

@@ -26,9 +26,9 @@ class Rules extends AdminController
     use UpdateSettings;
 
     protected static array $defaultData = [
-        'enable' => false,
+        'enable'         => false,
         'numbering_type' => 1, // 1|a|A|i|I
-        'list' => [],
+        'list'           => [],
     ];
 
     private static array $numbering_types = [
@@ -61,7 +61,7 @@ class Rules extends AdminController
         $rules = static::$defaultData;
         $post = $this->getPost()->get('rules');
 
-        $rules['enable'] = (bool)($post['enable'] ?? true);
+        $rules['enable'] = (bool) ($post['enable'] ?? true);
         $rules['numbering_type'] = $post['numbering_type'] ?? 1;
 
         if (!isset(static::$numbering_types[$rules['numbering_type']])) {
@@ -84,5 +84,4 @@ class Rules extends AdminController
             return $redirect->withInputs();
         }
     }
-
 }

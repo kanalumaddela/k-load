@@ -61,7 +61,7 @@ class BaseController
             $this->user = $this->session->user();
         }
 
-        View::addGlobal('title', !empty(static::$title) ? static::$title . ' | K-Load' : 'K-Load');
+        View::addGlobal('title', !empty(static::$title) ? static::$title.' | K-Load' : 'K-Load');
     }
 
     public function boot(): void
@@ -77,7 +77,7 @@ class BaseController
 
         static::$title = $title;
 
-        View::addGlobal('title', !empty(static::$title) ? static::$title . ' | K-Load' : 'K-Load');
+        View::addGlobal('title', !empty(static::$title) ? static::$title.' | K-Load' : 'K-Load');
     }
 
     /**
@@ -85,7 +85,7 @@ class BaseController
      */
     public static function getRoute(): string
     {
-        return APP_ROUTE_URL . '/' . self::$route;
+        return APP_ROUTE_URL.'/'.self::$route;
     }
 
     public function view($template, array $data = []): Response
@@ -94,12 +94,12 @@ class BaseController
             $data = static::addHookData($data);
         }
 
-        return view($this->getTemplateFolder() . $template, $data);
+        return view($this->getTemplateFolder().$template, $data);
     }
 
     public function getTemplateFolder(): string
     {
-        return (static::$templateFolder !== '' ? static::$templateFolder . '/' : '');
+        return static::$templateFolder !== '' ? static::$templateFolder.'/' : '';
     }
 
     public function getRequest(): Request

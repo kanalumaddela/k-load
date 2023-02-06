@@ -51,7 +51,7 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
             throw new InvalidArgumentException('Time must be numeric');
         }
 
-        $success = $this->driver->put($key, opis_serialize($value), (int)$time);
+        $success = $this->driver->put($key, opis_serialize($value), (int) $time);
 
         if ($success && $this->remember_values) {
             $this->loaded[$key] = $value;
