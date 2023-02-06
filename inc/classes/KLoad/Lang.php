@@ -22,7 +22,7 @@ use function vsprintf;
 
 class Lang
 {
-    public const LANG_FOLDER = APP_ROOT . '/inc/lang';
+    public const LANG_FOLDER = APP_ROOT.'/inc/lang';
 
     public string $currentLang = 'en';
 
@@ -42,17 +42,16 @@ class Lang
         static::boot();
 
         if (!static::exists($language)) {
-            throw new InvalidArgumentException('Language `' . $language . '` not found in `inc/lang/` folder');
+            throw new InvalidArgumentException('Language `'.$language.'` not found in `inc/lang/` folder');
         }
 
         $this->currentLang = $language;
-        $this->lang = include static::LANG_FOLDER . '/' . $language . '.php';
+        $this->lang = include static::LANG_FOLDER.'/'.$language.'.php';
 
         if (static::$debug) {
-            $loc = APP_ROOT . '/inc/lang/missing/' . $language . '.txt';
+            $loc = APP_ROOT.'/inc/lang/missing/'.$language.'.txt';
             $this->missingFile = fopen($loc, 'ab');
             $this->missing = array_flip(explode("\n", file_get_contents($loc)));
-
         }
     }
 
@@ -64,7 +63,7 @@ class Lang
 
         static::$booted = true;
 
-        static::$fallback = include static::LANG_FOLDER . '/en.php';
+        static::$fallback = include static::LANG_FOLDER.'/en.php';
     }
 
     public function getCurrentLang(): string
@@ -79,7 +78,7 @@ class Lang
      */
     public static function exists($lang): bool
     {
-        return file_exists(APP_ROOT . '/inc/lang/' . $lang . '.php');
+        return file_exists(APP_ROOT.'/inc/lang/'.$lang.'.php');
     }
 
     /**
@@ -105,7 +104,7 @@ class Lang
         }
 
         if (is_array($lang) && is_numeric($default)) {
-            $lang = sprintf((int)$default === 1 ? $lang[0] : $lang[1], $default);
+            $lang = sprintf((int) $default === 1 ? $lang[0] : $lang[1], $default);
         } else {
             $lang = is_array($default) ? vsprintf($lang, $default) : sprintf($lang, $default);
         }
@@ -116,7 +115,7 @@ class Lang
     private function isMissing($key)
     {
         if (!isset($this->missing[$key])) {
-            fwrite($this->missingFile, $key . "\n");
+            fwrite($this->missingFile, $key."\n");
         }
 
         $this->missing[$key] = '';

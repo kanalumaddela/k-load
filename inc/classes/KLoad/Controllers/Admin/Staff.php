@@ -26,7 +26,7 @@ class Staff extends AdminController
 
     protected static array $defaultData = [
         'enable' => false,
-        'list' => [],
+        'list'   => [],
     ];
 
     public function index(): Response
@@ -47,7 +47,7 @@ class Staff extends AdminController
         $post = $this->getPost()->get('staff');
         $redirect = redirect(static::getRoute());
 
-        $staff['enable'] = (bool)($post['enable'] ?? false);
+        $staff['enable'] = (bool) ($post['enable'] ?? false);
 
         if (isset($post['list'])) {
             foreach ($post['list'] as $gamemode => $list) {
@@ -64,14 +64,13 @@ class Staff extends AdminController
 
                     $fixed[] = [
                         'steamid' => $steamid,
-                        'rank' => $list['ranks'][$i],
+                        'rank'    => $list['ranks'][$i],
                     ];
                 }
 
                 $staff['list'][strtolower($gamemode)] = $fixed;
             }
         }
-
 
         try {
             $this->updateSetting('staff', $staff);

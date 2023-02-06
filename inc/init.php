@@ -45,7 +45,7 @@ if (DEBUG && !$res instanceof JsonResponse) {
 
     print_r(DB::connection()->getQueryLog());
 
-    echo "\n" . '-->';
+    echo "\n".'-->';
 }
 
 if (ob_get_length() > 0) {

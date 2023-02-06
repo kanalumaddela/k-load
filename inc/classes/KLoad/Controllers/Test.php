@@ -18,7 +18,7 @@ class Test extends BaseController
 {
     public function constants(): void
     {
-        $file = fopen(APP_ROOT . '/constants.php', 'wb');
+        $file = fopen(APP_ROOT.'/constants.php', 'wb');
         fwrite($file, "<?php\n");
 
         $constants = get_defined_constants(true);

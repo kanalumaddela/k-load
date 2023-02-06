@@ -237,18 +237,17 @@ copyright;
 //        }
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
-
             echo '<pre>';
             print_r(debug_backtrace());
-            die();
+            exit();
 
             kload_error_page([
-                'type' => 'error',
-                'code' => $errno,
-                'file' => $errfile,
+                'type'    => 'error',
+                'code'    => $errno,
+                'file'    => $errfile,
                 'line_no' => $errline,
                 'message' => $errstr,
-                'raw' => func_get_args(),
+                'raw'     => func_get_args(),
             ]);
 
             exit();
@@ -273,11 +272,11 @@ copyright;
      */
     private static function setupDirectories(): void
     {
-        Util::mkDir(APP_ROOT . '/assets/img/backgrounds/global');
-        Util::mkDir(APP_ROOT . '/assets/img/logos');
-        Util::mkDir(APP_ROOT . '/data/logs', true);
-        Util::mkDir(APP_ROOT . '/data/music');
-        Util::mkDir(APP_ROOT . '/data/users');
+        Util::mkDir(APP_ROOT.'/assets/img/backgrounds/global');
+        Util::mkDir(APP_ROOT.'/assets/img/logos');
+        Util::mkDir(APP_ROOT.'/data/logs', true);
+        Util::mkDir(APP_ROOT.'/data/music');
+        Util::mkDir(APP_ROOT.'/data/users');
     }
 
     private static function determineCurrentRoute(): void
@@ -308,7 +307,7 @@ copyright;
     public static function isInstalled(): bool
     {
 //        return false;
-        return file_exists(APP_ROOT . '/data/config.php');
+        return file_exists(APP_ROOT.'/data/config.php');
     }
 
     public static function bootContainer(): void
@@ -317,7 +316,7 @@ copyright;
 
         $container->share(Request::class, ($request = Request::createFromGlobals()))->addTags('Request', 'request');
         $container->share(Cache::class, ($cache = new Cache(KDriver::class)))->addTags('Cache', 'cache');
-        $container->share(Config::class, $config = new Config(APP_ROOT . '/data/config.php'))->addTags('Config', 'config');
+        $container->share(Config::class, $config = new Config(APP_ROOT.'/data/config.php'))->addTags('Config', 'config');
         $container->share(Lang::class, ($lang = new Lang(APP_LANGUAGE)))->addTags('Lang', 'lang');
 
         $capsule = new Capsule();
@@ -368,7 +367,7 @@ copyright;
 
     private static function runConversion(): void
     {
-        if (file_exists(APP_ROOT . '/inc/migrations')) {
+        if (file_exists(APP_ROOT.'/inc/migrations')) {
             $pdo = DB::connection()->getPdo();
 
             $triggers = $pdo->query('SHOW TRIGGERS like \'kload_sessions\'')->fetchAll(PDO::FETCH_ASSOC);
@@ -406,7 +405,7 @@ copyright;
     public static function setRoot(string $dir): void
     {
         if (!file_exists($dir)) {
-            trigger_error('Cannot set root directory as `' . $dir . '`. Does not exist.', E_USER_ERROR);
+            trigger_error('Cannot set root directory as `'.$dir.'`. Does not exist.', E_USER_ERROR);
         }
 
         defineConstant('app_root', $dir);

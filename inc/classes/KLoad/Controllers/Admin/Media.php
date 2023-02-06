@@ -35,10 +35,9 @@ class Media extends AdminController
 
         $route = $post->get('route', 'media');
 
-        $redirect = redirect(APP_ROUTE_URL . '/dashboard/admin/' . $route);
+        $redirect = redirect(APP_ROUTE_URL.'/dashboard/admin/'.$route);
 
         try {
-
         } catch (Exception $e) {
             $redirect->withError();
         }
@@ -48,7 +47,5 @@ class Media extends AdminController
 
     protected function validateFiles(FileBag $files, string $type = null): void
     {
-
     }
-
 }

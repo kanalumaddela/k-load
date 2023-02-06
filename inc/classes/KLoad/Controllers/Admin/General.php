@@ -36,7 +36,7 @@ class General extends AdminController
         $this->authorize('general');
 
         $settings = Setting::whereIn('name', ['community_name', 'description', 'logo'])->get()->pluck('value', 'name');
-        $logos = Util::listDir(APP_ROOT . '/assets/img/logos');
+        $logos = Util::listDir(APP_ROOT.'/assets/img/logos');
 
         return $this->view('general', get_defined_vars());
     }
@@ -58,7 +58,7 @@ class General extends AdminController
             flash('success', Lang::get('description_updated', 'Description name has been updated'));
         }
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/general');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/general');
     }
 
     public function logo(): RedirectResponse
@@ -68,11 +68,11 @@ class General extends AdminController
 
         $post = $this->getPost();
 
-        if (file_exists(APP_ROOT . '/assets/img/logos/' . ($logo = $post->get('logo')))) {
+        if (file_exists(APP_ROOT.'/assets/img/logos/'.($logo = $post->get('logo')))) {
             $logoSetting = Setting::find('logo');
 
             if ($post->get('action') === 'delete') {
-                unlink(APP_ROOT . '/assets/img/logos/' . $logo);
+                unlink(APP_ROOT.'/assets/img/logos/'.$logo);
                 $logoSetting->value = '';
                 $logoSetting->save();
 
@@ -82,10 +82,9 @@ class General extends AdminController
                 $logoSetting->save();
                 flash('success', Lang::get('logo_updated', 'Logo has been updated'));
             }
-
         }
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/general');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/general');
     }
 
     /**
@@ -104,20 +103,20 @@ class General extends AdminController
 
             $name = pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
             $sanitized = strtolower(preg_replace('/[[:^print:]]/', '', $name));
-            $newName = $sanitized . '.' . uniqid('', true) . '.' . $logo->guessExtension();
+            $newName = $sanitized.'.'.uniqid('', true).'.'.$logo->guessExtension();
 
             try {
                 $ext = $logo->guessExtension();
 
-                $logo->move(APP_ROOT . '/assets/img/logos', $newName);
+                $logo->move(APP_ROOT.'/assets/img/logos', $newName);
 
-                flash('success', 'Uploaded `' . $name . '.' . $ext . '`');
+                flash('success', 'Uploaded `'.$name.'.'.$ext.'`');
             } catch (FileException $e) {
-                flash('error', 'Failed to upload logo: ' . $e->getMessage());
+                flash('error', 'Failed to upload logo: '.$e->getMessage());
 //                flash('error', Lang::get('failed_to_upload_logo', [$name]));
             }
         }
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/general');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/general');
     }
 }

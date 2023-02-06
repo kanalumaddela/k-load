@@ -66,8 +66,8 @@ class LoadingView extends View
     {
         $theme = self::getTheme();
 
-        self::$twigLoader->addPath(APP_ROOT . '/themes/' . $theme . '/pages');
-        self::$twigLoader->addPath(APP_ROOT . '/themes/base', 'base');
+        self::$twigLoader->addPath(APP_ROOT.'/themes/'.$theme.'/pages');
+        self::$twigLoader->addPath(APP_ROOT.'/themes/base', 'base');
     }
 
     public static function getTheme(): string

@@ -71,15 +71,15 @@ class View
      */
     protected static array $globalData = [
         'app' => [
-            'host' => APP_HOST,
-            'path' => APP_PATH,
-            'url' => APP_URL,
-            'current' => APP_CURRENT_URL,
-            'route' => APP_ROUTE_URL,
+            'host'          => APP_HOST,
+            'path'          => APP_PATH,
+            'url'           => APP_URL,
+            'current'       => APP_CURRENT_URL,
+            'route'         => APP_ROUTE_URL,
             'current_route' => APP_CURRENT_ROUTE,
-            'debug' => DEBUG,
+            'debug'         => DEBUG,
         ],
-        'assets' => APP_PATH . '/assets',
+        'assets' => APP_PATH.'/assets',
     ];
 
     public static function init()
@@ -89,15 +89,15 @@ class View
 
     public static function getThemes(): array
     {
-        $themePath = APP_ROOT . '/themes/';
-        $list = array_slice(scandir(APP_ROOT . '/themes'), 2);
+        $themePath = APP_ROOT.'/themes/';
+        $list = array_slice(scandir(APP_ROOT.'/themes'), 2);
         $themes = [];
 
         foreach ($list as $theme) {
             if ($theme === '.template') {
                 continue;
             }
-            if (file_exists($themePath . $theme . '/pages/controllers')) {
+            if (file_exists($themePath.$theme.'/pages/controllers')) {
                 $themes[] = $theme;
             }
         }
@@ -107,7 +107,7 @@ class View
 
     public static function themeExists(string $theme): bool
     {
-        return file_exists(APP_ROOT . '/themes/' . $theme);
+        return file_exists(APP_ROOT.'/themes/'.$theme);
     }
 
     /**
@@ -124,7 +124,7 @@ class View
 
         static::$twig = new Environment(static::$twigLoader, [
             'debug' => DEBUG,
-            'cache' => ENABLE_CACHE ? APP_ROOT . '/data/templates' : false,
+            'cache' => ENABLE_CACHE ? APP_ROOT.'/data/templates' : false,
         ]);
 
         if (DEBUG) {
@@ -135,7 +135,7 @@ class View
 
         $data = array_merge($data, static::buildData());
 
-        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template . '.twig', $data);
+        return static::$twig->render(strpos($template, '.twig') !== false ? $template : $template.'.twig', $data);
     }
 
     /**
@@ -146,16 +146,16 @@ class View
         $theme = static::getTheme();
 
         $requiredFiles = [
-            APP_ROOT . '/themes/' . $theme . '/pages',
-            'controllers' => APP_ROOT . '/themes/' . $theme . '/pages/controllers',
+            APP_ROOT.'/themes/'.$theme.'/pages',
+            'controllers' => APP_ROOT.'/themes/'.$theme.'/pages/controllers',
         ];
 
         $optionalFiles = [
-            'partials' => APP_ROOT . '/themes/' . $theme . '/pages/partials',
+            'partials' => APP_ROOT.'/themes/'.$theme.'/pages/partials',
         ];
 
-        if (!file_exists(APP_ROOT . '/themes/' . $theme . '/pages')) {
-            throw new InvalidArgumentException('`' . $theme . '` does not exist in themes/');
+        if (!file_exists(APP_ROOT.'/themes/'.$theme.'/pages')) {
+            throw new InvalidArgumentException('`'.$theme.'` does not exist in themes/');
         }
 
         foreach ($requiredFiles as $key => $requiredFile) {
@@ -206,10 +206,10 @@ class View
             return true;
         }));
         self::$twig->addFunction(new TwigFunction('asset', function ($file) {
-            return APP_URL . '/assets/' . $file;
+            return APP_URL.'/assets/'.$file;
         }));
         self::$twig->addFunction(new TwigFunction('theme_asset', function ($file) {
-            return APP_URL . '/themes/' . static::getTheme() . '/assets/' . $file;
+            return APP_URL.'/themes/'.static::getTheme().'/assets/'.$file;
         }));
         self::$twig->addFunction(new TwigFunction('route', function ($route, ...$parameters) {
             if (isset($parameters[0]) && is_array($parameters[0])) {
@@ -222,7 +222,7 @@ class View
 
             $route = vsprintf($route, $parameters);
 
-            return APP_ROUTE_URL . '/' . $route;
+            return APP_ROUTE_URL.'/'.$route;
         }));
         self::$twig->addFunction(new TwigFunction('isActiveRoute', function ($route, $activeClass = 'is-active') {
             return APP_CURRENT_ROUTE === $route || substr(APP_CURRENT_ROUTE, 1) === $route ? $activeClass : '';
@@ -234,7 +234,7 @@ class View
 
             $csrf = Session::generateCsrf($route);
 
-            return new Markup('<input type="hidden" value="' . $csrf . '" name="_csrf" />', 'utf-8');
+            return new Markup('<input type="hidden" value="'.$csrf.'" name="_csrf" />', 'utf-8');
         }));
     }
 
@@ -254,18 +254,18 @@ class View
     public static function setupBaseData(): void
     {
         self::$globalData['app'] = array_merge(self::$globalData['app'], [
-            'lang' => Lang::getCurrentLang(),
-            'demo_mode' => Config::get('demo_mode', false),
-            'version' => App::$version,
+            'lang'       => Lang::getCurrentLang(),
+            'demo_mode'  => Config::get('demo_mode', false),
+            'version'    => App::$version,
             'version_id' => App::$versionId,
         ]);
 
         self::$globalData = array_merge(self::$globalData, [
-            'assets_theme' => APP_PATH . '/themes/' . static::getTheme() . '/assets',
-            'cache_buster' => bin2hex(random_bytes(4)),
-            'post_max_size' => ini_get('post_max_size'),
+            'assets_theme'        => APP_PATH.'/themes/'.static::getTheme().'/assets',
+            'cache_buster'        => bin2hex(random_bytes(4)),
+            'post_max_size'       => ini_get('post_max_size'),
             'upload_max_filesize' => ini_get('upload_max_filesize'),
-            'max_file_uploads' => ini_get('max_file_uploads'),
+            'max_file_uploads'    => ini_get('max_file_uploads'),
         ]);
 
         self::$globalData['site_json'] = new Markup(json_encode(self::$globalData['app'], JSON_THROW_ON_ERROR), 'utf-8');
@@ -281,10 +281,10 @@ class View
         if (isset($_SESSION['kload']) && Session::has('user')) {
             self::$twig->addGlobal('user', Session::user());
 
-            $csrf = Session::get('csrf.' . APP_CURRENT_ROUTE . '.token');
+            $csrf = Session::get('csrf.'.APP_CURRENT_ROUTE.'.token');
 
             self::$twig->addGlobal('csrf_token', $csrf);
-            self::$twig->addGlobal('csrf', new Markup('<input type="hidden" value="' . $csrf . '" name="_csrf" />', 'utf-8'));
+            self::$twig->addGlobal('csrf', new Markup('<input type="hidden" value="'.$csrf.'" name="_csrf" />', 'utf-8'));
 
             $flash = Session::flushFlash();
             self::$twig->addGlobal('flash', $flash);

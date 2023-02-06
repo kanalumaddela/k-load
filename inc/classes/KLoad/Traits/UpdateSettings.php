@@ -22,8 +22,9 @@ trait UpdateSettings
 {
     /**
      * @param string $name
-     * @param mixed $value
-     * @param bool $flash
+     * @param mixed  $value
+     * @param bool   $flash
+     *
      * @return void
      */
     public function updateSetting(string $name, mixed $value, bool $flash = true): void
@@ -32,7 +33,7 @@ trait UpdateSettings
             Setting::where('name', $name)->update(['value' => $value]);
 
             if ($flash) {
-                flash('success', Lang::get($name . '_updated'));
+                flash('success', Lang::get($name.'_updated'));
             }
         } catch (QueryException $e) {
             if ($flash) {
