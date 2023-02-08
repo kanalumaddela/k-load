@@ -23,8 +23,10 @@ use function array_shift;
 use function array_values;
 use function call_user_func;
 use function call_user_func_array;
+use function count;
 use function implode;
 use function preg_match;
+use function trim;
 
 class Dispatcher
 {
@@ -171,7 +173,7 @@ class Dispatcher
 
             $count = count($matches);
 
-            while (!isset($data['routeMap'][$count++]));
+//            while (!isset($data['routeMap'][$count++]));
 
             $routes = $data['routeMap'][$count - 1];
 

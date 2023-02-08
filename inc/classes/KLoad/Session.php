@@ -18,13 +18,16 @@ use KLoad\Helpers\Util;
 use RuntimeException;
 use function dd;
 use function dump;
+use function ini_set;
 use function is_array;
 use function is_string;
 use function session_destroy;
 use function session_name;
 use function session_regenerate_id;
+use function session_set_cookie_params;
 use function session_start;
 use function session_status;
+use function time;
 use const PHP_SESSION_ACTIVE;
 
 class Session extends DotArray

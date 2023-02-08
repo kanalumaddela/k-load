@@ -19,18 +19,21 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
+use function array_filter;
+use function get_defined_vars;
 use function KLoad\redirect;
+use function strtolower;
 
 class Messages extends AdminController
 {
     use UpdateSettings;
 
     protected static array $defaultData = [
-        'enable'   => false,
-        'random'   => false,
+        'enable' => false,
+        'random' => false,
         'duration' => 5000,
-        'fade'     => 750,
-        'list'     => [],
+        'fade' => 750,
+        'list' => [],
     ];
 
     public function index(): Response

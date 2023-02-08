@@ -22,17 +22,17 @@ use function time;
 
 class Cookie
 {
-    protected $data = [];
+    protected array $data = [];
 
-    protected $expires = 0;
+    protected int $expires = 0;
 
-    protected $path = '';
+    protected string $path = '';
 
-    protected $domain;
+    protected string $domain;
 
-    protected $secure = false;
+    protected bool $secure = false;
 
-    protected $prefix = '';
+    protected string $prefix = '';
 
     public function __construct(array $options = [])
     {
@@ -41,7 +41,7 @@ class Cookie
         $this->data = &$_COOKIE;
     }
 
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->prefix = $options['prefix'] ?? '';
         $this->domain = $options['domain'] ?? $_SERVER['HTTP_HOST'];
@@ -50,7 +50,7 @@ class Cookie
         $this->expires = $options['defaultExpire'] ?? 0;
     }
 
-    public function set($key, $value = null, ?int $expires = 0, bool $httpOnly = false)
+    public function set($key, $value = null, ?int $expires = 0, bool $httpOnly = false): void
     {
         if (is_null($expires)) {
             $expires = $this->expires;
@@ -67,13 +67,13 @@ class Cookie
         setcookie($key, $value, $expires, $this->path, $this->domain, $this->secure, $httpOnly);
     }
 
-    public function parseKey(string $key)
+    public function parseKey(string $key): string
     {
         if (strpos($key, '.') !== false) {
             $key = str_replace('.', '_', $key);
         }
 
-        return $this->prefix.$key;
+        return $this->prefix . $key;
     }
 
     public function get($key, $default = null)
@@ -81,7 +81,7 @@ class Cookie
         return $this->data[$this->parseKey($key)] ?? $default;
     }
 
-    public function clear()
+    public function clear(): void
     {
         foreach ($this->data as $key => $value) {
             if (substr($key, 0, strlen($this->prefix)) === $this->prefix) {
@@ -90,7 +90,7 @@ class Cookie
         }
     }
 
-    public function delete($key)
+    public function delete($key): void
     {
         $key = $this->parseKey($key);
 
@@ -99,7 +99,7 @@ class Cookie
         setcookie($key, null, time() - 3600, $this->path, $this->domain, $this->secure);
     }
 
-    public function has($key)
+    public function has($key): bool
     {
         return isset($this->data[$this->parseKey($key)]);
     }

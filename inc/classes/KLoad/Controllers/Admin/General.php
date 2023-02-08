@@ -21,11 +21,16 @@ use KLoad\Models\Setting;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
+use function file_exists;
+use function get_defined_vars;
 use function KLoad\flash;
 use function KLoad\redirect;
 use function pathinfo;
+use function preg_replace;
 use function str_contains;
+use function strtolower;
 use function uniqid;
+use function unlink;
 use const KLoad\APP_ROOT;
 use const KLoad\APP_ROUTE_URL;
 

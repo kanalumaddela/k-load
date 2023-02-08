@@ -31,17 +31,17 @@ use const PREG_SET_ORDER;
 class Constants
 {
     protected static $defaults = [
-        'debug'                        => false,
-        'app_language'                 => 'en',
-        'enable_log'                   => true,
-        'enable_cache'                 => true,
-        'clear_cache'                  => 'refresh',
-        'enable_registration'          => false,
+        'debug' => false,
+        'app_language' => 'en',
+        'enable_log' => true,
+        'enable_cache' => true,
+        'clear_cache' => 'refresh',
+        'enable_registration' => false,
         'ignore_player_customizations' => true,
-        'allow_theme_override'         => true,
-        'users_per_page'               => 16,
-        'date_format'                  => 'm/d/Y r',
-        'demo_mode'                    => false,
+        'allow_theme_override' => true,
+        'users_per_page' => 16,
+        'date_format' => 'm/d/Y r',
+        'demo_mode' => false,
     ];
 
     public static function init()

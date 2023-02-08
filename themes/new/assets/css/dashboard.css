@@ -209,6 +209,13 @@ main {
     margin-right: unset;
 }
 
+.field.has-addons.child:hover .control:not(:nth-child(1)) i {
+    opacity: 1;
+}
+
+.field.has-addons.child .control:not(:nth-child(1)) i {
+    opacity: 0;
+}
 
 /* notices */
 .notice {

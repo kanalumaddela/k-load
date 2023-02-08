@@ -33,6 +33,7 @@
 {% endblock %}
 {% block bodyCss %}{% endblock %}
 {% block body %}{% endblock %}
+<div id="toastMessages"></div>
 <input id="copyBox" class="is-hidden">
 <script>
     const toastMessages = {{ flash.messages|default([])|json_encode|raw }};

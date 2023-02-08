@@ -25,8 +25,10 @@ use KLoad\Models\Setting;
 use KLoad\Models\User;
 use KLoad\View\LoadingView;
 use Symfony\Component\HttpFoundation\Response;
+use function array_filter;
 use function array_intersect;
 use function array_keys;
+use function array_map;
 use function array_merge;
 use function file_get_contents;
 use function get_defined_vars;
@@ -35,6 +37,7 @@ use function json_encode;
 use function KLoad\flash;
 use function KLoad\redirect;
 use function md5;
+use function number_format;
 use function preg_match;
 use const KLoad\APP_ROUTE_URL;
 

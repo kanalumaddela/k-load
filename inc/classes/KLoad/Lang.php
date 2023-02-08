@@ -13,7 +13,13 @@
 namespace KLoad;
 
 use InvalidArgumentException;
+use function array_flip;
+use function explode;
+use function fclose;
 use function file_exists;
+use function file_get_contents;
+use function fopen;
+use function fwrite;
 use function is_array;
 use function is_null;
 use function is_numeric;
@@ -22,7 +28,7 @@ use function vsprintf;
 
 class Lang
 {
-    public const LANG_FOLDER = APP_ROOT.'/inc/lang';
+    public const LANG_FOLDER = APP_ROOT . '/inc/lang';
 
     public string $currentLang = 'en';
 

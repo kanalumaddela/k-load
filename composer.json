@@ -41,7 +41,8 @@
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "filp/whoops": "^2.7",
-        "symfony/var-dumper": "^4.4"
+        "symfony/var-dumper": "^4.4",
+        "laravel/pint": "^1.4"
     },
     "autoload": {
         "psr-4": {

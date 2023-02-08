@@ -12,13 +12,19 @@
 
 namespace KLoad\Controllers;
 
+use function fclose;
+use function fopen;
+use function fwrite;
+use function get_defined_constants;
+use function str_starts_with;
+use function var_export;
 use const KLoad\APP_ROOT;
 
 class Test extends BaseController
 {
     public function constants(): void
     {
-        $file = fopen(APP_ROOT.'/constants.php', 'wb');
+        $file = fopen(APP_ROOT . '/constants.php', 'wb');
         fwrite($file, "<?php\n");
 
         $constants = get_defined_constants(true);

@@ -19,16 +19,20 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
+use function array_filter;
+use function array_keys;
+use function get_defined_vars;
 use function KLoad\redirect;
+use function strtolower;
 
 class Rules extends AdminController
 {
     use UpdateSettings;
 
     protected static array $defaultData = [
-        'enable'         => false,
+        'enable' => false,
         'numbering_type' => 1, // 1|a|A|i|I
-        'list'           => [],
+        'list' => [],
     ];
 
     private static array $numbering_types = [

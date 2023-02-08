@@ -16,7 +16,11 @@ use KLoad\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
+use function dirname;
 use function microtime;
+use function ob_end_flush;
+use function ob_get_length;
+use function ob_start;
 use function print_r;
 
 $whoops = new Run();
@@ -32,11 +36,6 @@ ob_start();
 ($res = App::dispatch())->send();
 
 if (DEBUG && !$res instanceof JsonResponse) {
-//    if ($res instanceof JsonResponse) {
-//        $data = $res->getContent();
-//        dd($data);
-//    }
-
     echo "\n".'<!--'."\n\n";
 
     echo 'Script Time: '.(microtime(true) - APP_START).'s';

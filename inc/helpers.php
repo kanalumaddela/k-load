@@ -12,7 +12,7 @@
 
 namespace KLoad;
 
-use HttpResponse;
+use KLoad\Exceptions\HttpException;
 use KLoad\Http\RedirectResponse;
 use KLoad\View\LoadingView;
 use KLoad\View\View;
@@ -32,6 +32,7 @@ use function ksort;
 use function range;
 use function scandir;
 use function Sentry\init;
+use function session_unset;
 use function var_export;
 
 init(['dsn' => 'https://0bdc6629de78435f807c56358e3cdbae@o259687.ingest.sentry.io/1455550']);
@@ -184,7 +185,7 @@ function isAdminUser()
 //    throw new HttpException(403);
 
     if (\KLoad\Facades\Session::user()['admin'] !== true) {
-        return new HttpResponse(403);
+        return new HttpException(403);
     }
 }
 

@@ -62,7 +62,7 @@ $router->group(['before' => 'auth'], function ($router) {
         $router->delete('/dashboard/admin/media', [Admin\Media::class, 'delete']);
         $router->post('/dashboard/admin/media/upload', [Admin\Media::class, 'upload']);
 //
-        $router->get('/dashboard/admin/music', [Admin\Music::class, 'index']);
+//        $router->get('/dashboard/admin/music', [Admin\Music::class, 'index']);
 //        $router->post('/dashboard/admin/music', [Admin\Music::class, 'indexPost']);
 //        $router->post('/dashboard/admin/music/upload', [Admin\Music::class, 'musicUpload']);
 //        $router->post('/dashboard/admin/music/delete', [Admin\Music::class, 'deleteMusic']);

@@ -18,7 +18,10 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
+use function count;
+use function get_defined_vars;
 use function KLoad\redirect;
+use function strtolower;
 
 class Staff extends AdminController
 {
@@ -26,7 +29,7 @@ class Staff extends AdminController
 
     protected static array $defaultData = [
         'enable' => false,
-        'list'   => [],
+        'list' => [],
     ];
 
     public function index(): Response

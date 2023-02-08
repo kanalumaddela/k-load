@@ -13,6 +13,8 @@
 namespace KLoad\Casts;
 
 use function dd;
+use function json_decode;
+use function json_encode;
 
 class CheckIfJson
 {

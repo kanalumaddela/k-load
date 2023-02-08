@@ -39,6 +39,7 @@ use function json_decode;
 use function mkdir;
 use function preg_match;
 use function random_bytes;
+use function rawurldecode;
 use function restore_error_handler;
 use function rmdir;
 use function rtrim;
@@ -47,6 +48,7 @@ use function set_error_handler;
 use function sprintf;
 use function str_replace;
 use function unlink;
+use function urldecode;
 use const CURLOPT_RETURNTRANSFER;
 use const CURLOPT_TIMEOUT;
 use const DIRECTORY_SEPARATOR;
@@ -160,7 +162,7 @@ class Util
         $filtered = [];
 
         foreach ($items as $item) {
-            if (is_dir($dir.DIRECTORY_SEPARATOR.$item) && !$includeFolders) {
+            if (!$includeFolders && is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 continue;
             }
             $filtered[] = $item;

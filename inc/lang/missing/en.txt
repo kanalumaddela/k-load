@@ -10,3 +10,11 @@ rule_settings
 rule_duration_info
 numbering_type
 background_settings
+core_desc
+general_desc
+backgrounds_desc
+messages_desc
+music_desc
+rules_desc
+staff_desc
+themes_desc

@@ -15,6 +15,7 @@ namespace KLoad;
 use JsonException;
 use function file_get_contents;
 use function is_null;
+use function json_decode;
 
 class Request extends \Symfony\Component\HttpFoundation\Request
 {

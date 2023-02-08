@@ -20,8 +20,15 @@ use KLoad\Facades\Lang;
 use KLoad\Http\RedirectResponse;
 use KLoad\View\LoadingView;
 use Symfony\Component\HttpFoundation\Response;
+use function curl_close;
+use function curl_exec;
+use function curl_init;
+use function curl_setopt;
+use function get_defined_vars;
+use function json_decode;
 use function KLoad\flash;
 use function KLoad\redirect;
+use function str_contains;
 use const KLoad\APP_ROUTE_URL;
 
 class Core extends AdminController

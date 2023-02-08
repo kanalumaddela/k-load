@@ -17,7 +17,7 @@ use Throwable;
 
 class HttpException extends Exception
 {
-    protected static $statusCodeTemplates = [
+    protected static array $statusCodeTemplates = [
         404 => [
             'Not Found',
             '%s not found',
@@ -27,7 +27,7 @@ class HttpException extends Exception
         ],
     ];
 
-    protected $statusCode;
+    protected int $statusCode;
 
     public function __construct(int $statusCode = 500, string $message = '', Throwable $previous = null, array $headers = [], ?int $code = 0)
     {

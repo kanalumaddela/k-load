@@ -12,7 +12,8 @@
 
 namespace KLoad;
 
-use Exception;
+use JetBrains\PhpStorm\NoReturn;
+use RuntimeException;
 use function copy;
 use function file_exists;
 use function file_put_contents;
@@ -34,7 +35,7 @@ class Config extends DotArray
             'port' => '3306',
             'user' => 'root',
             'pass' => '',
-            'db'   => 'k-load',
+            'db' => 'k-load',
         ],
     ];
 
@@ -42,14 +43,18 @@ class Config extends DotArray
 
     protected $location;
 
-    public function __construct($items = [], $ignoreMissing = false)
+    /**
+     * @param mixed $items
+     * @param bool $ignoreMissing
+     */
+    public function __construct(mixed $items = [], bool $ignoreMissing = false)
     {
         if (is_string($items)) {
             $this->setLocation($items);
             $this->exists = file_exists($items);
 
             if ($this->fileExists() || $ignoreMissing) {
-                $items = require_once $items;
+                $items = require $items;
             }
         }
 
@@ -66,7 +71,7 @@ class Config extends DotArray
     public function checkLocation(string $location)
     {
         if (is_dir($location)) {
-            $location = $location.'/config.php';
+            $location .= '/config.php';
         }
 
         return $location;
@@ -77,10 +82,10 @@ class Config extends DotArray
         return $this->exists;
     }
 
-    public function save()
+    public function save(): void
     {
         if (empty($this->location)) {
-            throw new Exception('location not set, cannot save config');
+            throw new RuntimeException('location not set, cannot save config');
         }
 
 //        $loc = dirname($this->location);
@@ -97,22 +102,22 @@ class Config extends DotArray
 //
 //        file_put_contents($this->location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($this->all()).';');
         if (!file_exists($this->location)) {
-            throw new Exception('Config could not be saved in: '.$this->location);
+            throw new RuntimeException('Config could not be saved in: ' . $this->location);
         }
     }
 
-    public static function saveConfig(string $location, $data, bool $saveOriginal = true)
+    public static function saveConfig(string $location, $data, bool $saveOriginal = true): void
     {
-        if (file_exists($location) && $saveOriginal) {
-            copy($location, $location.'.'.time().'.old.php');
+        if ($saveOriginal && file_exists($location)) {
+            copy($location, $location . '.' . time() . '.old.php');
         }
 
-        file_put_contents($location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($data).';');
+        file_put_contents($location, "<?php\n" . App::getCopyright() . "\n\nreturn " . var_export_fixed($data) . ';');
     }
 
-    public function create(array $config)
+    #[NoReturn] public function create(array $config)
     {
-        exit('todo: '.__CLASS__.'@'.__METHOD__);
+        exit('todo: ' . __CLASS__ . '@' . __METHOD__);
 
         $template = static::$templateConfig;
 
@@ -125,7 +130,7 @@ class Config extends DotArray
         file_put_contents(APP_ROOT.'/data/config.php', "<?php\n\nreturn ".var_export_fixed($this->config));
 
         if (!file_exists(APP_ROOT.'/data/config.php')) {
-            throw new Exception('Config could not be saved in: '.APP_ROOT.'/data/config.php');
+            throw new RuntimeException('Config could not be saved in: ' . APP_ROOT . '/data/config.php');
         }
     }
 }

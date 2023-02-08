@@ -18,13 +18,13 @@ use function get_class;
 
 trait HasCustomCastsAttributes
 {
-    protected static array $castsAttributeClassCache = [];
-
-    protected array $castsAttributeCache = [];
-
     use HasAttributes {
         HasAttributes::castAttribute as parentCastAttribute;
     }
+
+    protected static array $castsAttributeClassCache = [];
+
+    protected array $castsAttributeCache = [];
 
     protected function castAttribute($key, $value)
     {
