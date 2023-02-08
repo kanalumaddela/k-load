@@ -63,7 +63,7 @@ use const PHP_URL_PATH;
 
 function defineConstant($name, $value)
 {
-    $constant = __NAMESPACE__ . '\\' . strtoupper($name);
+    $constant = __NAMESPACE__.'\\'.strtoupper($name);
 
     if (!defined($constant)) {
         define($constant, $value);
@@ -242,12 +242,12 @@ copyright;
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
             kload_error_page([
-                'type' => 'error',
-                'code' => $errno,
-                'file' => $errfile,
+                'type'    => 'error',
+                'code'    => $errno,
+                'file'    => $errfile,
                 'line_no' => $errline,
                 'message' => $errstr,
-                'raw' => func_get_args(),
+                'raw'     => func_get_args(),
             ]);
 
             exit();
@@ -272,10 +272,10 @@ copyright;
      */
     private static function setupDirectories(): void
     {
-        Util::mkDir(APP_ROOT . '/assets/img/logos');
-        Util::mkDir(APP_ROOT . '/data/logs', true);
-        Util::mkDir(APP_ROOT . '/data/music');
-        Util::mkDir(APP_ROOT . '/data/uploads');
+        Util::mkDir(APP_ROOT.'/assets/img/logos');
+        Util::mkDir(APP_ROOT.'/data/logs', true);
+        Util::mkDir(APP_ROOT.'/data/music');
+        Util::mkDir(APP_ROOT.'/data/uploads');
     }
 
     private static function determineCurrentRoute(): void
@@ -413,8 +413,9 @@ copyright;
     /**
      * @param string|null $route
      *
-     * @return Response
      * @throws Exception
+     *
+     * @return Response
      */
     public static function dispatch(string $route = null): Response
     {

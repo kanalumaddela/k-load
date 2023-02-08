@@ -30,9 +30,9 @@ class Rules extends AdminController
     use UpdateSettings;
 
     protected static array $defaultData = [
-        'enable' => false,
+        'enable'         => false,
         'numbering_type' => 1, // 1|a|A|i|I
-        'list' => [],
+        'list'           => [],
     ];
 
     private static array $numbering_types = [

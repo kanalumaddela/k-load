@@ -29,7 +29,7 @@ class Staff extends AdminController
 
     protected static array $defaultData = [
         'enable' => false,
-        'list' => [],
+        'list'   => [],
     ];
 
     public function index(): Response

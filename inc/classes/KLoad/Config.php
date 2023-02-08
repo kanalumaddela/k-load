@@ -35,7 +35,7 @@ class Config extends DotArray
             'port' => '3306',
             'user' => 'root',
             'pass' => '',
-            'db' => 'k-load',
+            'db'   => 'k-load',
         ],
     ];
 
@@ -45,7 +45,7 @@ class Config extends DotArray
 
     /**
      * @param mixed $items
-     * @param bool $ignoreMissing
+     * @param bool  $ignoreMissing
      */
     public function __construct(mixed $items = [], bool $ignoreMissing = false)
     {
@@ -102,35 +102,36 @@ class Config extends DotArray
 //
 //        file_put_contents($this->location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($this->all()).';');
         if (!file_exists($this->location)) {
-            throw new RuntimeException('Config could not be saved in: ' . $this->location);
+            throw new RuntimeException('Config could not be saved in: '.$this->location);
         }
     }
 
     public static function saveConfig(string $location, $data, bool $saveOriginal = true): void
     {
         if ($saveOriginal && file_exists($location)) {
-            copy($location, $location . '.' . time() . '.old.php');
+            copy($location, $location.'.'.time().'.old.php');
         }
 
-        file_put_contents($location, "<?php\n" . App::getCopyright() . "\n\nreturn " . var_export_fixed($data) . ';');
+        file_put_contents($location, "<?php\n".App::getCopyright()."\n\nreturn ".var_export_fixed($data).';');
     }
 
-    #[NoReturn] public function create(array $config)
-    {
-        exit('todo: ' . __CLASS__ . '@' . __METHOD__);
+    #[NoReturn]
+ public function create(array $config)
+ {
+     exit('todo: '.__CLASS__.'@'.__METHOD__);
 
-        $template = static::$templateConfig;
+     $template = static::$templateConfig;
 
-        foreach ($config as $key => $value) {
-            if (isset($template[$key])) {
-                $template[$key] = $value;
-            }
-        }
+     foreach ($config as $key => $value) {
+         if (isset($template[$key])) {
+             $template[$key] = $value;
+         }
+     }
 
-        file_put_contents(APP_ROOT.'/data/config.php', "<?php\n\nreturn ".var_export_fixed($this->config));
+     file_put_contents(APP_ROOT.'/data/config.php', "<?php\n\nreturn ".var_export_fixed($this->config));
 
-        if (!file_exists(APP_ROOT.'/data/config.php')) {
-            throw new RuntimeException('Config could not be saved in: ' . APP_ROOT . '/data/config.php');
-        }
-    }
+     if (!file_exists(APP_ROOT.'/data/config.php')) {
+         throw new RuntimeException('Config could not be saved in: '.APP_ROOT.'/data/config.php');
+     }
+ }
 }

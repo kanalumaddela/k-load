@@ -162,7 +162,7 @@ class Util
         $filtered = [];
 
         foreach ($items as $item) {
-            if (!$includeFolders && is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
+            if (!$includeFolders && is_dir($dir.DIRECTORY_SEPARATOR.$item)) {
                 continue;
             }
             $filtered[] = $item;

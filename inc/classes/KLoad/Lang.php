@@ -28,7 +28,7 @@ use function vsprintf;
 
 class Lang
 {
-    public const LANG_FOLDER = APP_ROOT . '/inc/lang';
+    public const LANG_FOLDER = APP_ROOT.'/inc/lang';
 
     public string $currentLang = 'en';
 

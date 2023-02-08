@@ -22,10 +22,10 @@ use function json_encode;
 class Backgrounds extends AdminController
 {
     protected static array $defaultData = [
-        'enable' => true,
-        'random' => true,
+        'enable'   => true,
+        'random'   => true,
         'duration' => 5000,
-        'fade' => 500,
+        'fade'     => 500,
     ];
 
     public function index(): Response
