@@ -73,7 +73,7 @@ class Cookie
             $key = str_replace('.', '_', $key);
         }
 
-        return $this->prefix . $key;
+        return $this->prefix.$key;
     }
 
     public function get($key, $default = null)

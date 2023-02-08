@@ -29,11 +29,11 @@ class Messages extends AdminController
     use UpdateSettings;
 
     protected static array $defaultData = [
-        'enable' => false,
-        'random' => false,
+        'enable'   => false,
+        'random'   => false,
         'duration' => 5000,
-        'fade' => 750,
-        'list' => [],
+        'fade'     => 750,
+        'list'     => [],
     ];
 
     public function index(): Response
