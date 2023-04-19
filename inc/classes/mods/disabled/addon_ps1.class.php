@@ -30,11 +30,11 @@ class addon_ps1
         if ($conn->connect_error) {
             Util::log('addons', 'Pointshop 1 - Failed to connect: '.$conn->connect_error);
         } else {
-            $authserver = bcsub($steamid, '76561197960265728') & 1;
-            $authid = (bcsub($steamid, '76561197960265728') - $authserver) / 2;
+            $authserver = \bcsub($steamid, '76561197960265728') & 1;
+            $authid = (\bcsub($steamid, '76561197960265728') - $authserver) / 2;
             $steam32 = "STEAM_0:$authserver:$authid";
 
-            $uniqueid = $conn->real_escape_string(sprintf('%u', crc32('gm_'.$steam32.'_gm')));
+            $uniqueid = $conn->real_escape_string(\sprintf('%u', \crc32('gm_'.$steam32.'_gm')));
             $sql = "SELECT `points` FROM `pointshop_data` WHERE `uniqueid` = '$uniqueid'";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
@@ -45,6 +45,6 @@ class addon_ps1
 
     public function data()
     {
-        return number_format($this->points);
+        return \number_format($this->points);
     }
 }

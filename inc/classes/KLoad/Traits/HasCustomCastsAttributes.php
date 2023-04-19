@@ -13,8 +13,6 @@
 namespace KLoad\Traits;
 
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
-use function class_exists;
-use function get_class;
 
 trait HasCustomCastsAttributes
 {
@@ -37,12 +35,12 @@ trait HasCustomCastsAttributes
         if ($newValue === $value) {
             $type = $this->getCastType($key);
 
-            if (class_exists($type)) {
+            if (\class_exists($type)) {
                 if (!isset(static::$castsAttributeClassCache[$type])) {
                     static::$castsAttributeClassCache[$type] = new $type();
                 }
 
-                $newValue = static::$castsAttributeClassCache[$type]->get(get_class($this), $key, $value, $this->getAttributes());
+                $newValue = static::$castsAttributeClassCache[$type]->get(\get_class($this), $key, $value, $this->getAttributes());
             }
         }
 

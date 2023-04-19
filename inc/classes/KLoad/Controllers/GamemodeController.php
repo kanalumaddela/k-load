@@ -12,8 +12,6 @@
 
 namespace KLoad\Controllers;
 
-use function strtolower;
-
 class GamemodeController extends BaseController
 {
     protected static $gamemodes = [
@@ -54,7 +52,7 @@ class GamemodeController extends BaseController
         // DarkRP
         // PropHunt
 
-        $lower = strtolower($gamemode);
+        $lower = \strtolower($gamemode);
         // darkrp
         // prophunt
 

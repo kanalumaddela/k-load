@@ -42,6 +42,6 @@ class addon_ps2
 
     public function data()
     {
-        return number_format($this->points);
+        return \number_format($this->points);
     }
 }

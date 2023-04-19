@@ -19,10 +19,8 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
-use function array_filter;
-use function get_defined_vars;
+
 use function KLoad\redirect;
-use function strtolower;
 
 class Messages extends AdminController
 {
@@ -42,7 +40,7 @@ class Messages extends AdminController
 
         $settings = Setting::where('name', 'messages')->pluck('value', 'name');
 
-        return $this->view('index', get_defined_vars());
+        return $this->view('index', \get_defined_vars());
     }
 
     /**
@@ -63,7 +61,7 @@ class Messages extends AdminController
 
         if (isset($post['list'])) {
             foreach ($post['list'] as $gamemode => $messageList) {
-                $messages['list'][strtolower($gamemode)] = array_filter($messageList);
+                $messages['list'][\strtolower($gamemode)] = \array_filter($messageList);
             }
         }
 
