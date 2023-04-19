@@ -21,11 +21,9 @@ use KLoad\View\View;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Response;
-use function array_merge;
-use function count;
-use function hash_equals;
+
 use function KLoad\view;
-use function time;
+
 use const KLoad\APP_CURRENT_ROUTE;
 use const KLoad\APP_ROUTE_URL;
 
@@ -90,7 +88,7 @@ class BaseController
 
     public function view($template, array $data = []): Response
     {
-        if (count(static::$dataHooks) > 0) {
+        if (\count(static::$dataHooks) > 0) {
             $data = static::addHookData($data);
         }
 
@@ -139,7 +137,7 @@ class BaseController
         $csrf = $this->session['csrf'];
         $csrf = $csrf[APP_CURRENT_ROUTE];
 
-        if (time() >= $csrf['expires'] || !hash_equals($csrf['token'], $userCsrf)) {
+        if (\time() >= $csrf['expires'] || !\hash_equals($csrf['token'], $userCsrf)) {
             throw new InvalidToken();
         }
     }
@@ -159,6 +157,6 @@ class BaseController
             $hookData[$key] = $instance->getData();
         }
 
-        return array_merge($data, $hookData);
+        return \array_merge($data, $hookData);
     }
 }

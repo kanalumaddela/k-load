@@ -12,14 +12,6 @@
 
 namespace KLoad;
 
-use function is_null;
-use function setcookie;
-use function str_replace;
-use function strlen;
-use function strpos;
-use function substr;
-use function time;
-
 class Cookie
 {
     protected array $data = [];
@@ -52,7 +44,7 @@ class Cookie
 
     public function set($key, $value = null, ?int $expires = 0, bool $httpOnly = false): void
     {
-        if (is_null($expires)) {
+        if (\is_null($expires)) {
             $expires = $this->expires;
         }
 
@@ -61,16 +53,16 @@ class Cookie
         $this->data[$key] = $value;
 
         if ($expires > 0) {
-            $expires = time() + $expires;
+            $expires = \time() + $expires;
         }
 
-        setcookie($key, $value, $expires, $this->path, $this->domain, $this->secure, $httpOnly);
+        \setcookie($key, $value, $expires, $this->path, $this->domain, $this->secure, $httpOnly);
     }
 
     public function parseKey(string $key): string
     {
-        if (strpos($key, '.') !== false) {
-            $key = str_replace('.', '_', $key);
+        if (\strpos($key, '.') !== false) {
+            $key = \str_replace('.', '_', $key);
         }
 
         return $this->prefix.$key;
@@ -84,7 +76,7 @@ class Cookie
     public function clear(): void
     {
         foreach ($this->data as $key => $value) {
-            if (substr($key, 0, strlen($this->prefix)) === $this->prefix) {
+            if (\substr($key, 0, \strlen($this->prefix)) === $this->prefix) {
                 $this->delete($key);
             }
         }
@@ -96,7 +88,7 @@ class Cookie
 
         unset($this->data[$key]);
 
-        setcookie($key, null, time() - 3600, $this->path, $this->domain, $this->secure);
+        \setcookie($key, null, \time() - 3600, $this->path, $this->domain, $this->secure);
     }
 
     public function has($key): bool

@@ -12,8 +12,6 @@
 
 namespace KLoad\Controllers;
 
-use function str_replace;
-use function strtolower;
 use const KLoad\APP_ROUTE_URL;
 
 class AdminController extends BaseController
@@ -51,7 +49,7 @@ class AdminController extends BaseController
 
     public function boot(): void
     {
-        $type = strtolower(str_replace(__NAMESPACE__.'\\Admin\\', '', static::class));
+        $type = \strtolower(\str_replace(__NAMESPACE__.'\\Admin\\', '', static::class));
 
         static::$templateFolder = 'controllers/admin/'.(!empty(static::$templateFolder) ? static::$templateFolder : $type);
         static::$title = empty(static::$title) ? $type : static::$title;
