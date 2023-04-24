@@ -12,10 +12,7 @@
 
 namespace KLoad\Casts;
 
-use function array_flip;
 use function dump;
-use function json_decode;
-use function json_encode;
 
 class JsonToFlippedArray
 {
@@ -23,11 +20,11 @@ class JsonToFlippedArray
     {
         dump('tbh');
 
-        return array_flip(json_decode($value, true));
+        return \array_flip(\json_decode($value, true));
     }
 
     public function set($model, string $key, $value, array $attributes)
     {
-        return json_encode($value);
+        return \json_encode($value);
     }
 }

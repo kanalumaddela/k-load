@@ -25,20 +25,10 @@ use KLoad\Models\Setting;
 use KLoad\Models\User;
 use KLoad\View\LoadingView;
 use Symfony\Component\HttpFoundation\Response;
-use function array_filter;
-use function array_intersect;
-use function array_keys;
-use function array_map;
-use function array_merge;
-use function file_get_contents;
-use function get_defined_vars;
-use function header;
-use function json_encode;
+
 use function KLoad\flash;
 use function KLoad\redirect;
-use function md5;
-use function number_format;
-use function preg_match;
+
 use const KLoad\APP_ROUTE_URL;
 
 class Dashboard extends BaseController
@@ -56,15 +46,15 @@ class Dashboard extends BaseController
         ];
 
         if (!$this->user['super']) {
-            $settings = array_intersect($settings, array_keys($this->user['perms']));
+            $settings = \array_intersect($settings, \array_keys($this->user['perms']));
         }
 
         $settings = Setting::whereIn('name', $settings)->get()->pluck('value', 'name');
         $themes = LoadingView::getThemes();
         $loading_theme = Config::get('loading_theme');
-        $userCount = number_format(User::count());
+        $userCount = \number_format(User::count());
 
-        return $this->view('index', get_defined_vars());
+        return $this->view('index', \get_defined_vars());
     }
 
     /**
@@ -104,7 +94,7 @@ class Dashboard extends BaseController
             $backgrounds['duration'] = isset($backgrounds['duration']) ? (int) $backgrounds['duration'] : 5000;
             $backgrounds['fade'] = isset($backgrounds['fade']) ? (int) $backgrounds['fade'] : 750;
 
-            Setting::where('name', 'backgrounds')->update(['value' => json_encode($backgrounds)]);
+            Setting::where('name', 'backgrounds')->update(['value' => \json_encode($backgrounds)]);
             flash('success', Lang::get('background_settings_updated', 'Background settings have been saved'));
         }
 
@@ -117,7 +107,7 @@ class Dashboard extends BaseController
 
             $music = Setting::where('name', 'music')->first();
 
-            Setting::where('name', 'music')->update(['value' => json_encode(array_merge($music->value, $musicPost))]);
+            Setting::where('name', 'music')->update(['value' => \json_encode(\array_merge($music->value, $musicPost))]);
             flash('success', Lang::get('music_settings_updated', 'Music settings have been saved'));
         }
 
@@ -135,13 +125,13 @@ class Dashboard extends BaseController
             'themes' => LoadingView::getThemes(true),
         ];
 
-        return $this->view('my-settings', array_merge($data, User::findBySteamid(Session::user()['steamid'])->only('settings')));
+        return $this->view('my-settings', \array_merge($data, User::findBySteamid(Session::user()['steamid'])->only('settings')));
     }
 
     public function mySettingsPost(): RedirectResponse
     {
         $settings = Setting::whereIn('name', ['backgrounds', 'music', 'youtube'])->get()->pluck('value', 'name')->toArray();
-        $settings['youtube'] = array_merge($settings['youtube'], $settings['music']);
+        $settings['youtube'] = \array_merge($settings['youtube'], $settings['music']);
 
         unset($settings['music'], $settings['youtube']['source'], $settings['youtube']['order'], $settings['youtube']['list']);
 
@@ -160,11 +150,11 @@ class Dashboard extends BaseController
         $post['youtube']['random'] = !isset($post['youtube']['random']) ? 0 : (int) $post['youtube']['random'];
         $post['youtube']['display_videos'] = !isset($post['youtube']['display_videos']) ? 0 : (int) $post['youtube']['display_videos'];
 
-        $post['youtube']['list'] = array_filter(array_map(function ($val) {
+        $post['youtube']['list'] = \array_filter(\array_map(function ($val) {
             return Util::YouTubeID($val);
         }, $post['youtube']['list']));
 
-        $post = array_merge($settings, $post);
+        $post = \array_merge($settings, $post);
         $update = [];
 
         unset($post['custom_css']);
@@ -200,7 +190,7 @@ class Dashboard extends BaseController
         $data = [
             'users'         => $users,
             'usersPageList' => Util::paginateFix($users),
-            'steamInfo'     => Cache::remember('steaminfo-users-'.md5($steamids), 3600, static function () use ($steamids) {
+            'steamInfo'     => Cache::remember('steaminfo-users-'.\md5($steamids), 3600, static function () use ($steamids) {
                 return empty($data = Util::getPlayersInfo($steamids, true)) ? null : $data;
             }),
             'query' => $query ?? null,
@@ -219,7 +209,7 @@ class Dashboard extends BaseController
             return empty($data = Util::getPlayersInfo($steamid, true)) ? null : $data;
         });
 
-        return $this->view('profile', get_defined_vars());
+        return $this->view('profile', \get_defined_vars());
     }
 
     public function userOldRoute($steamid): Response
@@ -232,7 +222,7 @@ class Dashboard extends BaseController
             return empty($data = Util::getPlayersInfo($steamid, true)) ? null : $data;
         });
 
-        return $this->view('profile', get_defined_vars());
+        return $this->view('profile', \get_defined_vars());
     }
 
     #[NoReturn]
@@ -240,14 +230,14 @@ class Dashboard extends BaseController
  {
      $url = Cache::remember('steam-bg-'.$steamid, 3600, static function () use ($steamid) {
          $regex = "/no_header *?profile_page *?has_profile_background *?.*\n\t *?style=\"background-image: *?url\( *?\n?'(https?:\/\/.*.jpg)/m";
-         $steamProfile = file_get_contents('https://steamcommunity.com/profiles/'.$steamid);
+         $steamProfile = \file_get_contents('https://steamcommunity.com/profiles/'.$steamid);
 
-         preg_match($regex, $steamProfile, $matches);
+         \preg_match($regex, $steamProfile, $matches);
 
          return $matches[1] ?? 'https://community.cloudflare.steamstatic.com/public/images/profile/2020/bg_dots.png';
      });
 
-     header('Location: '.$url, true, 302);
-     exit();
+     \header('Location: '.$url, true, 302);
+     exit;
  }
 }

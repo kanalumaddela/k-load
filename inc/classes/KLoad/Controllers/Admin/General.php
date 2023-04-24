@@ -21,16 +21,10 @@ use KLoad\Models\Setting;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
-use function file_exists;
-use function get_defined_vars;
+
 use function KLoad\flash;
 use function KLoad\redirect;
-use function pathinfo;
-use function preg_replace;
-use function str_contains;
-use function strtolower;
-use function uniqid;
-use function unlink;
+
 use const KLoad\APP_ROOT;
 use const KLoad\APP_ROUTE_URL;
 
@@ -43,7 +37,7 @@ class General extends AdminController
         $settings = Setting::whereIn('name', ['community_name', 'description', 'logo'])->get()->pluck('value', 'name');
         $logos = Util::listDir(APP_ROOT.'/assets/img/logos');
 
-        return $this->view('general', get_defined_vars());
+        return $this->view('general', \get_defined_vars());
     }
 
     public function generalPost(): RedirectResponse
@@ -73,11 +67,11 @@ class General extends AdminController
 
         $post = $this->getPost();
 
-        if (file_exists(APP_ROOT.'/assets/img/logos/'.($logo = $post->get('logo')))) {
+        if (\file_exists(APP_ROOT.'/assets/img/logos/'.($logo = $post->get('logo')))) {
             $logoSetting = Setting::find('logo');
 
             if ($post->get('action') === 'delete') {
-                unlink(APP_ROOT.'/assets/img/logos/'.$logo);
+                \unlink(APP_ROOT.'/assets/img/logos/'.$logo);
                 $logoSetting->value = '';
                 $logoSetting->save();
 
@@ -102,13 +96,13 @@ class General extends AdminController
 
         /** @var UploadedFile $logo */
         foreach ($this->request->files->get('logo-files') as $logo) {
-            if (!str_contains($logo->getMimeType(), 'image/')) {
+            if (!\str_contains($logo->getMimeType(), 'image/')) {
                 continue;
             }
 
-            $name = pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
-            $sanitized = strtolower(preg_replace('/[[:^print:]]/', '', $name));
-            $newName = $sanitized.'.'.uniqid('', true).'.'.$logo->guessExtension();
+            $name = \pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
+            $sanitized = \strtolower(\preg_replace('/[[:^print:]]/', '', $name));
+            $newName = $sanitized.'.'.\uniqid('', true).'.'.$logo->guessExtension();
 
             try {
                 $ext = $logo->guessExtension();

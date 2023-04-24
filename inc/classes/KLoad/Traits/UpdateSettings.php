@@ -16,6 +16,7 @@ use Illuminate\Database\QueryException;
 use KLoad\Facades\Lang;
 use KLoad\Facades\Session;
 use KLoad\Models\Setting;
+
 use function KLoad\flash;
 
 trait UpdateSettings

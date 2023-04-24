@@ -42,6 +42,6 @@ class addon_darkrp_wallet
 
     public function data()
     {
-        return '$'.number_format($this->money);
+        return '$'.\number_format($this->money);
     }
 }

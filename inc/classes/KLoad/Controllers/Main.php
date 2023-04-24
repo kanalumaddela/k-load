@@ -17,14 +17,9 @@ use KLoad\Helpers\Util;
 use KLoad\Models\Setting;
 use KLoad\Models\User;
 use KLoad\View\LoadingView;
-use function array_merge;
-use function array_slice;
-use function file_exists;
-use function get_declared_classes;
-use function json_encode;
+
 use function KLoad\loadingView;
-use function scandir;
-use function substr;
+
 use const KLoad\APP_ROOT;
 use const KLoad\ENABLE_REGISTRATION;
 use const KLoad\IGNORE_PLAYER_CUSTOMIZATIONS;
@@ -49,7 +44,7 @@ class Main extends BaseController
                 $player = $player->toArray();
 
                 $data['user'] = $player;
-                $data['settings'] = array_merge($data['settings'], $player['settings']);
+                $data['settings'] = \array_merge($data['settings'], $player['settings']);
                 unset($data['settings']['theme']);
 
                 $theme = $player['settings']['theme'];
@@ -75,7 +70,7 @@ class Main extends BaseController
 
 //        dd($data);
 
-        return loadingView(['data' => json_encode($data, JSON_THROW_ON_ERROR)]);
+        return loadingView(['data' => \json_encode($data, JSON_THROW_ON_ERROR)]);
     }
 
     protected function buildBaseData(): array
@@ -98,8 +93,8 @@ class Main extends BaseController
             'user'           => [],
         ];
 
-        $data['settings']['backgrounds'] = array_merge(['list' => Util::getBackgrounds()], $data['settings']['backgrounds']);
-        $data['theme'] = file_exists(APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php') ? include APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php' : [];
+        $data['settings']['backgrounds'] = \array_merge(['list' => Util::getBackgrounds()], $data['settings']['backgrounds']);
+        $data['theme'] = \file_exists(APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php') ? include APP_ROOT.'/themes/'.LoadingView::getTheme().'/config.php' : [];
 
         return $data;
     }
@@ -122,7 +117,7 @@ class Main extends BaseController
     protected static function getDataHooks(): array
     {
         $dir = APP_ROOT.'/plugins/disabled';
-        $files = scandir($dir);
+        $files = \scandir($dir);
 
         $class_count = 1;
 
@@ -131,13 +126,13 @@ class Main extends BaseController
                 continue;
             }
 
-            if (substr($file, -3, 3) === 'php') {
+            if (\substr($file, -3, 3) === 'php') {
                 include_once $dir.'/'.$file;
                 $class_count++;
             }
         }
 
-        foreach (array_slice(get_declared_classes(), -$class_count, $class_count) as $class) {
+        foreach (\array_slice(\get_declared_classes(), -$class_count, $class_count) as $class) {
             if ($class === 'KLoad\Hooks\DataHook') {
                 continue;
             }

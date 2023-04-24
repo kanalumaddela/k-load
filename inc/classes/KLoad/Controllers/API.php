@@ -15,7 +15,9 @@ namespace KLoad\Controllers;
 use KLoad\Facades\Cache;
 use KLoad\Helpers\Util;
 use KLoad\Http\RedirectResponse;
+
 use function KLoad\redirect;
+
 use const KLoad\APP_URL;
 
 class API extends BaseController

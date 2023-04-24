@@ -10,4 +10,4 @@
  * @license   MIT
  */
 
-phpinfo();
+\phpinfo();

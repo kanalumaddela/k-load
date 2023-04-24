@@ -34,39 +34,18 @@ use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use function array_merge;
-use function count;
-use function date;
-use function define;
-use function defined;
-use function file_exists;
-use function func_get_args;
-use function get_class;
-use function header;
-use function is_array;
-use function is_null;
-use function key;
+
 use function kload_error_page;
-use function parse_url;
-use function rtrim;
-use function set_error_handler;
-use function set_exception_handler;
-use function str_replace;
-use function stripos;
-use function strpos;
-use function strtoupper;
-use function time;
-use function trigger_error;
-use function var_dump;
+
 use const E_ALL;
 use const PHP_URL_PATH;
 
 function defineConstant($name, $value)
 {
-    $constant = __NAMESPACE__.'\\'.strtoupper($name);
+    $constant = __NAMESPACE__.'\\'.\strtoupper($name);
 
-    if (!defined($constant)) {
-        define($constant, $value);
+    if (!\defined($constant)) {
+        \define($constant, $value);
     }
 
     return $constant;
@@ -111,37 +90,37 @@ copyright;
 
         if (!static::isInstalled()) {
             if (APP_CURRENT_ROUTE !== '/install') {
-                header('Location: '.$_SERVER['SCRIPT_NAME'].'?/install', true, 302);
+                \header('Location: '.$_SERVER['SCRIPT_NAME'].'?/install', true, 302);
             }
 
-            var_dump('do install shit here');
-            exit();
+            \var_dump('do install shit here');
+            exit;
         }
 
         if (APP_CURRENT_ROUTE === '/install') {
             echo 'K-Load has already been installed, please visit <a href="'.APP_ROUTE_URL.'/dashboard">'.APP_ROUTE_URL.'/dashboard</a>';
-            exit();
+            exit;
         }
 
         static::bootContainer();
         static::runConversion();
 
-        if (stripos(APP_CURRENT_ROUTE, '/dashboard') !== false) {
-            static::$container->share(Session::class, ($session = new Session()))->addTags('Session', 'session');
-            static::$container->share(SteamLogin::class, ($steamLogin = new SteamLogin([
+        if (\stripos(APP_CURRENT_ROUTE, '/dashboard') !== false) {
+            static::$container->share(Session::class, $session = new Session())->addTags('Session', 'session');
+            static::$container->share(SteamLogin::class, $steamLogin = new SteamLogin([
                 'debug'  => DEBUG,
                 'return' => APP_CURRENT_URL,
                 //                'method'  => \K_Load\Facades\Config::has('apikeys.steam'),
                 'session' => [
                     'enable' => false,
                 ],
-            ])))->addTags('SteamLogin', 'steamLogin');
-            static::$container->share(Cookie::class, ($cookie = new Cookie([
+            ]))->addTags('SteamLogin', 'steamLogin');
+            static::$container->share(Cookie::class, $cookie = new Cookie([
                 'prefix' => 'kload_',
                 'domain' => APP_DOMAIN,
                 'path'   => APP_PATH,
                 'secure' => IS_HTTPS,
-            ])))->addTags('Cookie', 'cookie');
+            ]))->addTags('Cookie', 'cookie');
 
             $session->generateCsrf();
 
@@ -151,8 +130,8 @@ copyright;
                 $session->set('steamlogin', (array) $player);
                 $session->regenerate();
 
-                header('Location: '.$_GET['openid_return_to'] ?? APP_ROUTE_URL.'/dashboard', true, 302);
-                exit();
+                \header('Location: '.$_GET['openid_return_to'] ?? APP_ROUTE_URL.'/dashboard', true, 302);
+                exit;
             }
 
             $steamid = $session->get('user.steamid', $session->get('steamlogin.steamid'));
@@ -161,7 +140,7 @@ copyright;
             $user = !empty($steamid) ? User::findBySteamid($steamid) : null;
 
             // user doesn't exist
-            if (is_null($user) && !empty($steamid)) {
+            if (\is_null($user) && !empty($steamid)) {
                 $settings = Setting::whereIn('name', ['backgrounds', 'youtube'])->get()->toArray();
                 $youtube = $settings[1]['value'];
                 $youtube['list'] = [];
@@ -222,7 +201,7 @@ copyright;
                 $user['perms'] = $fixedPerms;
 
                 if (isset($player)) {
-                    $user = array_merge($user, (array) $player);
+                    $user = \array_merge($user, (array) $player);
                 }
 
                 $session->set('user', $user);
@@ -240,20 +219,20 @@ copyright;
             return;
         }
 
-        set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
+        \set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
             kload_error_page([
                 'type'    => 'error',
                 'code'    => $errno,
                 'file'    => $errfile,
                 'line_no' => $errline,
                 'message' => $errstr,
-                'raw'     => func_get_args(),
+                'raw'     => \func_get_args(),
             ]);
 
-            exit();
+            exit;
         }, E_ALL);
 
-        set_exception_handler(function (Exception $exception) {
+        \set_exception_handler(function (Exception $exception) {
             kload_error_page([
                 'type'    => 'exception',
                 'code'    => $exception->getCode(),
@@ -263,7 +242,7 @@ copyright;
                 'raw'     => $exception,
             ]);
 
-            exit();
+            exit;
         });
     }
 
@@ -288,15 +267,15 @@ copyright;
         } else {
             // check query string
             if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'][0] === '/') { // && preg_match('/(\/[\w]*)+/', $_SERVER['QUERY_STRING'], $query_matches, PREG_UNMATCHED_AS_NULL) === 1
-                $current_route = key($_GET);
+                $current_route = \key($_GET);
                 $route_query_string = true;
-            } elseif (strpos(($parse_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)), '/index.php') === false) { // isset($_SERVER['QUERY_STRING']) && substr($_SERVER['QUERY_STRING'], 0, 1) !== '/' &&
+            } elseif (\strpos($parse_url = \parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/index.php') === false) { // isset($_SERVER['QUERY_STRING']) && substr($_SERVER['QUERY_STRING'], 0, 1) !== '/' &&
                 $current_route = $parse_url;
                 unset($parse_url);
             }
         }
 
-        $current_route = rtrim(str_replace(APP_PATH, '', $current_route), '/');
+        $current_route = \rtrim(\str_replace(APP_PATH, '', $current_route), '/');
 
         defineConstant('app_current_route', $current_route);
         defineConstant('app_route_url', $route_query_string ? APP_URL.'/index.php?' : APP_URL);
@@ -306,17 +285,17 @@ copyright;
     public static function isInstalled(): bool
     {
 //        return false;
-        return file_exists(APP_ROOT.'/data/config.php');
+        return \file_exists(APP_ROOT.'/data/config.php');
     }
 
     public static function bootContainer(): void
     {
         $container = (new Container(new DefinitionAggregate()))->defaultToShared(true);
 
-        $container->share(Request::class, ($request = Request::createFromGlobals()))->addTags('Request', 'request');
-        $container->share(Cache::class, ($cache = new Cache(KDriver::class)))->addTags('Cache', 'cache');
+        $container->share(Request::class, $request = Request::createFromGlobals())->addTags('Request', 'request');
+        $container->share(Cache::class, $cache = new Cache(KDriver::class))->addTags('Cache', 'cache');
         $container->share(Config::class, $config = new Config(APP_ROOT.'/data/config.php'))->addTags('Config', 'config');
-        $container->share(Lang::class, ($lang = new Lang(APP_LANGUAGE)))->addTags('Lang', 'lang');
+        $container->share(Lang::class, $lang = new Lang(APP_LANGUAGE))->addTags('Lang', 'lang');
 
         $capsule = new Capsule();
         $dbConfig = [
@@ -366,12 +345,12 @@ copyright;
 
     private static function runConversion(): void
     {
-        if (file_exists(APP_ROOT.'/inc/migrations')) {
+        if (\file_exists(APP_ROOT.'/inc/migrations')) {
             $pdo = DB::connection()->getPdo();
 
             $triggers = $pdo->query('SHOW TRIGGERS like \'kload_sessions\'')->fetchAll(PDO::FETCH_ASSOC);
 
-            if (count($triggers) > 0) {
+            if (\count($triggers) > 0) {
                 $queries = [
                     'drop trigger if exists csrf_fix_insert',
                     'drop trigger if exists csrf_fix_update',
@@ -383,7 +362,7 @@ copyright;
             }
 
             $tmpConfig = include APP_ROOT.'/data/config.php';
-            if (is_array($tmpConfig['dashboard_theme'])) {
+            if (\is_array($tmpConfig['dashboard_theme'])) {
                 $tmpConfig['dashboard_theme'] = 'new';
                 Config::saveConfig(APP_ROOT.'/data/config.php', $tmpConfig, false);
             }
@@ -398,13 +377,13 @@ copyright;
     {
         $r = static::$container->get($id, $new);
 
-        return is_array($r) ? $r[0] : $r;
+        return \is_array($r) ? $r[0] : $r;
     }
 
     public static function setRoot(string $dir): void
     {
-        if (!file_exists($dir)) {
-            trigger_error('Cannot set root directory as `'.$dir.'`. Does not exist.', E_USER_ERROR);
+        if (!\file_exists($dir)) {
+            \trigger_error('Cannot set root directory as `'.$dir.'`. Does not exist.', E_USER_ERROR);
         }
 
         defineConstant('app_root', $dir);
@@ -429,7 +408,7 @@ copyright;
             $response = (new Response($e->getMessage()))->setStatusCode(500);
 
             if ($e instanceof \Phroute\Phroute\Exception\HttpException) {
-                switch (get_class($e)) {
+                switch (\get_class($e)) {
                     case HttpRouteNotFoundException::class:
                         $response->setStatusCode(404);
                         break;
@@ -449,7 +428,7 @@ copyright;
         }
 
         if (!$response instanceof Response) {
-            if (is_array($response) || $response instanceof Model) {
+            if (\is_array($response) || $response instanceof Model) {
                 $response = new JsonResponse($response);
             } else {
                 $response = new Response($response);
@@ -479,7 +458,7 @@ copyright;
         $device = Device::create([
             'device_id' => $device_id,
             'token'     => $token,
-            'expires'   => date('Y-m-d H:i:s', time() + (60 * 60 * 24)),
+            'expires'   => \date('Y-m-d H:i:s', \time() + (60 * 60 * 24)),
         ]);
 
         \KLoad\Facades\Cookie::set('device_id', $device_id);

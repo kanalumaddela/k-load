@@ -19,11 +19,8 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
-use function array_filter;
-use function array_keys;
-use function get_defined_vars;
+
 use function KLoad\redirect;
-use function strtolower;
 
 class Rules extends AdminController
 {
@@ -49,9 +46,9 @@ class Rules extends AdminController
         $this->authorize('rules');
 
         $settings = Setting::where('name', 'rules')->pluck('value', 'name');
-        $numbering_types = array_keys(static::$numbering_types);
+        $numbering_types = \array_keys(static::$numbering_types);
 
-        return $this->view('index', get_defined_vars());
+        return $this->view('index', \get_defined_vars());
     }
 
     /**
@@ -74,7 +71,7 @@ class Rules extends AdminController
 
         if (isset($post['list'])) {
             foreach ($post['list'] as $gamemode => $ruleList) {
-                $rules['list'][strtolower($gamemode)] = array_filter($ruleList);
+                $rules['list'][\strtolower($gamemode)] = \array_filter($ruleList);
             }
         }
 
