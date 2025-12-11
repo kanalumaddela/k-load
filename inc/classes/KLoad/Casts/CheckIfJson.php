@@ -13,8 +13,6 @@
 namespace KLoad\Casts;
 
 use function dd;
-use function json_decode;
-use function json_encode;
 
 class CheckIfJson
 {
@@ -22,11 +20,11 @@ class CheckIfJson
     {
         dd(__FUNCTION__);
 
-        return json_decode($value, true);
+        return \json_decode($value, true);
     }
 
     public function set($model, $key, $value, $attributes)
     {
-        return json_encode($value);
+        return \json_encode($value);
     }
 }

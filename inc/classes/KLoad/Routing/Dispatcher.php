@@ -16,17 +16,6 @@ use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\Route;
 use Phroute\Phroute\RouteDataInterface;
-use function array_flip;
-use function array_intersect_key;
-use function array_keys;
-use function array_shift;
-use function array_values;
-use function call_user_func;
-use function call_user_func_array;
-use function count;
-use function implode;
-use function preg_match;
-use function trim;
 
 class Dispatcher
 {
@@ -69,7 +58,7 @@ class Dispatcher
      */
     public function dispatch($httpMethod, $uri)
     {
-        [$handler, $filters, $vars] = $this->dispatchRoute($httpMethod, trim($uri, '/'));
+        [$handler, $filters, $vars] = $this->dispatchRoute($httpMethod, \trim($uri, '/'));
 
         [$beforeFilter, $afterFilter] = $this->parseFilters($filters);
 
@@ -79,7 +68,7 @@ class Dispatcher
 
         [$resolvedHandler, $vars] = $this->handlerResolver->resolve($handler, $vars);
 
-        $response = call_user_func_array($resolvedHandler, $vars);
+        $response = \call_user_func_array($resolvedHandler, $vars);
 
         return $this->dispatchFilters($afterFilter, $response);
     }
@@ -150,7 +139,7 @@ class Dispatcher
 
         $this->matchedRoute = $routes;
 
-        throw new HttpMethodNotAllowedException('Allow: '.implode(', ', array_keys($routes)));
+        throw new HttpMethodNotAllowedException('Allow: '.\implode(', ', \array_keys($routes)));
     }
 
     /**
@@ -167,11 +156,11 @@ class Dispatcher
     protected function dispatchVariableRoute($httpMethod, $uri)
     {
         foreach ($this->variableRouteData as $data) {
-            if (!preg_match($data['regex'], $uri, $matches)) {
+            if (!\preg_match($data['regex'], $uri, $matches)) {
                 continue;
             }
 
-            $count = count($matches);
+            $count = \count($matches);
 
 //            while (!isset($data['routeMap'][$count++]));
 
@@ -181,7 +170,7 @@ class Dispatcher
                 $httpMethod = $this->checkFallbacks($routes, $httpMethod);
             }
 
-            foreach (array_values($routes[$httpMethod][2]) as $i => $varName) {
+            foreach (\array_values($routes[$httpMethod][2]) as $i => $varName) {
                 if (!isset($matches[$i + 1]) || $matches[$i + 1] === '') {
                     unset($routes[$httpMethod][2][$varName]);
                 } else {
@@ -212,11 +201,11 @@ class Dispatcher
         $afterFilter = [];
 
         if (isset($filters[Route::BEFORE])) {
-            $beforeFilter = array_intersect_key($this->filters, array_flip((array) $filters[Route::BEFORE]));
+            $beforeFilter = \array_intersect_key($this->filters, \array_flip((array) $filters[Route::BEFORE]));
         }
 
         if (isset($filters[Route::AFTER])) {
-            $afterFilter = array_intersect_key($this->filters, array_flip((array) $filters[Route::AFTER]));
+            $afterFilter = \array_intersect_key($this->filters, \array_flip((array) $filters[Route::AFTER]));
         }
 
         return [$beforeFilter, $afterFilter];
@@ -232,10 +221,10 @@ class Dispatcher
      */
     protected function dispatchFilters($filters, $response = null)
     {
-        while ($filter = array_shift($filters)) {
+        while ($filter = \array_shift($filters)) {
             $handler = $this->handlerResolver->resolve($filter);
 
-            if (($filteredResponse = call_user_func($handler, $response)) !== null) {
+            if (($filteredResponse = \call_user_func($handler, $response)) !== null) {
                 return $filteredResponse;
             }
         }

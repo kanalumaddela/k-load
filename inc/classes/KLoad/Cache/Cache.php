@@ -13,13 +13,7 @@
 namespace KLoad\Cache;
 
 use InvalidArgumentException;
-use function is_array;
-use function is_callable;
-use function is_int;
-use function is_null;
-use function is_numeric;
-use function is_string;
-use function max;
+
 use function Opis\Closure\serialize as opis_serialize;
 use function Opis\Closure\unserialize as opis_unserialize;
 
@@ -29,14 +23,14 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
     {
         $this->validateKey($key);
 
-        if (!is_int($time) && !is_null($time)) {
+        if (!\is_int($time) && !\is_null($time)) {
             throw new InvalidArgumentException('`time` must be an integer or null');
         }
 
-        $time = is_null($time) ? self::$DEFAULT_TIME : max(0, $time);
+        $time = \is_null($time) ? self::$DEFAULT_TIME : \max(0, $time);
 
-        if (is_array($key)) {
-            $time = is_null($value) ? $time : $value;
+        if (\is_array($key)) {
+            $time = \is_null($value) ? $time : $value;
             $values = $key;
 
             $successes = [];
@@ -47,7 +41,7 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
             return $successes;
         }
 
-        if (!is_numeric($time)) {
+        if (!\is_numeric($time)) {
             throw new InvalidArgumentException('Time must be numeric');
         }
 
@@ -64,7 +58,7 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
     {
         $this->validateKey($key);
 
-        if (is_array($key)) {
+        if (\is_array($key)) {
             $keys = $key;
 
             $results = [];
@@ -81,8 +75,8 @@ class Cache extends \J0sh0nat0r\SimpleCache\Cache
 
         $result = $this->driver->get($key);
 
-        if (is_null($result)) {
-            if (is_callable($default) && !is_string($default)) {
+        if (\is_null($result)) {
+            if (\is_callable($default) && !\is_string($default)) {
                 return $default($key);
             }
 
