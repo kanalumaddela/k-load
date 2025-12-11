@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -16,7 +17,7 @@ use Throwable;
 
 class NotAuthorized extends HttpException
 {
-    public function __construct(int $statusCode = 401, string $message = '', Throwable $previous = null, array $headers = [], ?int $code = 0)
+    public function __construct(int $statusCode = 401, string $message = '', ?Throwable $previous = null, array $headers = [], ?int $code = 0)
     {
         parent::__construct($statusCode, $message, $previous, $headers, $code);
     }

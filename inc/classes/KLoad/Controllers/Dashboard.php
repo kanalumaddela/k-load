@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -226,18 +227,18 @@ class Dashboard extends BaseController
     }
 
     #[NoReturn]
- public function getUserBackground($steamid): void
- {
-     $url = Cache::remember('steam-bg-'.$steamid, 3600, static function () use ($steamid) {
-         $regex = "/no_header *?profile_page *?has_profile_background *?.*\n\t *?style=\"background-image: *?url\( *?\n?'(https?:\/\/.*.jpg)/m";
-         $steamProfile = \file_get_contents('https://steamcommunity.com/profiles/'.$steamid);
+    public function getUserBackground($steamid): void
+    {
+        $url = Cache::remember('steam-bg-'.$steamid, 3600, static function () use ($steamid) {
+            $regex = "/no_header *?profile_page *?has_profile_background *?.*\n\t *?style=\"background-image: *?url\( *?\n?'(https?:\/\/.*.jpg)/m";
+            $steamProfile = \file_get_contents('https://steamcommunity.com/profiles/'.$steamid);
 
-         \preg_match($regex, $steamProfile, $matches);
+            \preg_match($regex, $steamProfile, $matches);
 
-         return $matches[1] ?? 'https://community.cloudflare.steamstatic.com/public/images/profile/2020/bg_dots.png';
-     });
+            return $matches[1] ?? 'https://community.cloudflare.steamstatic.com/public/images/profile/2020/bg_dots.png';
+        });
 
-     \header('Location: '.$url, true, 302);
-     exit;
- }
+        \header('Location: '.$url, true, 302);
+        exit;
+    }
 }
