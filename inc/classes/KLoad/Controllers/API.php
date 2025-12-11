@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -22,7 +23,7 @@ use const KLoad\APP_URL;
 
 class API extends BaseController
 {
-    public function userInfo($steamid, string $info = null)
+    public function userInfo($steamid, ?string $info = null)
     {
         $data = Cache::remember('api-steaminfo-user-'.$steamid, 3600, static function () use ($steamid) {
             return empty($data = Util::getPlayerInfo($steamid)) ? null : $data;

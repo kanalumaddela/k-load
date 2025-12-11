@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -47,7 +48,7 @@ class Media extends AdminController
         return $redirect;
     }
 
-    protected function validateFiles(FileBag $files, string $type = null): void
+    protected function validateFiles(FileBag $files, ?string $type = null): void
     {
     }
 }

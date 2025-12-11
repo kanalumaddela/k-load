@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -396,7 +397,7 @@ copyright;
      *
      * @return Response
      */
-    public static function dispatch(string $route = null): Response
+    public static function dispatch(?string $route = null): Response
     {
         try {
             $response = Router::dispatch(!empty($route) ? $route : APP_CURRENT_ROUTE);

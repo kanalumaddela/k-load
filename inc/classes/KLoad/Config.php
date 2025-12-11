@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -115,22 +116,22 @@ class Config extends DotArray
     }
 
     #[NoReturn]
- public function create(array $config)
- {
-     exit('todo: '.__CLASS__.'@'.__METHOD__);
+    public function create(array $config)
+    {
+        exit('todo: '.__CLASS__.'@'.__METHOD__);
 
-     $template = static::$templateConfig;
+        $template = static::$templateConfig;
 
-     foreach ($config as $key => $value) {
-         if (isset($template[$key])) {
-             $template[$key] = $value;
-         }
-     }
+        foreach ($config as $key => $value) {
+            if (isset($template[$key])) {
+                $template[$key] = $value;
+            }
+        }
 
-     \file_put_contents(APP_ROOT.'/data/config.php', "<?php\n\nreturn ".var_export_fixed($this->config));
+        \file_put_contents(APP_ROOT.'/data/config.php', "<?php\n\nreturn ".var_export_fixed($this->config));
 
-     if (!\file_exists(APP_ROOT.'/data/config.php')) {
-         throw new RuntimeException('Config could not be saved in: '.APP_ROOT.'/data/config.php');
-     }
- }
+        if (!\file_exists(APP_ROOT.'/data/config.php')) {
+            throw new RuntimeException('Config could not be saved in: '.APP_ROOT.'/data/config.php');
+        }
+    }
 }

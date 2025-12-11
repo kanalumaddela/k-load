@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -29,7 +30,7 @@ class HttpException extends Exception
 
     protected int $statusCode;
 
-    public function __construct(int $statusCode = 500, string $message = '', Throwable $previous = null, array $headers = [], ?int $code = 0)
+    public function __construct(int $statusCode = 500, string $message = '', ?Throwable $previous = null, array $headers = [], ?int $code = 0)
     {
         $this->statusCode = $statusCode;
 

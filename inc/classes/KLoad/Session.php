@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -59,10 +60,10 @@ class Session extends DotArray
     }
 
     #[NoReturn]
- public function dd(): void
- {
-     dd($_SESSION);
- }
+    public function dd(): void
+    {
+        dd($_SESSION);
+    }
 
     public function user()
     {
