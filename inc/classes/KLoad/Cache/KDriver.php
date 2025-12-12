@@ -7,7 +7,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -17,7 +17,6 @@ use J0sh0nat0r\SimpleCache\Drivers\ArrayDriver;
 use J0sh0nat0r\SimpleCache\Drivers\File;
 use J0sh0nat0r\SimpleCache\Exceptions\InvalidKeyException;
 use J0sh0nat0r\SimpleCache\IDriver;
-
 use const KLoad\APP_ROOT;
 use const KLoad\ENABLE_CACHE;
 
@@ -29,18 +28,18 @@ class KDriver implements IDriver
     {
         $this->drivers['array'] = new \J0sh0nat0r\SimpleCache\Cache(ArrayDriver::class);
         $this->drivers['file'] = new \J0sh0nat0r\SimpleCache\Cache(File::class, [
-            'dir' => APP_ROOT.'/data/cache',
+            'dir' => APP_ROOT . '/data/cache',
         ]);
     }
 
     /**
      * @param string $key
-     * @param mixed  $value
-     * @param int    $time
-     *
-     * @throws InvalidKeyException
+     * @param mixed $value
+     * @param int $time
      *
      * @return bool
+     * @throws InvalidKeyException
+     *
      */
     public function put($key, $value, $time)
     {
@@ -64,9 +63,9 @@ class KDriver implements IDriver
     /**
      * @param string $key
      *
+     * @return bool|bool[]
      * @throws InvalidKeyException
      *
-     * @return bool|bool[]
      */
     public function has($key)
     {
@@ -76,9 +75,9 @@ class KDriver implements IDriver
     /**
      * @param string $key
      *
+     * @return array|callable|mixed|string|null
      * @throws InvalidKeyException
      *
-     * @return array|callable|mixed|string|null
      */
     public function get($key)
     {
@@ -88,9 +87,9 @@ class KDriver implements IDriver
     /**
      * @param string $key
      *
+     * @return bool|void
      * @throws InvalidKeyException
      *
-     * @return bool|void
      */
     public function remove($key)
     {

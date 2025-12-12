@@ -7,13 +7,14 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
 namespace KLoad\Models;
 
 use JsonException;
+use function json_decode;
 
 class Setting extends BaseModel
 {
@@ -37,7 +38,7 @@ class Setting extends BaseModel
         $original = $value;
 
         try {
-            $val = \json_decode($original, true, 512, JSON_THROW_ON_ERROR);
+            $val = json_decode($original, true, 512, JSON_THROW_ON_ERROR);
 
             if (empty($val)) {
                 $val = $original;

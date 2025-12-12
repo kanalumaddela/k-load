@@ -78,14 +78,14 @@
                                              src="{{ steamInfo['player-' ~ user.steamid].avatarmedium|default(asset('img/avatar.jpg')) }}">
                                     </div>
                                     <div class="pl-4" style="width: 75%">
-                                        {% if steamInfo['player-' ~ user.steamid].personaname %}
-                                            <p class="is-size-5 username">{{ steamInfo['player-' ~ user.steamid].personaname }}</p>
-                                            {% if steamInfo['player-' ~ user.steamid].personaname != user.name %}
-                                                <p class="is-size-7 sub-text">({{ user.name|default('Unknown') }})</p>
-                                            {% endif %}
-                                        {% else %}
-                                            <p class="is-size-7 sub-text">{{ user.name|default('Unknown') }}</p>
+                                        {% set name = steamInfo['player-' ~ user.steamid].personaname|default(user.name) %}
+
+                                        <p class="is-size-5 username">{{ name }}</p>
+
+                                        {% if name != user.name %}
+                                            <p class="is-size-7 sub-text">({{ user.name|default('Unknown') }})</p>
                                         {% endif %}
+
                                         <p class="is-size-7 sub-text">{{ user.steamid2 }}</p>
                                     </div>
                                 </div>

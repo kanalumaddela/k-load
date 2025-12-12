@@ -7,13 +7,14 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
 namespace KLoad\Models;
 
 use KLoad\Facades\Config;
+use function in_array;
 
 class User extends BaseModel
 {
@@ -36,15 +37,15 @@ class User extends BaseModel
     ];
 
     protected $casts = [
-        'steamid'  => 'string',
-        'admin'    => 'boolean',
+        'steamid' => 'string',
+        'admin' => 'boolean',
         'settings' => 'array',
-        'perms'    => 'array',
+        'perms' => 'array',
     ];
 
     public static function isSuper($steamid): bool
     {
-        return \in_array($steamid, Config::get('admins', []), true);
+        return in_array($steamid, Config::get('admins', []), true);
     }
 
     /**
@@ -59,6 +60,6 @@ class User extends BaseModel
 
     public function can($perm)
     {
-        return \in_array($perm, $this->perms, true);
+        return in_array($perm, $this->perms, true);
     }
 }

@@ -1,0 +1,341 @@
+{% extends '@base/layouts/loading.twig' %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap">
+{% endblock %}
+{% block body %}
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            color: #000;
+        }
+
+        body:before {
+            background-image: url(https://gmodload.b-cdn.net/35/tJ35YghYhyfNAiKfyPBFGTFNAXvqD3-metaYmc1LnBuZw==-.png);
+        }
+
+        h1, h2, h3, h4, h5, h6, p {
+            margin: 0
+        }
+
+        .top-content {
+            position: relative;
+            height: 70%;
+        }
+
+        .footer {
+            height: 30%;
+        }
+
+        .server-banner {
+            position: absolute;
+            text-align: center;
+            left: 50%;
+            top: 30%;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            color: #fff;
+            text-shadow: 2px 2px 1px black;
+        }
+
+        .server-name {
+            font-weight: 700;
+            font-size: 5rem;
+        }
+
+        .server-description {
+            font-weight: 400;
+        }
+
+        .connecting-user, .card, .k-load-staff {
+            border-radius: .35rem;
+            overflow: hidden;
+        }
+
+        .connecting-user, .card, .footer, .k-load-staff {
+            background-color: #fff;
+        }
+
+        .connecting-user, #k-load-staff {
+            bottom: .5rem;
+        }
+
+        .connecting-user {
+            position: absolute;
+            left: .75rem;
+            font-size: 0;
+        }
+
+        .welcome-message, .player-steamid {
+            font-weight: 300;
+        }
+
+        .welcome-message {
+            font-size: 2rem;
+        }
+
+        .player-steamid {
+            font-size: 1.5rem;
+        }
+
+        .connecting-user > div {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .connecting-user > div:nth-child(2) {
+            margin: 0 10px;
+            padding: .25rem 1rem;
+            border-top: 2px solid #b87c6a;
+            border-bottom: 2px solid #b87c6a;
+        }
+
+        .connecting-user .avatar {
+            max-width: 90px;
+            border-top-left-radius: .3rem;
+            border-bottom-left-radius: .3rem;
+        }
+
+        #k-load-staff, .loading-bar-container > .status-percentage {
+            position: absolute;
+            right: .75rem;
+        }
+
+        .k-load-staff {
+            padding: .5rem .3rem;
+            width: 300px;
+            background: rgb(195, 34, 34);
+            background: -webkit-linear-gradient(-90deg, #FE4B48 0%, #FE4B48 50%, #fff 50%, #fff 50%);
+        }
+
+        .k-load-staff:nth-child(1) {
+            background: -webkit-linear-gradient(-90deg, #FE4B48 0%, #FE4B48 50%, #fff 50%, #fff 50%);
+        }
+
+        .k-load-staff:nth-child(2) {
+            background: -webkit-linear-gradient(-90deg, #4286F3 0%, #4286F3 50%, #fff 50%, #fff 50%);
+        }
+
+        .k-load-staff:nth-child(3) {
+            background: -webkit-linear-gradient(-90deg, #34A852 0%, #34A852 50%, #fff 50%, #fff 50%);
+        }
+
+        .k-load-staff:not(:last-child) {
+            margin-bottom: .35rem;
+        }
+
+        .k-load-staff > div {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .k-load-staff-avatar {
+            font-size: 0;
+            border-radius: 100%;
+            border: 3px solid #fff;
+            overflow: hidden;
+        }
+
+        .k-load-staff-avatar .avatar {
+            position: relative;
+            max-width: 64px;
+            border-radius: 100%;
+        }
+
+        .k-load-staff-info > span {
+            display: block;
+        }
+
+        .k-load-staff--name {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #fff;
+        }
+
+        .k-load-staff--rank {
+            margin-top: 5px;
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .loading-bar-container {
+            position: relative;
+            height: 2.5rem;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.35);
+        }
+
+        .loading-bar {
+            background-color: #2d3e50;
+            height: 100%;
+        }
+
+        .loading-bar-container > .status-percentage {
+            z-index: 1;
+        }
+
+        .loading-bar-container > .status-percentage > * {
+            display: inline-block;
+        }
+
+        .status {
+            margin-right: .35rem;
+        }
+
+        .status, .percentage {
+            padding: .25rem .75rem;
+            font-weight: 400;
+            background-color: #cccdcc;
+            border-radius: 5rem;
+        }
+
+        .content {
+            font-size: 0;
+            padding-top: 1rem;
+        }
+
+        .content > div {
+            display: inline-block;
+            padding-left: 1.35rem;
+            padding-right: 1.35rem;
+            font-size: 1.5rem;
+            vertical-align: top;
+        }
+
+        .content > div:nth-child(1) {
+            width: 28%;
+        }
+
+        .content > div:nth-child(2) {
+            width: 44%;
+        }
+
+        .content > div:nth-child(3) {
+            width: 28%;
+        }
+
+        .content .header {
+            font-weight: 400;
+            font-size: 2rem;
+            margin-bottom: .65rem;
+        }
+
+        .server-info {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .server-info td {
+            padding-top: .25rem;
+            padding-bottom: .25rem;
+        }
+
+        .server-info td:nth-child(2) {
+            font-weight: 500;
+        }
+
+        /*.k-load-rule-block, .k-load-rule, .k-load-staff-block, .k-load-staff*/
+    </style>
+
+    <div class="fixed full-body">
+        <div class="top-content">
+            <!-- server banner -->
+            <div class="server-banner">
+                <h1 class="server-name"></h1>
+                {#                <h4 class="server-description"></h4> #}
+            </div>
+
+            <!-- player welcome -->
+            <div class="connecting-user">
+                <div>
+                    <img class="avatar" src="{{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }}" alt="">
+                </div>
+                <div>
+                    <h2 class="welcome-message">Welcome <b>{{ user.name|default('player') }}</b>!</h2>
+                    <h4 class="player-steamid">{{ user.steamid2|default('STEAM_0:0:96062495') }}</h4>
+                </div>
+            </div>
+
+            <!-- staff -->
+            <div id="k-load-staff" class="staff">
+                <div class="k-load-staff-block">
+                    {% for i in 1..3 %}
+                        <div class="k-load-staff">
+                            <div class="k-load-staff-avatar">
+                                <img class="avatar" src="{{ user.avatarLarge|default(assets ~ '/img/avatar.jpg') }}"
+                                     alt="">
+                            </div>
+                            <div class="k-load-staff-info">
+                                <span class="k-load-staff--name">name</span>
+                                <span class="k-load-staff--rank">rank</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <!-- loading bar -->
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+                <div class="status-percentage relative vertical-center">
+                    <div class="status"></div>
+                    <div class="percentage"></div>
+                </div>
+            </div>
+
+            <!-- rules/desc/server info -->
+            <div class="content">
+
+                <!-- rules -->
+                <div>
+                    <h3 class="header">Rules</h3>
+                    <div id="k-load-rules">
+                        <div class="k-load-rule-block">
+                            {% for i in 1..4 %}
+                                <div class="k-load-rule">
+                                    {{ i }}. Rule #{{ i }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- description -->
+                <div>
+                    <h3 class="header">Description</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac eros vel velit pretium
+                        facilisis. Vestibulum nec fringilla augue. Maecenas ultrices tempor sem nec tristique. Praesent
+                        iaculis erat eget velit tincidunt consequat. In a consectetur libero, vel pellentesque nisi.
+                        Suspendisse tellus ligula, feugiat sed placerat ut, vestibulum sed orci. </p>
+                </div>
+
+                <!-- server info -->
+                <div>
+                    <h3 class="header">Server Info</h3>
+                    <table class="server-info">
+                        <tr>
+                            <td>Map:</td>
+                            <td class="map"></td>
+                        </tr>
+                        <tr>
+                            <td>Gamemode:</td>
+                            <td class="gamemode"></td>
+                        </tr>
+                        <tr>
+                            <td>Maxplayers:</td>
+                            <td class="max-players"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

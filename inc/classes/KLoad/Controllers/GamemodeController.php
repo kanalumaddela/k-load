@@ -7,33 +7,35 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
 namespace KLoad\Controllers;
 
+use function strtolower;
+
 class GamemodeController extends BaseController
 {
     protected static $gamemodes = [
-        'cinema'        => 'Cinema',
-        'demo'          => 'Demo Rules (if you want to test rules without applying them to any actual gamemode)',
-        'darkrp'        => 'DarkRP',
-        'deathrun'      => 'Deathrun',
-        'jailbreak'     => 'Jailbreak',
-        'melonbomber'   => 'Melon Bomber',
-        'militaryrp'    => 'MilitaryRP',
-        'murder'        => 'Murder',
-        'morbus'        => 'Morbus',
-        'policerp'      => 'PoliceRP',
-        'prophunt'      => 'Prophunt',
-        'sandbox'       => 'Sandbox',
-        'santosrp'      => 'SantosRP',
-        'schoolrp'      => 'SchoolRP',
-        'starwarsrp'    => 'SWRP',
+        'cinema' => 'Cinema',
+        'demo' => 'Demo Rules (if you want to test rules without applying them to any actual gamemode)',
+        'darkrp' => 'DarkRP',
+        'deathrun' => 'Deathrun',
+        'jailbreak' => 'Jailbreak',
+        'melonbomber' => 'Melon Bomber',
+        'militaryrp' => 'MilitaryRP',
+        'murder' => 'Murder',
+        'morbus' => 'Morbus',
+        'policerp' => 'PoliceRP',
+        'prophunt' => 'Prophunt',
+        'sandbox' => 'Sandbox',
+        'santosrp' => 'SantosRP',
+        'schoolrp' => 'SchoolRP',
+        'starwarsrp' => 'SWRP',
         'stopitslender' => 'Stop it Slender',
-        'slashers'      => 'Slashers',
-        'terrortown'    => 'TTT',
+        'slashers' => 'Slashers',
+        'terrortown' => 'TTT',
     ];
 
     protected function parseData(array $data)
@@ -53,7 +55,7 @@ class GamemodeController extends BaseController
         // DarkRP
         // PropHunt
 
-        $lower = \strtolower($gamemode);
+        $lower = strtolower($gamemode);
         // darkrp
         // prophunt
 

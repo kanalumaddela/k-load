@@ -7,7 +7,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -16,6 +16,6 @@
 //}
 declare(strict_types=1);
 
-\define('KLoad\\'.'APP_START', \microtime(true));
+define('KLoad\\'.'APP_START', microtime(true));
 
 require_once __DIR__.'/vendor/autoload.php';

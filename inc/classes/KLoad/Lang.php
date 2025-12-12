@@ -1,5 +1,4 @@
 <?php
-
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -7,17 +6,29 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
 namespace KLoad;
 
 use InvalidArgumentException;
+use function array_flip;
+use function explode;
+use function fclose;
+use function file_exists;
+use function file_get_contents;
+use function fopen;
+use function fwrite;
+use function is_array;
+use function is_null;
+use function is_numeric;
+use function sprintf;
+use function vsprintf;
 
 class Lang
 {
-    public const LANG_FOLDER = APP_ROOT.'/inc/lang';
+    public const LANG_FOLDER = APP_ROOT . '/inc/lang';
 
     public string $currentLang = 'en';
 
@@ -37,16 +48,16 @@ class Lang
         static::boot();
 
         if (!static::exists($language)) {
-            throw new InvalidArgumentException('Language `'.$language.'` not found in `inc/lang/` folder');
+            throw new InvalidArgumentException('Language `' . $language . '` not found in `inc/lang/` folder');
         }
 
         $this->currentLang = $language;
-        $this->lang = include static::LANG_FOLDER.'/'.$language.'.php';
+        $this->lang = include static::LANG_FOLDER . '/' . $language . '.php';
 
         if (static::$debug) {
-            $loc = APP_ROOT.'/inc/lang/missing/'.$language.'.txt';
-            $this->missingFile = \fopen($loc, 'ab');
-            $this->missing = \array_flip(\explode("\n", \file_get_contents($loc)));
+            $loc = APP_ROOT . '/inc/lang/missing/' . $language . '.txt';
+            $this->missingFile = fopen($loc, 'ab');
+            $this->missing = array_flip(explode("\n", file_get_contents($loc)));
         }
     }
 
@@ -58,7 +69,7 @@ class Lang
 
         static::$booted = true;
 
-        static::$fallback = include static::LANG_FOLDER.'/en.php';
+        static::$fallback = include static::LANG_FOLDER . '/en.php';
     }
 
     public function getCurrentLang(): string
@@ -73,7 +84,7 @@ class Lang
      */
     public static function exists($lang): bool
     {
-        return \file_exists(APP_ROOT.'/inc/lang/'.$lang.'.php');
+        return file_exists(APP_ROOT . '/inc/lang/' . $lang . '.php');
     }
 
     /**
@@ -90,18 +101,18 @@ class Lang
 
         $lang = isset($this->lang[$key]) && !empty($this->lang[$key]) ? $this->lang[$key] : (isset(static::$fallback[$key]) && !empty(static::$fallback[$key]) ? static::$fallback[$key] : $key);
 
-        if ($lang === $key && !\is_numeric($default)) {
-            if (!\is_null($default) && !\is_array($default)) {
+        if ($lang === $key && !is_numeric($default)) {
+            if (!is_null($default) && !is_array($default)) {
                 $lang = $default;
             }
 
             return $lang;
         }
 
-        if (\is_array($lang) && \is_numeric($default)) {
-            $lang = \sprintf((int) $default === 1 ? $lang[0] : $lang[1], $default);
+        if (is_array($lang) && is_numeric($default)) {
+            $lang = sprintf((int)$default === 1 ? $lang[0] : $lang[1], $default);
         } else {
-            $lang = \is_array($default) ? \vsprintf($lang, $default) : \sprintf($lang, $default);
+            $lang = is_array($default) ? vsprintf($lang, $default) : sprintf($lang, $default);
         }
 
         return $lang;
@@ -110,7 +121,7 @@ class Lang
     private function isMissing($key)
     {
         if (!isset($this->missing[$key])) {
-            \fwrite($this->missingFile, $key."\n");
+            fwrite($this->missingFile, $key . "\n");
         }
 
         $this->missing[$key] = '';
@@ -119,7 +130,7 @@ class Lang
     public function closeFile()
     {
         if ($this->missingFile) {
-            \fclose($this->missingFile);
+            fclose($this->missingFile);
         }
     }
 }

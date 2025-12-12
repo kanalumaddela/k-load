@@ -10,21 +10,16 @@
  * @license   MIT
  */
 
-namespace KLoad\Plugins;
+namespace KLoad\Http;
 
-abstract class DataPlugin
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class DataResponse extends JsonResponse
 {
-    protected static bool $hasConfig = false;
-
-    protected static bool $overWritesData = false;
-
-    protected array $data = [];
-
-    public function __construct($data)
+    public function __construct($data = null, int $status = 200, array $headers = [], bool $json = false)
     {
-    }
 
-    public function getData(): array
-    {
+
+        parent::__construct($data, $status, $headers, $json);
     }
 }

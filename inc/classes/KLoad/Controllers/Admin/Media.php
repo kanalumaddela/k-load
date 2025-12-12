@@ -7,7 +7,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2023 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -18,9 +18,7 @@ use KLoad\Controllers\AdminController;
 use KLoad\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\Response;
-
 use function KLoad\redirect;
-
 use const KLoad\APP_ROUTE_URL;
 
 class Media extends AdminController
@@ -38,7 +36,7 @@ class Media extends AdminController
 
         $route = $post->get('route', 'media');
 
-        $redirect = redirect(APP_ROUTE_URL.'/dashboard/admin/'.$route);
+        $redirect = redirect(APP_ROUTE_URL . '/dashboard/admin/' . $route);
 
         try {
         } catch (Exception $e) {

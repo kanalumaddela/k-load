@@ -5,7 +5,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -16,7 +16,7 @@
  * @param {string|number} text
  * @param {boolean} raw
  */
-const text = function (selector, text, raw) {
+const text = function (selector, text, raw = false) {
     [].forEach.call(document.querySelectorAll(selector), function (elem) {
         if (raw) {
             elem.innerHTML = text;
@@ -100,15 +100,11 @@ KLoad.on('GameDetails', function (servername, serverurl, mapname, maxplayers, st
 KLoad.on('SetFilesTotal', function (total) {
     KLoad.data.files.total = total;
     text('.files-total', total);
-
-    console.log('SetFilesTotal: ' + total);
 });
 
 KLoad.on('SetFilesNeeded', function (needed) {
     KLoad.data.files.needed = needed;
     text('.files-needed', needed);
-
-    console.log('SetFilesNeeded: ' + needed);
 });
 
 KLoad.getProgress = function () {
@@ -131,8 +127,6 @@ KLoad.on('DownloadingFile', function (file) {
 
     SetStatusChanged('Downloading ' + file);
     text('.files-downloading', file);
-
-    console.log('DownloadingFile: ' + file)
 
     if (!KLoad.data.files.downloadComplete) {
         KLoad.emit('DownloadProgress', KLoad.getProgress());
@@ -168,7 +162,6 @@ KLoad.on('SetStatusChanged', function (status) {
     }
 
     text('.status', status);
-    console.log('SetStatusChanged: ' + status)
 
     if (KLoad.finishedStatuses.indexOf(status) !== -1) {
         KLoad.data.files.downloadComplete = true;
@@ -201,3 +194,117 @@ KLoad.init = function () {
         KLoad.emit('SetStatusChanged', status);
     };
 };
+
+KLoad.Backgrounds = {
+    init: function (backgrounds, options) {
+        this.setBackgrounds(backgrounds);
+        this.setOptions(options);
+        this.setupCss();
+        this.setupContainer();
+        this.data = {
+            currentIndex: -1,
+            backgroundChildren: 0,
+            activeBackgrounds: [],
+            timer: null,
+        }
+
+        if (backgrounds && backgrounds.length) {
+            this.start();
+        }
+
+        return this;
+    },
+
+    start: function () {
+        [].forEach.call(this.backgrounds, function (url) {
+            this.container.appendChild(this.createBackground(url))
+        }.bind(this));
+
+        this.data.activeBackgrounds = this.backgrounds;
+        this.data.backgroundChildren = this.container.querySelectorAll('.bg-item');
+
+        this.nextBackground();
+
+        this.data.timer = setInterval(function () {
+            this.nextBackground();
+        }.bind(this), this.options.duration);
+    },
+
+    nextBackground: function () {
+        this.data.currentIndex++;
+
+        if (this.data.currentIndex >= this.data.activeBackgrounds.length) {
+            this.data.currentIndex = 0;
+        }
+
+        const indx = this.data.currentIndex;
+
+        this.data.backgroundChildren[indx].style.opacity = '1';
+
+        if (indx === 0) {
+            this.data.backgroundChildren[this.data.activeBackgrounds.length - 1].style.opacity = '0';
+        } else {
+            this.data.backgroundChildren[indx - 1].style.opacity = '0';
+        }
+
+        return this;
+    },
+
+    setupContainer: function () {
+        this.container = document.querySelector('.k-load-background-container');
+
+        if (!this.container) {
+            window.document.body.innerHTML += '<div class="k-load-background-container"></div>';
+            this.container = document.querySelector('.k-load-background-container');
+        }
+
+        return this;
+    },
+
+    setupCss: function () {
+        window.document.body.innerHTML += '<style>body > .k-load-background-container {z-index: -9999;pointer-events: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;}.k-load-background-container > .bg-item {z-index: -9998;position: absolute;width: 100%;height: 100%;background-size: cover;background-position: center;opacity: 0;-webkit-transition: opacity ' + (Math.round(this.options.fade / 1000 * 100) / 100) + 's ease-in;}</style>';
+
+        return this;
+    },
+
+    setBackgrounds: function (backgrounds) {
+        if (!backgrounds) {
+            backgrounds = [];
+        }
+
+        this.backgrounds = backgrounds;
+
+        return this;
+    },
+
+    getBackgrounds: function () {
+        return this.backgrounds;
+    },
+
+    createBackground: function (imageUrl) {
+        const div = document.createElement('div');
+
+        div.className = 'bg-item';
+        div.style.backgroundImage = 'url(' + imageUrl + ')';
+
+        return div;
+    },
+
+    setOptions: function (options) {
+        if (!options) {
+            options = {};
+        }
+
+        this.options = {
+            random: options.hasOwnProperty('random') ? options.random : true,
+            fade: options.hasOwnProperty('fade') ? options.fade : 750,
+            duration: options.hasOwnProperty('duration') ? options.duration : 5 * 1000,
+        }
+
+        return this;
+    },
+
+    getOptions: function () {
+        return this.options;
+    }
+}

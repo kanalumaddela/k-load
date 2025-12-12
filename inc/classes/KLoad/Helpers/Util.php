@@ -1,5 +1,4 @@
 <?php
-
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -7,7 +6,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -21,9 +20,35 @@ use JsonException;
 use kanalumaddela\SteamLogin\SteamLogin;
 use KLoad\Facades\Config;
 use stdClass;
-
+use function array_filter;
+use function array_slice;
+use function bin2hex;
+use function count;
+use function curl_close;
+use function curl_exec;
+use function curl_init;
 use function curl_setopt;
-
+use function file_exists;
+use function file_put_contents;
+use function glob;
+use function implode;
+use function is_array;
+use function is_dir;
+use function is_null;
+use function json_decode;
+use function mkdir;
+use function preg_match;
+use function random_bytes;
+use function rawurldecode;
+use function restore_error_handler;
+use function rmdir;
+use function rtrim;
+use function scandir;
+use function set_error_handler;
+use function sprintf;
+use function str_replace;
+use function unlink;
+use function urldecode;
 use const CURLOPT_RETURNTRANSFER;
 use const CURLOPT_TIMEOUT;
 use const DIRECTORY_SEPARATOR;
@@ -39,7 +64,7 @@ class Util
 
     public static function hash($length = 16)
     {
-        return \bin2hex(\random_bytes($length));
+        return bin2hex(random_bytes($length));
     }
 
     /**
@@ -48,26 +73,26 @@ class Util
      * @param string
      * @param bool $includeHtaccess
      *
+     * @return bool
      * @throws Exception
      *
-     * @return bool
      */
     public static function mkDir(string $directory, bool $includeHtaccess = false): bool
     {
-        $directory = \rtrim($directory, '/');
+        $directory = rtrim($directory, '/');
 
-        if ($doesntExist = !\file_exists($directory)) {
-            \set_error_handler(function () {
+        if ($doesntExist = !file_exists($directory)) {
+            set_error_handler(function () {
             });
-            $doesntExist = !\mkdir($directory, 0774, true);
-            \restore_error_handler();
+            $doesntExist = !mkdir($directory, 0774, true);
+            restore_error_handler();
             if ($doesntExist) {
-                throw new Exception('No permissions to create directory `'.$directory.'`');
+                throw new Exception('No permissions to create directory `' . $directory . '`');
             }
         }
 
-        if ($includeHtaccess && \file_exists($directory) && !\file_exists($directory.'/.htaccess')) {
-            \file_put_contents($directory.'/.htaccess', "options -indexes\ndeny from all");
+        if ($includeHtaccess && file_exists($directory) && !file_exists($directory . '/.htaccess')) {
+            file_put_contents($directory . '/.htaccess', "options -indexes\ndeny from all");
         }
 
         return !$doesntExist;
@@ -80,36 +105,36 @@ class Util
      */
     public static function rmDir($folder): void
     {
-        $content = \glob($folder.'/*');
+        $content = glob($folder . '/*');
 
         foreach ($content as $location) {
-            \is_dir($location) ? self::rmdir($location) : \unlink($location);
+            is_dir($location) ? self::rmdir($location) : unlink($location);
         }
 
-        \rmdir($folder);
+        rmdir($folder);
     }
 
     public static function getBackgrounds(): array
     {
         $backgrounds = [];
         $backgroundUrlPath = '/assets/img/backgrounds';
-        $backgroundRoot = APP_ROOT.$backgroundUrlPath;
+        $backgroundRoot = APP_ROOT . $backgroundUrlPath;
 
-        foreach (\scandir($backgroundRoot) as $item) {
-            if ($item === '.' || $item === '..' || !\is_dir($backgroundRoot.'/'.$item)) {
+        foreach (scandir($backgroundRoot) as $item) {
+            if ($item === '.' || $item === '..' || !is_dir($backgroundRoot . '/' . $item)) {
                 continue;
             }
 
-            $bgGamemodeUrlPath = $backgroundUrlPath.'/'.$item;
+            $bgGamemodeUrlPath = $backgroundUrlPath . '/' . $item;
 
-            if (\count($files = static::listDir($backgroundRoot.'/'.$item)) > 0) {
+            if (count($files = static::listDir($backgroundRoot . '/' . $item)) > 0) {
                 $backgrounds[$item] = [];
                 foreach ($files as $bg) {
                     if (!Str::endsWith($bg, ['.jpg', '.jpeg', '.png'])) {
                         continue;
                     }
 
-                    $backgrounds[$item][] = APP_PATH.$bgGamemodeUrlPath.'/'.$bg;
+                    $backgrounds[$item][] = APP_PATH . $bgGamemodeUrlPath . '/' . $bg;
                 }
             }
         }
@@ -127,17 +152,17 @@ class Util
      */
     public static function listDir($dir, bool $includeFolders = false): array
     {
-        $dir = \str_replace('/', DIRECTORY_SEPARATOR, $dir);
+        $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
 
         if (static::isLinux() && !Str::startsWith($dir, '/')) {
-            $dir = APP_ROOT.DIRECTORY_SEPARATOR.$dir;
+            $dir = APP_ROOT . DIRECTORY_SEPARATOR . $dir;
         }
 
-        $items = \array_slice(\scandir($dir), 2);
+        $items = array_slice(scandir($dir), 2);
         $filtered = [];
 
         foreach ($items as $item) {
-            if (!$includeFolders && \is_dir($dir.DIRECTORY_SEPARATOR.$item)) {
+            if (!$includeFolders && is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 continue;
             }
             $filtered[] = $item;
@@ -159,7 +184,7 @@ class Util
             'G' => 1073741824,
         ];
 
-        \preg_match('/(\d+)([KMG])/', $value, $matches);
+        preg_match('/(\d+)([KMG])/', $value, $matches);
 
         if (!isset($matches[1], $matches[2])) {
             return 0;
@@ -172,40 +197,40 @@ class Util
     {
         $window = UrlWindow::make($paginator);
 
-        return \array_filter([
+        return array_filter([
             $window['first'],
-            \is_array($window['slider']) ? '...' : null,
+            is_array($window['slider']) ? '...' : null,
             $window['slider'],
-            \is_array($window['last']) ? '...' : null,
+            is_array($window['last']) ? '...' : null,
             $window['last'],
         ]);
     }
 
     public static function getPlayersInfo($steamids, $useSteamidKeys = false, $json = true)
     {
-        if (\is_array($steamids)) {
-            $steamids = \implode(',', $steamids);
+        if (is_array($steamids)) {
+            $steamids = implode(',', $steamids);
         }
 
-        $url = \sprintf(SteamLogin::STEAM_API.'&steamids=%s', Config::get('apikeys.steam'), $steamids);
-        $curl = \curl_init($url);
+        $url = sprintf(SteamLogin::STEAM_API_PLAYER_SUMMARY, Config::get('apikeys.steam'), $steamids);
+        $curl = curl_init($url);
 //        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        \curl_setopt($curl, CURLOPT_TIMEOUT, 5);
-        $data = \curl_exec($curl);
-        \curl_close($curl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        $data = curl_exec($curl);
+        curl_close($curl);
 
         try {
-            $data = \json_decode($data, $json, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode($data, $json, 512, JSON_THROW_ON_ERROR);
 
-            if (\is_null($data)) {
+            if (is_null($data)) {
                 $data = [];
             }
         } catch (JsonException $e) {
             $data = [];
         }
 
-        $data = \is_array($data) && isset($data['response']['players']) ? $data['response']['players'] : $data->response->players;
+        $data = is_array($data) && isset($data['response']['players']) ? $data['response']['players'] : $data->response->players;
 
         return $useSteamidKeys ? static::fixSteamInfo($data) : $data;
     }
@@ -222,7 +247,7 @@ class Util
         $fixed = [];
 
         foreach ($data as $player) {
-            $fixed['player-'.$player['steamid']] = $player;
+            $fixed['player-' . $player['steamid']] = $player;
         }
 
         return $fixed;
@@ -230,8 +255,8 @@ class Util
 
     public static function YouTubeID($url)
     {
-        $url = \urldecode(\rawurldecode($url));
-        \preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
+        $url = urldecode(rawurldecode($url));
+        preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $match);
 
         return $match[1] ?? null;
     }

@@ -18,3 +18,4 @@ music_desc
 rules_desc
 staff_desc
 themes_desc
+rules_updated

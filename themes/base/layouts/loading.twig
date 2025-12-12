@@ -26,7 +26,31 @@
     var rules_fade_delay = staff_fade_delay = 750; // todo: remove
     var forcedGamemode = '{{ forcedGamemode }}';
 </script>
-<script src="{{ assets }}/js/loading/kload.js?{{ cache_buster }}"></script>
+<script src="{{ assets }}/js/loading/kload.cc710677.js?{{ cache_buster }}"></script>
+<script>
+    function FakeClass(options) {
+        this.options = options
+
+        this.someFunctionInFakeClass = function () {
+            console.log('someFunctionInFakeClass called');
+        }
+    }
+
+    var testing = new FakeClass();
+
+    const start = Date.now();
+    var KLoad = null;
+
+    for (var vr in window) {
+        if (typeof window[vr] === 'object' && !Array.isArray(window[vr]) && window[vr] !== null && window[vr].hasOwnProperty('Backgrounds')) {
+            console.log('found k-load!');
+            KLoad = window[vr];
+            break;
+        }
+    }
+    const end = Date.now();
+    console.log('Time to find KLoad: ' + (end - start) + 'ms');
+</script>
 {% block js %}{% endblock %}
 <script>
     KLoad.init();

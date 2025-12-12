@@ -7,7 +7,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -25,7 +25,7 @@ $router->filter('super', 'isSuperUser');
 $router->filter('csrf', 'checkForCsrf');
 
 $router->any('/', [Main::class, 'index']);
-$router->any('/dashboard/logout', [Main::class, 'logout']);
+$router->post('/dashboard/logout', [Main::class, 'logout']);
 
 $router->get('/api/user/{steamid:i}/{info}?', [API::class, 'userInfo']);
 $router->get('/api/avatar/{steamid:i}', [API::class, 'avatar']);

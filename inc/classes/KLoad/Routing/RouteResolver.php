@@ -7,7 +7,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -18,8 +18,10 @@ use Illuminate\Database\Eloquent\Model;
 use KLoad\App;
 use ReflectionFunction;
 use ReflectionMethod;
-
+use function array_values;
 use function count;
+use function is_array;
+use function is_string;
 
 class RouteResolver
 {
@@ -33,7 +35,7 @@ class RouteResolver
             return [$handler, $vars];
         }
 
-        if (\is_array($handler) && \is_string($handler[0])) {
+        if (is_array($handler) && is_string($handler[0])) {
             $handler[0] = App::get($handler[0]);
 
             $reflection = new ReflectionMethod($handler[0], $handler[1]);
@@ -43,7 +45,7 @@ class RouteResolver
             return [$handler, $vars];
         }
 
-        if (\is_string($handler) && empty($vars)) {
+        if (is_string($handler) && empty($vars)) {
             return $handler;
         }
 
@@ -52,7 +54,7 @@ class RouteResolver
 
     /**
      * @param ReflectionFunction|ReflectionMethod $reflection
-     * @param array                               $routeVars
+     * @param array $routeVars
      *
      * @return array
      */
@@ -60,9 +62,9 @@ class RouteResolver
     {
         $args = [];
 //        $routeKeys = array_keys($routeVars);
-        $routeVals = \array_values($routeVars);
+        $routeVals = array_values($routeVars);
 
-        $attemptRouteBinding = \count($routeVars) !== 0;
+        $attemptRouteBinding = count($routeVars) !== 0;
 
 //        $parameterCount = count($parameters = $reflection->getParameters());
 

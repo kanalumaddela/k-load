@@ -7,13 +7,15 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
 namespace KLoad\Casts;
 
 use function dd;
+use function json_decode;
+use function json_encode;
 
 class CheckIfJson
 {
@@ -21,11 +23,11 @@ class CheckIfJson
     {
         dd(__FUNCTION__);
 
-        return \json_decode($value, true);
+        return json_decode($value, true);
     }
 
     public function set($model, $key, $value, $attributes)
     {
-        return \json_encode($value);
+        return json_encode($value);
     }
 }

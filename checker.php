@@ -6,7 +6,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] === 'phpinfo') {
@@ -53,7 +53,7 @@ $extensions = [
     ],
     [
         'name'     => 'Zip',
-        'required' => false,
+//        'required' => false,
         'desc'     => 'Used for extracting/creating zip files',
     ],
 ];
@@ -77,7 +77,7 @@ $data = [
     'passes'     => true,
 ];
 
-if (PHP_VERSION_ID < 80000) {
+if (PHP_VERSION_ID < 80415) {
     checkFailed();
 }
 
@@ -89,7 +89,7 @@ $data['app'] = [
 foreach ($extensions as $extension) {
     $ext = $extension['ext'] ?? strtolower($extension['name']);
     $loaded = extension_loaded($ext);
-    if (!$loaded) {
+    if (!$loaded && $extension['required']) {
         checkFailed();
     }
 

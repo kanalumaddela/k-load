@@ -7,13 +7,15 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
 namespace KLoad\Traits;
 
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use function class_exists;
+use function get_class;
 
 trait HasCustomCastsAttributes
 {
@@ -36,12 +38,12 @@ trait HasCustomCastsAttributes
         if ($newValue === $value) {
             $type = $this->getCastType($key);
 
-            if (\class_exists($type)) {
+            if (class_exists($type)) {
                 if (!isset(static::$castsAttributeClassCache[$type])) {
                     static::$castsAttributeClassCache[$type] = new $type();
                 }
 
-                $newValue = static::$castsAttributeClassCache[$type]->get(\get_class($this), $key, $value, $this->getAttributes());
+                $newValue = static::$castsAttributeClassCache[$type]->get(get_class($this), $key, $value, $this->getAttributes());
             }
         }
 

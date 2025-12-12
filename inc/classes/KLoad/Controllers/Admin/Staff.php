@@ -7,7 +7,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2023 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -19,8 +19,10 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
-
+use function count;
+use function get_defined_vars;
 use function KLoad\redirect;
+use function strtolower;
 
 class Staff extends AdminController
 {
@@ -28,7 +30,7 @@ class Staff extends AdminController
 
     protected static array $defaultData = [
         'enable' => false,
-        'list'   => [],
+        'list' => [],
     ];
 
     public function index(): Response
@@ -37,7 +39,7 @@ class Staff extends AdminController
 
         $settings = Setting::where('name', 'staff')->pluck('value', 'name');
 
-        return $this->view('index', \get_defined_vars());
+        return $this->view('index', get_defined_vars());
     }
 
     public function indexPost(): RedirectResponse
@@ -49,11 +51,11 @@ class Staff extends AdminController
         $post = $this->getPost()->get('staff');
         $redirect = redirect(static::getRoute());
 
-        $staff['enable'] = (bool) ($post['enable'] ?? false);
+        $staff['enable'] = (bool)($post['enable'] ?? false);
 
         if (isset($post['list'])) {
             foreach ($post['list'] as $gamemode => $list) {
-                if (\count($list['steamids']) !== \count($list['ranks'])) {
+                if (count($list['steamids']) !== count($list['ranks'])) {
                     return $redirect->withError('Number of steamids and ranks do not equal each other')->withInputs();
                 }
 
@@ -66,11 +68,11 @@ class Staff extends AdminController
 
                     $fixed[] = [
                         'steamid' => $steamid,
-                        'rank'    => $list['ranks'][$i],
+                        'rank' => $list['ranks'][$i],
                     ];
                 }
 
-                $staff['list'][\strtolower($gamemode)] = $fixed;
+                $staff['list'][strtolower($gamemode)] = $fixed;
             }
         }
 

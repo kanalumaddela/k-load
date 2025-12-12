@@ -1,5 +1,4 @@
 <?php
-
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -7,7 +6,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -22,10 +21,16 @@ use KLoad\Models\Setting;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
-
+use function file_exists;
+use function get_defined_vars;
 use function KLoad\flash;
 use function KLoad\redirect;
-
+use function pathinfo;
+use function preg_replace;
+use function str_contains;
+use function strtolower;
+use function uniqid;
+use function unlink;
 use const KLoad\APP_ROOT;
 use const KLoad\APP_ROUTE_URL;
 
@@ -36,9 +41,9 @@ class General extends AdminController
         $this->authorize('general');
 
         $settings = Setting::whereIn('name', ['community_name', 'description', 'logo'])->get()->pluck('value', 'name');
-        $logos = Util::listDir(APP_ROOT.'/assets/img/logos');
+        $logos = Util::listDir(APP_ROOT . '/assets/img/logos');
 
-        return $this->view('general', \get_defined_vars());
+        return $this->view('general', get_defined_vars());
     }
 
     public function generalPost(): RedirectResponse
@@ -58,7 +63,7 @@ class General extends AdminController
             flash('success', Lang::get('description_updated', 'Description name has been updated'));
         }
 
-        return redirect(APP_ROUTE_URL.'/dashboard/admin/general');
+        return redirect(APP_ROUTE_URL . '/dashboard/admin/general');
     }
 
     public function logo(): RedirectResponse
@@ -68,11 +73,11 @@ class General extends AdminController
 
         $post = $this->getPost();
 
-        if (\file_exists(APP_ROOT.'/assets/img/logos/'.($logo = $post->get('logo')))) {
+        if (file_exists(APP_ROOT . '/assets/img/logos/' . ($logo = $post->get('logo')))) {
             $logoSetting = Setting::find('logo');
 
             if ($post->get('action') === 'delete') {
-                \unlink(APP_ROOT.'/assets/img/logos/'.$logo);
+                unlink(APP_ROOT . '/assets/img/logos/' . $logo);
                 $logoSetting->value = '';
                 $logoSetting->save();
 
@@ -84,7 +89,7 @@ class General extends AdminController
             }
         }
 
-        return redirect(APP_ROUTE_URL.'/dashboard/admin/general');
+        return redirect(APP_ROUTE_URL . '/dashboard/admin/general');
     }
 
     /**
@@ -97,26 +102,26 @@ class General extends AdminController
 
         /** @var UploadedFile $logo */
         foreach ($this->request->files->get('logo-files') as $logo) {
-            if (!\str_contains($logo->getMimeType(), 'image/')) {
+            if (!str_contains($logo->getMimeType(), 'image/')) {
                 continue;
             }
 
-            $name = \pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
-            $sanitized = \strtolower(\preg_replace('/[[:^print:]]/', '', $name));
-            $newName = $sanitized.'.'.\uniqid('', true).'.'.$logo->guessExtension();
+            $name = pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
+            $sanitized = strtolower(preg_replace('/[[:^print:]]/', '', $name));
+            $newName = $sanitized . '.' . uniqid('', true) . '.' . $logo->guessExtension();
 
             try {
                 $ext = $logo->guessExtension();
 
-                $logo->move(APP_ROOT.'/assets/img/logos', $newName);
+                $logo->move(APP_ROOT . '/assets/img/logos', $newName);
 
-                flash('success', 'Uploaded `'.$name.'.'.$ext.'`');
+                flash('success', 'Uploaded `' . $name . '.' . $ext . '`');
             } catch (FileException $e) {
-                flash('error', 'Failed to upload logo: '.$e->getMessage());
+                flash('error', 'Failed to upload logo: ' . $e->getMessage());
 //                flash('error', Lang::get('failed_to_upload_logo', [$name]));
             }
         }
 
-        return redirect(APP_ROUTE_URL.'/dashboard/admin/general');
+        return redirect(APP_ROUTE_URL . '/dashboard/admin/general');
     }
 }

@@ -7,7 +7,7 @@
  * @link      https://github.com/kanalumaddela/k-load-v2
  *
  * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2023 kanalumaddela
+ * @copyright Copyright (c) 2018-2025 kanalumaddela
  * @license   MIT
  */
 
@@ -20,19 +20,21 @@ use KLoad\Http\RedirectResponse;
 use KLoad\Models\Setting;
 use KLoad\Traits\UpdateSettings;
 use Symfony\Component\HttpFoundation\Response;
-
+use function array_filter;
+use function get_defined_vars;
 use function KLoad\redirect;
+use function strtolower;
 
 class Messages extends AdminController
 {
     use UpdateSettings;
 
     protected static array $defaultData = [
-        'enable'   => false,
-        'random'   => false,
+        'enable' => false,
+        'random' => false,
         'duration' => 5000,
-        'fade'     => 750,
-        'list'     => [],
+        'fade' => 750,
+        'list' => [],
     ];
 
     public function index(): Response
@@ -41,7 +43,7 @@ class Messages extends AdminController
 
         $settings = Setting::where('name', 'messages')->pluck('value', 'name');
 
-        return $this->view('index', \get_defined_vars());
+        return $this->view('index', get_defined_vars());
     }
 
     /**
@@ -55,14 +57,14 @@ class Messages extends AdminController
         $messages = static::$defaultData;
         $post = $this->getPost()->get('messages');
 
-        $messages['enable'] = (bool) ($post['enable'] ?? true);
-        $messages['random'] = (bool) ($post['random'] ?? false);
-        $messages['duration'] = (int) ($post['duration'] ?? 5000);
-        $messages['fade'] = (int) ($post['fade'] ?? 750);
+        $messages['enable'] = (bool)($post['enable'] ?? true);
+        $messages['random'] = (bool)($post['random'] ?? false);
+        $messages['duration'] = (int)($post['duration'] ?? 5000);
+        $messages['fade'] = (int)($post['fade'] ?? 750);
 
         if (isset($post['list'])) {
             foreach ($post['list'] as $gamemode => $messageList) {
-                $messages['list'][\strtolower($gamemode)] = \array_filter($messageList);
+                $messages['list'][strtolower($gamemode)] = array_filter($messageList);
             }
         }
 
