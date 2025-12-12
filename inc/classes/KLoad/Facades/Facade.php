@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -13,8 +14,6 @@
 namespace KLoad\Facades;
 
 use KLoad\App;
-use function call_user_func_array;
-use function str_replace;
 
 abstract class Facade
 {
@@ -22,7 +21,7 @@ abstract class Facade
 
     public static function __callStatic($name, $arguments)
     {
-        return call_user_func_array([static::getInstance(), $name], $arguments);
+        return \call_user_func_array([static::getInstance(), $name], $arguments);
     }
 
     protected static function getInstance()
@@ -38,6 +37,6 @@ abstract class Facade
 
     protected static function getId(): string
     {
-        return str_replace(__NAMESPACE__ . '\\', '', static::class);
+        return \str_replace(__NAMESPACE__.'\\', '', static::class);
     }
 }

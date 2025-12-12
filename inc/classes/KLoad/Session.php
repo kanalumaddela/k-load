@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -16,18 +17,10 @@ use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use KLoad\Helpers\Util;
 use RuntimeException;
+
 use function dd;
 use function dump;
-use function ini_set;
-use function is_array;
-use function is_string;
-use function session_destroy;
-use function session_name;
-use function session_regenerate_id;
-use function session_set_cookie_params;
-use function session_start;
-use function session_status;
-use function time;
+
 use const PHP_SESSION_ACTIVE;
 
 class Session extends DotArray
@@ -40,10 +33,10 @@ class Session extends DotArray
             throw new RuntimeException('Session already started');
         }
 
-        session_name('K-Load');
-        ini_set('session.gc_maxlifetime', 60 * 60 * 24 * 14);
-        session_set_cookie_params(60 * 60 * 24 * 14, APP_PATH, APP_DOMAIN, IS_HTTPS, true);
-        session_start();
+        \session_name('K-Load');
+        \ini_set('session.gc_maxlifetime', 60 * 60 * 24 * 14);
+        \session_set_cookie_params(60 * 60 * 24 * 14, APP_PATH, APP_DOMAIN, IS_HTTPS, true);
+        \session_start();
 
         if (!isset($_SESSION['kload'])) {
             $_SESSION['kload'] = [];
@@ -58,7 +51,7 @@ class Session extends DotArray
 
     public function isActive(): bool
     {
-        return session_status() === PHP_SESSION_ACTIVE;
+        return \session_status() === PHP_SESSION_ACTIVE;
     }
 
     public function dump(): void
@@ -79,12 +72,12 @@ class Session extends DotArray
 
     public function destroy(): void
     {
-        session_destroy();
+        \session_destroy();
     }
 
     public function regenerate(): void
     {
-        session_regenerate_id();
+        \session_regenerate_id();
     }
 
     /**
@@ -99,18 +92,18 @@ class Session extends DotArray
 
         $toasts = [
             'success' => '',
-            'error' => '',
+            'error'   => '',
             'warning' => '',
-            'info' => '',
-            'danger' => '',
+            'info'    => '',
+            'danger'  => '',
         ];
 
         if (isset($toasts[$key])) {
-            $messages = $this->get('flash.messages.' . $key, []);
+            $messages = $this->get('flash.messages.'.$key, []);
             $messages[] = $value;
-            $this->set('flash.messages.' . $key, $messages);
+            $this->set('flash.messages.'.$key, $messages);
         } else {
-            $this->set('flash.' . $key, $value);
+            $this->set('flash.'.$key, $value);
         }
     }
 
@@ -126,13 +119,13 @@ class Session extends DotArray
 
     public function error($message): void
     {
-        if (is_array($message)) {
+        if (\is_array($message)) {
             foreach ($message as $msg) {
                 $this->error($msg);
             }
         }
 
-        if (is_string($message)) {
+        if (\is_string($message)) {
             $errors = $this->get('flash.errors', []);
             $errors[] = $message;
 
@@ -157,14 +150,14 @@ class Session extends DotArray
 
         $csrf = $this->get('csrf', []);
 
-        if (!isset($csrf[$route]) || $csrf[$route]['expires'] <= time()) {
+        if (!isset($csrf[$route]) || $csrf[$route]['expires'] <= \time()) {
             $token = Util::hash(32);
 
             $csrf[$route] = [
-                'token' => $token,
-                'expires' => time() + 3600,
+                'token'     => $token,
+                'expires'   => \time() + 3600,
                 'last_used' => null,
-                'uses' => 0,
+                'uses'      => 0,
             ];
 
             $this->set('csrf', $csrf);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -17,22 +18,6 @@ use KLoad\Http\RedirectResponse;
 use KLoad\View\LoadingView;
 use KLoad\View\View;
 use Symfony\Component\HttpFoundation\Response;
-use function addcslashes;
-use function array_keys;
-use function basename;
-use function call_user_func_array;
-use function compact;
-use function count;
-use function func_get_args;
-use function get_defined_vars;
-use function gettype;
-use function implode;
-use function is_dir;
-use function ksort;
-use function range;
-use function scandir;
-use function session_unset;
-use function var_export;
 
 //init(['dsn' => 'https://0bdc6629de78435f807c56358e3cdbae@o259687.ingest.sentry.io/1455550']);
 
@@ -57,37 +42,37 @@ function get_vars($file)
 {
     require_once $file;
 
-    return get_defined_vars();
+    return \get_defined_vars();
 }
 
 // stackoverflow gang
 // short array syntax instead of array()
 function var_export_fixed($var, $indent = ''): ?string
 {
-    switch (gettype($var)) {
+    switch (\gettype($var)) {
         case 'string':
-            return '\'' . addcslashes($var, "\\\$\"\r\n\t\v\f") . '\'';
+            return '\''.\addcslashes($var, "\\\$\"\r\n\t\v\f").'\'';
         case 'array':
-            $indexed = array_keys($var) === range(0, count($var) - 1);
+            $indexed = \array_keys($var) === \range(0, \count($var) - 1);
             $r = [];
             foreach ($var as $key => $value) {
                 $r[] = "$indent    "
-                    . ($indexed ? '' : var_export_fixed($key) . ' => ')
-                    . var_export_fixed($value, "$indent    ");
+                    .($indexed ? '' : var_export_fixed($key).' => ')
+                    .var_export_fixed($value, "$indent    ");
             }
 
-            return "[\n" . implode(",\n", $r) . "\n" . $indent . ']';
+            return "[\n".\implode(",\n", $r)."\n".$indent.']';
         case 'boolean':
             return $var ? 'true' : 'false';
         default:
-            return var_export($var, true);
+            return \var_export($var, true);
     }
 }
 
 /**
  * @param       $template
  * @param array $data
- * @param int $httpCode
+ * @param int   $httpCode
  *
  * @return Response
  */
@@ -118,7 +103,7 @@ function loadingView(array $data = [])
  */
 function lang(): string
 {
-    return call_user_func_array([Lang::class, 'get'], func_get_args());
+    return \call_user_func_array([Lang::class, 'get'], \func_get_args());
 }
 
 /**
@@ -129,7 +114,7 @@ function loggedIn()
     $loggedIn = isset($_SESSION['kload'], $_SESSION['kload']['user'], $_SESSION['kload']['user']['id']);
 
     if (!$loggedIn) {
-        session_unset();
+        \session_unset();
     }
 
     return $loggedIn;
@@ -138,29 +123,29 @@ function loggedIn()
 function directoryTree($dir): array
 {
     $arr = [];
-    $name = basename($dir);
+    $name = \basename($dir);
     $arr[$name] = [];
 
     $folders = $files = [];
 
-    foreach (scandir($dir) as $item) {
+    foreach (\scandir($dir) as $item) {
         if ($item === '.' || $item === '..') {
             continue;
         }
 
-        $item = $dir . DIRECTORY_SEPARATOR . $item;
+        $item = $dir.DIRECTORY_SEPARATOR.$item;
 
-        if (is_dir($item)) {
-            $folders[basename($item)] = directoryTree($item);
+        if (\is_dir($item)) {
+            $folders[\basename($item)] = directoryTree($item);
         } else {
-            $files[basename($item)] = $item;
+            $files[\basename($item)] = $item;
         }
     }
 
-    ksort($folders);
-    ksort($files);
+    \ksort($folders);
+    \ksort($files);
 
-    $arr = compact('folders', 'files');
+    $arr = \compact('folders', 'files');
 
     return $arr;
 }

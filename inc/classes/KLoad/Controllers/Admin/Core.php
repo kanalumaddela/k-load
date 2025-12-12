@@ -21,15 +21,10 @@ use KLoad\Facades\Lang;
 use KLoad\Http\RedirectResponse;
 use KLoad\View\LoadingView;
 use Symfony\Component\HttpFoundation\Response;
-use function curl_close;
-use function curl_exec;
-use function curl_init;
-use function curl_setopt;
-use function get_defined_vars;
-use function json_decode;
+
 use function KLoad\flash;
 use function KLoad\redirect;
-use function str_contains;
+
 use const KLoad\APP_ROUTE_URL;
 
 class Core extends AdminController
@@ -77,7 +72,7 @@ class Core extends AdminController
         $steamApiKey = Config::get('apikeys.steam');
         $currentTheme = LoadingView::getTheme();
 
-        return $this->view('core', get_defined_vars());
+        return $this->view('core', \get_defined_vars());
     }
 
     public function configUpdate(): RedirectResponse
@@ -97,30 +92,30 @@ class Core extends AdminController
 
         flash($valid ? 'success' : 'danger', $valid ? Lang::get('config_updated', 'Config has been updated!') : $error);
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
     }
 
     private static function testSteamApiKey($key): bool|string
     {
-        $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=' . $key . '&steamids=76561198152390718';
+        $url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key='.$key.'&steamids=76561198152390718';
 
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 1);
-        $data = curl_exec($curl);
+        $curl = \curl_init($url);
+        \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($curl, CURLOPT_TIMEOUT, 1);
+        $data = \curl_exec($curl);
 //        $err = curl_error($curl);
 //        $errno = curl_errno($curl);
-        curl_close($curl);
+        \curl_close($curl);
 
-        if (str_contains($data, 'Please verify your')) {
+        if (\str_contains($data, 'Please verify your')) {
             return Lang::get('api_key_invalid_error', 'API key invalid, please make sure it is entered correctly.');
         }
 
         try {
-            $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+            $data = \json_decode($data, true, 512, JSON_THROW_ON_ERROR);
             unset($data);
         } catch (Exception $e) {
-            return 'Validate Failed:' . $e->getMessage();
+            return 'Validate Failed:'.$e->getMessage();
         }
 
         return true;
@@ -139,6 +134,6 @@ class Core extends AdminController
             flash('success', Lang::get('theme_updated', 'Default theme has been updated!'));
         }
 
-        return redirect(APP_ROUTE_URL . '/dashboard/admin/core');
+        return redirect(APP_ROUTE_URL.'/dashboard/admin/core');
     }
 }

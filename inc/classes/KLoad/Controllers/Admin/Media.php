@@ -18,7 +18,9 @@ use KLoad\Controllers\AdminController;
 use KLoad\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\Response;
+
 use function KLoad\redirect;
+
 use const KLoad\APP_ROUTE_URL;
 
 class Media extends AdminController
@@ -36,7 +38,7 @@ class Media extends AdminController
 
         $route = $post->get('route', 'media');
 
-        $redirect = redirect(APP_ROUTE_URL . '/dashboard/admin/' . $route);
+        $redirect = redirect(APP_ROUTE_URL.'/dashboard/admin/'.$route);
 
         try {
         } catch (Exception $e) {
