@@ -22,11 +22,9 @@ use KLoad\View\View;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Response;
-use function array_merge;
-use function count;
-use function hash_equals;
+
 use function KLoad\view;
-use function time;
+
 use const KLoad\APP_CURRENT_ROUTE;
 use const KLoad\APP_ROUTE_URL;
 
@@ -62,7 +60,7 @@ class BaseController
             $this->user = $this->session->user();
         }
 
-        View::addGlobal('title', !empty(static::$title) ? static::$title . ' | K-Load' : 'K-Load');
+        View::addGlobal('title', !empty(static::$title) ? static::$title.' | K-Load' : 'K-Load');
     }
 
     public function boot(): void
@@ -78,7 +76,7 @@ class BaseController
 
         static::$title = $title;
 
-        View::addGlobal('title', !empty(static::$title) ? static::$title . ' | K-Load' : 'K-Load');
+        View::addGlobal('title', !empty(static::$title) ? static::$title.' | K-Load' : 'K-Load');
     }
 
     /**
@@ -86,21 +84,21 @@ class BaseController
      */
     public static function getRoute(): string
     {
-        return APP_ROUTE_URL . '/' . self::$route;
+        return APP_ROUTE_URL.'/'.self::$route;
     }
 
     public function view($template, array $data = []): Response
     {
-        if (count(static::$dataHooks) > 0) {
+        if (\count(static::$dataHooks) > 0) {
             $data = static::addHookData($data);
         }
 
-        return view($this->getTemplateFolder() . $template, $data);
+        return view($this->getTemplateFolder().$template, $data);
     }
 
     public function getTemplateFolder(): string
     {
-        return static::$templateFolder !== '' ? static::$templateFolder . '/' : '';
+        return static::$templateFolder !== '' ? static::$templateFolder.'/' : '';
     }
 
     public function getRequest(): Request
@@ -140,7 +138,7 @@ class BaseController
         $csrf = $this->session['csrf'];
         $csrf = $csrf[APP_CURRENT_ROUTE];
 
-        if (time() >= $csrf['expires'] || !hash_equals($csrf['token'], $userCsrf)) {
+        if (\time() >= $csrf['expires'] || !\hash_equals($csrf['token'], $userCsrf)) {
             throw new InvalidToken();
         }
     }
@@ -160,6 +158,6 @@ class BaseController
             $hookData[$key] = $instance->getData();
         }
 
-        return array_merge($data, $hookData);
+        return \array_merge($data, $hookData);
     }
 }

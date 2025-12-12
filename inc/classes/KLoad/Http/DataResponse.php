@@ -1,4 +1,5 @@
 <?php
+
 /*
  * K-Load v2 (https://demo.maddela.org/k-load/).
  *
@@ -18,8 +19,6 @@ class DataResponse extends JsonResponse
 {
     public function __construct($data = null, int $status = 200, array $headers = [], bool $json = false)
     {
-
-
         parent::__construct($data, $status, $headers, $json);
     }
 }

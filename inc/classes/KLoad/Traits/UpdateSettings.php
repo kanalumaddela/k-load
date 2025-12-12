@@ -17,14 +17,15 @@ use Illuminate\Database\QueryException;
 use KLoad\Facades\Lang;
 use KLoad\Facades\Session;
 use KLoad\Models\Setting;
+
 use function KLoad\flash;
 
 trait UpdateSettings
 {
     /**
      * @param string $name
-     * @param mixed $value
-     * @param bool $flash
+     * @param mixed  $value
+     * @param bool   $flash
      *
      * @return void
      */
@@ -34,7 +35,7 @@ trait UpdateSettings
             Setting::where('name', $name)->update(['value' => $value]);
 
             if ($flash) {
-                flash('success', Lang::get($name . '_updated'));
+                flash('success', Lang::get($name.'_updated'));
             }
         } catch (QueryException $e) {
             if ($flash) {

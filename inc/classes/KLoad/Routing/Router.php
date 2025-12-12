@@ -34,10 +34,10 @@ class Router
         return Cache::remember('routes', 0, static function () {
             $router = new RouteCollector();
 
-            require_once __DIR__ . '/routes/web.php';
+            require_once __DIR__.'/routes/web.php';
 
             $router->group(['prefix' => 'api'], function ($router) {
-                require_once __DIR__ . '/routes/api.php';
+                require_once __DIR__.'/routes/api.php';
             });
 
             return $router->getData();
