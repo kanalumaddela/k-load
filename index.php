@@ -1,21 +1,18 @@
 <?php
 
-/*
- * K-Load v2 (https://demo.maddela.org/k-load/).
- *
- * @link      https://www.maddela.org
- * @link      https://github.com/kanalumaddela/k-load-v2
- *
- * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2021 kanalumaddela
- * @license   MIT
- */
+// if installed with composer
+require __DIR__ . '/vendor/autoload.php';
+// or if installed manually by zip file
+// require 'flight/Flight.php';
 
-//if ($_SERVER['SERVER_NAME'] === 'demo.maddela.org') {
-//    die('making this better, have patience thx');
-//}
-declare(strict_types=1);
+Flight::route('/', static function () {
+    echo 'hello world!';
+});
 
-\define('KLoad\\'.'APP_START', \microtime(true));
+Flight::route('/json', static function () {
+    Flight::json([
+        'hello' => 'world'
+    ]);
+});
 
-require_once __DIR__.'/vendor/autoload.php';
+Flight::start();

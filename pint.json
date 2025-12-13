@@ -18,19 +18,6 @@
             "scope": "namespaced"
         }
     },
-    "exclude": [
-        "_tmp",
-        "assets",
-        "data",
-        "database",
-        "inc/lang",
-        "plugins",
-        "README-FILES",
-        "themes"
-    ],
-    "notPath": [
-        "inc/addons.php",
-        "inc/error.php",
-        "inc/install.php"
-    ]
+    "exclude": [],
+    "notPath": []
 }
