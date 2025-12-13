@@ -1,7 +1,7 @@
 <?php
 
 // if installed with composer
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 // or if installed manually by zip file
 // require 'flight/Flight.php';
 
@@ -11,7 +11,7 @@ Flight::route('/', static function () {
 
 Flight::route('/json', static function () {
     Flight::json([
-        'hello' => 'world'
+        'hello' => 'world',
     ]);
 });
 
